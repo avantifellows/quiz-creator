@@ -1,8 +1,11 @@
+import { useRouter } from 'next/router'
 import React from 'react'
 
+
 export default function StudentDetails() {
+  const router = useRouter();
   return <>
-   <div className='bg-white rounded-2 border border-solid border-[#B52326] m-10'>
+   <div className='bg-white rounded-2 border border-solid border-[#B52326] m-10 rounded-lg'>
 <form action="" className='flex flex-col items-center m-[60px]' >   
 <select  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5">
   <option selected>Program</option>
@@ -23,7 +26,9 @@ export default function StudentDetails() {
     <option selected>Test Takers Count</option>
     </select>
 
-    <button className='rounded-lg w-44 bg-[#B52326] text-white h-11 mt-10'>Next</button>
+    <button className='rounded-lg w-44 bg-[#B52326] text-white h-11 mt-10 ' onClick={()=>{
+      router.push('/TestDetails')
+    }}>Next</button>
 </form>
 
 </div>
