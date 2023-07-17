@@ -5,16 +5,8 @@ import { useRouter } from 'next/router'
 export default function CreateSession() {
   const router = useRouter();
   return (
-   <button className='bg-[#B52326] text-white text-[10px] px-2 md:px-5 rounded-[10px] md:text-[20px] ' onClick={()=>{
+   <button className='bg-[#B52326] text-white text-[10px] px-2 md:px-5 rounded-md md:text-[20px] ' onClick={()=>{
     router.push('/sessionCreator')
    }}>+ Create Session</button>
   )
 }
-
-// color: #FFF;
-// text-align: center;
-// font-family: Inter;
-// font-size: 20px;
-// font-style: normal;
-// font-weight: 500;
-// line-height: normal;
