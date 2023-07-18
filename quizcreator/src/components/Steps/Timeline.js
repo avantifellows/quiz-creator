@@ -8,34 +8,35 @@ export default function Timeline({setActiveStep}) {
       <div className="bg-white rounded-2 border border-solid border-[#B52326] m-10 rounded-lg">
         <form action="" className="flex flex-col items-center m-[60px]">
           <div>
-            <div className="flex">
+            <div className="flex mb-5 space-x-5">
+              <p>Start Date</p>
               <input
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 "
                 placeholder="Start Date"
-                type="text"
-                onfocus="(this.type='date')"
+                type="date"
+               
               />
+              <p>End Date</p>
               <input
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5"
                 placeholder="End Date"
-                type="text"
-                onfocus="(this.type='date')"
+                type="date"
               />
             </div>
           </div>
 
-          <div className="flex">
+          <div className="flex mb-5 space-x-5">
+            <p>Start Time</p>
             <input
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5"
               placeholder="Start Time"
-              type="text"
-              onfocus="(this.type='date')"
+              type="time"
             />
+            <p>End Time</p>
             <input
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5"
               placeholder="End Time"
-              type="text"
-              onfocus="(this.type='date')"
+             type="time"
             />
           </div>
           <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10">
