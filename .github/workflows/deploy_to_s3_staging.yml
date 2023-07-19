@@ -45,4 +45,4 @@ jobs:
           aws-region: ap-south-1
 
       - name: Deploy static site to S3 bucket
-        run: aws s3 sync quiz-creator\.next s3://quiz-creator-staging --delete --acl public-read
+        run: aws s3 sync ../quiz-creator/.next s3://quiz-creator-staging --delete --acl public-read
