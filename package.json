@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "build-staging": "next build --mode staging",
+    "start:staging": "next start --mode staging",
     "lint": "next lint"
   },
   "dependencies": {
