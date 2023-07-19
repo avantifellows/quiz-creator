@@ -5,7 +5,7 @@ import StudentDetails from "@/components/Steps/studentDetails";
 
 import React, { useState } from "react";
 
-export default function sessionCreator() {
+export default function SessionCreator() {
   const [activestep, setActiveStep] = useState(0);
   const activeForm = () => {
     if (activestep === 0) {

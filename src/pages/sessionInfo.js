@@ -1,7 +1,7 @@
 import CreateSession from "@/components/Buttons/CreateSession";
 import React from "react";
 
-export default function sessionInfo() {
+export default function SessionInfo() {
   return (
     <>
       <div className="flex justify-between m-2 p-5 ">
