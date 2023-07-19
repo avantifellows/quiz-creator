@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "build-staging": "next build --mode staging",
-    "start:staging": "next start --mode staging",
+    "build-staging": "cross-env NODE_ENV=staging next build",
+    "start:staging": "cross-env NODE_ENV=staging next start",
     "lint": "next lint"
   },
   "dependencies": {
