@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import React from "react";
 
 export default function StudentDetails({ setActiveStep }) {
@@ -56,7 +55,7 @@ export default function StudentDetails({ setActiveStep }) {
           <button
             className="rounded-lg md:w-44 w-32 bg-[#B52326] text-white h-11 mt-10 "
             onClick={() => {
-              setActiveStep(1);
+              setActiveStep("TestDetails");
             }}
           >
             Next

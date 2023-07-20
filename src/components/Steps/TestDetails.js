@@ -50,7 +50,7 @@ export default function TestDetails({ setActiveStep }) {
             <button
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"
               onClick={() => {
-                setActiveStep(0);
+                setActiveStep("StudentDetails");
               }}
             >
               Back
@@ -58,7 +58,7 @@ export default function TestDetails({ setActiveStep }) {
             <button
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"
               onClick={() => {
-                setActiveStep(2);
+                setActiveStep("Timeline");
               }}
             >
               Next

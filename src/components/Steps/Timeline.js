@@ -1,6 +1,8 @@
+import { useRouter } from "next/router";
 import React from "react";
 
 export default function Timeline({ setActiveStep }) {
+  const router = useRouter();
   return (
     <>
       <div className="bg-white rounded-2 border border-solid border-[#B52326] m-10 rounded-lg">
@@ -58,12 +60,17 @@ export default function Timeline({ setActiveStep }) {
             <button
               className="rounded-lg sm:w-44 w-10 text-xs h-8 bg-[#B52326] text-white sm:h-11 mt-10"
               onClick={() => {
-                setActiveStep(1);
+                setActiveStep("TestDetails");
               }}
             >
               Back
             </button>
-            <button className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10">
+            <button
+              className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"
+              onClick={() => {
+                router.push("/sessionInfo");
+              }}
+            >
               Save
             </button>
           </div>
