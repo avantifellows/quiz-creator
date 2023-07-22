@@ -5,7 +5,7 @@ import React from "react";
 export default function SessionInfo() {
   const router = useRouter();
   const handleCreateSession = () => {
-    router.push("/sessionCreator");
+    router.push("/SessionCreator");
   };
   return (
     <>

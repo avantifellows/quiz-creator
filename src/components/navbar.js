@@ -7,7 +7,11 @@ const Navbar = () => {
       <div>
         <div className="flex flex-row justify-between items-center md:px-5">
           <div className="relative w-32 aspect-video">
-            <Image src="/logo_2 1.svg" alt="Avanti fellows logo" fill />
+            <Image
+              src="/AvantiFellowsLogo.svg"
+              alt="Avanti fellows logo"
+              fill
+            />
           </div>
           <p className={`md:text-2xl md:first-letter:text-3xl text-xs `}>
             SESSION MANAGER

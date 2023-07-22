@@ -1,35 +1,84 @@
-import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
+
+import Select from "react-select";
+import {
+  MarkingSchemeOptions,
+  TestFormatOptions,
+  TestPlatformOptions,
+  TestPurposeOptions,
+  TestTypeOptions,
+} from "../Options/TestDetailsOptions";
 
 export default function TestDetails({ setActiveStep }) {
+  const [selectedTestType, setSelectedTestType] = useState(null);
+  const [selectedTestFormat, setSelectedTestFormat] = useState(null);
+  const [selectedTestPurpose, setSelectedTestPurpose] = useState(null);
+  const [selectedTestPlatform, setSelectedTestPlatform] = useState(null);
+  const [selectedMarkingScheme, setSelectedMarkingScheme] = useState(null);
   return (
     <>
-      <div className="bg-white rounded-2 border border-solid border-[#B52326] m-10 rounded-lg">
+      <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
         <form action="" className="flex flex-col items-center m-[60px]">
           <input
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5"
             placeholder="Test Name"
           />
-          <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10">
-            <option selected>Test Type</option>
-          </select>
-          <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10">
-            <option selected>Test Format</option>
-          </select>
-          <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10">
-            <option selected>Test Purpose</option>
-          </select>
-          <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10">
-            <option selected>Platform</option>
-          </select>
+          <Select
+            className="bg-gray-50 border text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            options={TestTypeOptions}
+            value={selectedTestType}
+            onChange={(selectedOption) => setSelectedTestType(selectedOption)}
+            instanceId="test_typeSelect"
+            isSearchable
+            placeholder="Test Type"
+          />
+          <Select
+            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            options={TestFormatOptions}
+            value={selectedTestFormat}
+            onChange={(selectedOption) => setSelectedTestFormat(selectedOption)}
+            instanceId="test_formatSelect"
+            isSearchable
+            placeholder="Test Format"
+          />
+          <Select
+            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            options={TestPurposeOptions}
+            value={selectedTestPurpose}
+            onChange={(selectedOption) =>
+              setSelectedTestPurpose(selectedOption)
+            }
+            instanceId="test_purposeSelect"
+            isSearchable
+            placeholder="Test Purpose"
+          />
+          <Select
+            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            options={TestPlatformOptions}
+            value={selectedTestPlatform}
+            onChange={(selectedOption) =>
+              setSelectedTestPlatform(selectedOption)
+            }
+            instanceId="test_platformSelect"
+            isSearchable
+            placeholder="Test Platform"
+          />
           <input
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
             placeholder="Option Limit"
           />
 
-          <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10">
-            <option selected>Marking Scheme</option>
-          </select>
+          <Select
+            className="bg-gray-50  text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            options={MarkingSchemeOptions}
+            value={selectedMarkingScheme}
+            onChange={(selectedOption) =>
+              setSelectedMarkingScheme(selectedOption)
+            }
+            instanceId="marking_schemeSelect"
+            isSearchable
+            placeholder="Marking Scheme"
+          />
           <input
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
             placeholder="Test id"

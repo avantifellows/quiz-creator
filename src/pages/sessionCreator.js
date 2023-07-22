@@ -1,7 +1,7 @@
 import Stepper from "@/components/Stepper";
 import TestDetails from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
-import StudentDetails from "@/components/Steps/studentDetails";
+import StudentDetails from "@/components/Steps/StudentDetails";
 
 import React, { useState } from "react";
 const Step = {
