@@ -8,6 +8,7 @@ import {
   TestPlatformOptions,
   TestPurposeOptions,
   TestTypeOptions,
+  OptionalLimitOptions,
 } from "../Options/TestDetailsOptions";
 
 export default function TestDetails({ setActiveStep }) {
@@ -16,6 +17,7 @@ export default function TestDetails({ setActiveStep }) {
   const [selectedTestPurpose, setSelectedTestPurpose] = useState(null);
   const [selectedTestPlatform, setSelectedTestPlatform] = useState(null);
   const [selectedMarkingScheme, setSelectedMarkingScheme] = useState(null);
+  const [selectedOptionalLimit, setSelectedOptionalLimit] = useState(null);
   return (
     <>
       <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
@@ -61,7 +63,17 @@ export default function TestDetails({ setActiveStep }) {
             isSearchable
             placeholder="Test Platform"
           />
-          <input className={styles.custom_input} placeholder="Option Limit" />
+          <Select
+            className={styles.custom_input}
+            options={OptionalLimitOptions}
+            value={selectedOptionalLimit}
+            onChange={(selectedOption) =>
+              setSelectedOptionalLimit(selectedOption)
+            }
+            instanceId="Optional_limitSelect"
+            isSearchable
+            placeholder="Optional Limit"
+          />
 
           <Select
             className={styles.custom_input}

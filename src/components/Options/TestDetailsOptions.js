@@ -30,10 +30,18 @@ const MarkingSchemeOptions = [
   { value: "1,0", label: "1, 0" },
 ];
 
+const OptionalLimitOptions = [
+  { value: "na", label: "NA" },
+  { value: "neet", label: "NEET" },
+  { value: "jee", label: "JEE" },
+  { value: "cuet", label: "CUET" },
+];
+
 export {
   MarkingSchemeOptions,
   TestFormatOptions,
   TestPurposeOptions,
   TestPlatformOptions,
   TestTypeOptions,
+  OptionalLimitOptions,
 };
