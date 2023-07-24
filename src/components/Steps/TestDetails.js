@@ -20,10 +20,7 @@ export default function TestDetails({ setActiveStep }) {
     <>
       <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
         <form action="" className="flex flex-col items-center m-[60px]">
-          <input
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5"
-            placeholder="Test Name"
-          />
+          <input className={styles.custom_input} placeholder="Test Name" />
           <Select
             className={styles.custom_input}
             options={TestTypeOptions}
@@ -64,10 +61,7 @@ export default function TestDetails({ setActiveStep }) {
             isSearchable
             placeholder="Test Platform"
           />
-          <input
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
-            placeholder="Option Limit"
-          />
+          <input className={styles.custom_input} placeholder="Option Limit" />
 
           <Select
             className={styles.custom_input}
@@ -80,22 +74,16 @@ export default function TestDetails({ setActiveStep }) {
             isSearchable
             placeholder="Marking Scheme"
           />
+          <input className={styles.custom_input} placeholder="Test id" />
           <input
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
-            placeholder="Test id"
-          />
-          <input
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             placeholder="Test Session id"
           />
           <input
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             placeholder="Test Session Link"
           />
-          <input
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
-            placeholder="CMS Test id"
-          />
+          <input className={styles.custom_input} placeholder="CMS Test id" />
           <div className="w-full flex justify-between">
             <button
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"

@@ -18,7 +18,7 @@ const Navbar = ({ item1, item2 }) => {
           </p>
         </div>
         <div>
-          <div className="flex text-white text-l gap-5 pl-10 items-center bg-[#B52326] w-100% h-16">
+          <div className="flex text-white text-l gap-5 pl-10 items-center bg-[#B52326] w-full h-16">
             <p className="hover:font-semibold active:font-light cursor-pointer ">
               {item1}
             </p>
