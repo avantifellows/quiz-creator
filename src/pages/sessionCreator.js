@@ -22,7 +22,7 @@ export default function SessionCreator() {
       return <Timeline setActiveStep={setActiveStep} />;
     }
   };
-
+  const steps = [Step.STUDENT_DETAILS, Step.TEST_DETAILS, Step.TIMELINE];
   return (
     <>
       <div className="md:flex md:justify-around mt-5 flex flex-col items-center md:flex-row text-xs md:text-lg">
@@ -30,7 +30,7 @@ export default function SessionCreator() {
         <div>Created Date: 26-06-2023</div>
         <div>Created By: Arya Jain</div>
       </div>
-      <Stepper activeStep={activeStep} />
+      <Stepper steps={steps} activeStep={activeStep} />
       {activeForm()}
     </>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "../../styles/Home.module.css";
 
 import Select from "react-select";
 import {
@@ -24,7 +25,7 @@ export default function TestDetails({ setActiveStep }) {
             placeholder="Test Name"
           />
           <Select
-            className="bg-gray-50 border text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             options={TestTypeOptions}
             value={selectedTestType}
             onChange={(selectedOption) => setSelectedTestType(selectedOption)}
@@ -33,7 +34,7 @@ export default function TestDetails({ setActiveStep }) {
             placeholder="Test Type"
           />
           <Select
-            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             options={TestFormatOptions}
             value={selectedTestFormat}
             onChange={(selectedOption) => setSelectedTestFormat(selectedOption)}
@@ -42,7 +43,7 @@ export default function TestDetails({ setActiveStep }) {
             placeholder="Test Format"
           />
           <Select
-            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             options={TestPurposeOptions}
             value={selectedTestPurpose}
             onChange={(selectedOption) =>
@@ -53,7 +54,7 @@ export default function TestDetails({ setActiveStep }) {
             placeholder="Test Purpose"
           />
           <Select
-            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             options={TestPlatformOptions}
             value={selectedTestPlatform}
             onChange={(selectedOption) =>
@@ -69,7 +70,7 @@ export default function TestDetails({ setActiveStep }) {
           />
 
           <Select
-            className="bg-gray-50  text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             options={MarkingSchemeOptions}
             value={selectedMarkingScheme}
             onChange={(selectedOption) =>

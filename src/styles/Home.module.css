@@ -1,9 +1,27 @@
-.p{
-width: 347px;
-height: 52px;
-font-family: Inter;
-font-size: 48px;
-font-style: normal;
-font-weight: 500;
+.p {
+  width: 347px;
+  height: 52px;
+  font-family: Inter;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 500;
+}
 
+.custom_input {
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+  border-radius: var(--input-radius);
+  padding: 10px;
+  margin-top: 40px;
+  width: 100%;
+}
+
+.custom-button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border-radius: 0.375rem; /* 6px */
+  font-size: 0.875rem; /* 14px */
+  height: 2rem; /* 32px */
+  width: 4.375rem; /* 70px */
 }

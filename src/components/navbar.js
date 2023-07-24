@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-const Navbar = () => {
+const Navbar = ({ item1, item2 }) => {
   return (
     <>
       <div>
@@ -18,12 +18,12 @@ const Navbar = () => {
           </p>
         </div>
         <div>
-          <div className="flex  text-white text-l gap-5 pl-10 items-center bg-[#B52326] w-100%  h-16">
+          <div className="flex text-white text-l gap-5 pl-10 items-center bg-[#B52326] w-100% h-16">
             <p className="hover:font-semibold active:font-light cursor-pointer ">
-              Quizzing Engine
+              {item1}
             </p>
             <p className="hover:font-semibold active:font-light cursor-pointer ">
-              Live Classes
+              {item2}
             </p>
           </div>
         </div>

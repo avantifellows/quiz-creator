@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Select from "react-select";
+import styles from "../../styles/Home.module.css";
 import {
   courseOptions,
   gradeOptions,
@@ -21,7 +22,7 @@ export default function StudentDetails({ setActiveStep }) {
       <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
         <form action="" className="flex flex-col items-center m-[60px]">
           <Select
-            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             options={programOptions}
             value={selectedProgram}
             onChange={(selectedOption) => setSelectedProgram(selectedOption)}
@@ -30,7 +31,7 @@ export default function StudentDetails({ setActiveStep }) {
             placeholder="Program"
           />
           <Select
-            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             options={BatchOptions}
             value={selectedBatch}
             onChange={(selectedOption) => setSelectedBatch(selectedOption)}
@@ -39,7 +40,7 @@ export default function StudentDetails({ setActiveStep }) {
             placeholder="Batch"
           />
           <Select
-            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             options={gradeOptions}
             value={selectedGrade}
             onChange={(selectedOption) => setSelectedGrade(selectedOption)}
@@ -48,7 +49,7 @@ export default function StudentDetails({ setActiveStep }) {
             placeholder="Grade"
           />
           <Select
-            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             options={courseOptions}
             value={selectedCourse}
             onChange={(selectedOption) => setSelectedCourse(selectedOption)}
@@ -57,7 +58,7 @@ export default function StudentDetails({ setActiveStep }) {
             placeholder="Course"
           />
           <Select
-            className="bg-gray-50 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+            className={styles.custom_input}
             options={streamOptions}
             value={selectedStream}
             onChange={(selectedOption) => setSelectedStream(selectedOption)}
@@ -65,13 +66,8 @@ export default function StudentDetails({ setActiveStep }) {
             isSearchable
             placeholder="Stream"
           />
-          <Select
-            className="bg-gray-50  text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
-            options={testTakersOptions}
-            value={selectedTestTakers}
-            onChange={(selectedOption) => setSelectedTestTakers(selectedOption)}
-            instanceId="testTakersSelect"
-            isSearchable
+          <input
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
             placeholder="Test Takers Count"
           />
 
