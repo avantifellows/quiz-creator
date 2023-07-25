@@ -1,7 +1,7 @@
 // Stepper.js
 import React from "react";
 
-//Navigates throught different sub-pages by passing the surrent step and the active step and renders the components based on the sub-page user is presented at
+//Navigates throught different sub-pages by passing the current step and the active step and renders the components based on the sub-page user is presented at
 export default function Stepper({ steps, activeStep }) {
   return (
     <>
