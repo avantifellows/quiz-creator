@@ -1,7 +1,7 @@
 ---
 name: c4gt_template
 about: C4GT Community Issues Template
-title: 'Quiz Creattor'
+title: 'Quiz Creator'
 labels: ''
 assignees: ''
 
@@ -17,17 +17,18 @@ assignees: ''
 ---
 
 ## Description
-[Provide a brief description of the feature, including why it is needed and what it will accomplish. You can skip any of Goals, Expected Outcome, Implementation Details, Mockups / Wireframes if they are irrelevant]
+An interface to create quizzes for the Avanti Fellows Quiz Engine and Remove the Dependence on Google Sheets Completely
 
 ## Goals
-- [ ] [Goal 1]
-- [ ] [Goal 2]
+- [ ] [Establish a basic structure of the Quiz-Creator ]
+- [ ] [Store the Dummy Data of the initial Frotend]
 - [ ] [Goal 3]
 - [ ] [Goal 4]
 - [ ] [Goal 5]
+\
 
 ## Expected Outcome
-[Describe in detail what the final product or result should look like and how it should behave.]
+[At the end it should Remove the Dependence on Google sheets completely]
 
 ## Acceptance Criteria
 - [ ] [Criteria 1]

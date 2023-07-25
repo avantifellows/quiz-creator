@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  --input-bg: #f9fafb;
+  --input-border: #d1d5db;
+  --input-text: #1f2937;
+  --input-radius: 5px;
+  --button-bg: #b52326;
+  --button-text: #ffffff;
+}

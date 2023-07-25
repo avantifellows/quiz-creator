@@ -1,0 +1,18 @@
+.p {
+  width: 347px;
+  height: 52px;
+  font-family: Inter;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.custom_input {
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+  border-radius: var(--input-radius);
+  padding: 10px;
+  margin-top: 40px;
+  width: 100%;
+}
