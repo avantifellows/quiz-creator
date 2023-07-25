@@ -5,16 +5,16 @@ import styles from "../../styles/Home.module.css";
 import Select from "react-select";
 import {
   HasSyncedOptions,
-  InfiniteSessionsOptions,
+  SessionTypeOptions,
   IsEnabledOptions,
 } from "../Options/TimelineOptions";
-
+//Renders the sub-page containing details of Session Timeline
 export default function Timeline({ setActiveStep }) {
   const router = useRouter();
   const [selectedSynced, setSelectedSynced] = useState(null);
   const [selectedIsEnabled, setSelectedIsEnabled] = useState(null);
-  const [selectedInfiniteSessions, setSelectedInfiniteSessions] =
-    useState(null);
+  const [selectedSessionType, setSelectedSessionType] = useState(null);
+  useState(null);
 
   return (
     <>
@@ -62,21 +62,21 @@ export default function Timeline({ setActiveStep }) {
           />
           <Select
             className={styles.custom_input}
-            options={InfiniteSessionsOptions}
-            value={selectedInfiniteSessions}
+            options={SessionTypeOptions}
+            value={selectedSessionType}
             onChange={(selectedOption) =>
-              setSelectedInfiniteSessions(selectedOption)
+              setSelectedSessionType(selectedOption)
             }
-            instanceId="infinite_sessionsSelect"
+            instanceId="session_typeSelect"
             isSearchable
-            placeholder="Infinite Sessions"
+            placeholder="Sessions Type"
           />
           <Select
             className={styles.custom_input}
             options={HasSyncedOptions}
             value={selectedSynced}
             onChange={(selectedOption) => setSelectedSynced(selectedOption)}
-            instanceId="has_syancedSelect"
+            instanceId="has_syncedSelect"
             isSearchable
             placeholder="Has Synced"
           />

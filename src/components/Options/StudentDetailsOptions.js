@@ -1,4 +1,4 @@
-const programOptions = [
+const ProgramOptions = [
   { value: "Haryana Students", label: "Haryana Students" },
   { value: "Himachal Students", label: "Himachal Students" },
   { value: "Delhi Students", label: "Delhi Students" },
@@ -135,14 +135,14 @@ const BatchOptions = [
   { value: "AF-10-Foundation-sci-22", label: "AF-10-Foundation-sci-22" },
   { value: "NEEV SCERT", label: "NEEV SCERT" },
 ];
-const gradeOptions = [
+const GradeOptions = [
   { value: "9", label: "9" },
   { value: "10", label: "10" },
   { value: "11", label: "11" },
   { value: "12", label: "12" },
 ];
 
-const courseOptions = [
+const CourseOptions = [
   { value: "NEET", label: "NEET" },
   { value: "Catalyst", label: "Catalyst" },
   { value: "Alpha", label: "Alpha" },
@@ -152,7 +152,7 @@ const courseOptions = [
   { value: "Photon", label: "Photon" },
 ];
 
-const streamOptions = [
+const StreamOptions = [
   { value: "Medical", label: "Medical" },
   { value: "Maths", label: "Maths" },
   { value: "Science", label: "Science" },
@@ -164,15 +164,15 @@ const streamOptions = [
   { value: "Zoology", label: "Zoology" },
 ];
 
-const testTakersOptions = [
+const TestTakersOptions = [
   { value: "Test Takers Count", label: "Test Takers Count" },
 ];
 
 export {
-  programOptions,
-  gradeOptions,
-  courseOptions,
-  streamOptions,
-  testTakersOptions,
+  ProgramOptions,
+  GradeOptions,
+  CourseOptions,
+  StreamOptions,
+  TestTakersOptions,
   BatchOptions,
 };

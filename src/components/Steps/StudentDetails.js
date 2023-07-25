@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import Select from "react-select";
 import styles from "../../styles/Home.module.css";
 import {
-  courseOptions,
-  gradeOptions,
-  programOptions,
-  streamOptions,
-  testTakersOptions,
+  CourseOptions,
+  GradeOptions,
+  ProgramOptions,
+  StreamOptions,
+  TestTakersOptions,
   BatchOptions,
 } from "../Options/StudentDetailsOptions";
 
+const Steps = {
+  StudentDetails: "StudentDetails",
+  TestDetails: "TestDetails",
+};
+// Renders the sub-page containing student details
 export default function StudentDetails({ setActiveStep }) {
   const [selectedProgram, setSelectedProgram] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState(null);
@@ -17,13 +22,15 @@ export default function StudentDetails({ setActiveStep }) {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedStream, setSelectedStream] = useState(null);
   const [selectedTestTakers, setSelectedTestTakers] = useState(null);
+
   return (
     <>
       <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
         <form action="" className="flex flex-col items-center m-[60px]">
+          {/* Select inputs */}
           <Select
             className={styles.custom_input}
-            options={programOptions}
+            options={ProgramOptions}
             value={selectedProgram}
             onChange={(selectedOption) => setSelectedProgram(selectedOption)}
             instanceId="programSelect"
@@ -41,7 +48,7 @@ export default function StudentDetails({ setActiveStep }) {
           />
           <Select
             className={styles.custom_input}
-            options={gradeOptions}
+            options={GradeOptions}
             value={selectedGrade}
             onChange={(selectedOption) => setSelectedGrade(selectedOption)}
             instanceId="gradeSelect"
@@ -50,7 +57,7 @@ export default function StudentDetails({ setActiveStep }) {
           />
           <Select
             className={styles.custom_input}
-            options={courseOptions}
+            options={CourseOptions}
             value={selectedCourse}
             onChange={(selectedOption) => setSelectedCourse(selectedOption)}
             instanceId="courseSelect"
@@ -59,7 +66,7 @@ export default function StudentDetails({ setActiveStep }) {
           />
           <Select
             className={styles.custom_input}
-            options={streamOptions}
+            options={StreamOptions}
             value={selectedStream}
             onChange={(selectedOption) => setSelectedStream(selectedOption)}
             instanceId="streamSelect"
@@ -72,9 +79,9 @@ export default function StudentDetails({ setActiveStep }) {
           />
 
           <button
-            className="rounded-lg md:w-44 w-32 bg-[#B52326] text-white h-11 mt-10 "
+            className="rounded-lg md:w-44 w-32 bg-[#B52326] text-white h-11 mt-10"
             onClick={() => {
-              setActiveStep("TestDetails");
+              setActiveStep(Steps.TestDetails);
             }}
           >
             Next

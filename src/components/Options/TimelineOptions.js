@@ -1,16 +1,16 @@
 const IsEnabledOptions = [
-  { value: "on", label: "ON" },
-  { value: "off", label: "OFF" },
+  { value: true, label: "ON" },
+  { value: false, label: "OFF" },
 ];
 
 const HasSyncedOptions = [
-  { value: "True", label: "TRUE" },
-  { value: "False", label: "FALSE" },
+  { value: true, label: "TRUE" },
+  { value: false, label: "FALSE" },
 ];
 
-const InfiniteSessionsOptions = [
-  { value: "True", label: "TRUE" },
-  { value: "False", label: "FALSE" },
+const SessionTypeOptions = [
+  { value: "infinite", label: "Infinite" },
+  { value: "standard", label: "Standard" },
 ];
 
-export { IsEnabledOptions, HasSyncedOptions, InfiniteSessionsOptions };
+export { IsEnabledOptions, HasSyncedOptions, SessionTypeOptions };

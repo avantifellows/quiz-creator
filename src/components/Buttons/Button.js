@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export default function CommonButton({ text, onClick }) {
+export default function Button({ text, onClick }) {
   const handleClick = () => {
     onClick();
   };
@@ -9,7 +9,7 @@ export default function CommonButton({ text, onClick }) {
   return <button onClick={handleClick}>{text}</button>;
 }
 
-CommonButton.propTypes = {
+Button.propTypes = {
   text: PropTypes.string.isRequired,
   onClick: PropTypes.func,
 };

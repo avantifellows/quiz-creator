@@ -11,6 +11,8 @@ import {
   OptionalLimitOptions,
 } from "../Options/TestDetailsOptions";
 
+// Renders sub-page containing test details
+
 export default function TestDetails({ setActiveStep }) {
   const [selectedTestType, setSelectedTestType] = useState(null);
   const [selectedTestFormat, setSelectedTestFormat] = useState(null);

@@ -1,4 +1,5 @@
-import CommonButtton from "@/components/Buttons/CommonButton";
+import Button from "@/components/Buttons/Button";
+Button;
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -11,10 +12,7 @@ export default function SessionInfo() {
     <>
       <div className="flex justify-between m-2 p-5 ">
         <div className="bg-[#B52326] text-white text-[10px] px-2 md:px-3 rounded-lg md:text-lg">
-          <CommonButtton
-            text="+ Create Quiz Session"
-            onClick={handleCreateSession}
-          />
+          <Button text="+ Create Quiz Session" onClick={handleCreateSession} />
         </div>
 
         <input
