@@ -25,4 +25,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## Project
 
-An interface to create quizzes for the Avanti Fellows Quiz Engine and Remove the dependence on google sheets completely
+An interface to create quizzes for the Avanti Fellows Quiz Engine, and remove the dependence on Google Sheets completely.
