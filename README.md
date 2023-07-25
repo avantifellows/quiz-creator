@@ -1,2 +1,2 @@
 # quiz-creator
-An interface to create quizzes for the Avanti Fellows Quiz Engine and Remove the dependence on google Sheets completely
+An interface to create quizzes for the Avanti Fellows Quiz Engine , and remove the dependence on Google Sheets completely.
