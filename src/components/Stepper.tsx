@@ -1,8 +1,15 @@
 // Stepper.js
+import { Step } from "@/pages/SessionCreator";
 import React from "react";
 
 //Navigates throught different sub-pages by passing the current step and the active step and renders the components based on the sub-page user is presented at
-export default function Stepper({ steps, activeStep }) {
+export default function Stepper({
+  steps,
+  activeStep,
+}: {
+  steps: Step[];
+  activeStep: string;
+}) {
   return (
     <>
       <ol className="sm:items-center sm:justify-center w-full space-x-10 flex md:space-x-32 mt-16">

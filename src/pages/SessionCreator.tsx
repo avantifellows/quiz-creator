@@ -10,6 +10,7 @@ const Step = {
   TIMELINE: "Timeline",
 };
 
+//Renders the main page for the multiple sub-pages that are rendered after
 export default function SessionCreator() {
   const [activeStep, setActiveStep] = useState(Step.STUDENT_DETAILS);
 

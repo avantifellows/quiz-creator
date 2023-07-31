@@ -1,4 +1,9 @@
-const ProgramOptions = [
+export type OptionType = {
+  value: string;
+  label: string;
+};
+
+const ProgramOptions: OptionType[] = [
   { value: "Haryana Students", label: "Haryana Students" },
   { value: "Himachal Students", label: "Himachal Students" },
   { value: "Delhi Students", label: "Delhi Students" },

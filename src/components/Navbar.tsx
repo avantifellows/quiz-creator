@@ -1,7 +1,8 @@
 import Image from "next/image";
 import React from "react";
 
-const Navbar = ({ item1, item2 }) => {
+// Renders Navbar as General Component
+const Navbar = ({ item1, item2 }: { item1: string; item2: string }) => {
   return (
     <>
       <div>
