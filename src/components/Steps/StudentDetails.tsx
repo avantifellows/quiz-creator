@@ -1,16 +1,14 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import Selectfrom "react-select";
+import Select from "react-select";
 import styles from "../../styles/Home.module.css";
 import {
   CourseOptions,
   GradeOptions,
   ProgramOptions,
   StreamOptions,
-  TestTakersOptions,
   BatchOptions,
 } from "../Options/StudentDetailsOptions";
 import { OptionType } from "../Options/StudentDetailsOptions";
-
 
 const Steps = {
   StudentDetails: "StudentDetails",
@@ -29,7 +27,6 @@ export default function StudentDetails({
   const [selectedGrade, setSelectedGrade] = useState<string>("");
   const [selectedCourse, setSelectedCourse] = useState<string>("");
   const [selectedStream, setSelectedStream] = useState<string>("");
-  const [selectedTestTakers, setSelectedTestTakers] = useState(null);
 
   return (
     <>
