@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Select from "react-select";
 import styles from "../../styles/Home.module.css";
 import {
@@ -6,22 +6,36 @@ import {
   GradeOptions,
   ProgramOptions,
   StreamOptions,
-  TestTakersOptions,
   BatchOptions,
 } from "../Options/StudentDetailsOptions";
+import { OptionType } from "../Options/StudentDetailsOptions";
 
 const Steps = {
   StudentDetails: "StudentDetails",
   TestDetails: "TestDetails",
 };
 // Renders the sub-page containing student details
-export default function StudentDetails({ setActiveStep }) {
-  const [selectedProgram, setSelectedProgram] = useState(null);
-  const [selectedBatch, setSelectedBatch] = useState(null);
-  const [selectedGrade, setSelectedGrade] = useState(null);
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [selectedStream, setSelectedStream] = useState(null);
-  const [selectedTestTakers, setSelectedTestTakers] = useState(null);
+export default function StudentDetails({
+  setActiveStep,
+}: {
+  setActiveStep: Dispatch<SetStateAction<string>>;
+}) {
+  const [selectedProgram, setSelectedProgram] = useState<OptionType | null>(
+    ProgramOptions[0]
+  );
+  const [selectedBatch, setSelectedBatch] = useState<OptionType | null>(
+    BatchOptions[0]
+  );
+
+  const [selectedGrade, setSelectedGrade] = useState<OptionType | null>(
+    GradeOptions[0]
+  );
+  const [selectedCourse, setSelectedCourse] = useState<OptionType | null>(
+    CourseOptions[0]
+  );
+  const [selectedStream, setSelectedStream] = useState<OptionType | null>(
+    StreamOptions[0]
+  );
 
   return (
     <>

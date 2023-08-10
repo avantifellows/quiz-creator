@@ -1,13 +1,13 @@
 ---
 name: c4gt_template
 about: C4GT Community Issues Template
-title: 'Quiz Creator'
-labels: ''
-assignees: ''
-
+title: "Quiz Creator"
+labels: ""
+assignees: ""
 ---
 
 ---
+
 name: C4GT
 about: C4GT Community Issues Template
 title: "[C4GT] Button for likes"
@@ -17,20 +17,24 @@ assignees: ''
 ---
 
 ## Description
+
 An interface to create quizzes for the Avanti Fellows Quiz Engine and Remove the Dependence on Google Sheets Completely
 
 ## Goals
+
 - [ ] [Establish a basic structure of the Quiz-Creator ]
 - [ ] [Store the Dummy Data of the initial Frotend]
 - [ ] [Goal 3]
 - [ ] [Goal 4]
 - [ ] [Goal 5]
-\
+      \
 
 ## Expected Outcome
+
 [At the end it should Remove the Dependence on Google sheets completely]
 
 ## Acceptance Criteria
+
 - [ ] [Criteria 1]
 - [ ] [Criteria 2]
 - [ ] [Criteria 3]
@@ -38,20 +42,25 @@ An interface to create quizzes for the Avanti Fellows Quiz Engine and Remove the
 - [ ] [Criteria 5]
 
 ## Implementation Details
+
 [List any technical details about the proposed implementation, including any specific technologies that will be used.]
 
 ## Mockups / Wireframes
+
 [Include links to any visual aids, mockups, wireframes, or diagrams that help illustrate what the final product should look like. This is not always necessary, but can be very helpful in many cases.]
 
 ---
 
 ### Project
+
 [Project Name]
 
 ### Organization Name:
+
 [Organization Name]
 
 ### Domain
+
 [Area of governance]
 
 <!-- Choose area of governance from the following list
@@ -91,16 +100,21 @@ An interface to create quizzes for the Avanti Fellows Quiz Engine and Remove the
 -->
 
 ### Tech Skills Needed:
+
 [Required technical skills for the project]
 
 ### Mentor(s)
+
 [@Mentor1] [@Mentor2] [@Mentor3]
 
 ### Complexity
+
 Pick one of [High]/[Medium]/[Low]
 
 ### Category
+
 Pick one or more of [CI/CD], [Integrations], [Performance Improvement], [Security], [UI/UX/Design], [Bug], [Feature], [Documentation], [Deployment], [Test], [PoC]
 
 ### Sub Category
+
 Pick one or more of [API], [Database], [Analytics], [Refactoring], [Data Science], [Machine Learning], [Accessibility], [Internationalization], [Localization], [Frontend], [Backend], [Mobile], [SEO], [Configuration], [Deprecation], [Breaking Change], [Maintenance], [Support], [Question], [Technical Debt], [Beginner friendly], [Research], [Reproducible], [Needs Reproduction].

@@ -4,14 +4,15 @@ import Timeline from "@/components/Steps/Timeline";
 import StudentDetails from "@/components/Steps/StudentDetails";
 
 import React, { useState } from "react";
-const Step = {
-  STUDENT_DETAILS: "StudentDetails",
-  TEST_DETAILS: "TestDetails",
-  TIMELINE: "Timeline",
-};
+export enum Step {
+  STUDENT_DETAILS = "StudentDetails",
+  TEST_DETAILS = "TestDetails",
+  TIMELINE = "Timeline",
+}
 
+//Renders the main page for the multiple sub-pages that are rendered after
 export default function SessionCreator() {
-  const [activeStep, setActiveStep] = useState(Step.STUDENT_DETAILS);
+  const [activeStep, setActiveStep] = useState<string>(Step.STUDENT_DETAILS);
 
   const activeForm = () => {
     if (activeStep === Step.STUDENT_DETAILS) {
