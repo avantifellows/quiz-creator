@@ -1,8 +1,8 @@
 import Button from "@/components/Buttons/Button";
-Button;
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 
+// Renders the Information of the latest session Created
 export default function SessionInfo() {
   const router = useRouter();
   const handleCreateSession = () => {
