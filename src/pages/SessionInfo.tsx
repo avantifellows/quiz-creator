@@ -1,6 +1,5 @@
 import Button from "@/components/Buttons/Button";
-
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 // Renders the Information of the latest session Created

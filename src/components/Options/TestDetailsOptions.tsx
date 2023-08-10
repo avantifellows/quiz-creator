@@ -1,10 +1,15 @@
-const TestTypeOptions = [
+export type OptionType = {
+  value: string;
+  label: string;
+};
+
+const TestTypeOptions: OptionType[] = [
   { value: "assessment", label: "Assessment" },
   { value: "homework", label: "Homework" },
   { value: "omr_assessment", label: "Omr-Assessment" },
 ];
 
-const TestFormatOptions = [
+const TestFormatOptions: OptionType[] = [
   { value: "part_test", label: "Part Test" },
   { value: "major_test", label: "Major Test" },
   { value: "full_syllabus_test", label: "Full Syllabus Test" },
@@ -13,7 +18,7 @@ const TestFormatOptions = [
   { value: "homework", label: "Homework" },
 ];
 
-const TestPurposeOptions = [
+const TestPurposeOptions: OptionType[] = [
   { value: "baseline", label: "Baseline" },
   { value: "endline", label: "Endline" },
   { value: "weekly_test", label: "Weekly Test" },
@@ -25,12 +30,12 @@ const TestPurposeOptions = [
 
 const TestPlatformOptions = [{ value: "Quiz", label: "Quiz" }];
 
-const MarkingSchemeOptions = [
+const MarkingSchemeOptions: OptionType[] = [
   { value: "4,-1", label: "4 , -1" },
   { value: "1,0", label: "1, 0" },
 ];
 
-const OptionalLimitOptions = [
+const OptionalLimitOptions: OptionType[] = [
   { value: "na", label: "NA" },
   { value: "neet", label: "NEET" },
   { value: "jee", label: "JEE" },

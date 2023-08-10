@@ -14,7 +14,7 @@ const ProgramOptions: OptionType[] = [
   { value: "AF Testing", label: "AF Testing" },
 ];
 
-const BatchOptions = [
+const BatchOptions: OptionType[] = [
   { value: "DL-12-Alpha-Eng-23", label: "DL-12-Alpha-Eng-23" },
   { value: "DL-12-Photon-Eng-23", label: "DL-12-Photon-Eng-23" },
   { value: "DL-12-Catalyst-Eng-23", label: "DL-12-Catalyst-Eng-23" },
@@ -147,7 +147,7 @@ const GradeOptions = [
   { value: "12", label: "12" },
 ];
 
-const CourseOptions = [
+const CourseOptions: OptionType[] = [
   { value: "NEET", label: "NEET" },
   { value: "Catalyst", label: "Catalyst" },
   { value: "Alpha", label: "Alpha" },
@@ -157,7 +157,7 @@ const CourseOptions = [
   { value: "Photon", label: "Photon" },
 ];
 
-const StreamOptions = [
+const StreamOptions: OptionType[] = [
   { value: "Medical", label: "Medical" },
   { value: "Maths", label: "Maths" },
   { value: "Science", label: "Science" },

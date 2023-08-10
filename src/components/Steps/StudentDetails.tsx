@@ -20,13 +20,22 @@ export default function StudentDetails({
 }: {
   setActiveStep: Dispatch<SetStateAction<string>>;
 }) {
-  const [selectedProgram, setSelectedProgram] = useState<ValueType<OptionType>>(
+  const [selectedProgram, setSelectedProgram] = useState<OptionType | null>(
     ProgramOptions[0]
   );
-  const [selectedBatch, setSelectedBatch] = useState<string>("");
-  const [selectedGrade, setSelectedGrade] = useState<string>("");
-  const [selectedCourse, setSelectedCourse] = useState<string>("");
-  const [selectedStream, setSelectedStream] = useState<string>("");
+  const [selectedBatch, setSelectedBatch] = useState<OptionType | null>(
+    BatchOptions[0]
+  );
+
+  const [selectedGrade, setSelectedGrade] = useState<OptionType | null>(
+    GradeOptions[0]
+  );
+  const [selectedCourse, setSelectedCourse] = useState<OptionType | null>(
+    CourseOptions[0]
+  );
+  const [selectedStream, setSelectedStream] = useState<OptionType | null>(
+    StreamOptions[0]
+  );
 
   return (
     <>
