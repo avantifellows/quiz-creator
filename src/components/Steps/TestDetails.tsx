@@ -1,25 +1,39 @@
-import React, { useState } from "react";
+import { MouseEvent, useState } from "react";
 import styles from "../../styles/Home.module.css";
 
+import { Step } from "@/pages/SessionCreator";
+import { ActiveFormProps } from "@/types/types";
 import Select from "react-select";
+import { OptionType } from "../Options/StudentDetailsOptions";
 import {
   MarkingSchemeOptions,
+  OptionalLimitOptions,
   TestFormatOptions,
   TestPlatformOptions,
   TestPurposeOptions,
   TestTypeOptions,
-  OptionalLimitOptions,
 } from "../Options/TestDetailsOptions";
 
 // Renders sub-page containing test details
 
-export default function TestDetails({ setActiveStep }) {
-  const [selectedTestType, setSelectedTestType] = useState(null);
-  const [selectedTestFormat, setSelectedTestFormat] = useState(null);
-  const [selectedTestPurpose, setSelectedTestPurpose] = useState(null);
-  const [selectedTestPlatform, setSelectedTestPlatform] = useState(null);
-  const [selectedMarkingScheme, setSelectedMarkingScheme] = useState(null);
-  const [selectedOptionalLimit, setSelectedOptionalLimit] = useState(null);
+export function TestDetails({ setActiveStep, setData }: ActiveFormProps) {
+  const [testData, setTestData] = useState<{
+    [key: string]: OptionType | null;
+  }>({
+    testType: null,
+    testFormat: null,
+    testPurpose: null,
+    testPlatform: null,
+    markingScheme: null,
+    optionalLimit: null,
+  });
+
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setData((prevData: Object) => ({ ...prevData, testData }));
+    setActiveStep(Step.TIMELINE);
+  };
+
   return (
     <>
       <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
@@ -28,8 +42,13 @@ export default function TestDetails({ setActiveStep }) {
           <Select
             className={styles.custom_input}
             options={TestTypeOptions}
-            value={selectedTestType}
-            onChange={(selectedOption) => setSelectedTestType(selectedOption)}
+            value={testData.testType}
+            onChange={(selectedOption) =>
+              setTestData({
+                ...testData,
+                testType: selectedOption,
+              })
+            }
             instanceId="test_typeSelect"
             isSearchable
             placeholder="Test Type"
@@ -37,8 +56,13 @@ export default function TestDetails({ setActiveStep }) {
           <Select
             className={styles.custom_input}
             options={TestFormatOptions}
-            value={selectedTestFormat}
-            onChange={(selectedOption) => setSelectedTestFormat(selectedOption)}
+            value={testData.testFormat}
+            onChange={(selectedOption) =>
+              setTestData({
+                ...testData,
+                testFormat: selectedOption,
+              })
+            }
             instanceId="test_formatSelect"
             isSearchable
             placeholder="Test Format"
@@ -46,9 +70,12 @@ export default function TestDetails({ setActiveStep }) {
           <Select
             className={styles.custom_input}
             options={TestPurposeOptions}
-            value={selectedTestPurpose}
+            value={testData.testPurpose}
             onChange={(selectedOption) =>
-              setSelectedTestPurpose(selectedOption)
+              setTestData({
+                ...testData,
+                testPurpose: selectedOption,
+              })
             }
             instanceId="test_purposeSelect"
             isSearchable
@@ -57,9 +84,12 @@ export default function TestDetails({ setActiveStep }) {
           <Select
             className={styles.custom_input}
             options={TestPlatformOptions}
-            value={selectedTestPlatform}
+            value={testData.testPlatform}
             onChange={(selectedOption) =>
-              setSelectedTestPlatform(selectedOption)
+              setTestData({
+                ...testData,
+                testPlatform: selectedOption,
+              })
             }
             instanceId="test_platformSelect"
             isSearchable
@@ -68,25 +98,31 @@ export default function TestDetails({ setActiveStep }) {
           <Select
             className={styles.custom_input}
             options={OptionalLimitOptions}
-            value={selectedOptionalLimit}
+            value={testData.markingScheme}
             onChange={(selectedOption) =>
-              setSelectedOptionalLimit(selectedOption)
+              setTestData({
+                ...testData,
+                markingScheme: selectedOption,
+              })
             }
-            instanceId="Optional_limitSelect"
             isSearchable
-            placeholder="Optional Limit"
+            instanceId="marking_schemeSelect"
+            placeholder="Marking Scheme"
           />
 
           <Select
             className={styles.custom_input}
             options={MarkingSchemeOptions}
-            value={selectedMarkingScheme}
+            value={testData.optionalLimit}
             onChange={(selectedOption) =>
-              setSelectedMarkingScheme(selectedOption)
+              setTestData({
+                ...testData,
+                optionalLimit: selectedOption,
+              })
             }
-            instanceId="marking_schemeSelect"
             isSearchable
-            placeholder="Marking Scheme"
+            instanceId="Optional_limitSelect"
+            placeholder="Optional Limit"
           />
           <input className={styles.custom_input} placeholder="Test id" />
           <input
@@ -102,16 +138,14 @@ export default function TestDetails({ setActiveStep }) {
             <button
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"
               onClick={() => {
-                setActiveStep("StudentDetails");
+                setActiveStep(Step.STUDENT_DETAILS);
               }}
             >
               Back
             </button>
             <button
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"
-              onClick={() => {
-                setActiveStep("Timeline");
-              }}
+              onClick={(e: MouseEvent<HTMLButtonElement>) => handleClick(e)}
             >
               Next
             </button>

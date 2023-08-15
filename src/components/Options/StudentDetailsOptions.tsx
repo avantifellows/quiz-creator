@@ -1,7 +1,7 @@
-export type OptionType = {
-  value: string;
+export interface OptionType {
+  value: string | boolean;
   label: string;
-};
+}
 
 const ProgramOptions: OptionType[] = [
   { value: "Haryana Students", label: "Haryana Students" },
@@ -174,10 +174,10 @@ const TestTakersOptions = [
 ];
 
 export {
-  ProgramOptions,
-  GradeOptions,
+  BatchOptions,
   CourseOptions,
+  GradeOptions,
+  ProgramOptions,
   StreamOptions,
   TestTakersOptions,
-  BatchOptions,
 };

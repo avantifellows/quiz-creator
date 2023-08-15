@@ -1,107 +1,124 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import { Step } from "@/pages/SessionCreator";
+import { ActiveFormProps } from "@/types/types";
+import { useState, type MouseEvent } from "react";
 import Select from "react-select";
 import styles from "../../styles/Home.module.css";
 import {
+  BatchOptions,
   CourseOptions,
   GradeOptions,
+  OptionType,
   ProgramOptions,
   StreamOptions,
-  BatchOptions,
 } from "../Options/StudentDetailsOptions";
-import { OptionType } from "../Options/StudentDetailsOptions";
 
-const Steps = {
-  StudentDetails: "StudentDetails",
-  TestDetails: "TestDetails",
-};
-// Renders the sub-page containing student details
 export default function StudentDetails({
   setActiveStep,
-}: {
-  setActiveStep: Dispatch<SetStateAction<string>>;
-}) {
-  const [selectedProgram, setSelectedProgram] = useState<OptionType | null>(
-    ProgramOptions[0]
-  );
-  const [selectedBatch, setSelectedBatch] = useState<OptionType | null>(
-    BatchOptions[0]
-  );
+  setData,
+}: ActiveFormProps) {
+  const [studentData, setStudentData] = useState<{
+    [key: string]: OptionType | null;
+  }>({
+    program: null,
+    batch: null,
+    grade: null,
+    course: null,
+    stream: null,
+  });
 
-  const [selectedGrade, setSelectedGrade] = useState<OptionType | null>(
-    GradeOptions[0]
-  );
-  const [selectedCourse, setSelectedCourse] = useState<OptionType | null>(
-    CourseOptions[0]
-  );
-  const [selectedStream, setSelectedStream] = useState<OptionType | null>(
-    StreamOptions[0]
-  );
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    setData((prevData) => ({ ...prevData, studentData }));
+
+    setActiveStep(Step.TEST_DETAILS);
+  };
 
   return (
-    <>
-      <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
-        <form action="" className="flex flex-col items-center m-[60px]">
-          {/* Select inputs */}
-          <Select
-            className={styles.custom_input}
-            options={ProgramOptions}
-            value={selectedProgram}
-            onChange={(selectedOption) => setSelectedProgram(selectedOption)}
-            instanceId="programSelect"
-            isSearchable
-            placeholder="Program"
-          />
-          <Select
-            className={styles.custom_input}
-            options={BatchOptions}
-            value={selectedBatch}
-            onChange={(selectedOption) => setSelectedBatch(selectedOption)}
-            instanceId="batchSelect"
-            isSearchable
-            placeholder="Batch"
-          />
-          <Select
-            className={styles.custom_input}
-            options={GradeOptions}
-            value={selectedGrade}
-            onChange={(selectedOption) => setSelectedGrade(selectedOption)}
-            instanceId="gradeSelect"
-            isSearchable
-            placeholder="Grade"
-          />
-          <Select
-            className={styles.custom_input}
-            options={CourseOptions}
-            value={selectedCourse}
-            onChange={(selectedOption) => setSelectedCourse(selectedOption)}
-            instanceId="courseSelect"
-            isSearchable
-            placeholder="Course"
-          />
-          <Select
-            className={styles.custom_input}
-            options={StreamOptions}
-            value={selectedStream}
-            onChange={(selectedOption) => setSelectedStream(selectedOption)}
-            instanceId="streamSelect"
-            isSearchable
-            placeholder="Stream"
-          />
-          <input
-            className={styles.custom_input}
-            placeholder="Test Takers Count"
-          />
+    <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
+      <form className="flex flex-col items-center m-[60px]">
+        <Select
+          className={styles.custom_input}
+          options={ProgramOptions}
+          value={studentData.program}
+          onChange={(selectedOption) =>
+            setStudentData({
+              ...studentData,
+              program: selectedOption,
+            })
+          }
+          instanceId="programSelect"
+          isSearchable
+          placeholder="Program"
+        />
+        <Select
+          className={styles.custom_input}
+          options={BatchOptions}
+          value={studentData.batch}
+          onChange={(selectedOption) =>
+            setStudentData({
+              ...studentData,
+              batch: selectedOption,
+            })
+          }
+          instanceId="batchSelect"
+          isSearchable
+          placeholder="Batch"
+        />
+        <Select
+          className={styles.custom_input}
+          options={GradeOptions}
+          value={studentData.grade}
+          onChange={(selectedOption) =>
+            setStudentData({
+              ...studentData,
+              grade: selectedOption,
+            })
+          }
+          instanceId="gradeSelect"
+          isSearchable
+          placeholder="Grade"
+        />
+        <Select
+          className={styles.custom_input}
+          options={CourseOptions}
+          value={studentData.course}
+          onChange={(selectedOption) =>
+            setStudentData({
+              ...studentData,
+              course: selectedOption,
+            })
+          }
+          instanceId="courseSelect"
+          isSearchable
+          placeholder="Course"
+        />
+        <Select
+          className={styles.custom_input}
+          options={StreamOptions}
+          value={studentData.stream}
+          onChange={(selectedOption) =>
+            setStudentData({
+              ...studentData,
+              stream: selectedOption,
+            })
+          }
+          instanceId="streamSelect"
+          isSearchable
+          placeholder="Stream"
+        />
+        <input
+          className={styles.custom_input}
+          placeholder="Test Takers Count"
+        />
 
-          <button
-            className="rounded-lg md:w-44 w-32 bg-[#B52326] text-white h-11 mt-10"
-            onClick={() => {
-              setActiveStep(Steps.TestDetails);
-            }}
-          >
-            Next
-          </button>
-        </form>
-      </div>
-    </>
+        <button
+          className="rounded-lg md:w-44 w-32 bg-[#B52326] text-white h-11 mt-10"
+          onClick={(e: MouseEvent<HTMLButtonElement>) => handleClick(e)}
+        >
+          Next
+        </button>
+      </form>
+    </div>
   );
 }

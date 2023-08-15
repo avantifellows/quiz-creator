@@ -1,21 +1,34 @@
-import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { MouseEvent, useState } from "react";
 import styles from "../../styles/Home.module.css";
 
+import { Step } from "@/pages/SessionCreator";
+import { ActiveFormProps } from "@/types/types";
 import Select from "react-select";
+import { OptionType } from "../Options/StudentDetailsOptions";
 import {
   HasSyncedOptions,
-  SessionTypeOptions,
   IsEnabledOptions,
+  SessionTypeOptions,
 } from "../Options/TimelineOptions";
-//Renders the sub-page containing details of Session Timeline
-export default function Timeline({ setActiveStep }) {
-  const router = useRouter();
-  const [selectedSynced, setSelectedSynced] = useState(null);
-  const [selectedIsEnabled, setSelectedIsEnabled] = useState(null);
-  const [selectedSessionType, setSelectedSessionType] = useState(null);
-  useState(null);
 
+export default function Timeline({
+  setActiveStep,
+  setData,
+  createSession,
+}: ActiveFormProps) {
+  const [timelineData, setTimelineData] = useState<{
+    [key: string]: OptionType | null;
+  }>({
+    isEnabled: null,
+    sessionType: null,
+    synced: null,
+  });
+
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setData((prevData: Object) => ({ ...prevData, timelineData }));
+    createSession!();
+  };
   return (
     <>
       <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
@@ -54,8 +67,13 @@ export default function Timeline({ setActiveStep }) {
           <Select
             className={styles.custom_input}
             options={IsEnabledOptions}
-            value={selectedIsEnabled}
-            onChange={(selectedOption) => setSelectedIsEnabled(selectedOption)}
+            value={timelineData.isEnabled}
+            onChange={(selectedOption) =>
+              setTimelineData({
+                ...timelineData,
+                isEnabled: selectedOption,
+              })
+            }
             instanceId="is_enabledSelect"
             isSearchable
             placeholder="Is Enabled"
@@ -63,9 +81,12 @@ export default function Timeline({ setActiveStep }) {
           <Select
             className={styles.custom_input}
             options={SessionTypeOptions}
-            value={selectedSessionType}
+            value={timelineData.sessionType}
             onChange={(selectedOption) =>
-              setSelectedSessionType(selectedOption)
+              setTimelineData({
+                ...timelineData,
+                sessionType: selectedOption,
+              })
             }
             instanceId="session_typeSelect"
             isSearchable
@@ -74,8 +95,13 @@ export default function Timeline({ setActiveStep }) {
           <Select
             className={styles.custom_input}
             options={HasSyncedOptions}
-            value={selectedSynced}
-            onChange={(selectedOption) => setSelectedSynced(selectedOption)}
+            value={timelineData.synced}
+            onChange={(selectedOption) =>
+              setTimelineData({
+                ...timelineData,
+                synced: selectedOption,
+              })
+            }
             instanceId="has_syncedSelect"
             isSearchable
             placeholder="Has Synced"
@@ -93,16 +119,14 @@ export default function Timeline({ setActiveStep }) {
             <button
               className="rounded-lg sm:w-44 w-10 text-xs h-8 bg-[#B52326] text-white sm:h-11 mt-10"
               onClick={() => {
-                setActiveStep("TestDetails");
+                setActiveStep(Step.TEST_DETAILS);
               }}
             >
               Back
             </button>
             <button
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"
-              onClick={() => {
-                router.push("/sessionInfo");
-              }}
+              onClick={(e: MouseEvent<HTMLButtonElement>) => handleClick(e)}
             >
               Save
             </button>

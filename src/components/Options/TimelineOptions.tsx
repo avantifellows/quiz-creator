@@ -1,16 +1,18 @@
-const IsEnabledOptions = [
+import { OptionType } from "./StudentDetailsOptions";
+
+const IsEnabledOptions: OptionType[] = [
   { value: true, label: "ON" },
   { value: false, label: "OFF" },
 ];
 
-const HasSyncedOptions = [
+const HasSyncedOptions: OptionType[] = [
   { value: true, label: "TRUE" },
   { value: false, label: "FALSE" },
 ];
 
-const SessionTypeOptions = [
+const SessionTypeOptions: OptionType[] = [
   { value: "infinite", label: "Infinite" },
   { value: "standard", label: "Standard" },
 ];
 
-export { IsEnabledOptions, HasSyncedOptions, SessionTypeOptions };
+export { HasSyncedOptions, IsEnabledOptions, SessionTypeOptions };
