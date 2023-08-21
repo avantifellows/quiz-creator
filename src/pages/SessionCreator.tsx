@@ -2,6 +2,7 @@ import Stepper from "@/components/Stepper";
 import StudentDetails from "@/components/Steps/StudentDetails";
 import { TestDetails } from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
+import { RowType } from "@/types/types";
 import { useRouter } from "next/router";
 
 import { useState } from "react";
@@ -21,28 +22,44 @@ const stepArr: string[] = [
 export default function SessionCreator() {
   const router = useRouter();
   const [activeStep, setActiveStep] = useState<string>(Step.STUDENT_DETAILS);
-  const [data, setData] = useState<Object>({});
+  const [data, setData] = useState<RowType>({
+    student: {},
+    test: {},
+    timeline: {},
+  });
+  console.log(data!);
 
-  console.log(data);
-
-  const submitData = () => {
+  const createSession = () => {
     console.log(data!);
     // TODO: POST DATA FUNCTION HERE
 
-    setTimeout(() => router.push("/"), 2000);
+    // setTimeout(() => router.push('/'), 2000);
   };
 
   const activeForm = () => {
     if (activeStep === Step.STUDENT_DETAILS) {
-      return <StudentDetails setActiveStep={setActiveStep} setData={setData} />;
+      return (
+        <StudentDetails
+          data={data}
+          setActiveStep={setActiveStep}
+          setData={setData}
+        />
+      );
     } else if (activeStep === Step.TEST_DETAILS) {
-      return <TestDetails setActiveStep={setActiveStep} setData={setData} />;
+      return (
+        <TestDetails
+          data={data}
+          setActiveStep={setActiveStep}
+          setData={setData}
+        />
+      );
     } else {
       return (
         <Timeline
+          data={data}
           setActiveStep={setActiveStep}
           setData={setData}
-          createSession={submitData}
+          createSession={createSession}
         />
       );
     }

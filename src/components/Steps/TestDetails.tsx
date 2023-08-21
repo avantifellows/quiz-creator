@@ -1,10 +1,9 @@
-import { MouseEvent, useState } from "react";
 import styles from "../../styles/Home.module.css";
 
 import { Step } from "@/pages/SessionCreator";
+import { MyForm } from "@/types/FormTypes";
 import { ActiveFormProps } from "@/types/types";
-import Select from "react-select";
-import { OptionType } from "../Options/StudentDetailsOptions";
+import { SubmitHandler, useForm } from "react-hook-form";
 import {
   MarkingSchemeOptions,
   OptionalLimitOptions,
@@ -13,127 +12,96 @@ import {
   TestPurposeOptions,
   TestTypeOptions,
 } from "../Options/TestDetailsOptions";
+import SelectField from "./Form/SelectedField";
 
 // Renders sub-page containing test details
 
-export function TestDetails({ setActiveStep, setData }: ActiveFormProps) {
-  const [testData, setTestData] = useState<{
-    [key: string]: OptionType | null;
-  }>({
-    testType: null,
-    testFormat: null,
-    testPurpose: null,
-    testPlatform: null,
-    markingScheme: null,
-    optionalLimit: null,
+export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
+  const { register, handleSubmit, control } = useForm<MyForm>({
+    defaultValues: { ...data.test },
   });
 
-  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setData((prevData: Object) => ({ ...prevData, testData }));
+  const onSubmit: SubmitHandler<MyForm> = (test) => {
+    setData((prevData) => ({ ...prevData, test }));
+
     setActiveStep(Step.TIMELINE);
   };
-
   return (
     <>
       <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
-        <form action="" className="flex flex-col items-center m-[60px]">
-          <input className={styles.custom_input} placeholder="Test Name" />
-          <Select
+        <form
+          className="flex flex-col items-center m-[60px]"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <input
+            required
             className={styles.custom_input}
-            options={TestTypeOptions}
-            value={testData.testType}
-            onChange={(selectedOption) =>
-              setTestData({
-                ...testData,
-                testType: selectedOption,
-              })
-            }
-            instanceId="test_typeSelect"
-            isSearchable
-            placeholder="Test Type"
-          />
-          <Select
-            className={styles.custom_input}
-            options={TestFormatOptions}
-            value={testData.testFormat}
-            onChange={(selectedOption) =>
-              setTestData({
-                ...testData,
-                testFormat: selectedOption,
-              })
-            }
-            instanceId="test_formatSelect"
-            isSearchable
-            placeholder="Test Format"
-          />
-          <Select
-            className={styles.custom_input}
-            options={TestPurposeOptions}
-            value={testData.testPurpose}
-            onChange={(selectedOption) =>
-              setTestData({
-                ...testData,
-                testPurpose: selectedOption,
-              })
-            }
-            instanceId="test_purposeSelect"
-            isSearchable
-            placeholder="Test Purpose"
-          />
-          <Select
-            className={styles.custom_input}
-            options={TestPlatformOptions}
-            value={testData.testPlatform}
-            onChange={(selectedOption) =>
-              setTestData({
-                ...testData,
-                testPlatform: selectedOption,
-              })
-            }
-            instanceId="test_platformSelect"
-            isSearchable
-            placeholder="Test Platform"
-          />
-          <Select
-            className={styles.custom_input}
-            options={OptionalLimitOptions}
-            value={testData.markingScheme}
-            onChange={(selectedOption) =>
-              setTestData({
-                ...testData,
-                markingScheme: selectedOption,
-              })
-            }
-            isSearchable
-            instanceId="marking_schemeSelect"
-            placeholder="Marking Scheme"
+            placeholder="Test Name"
+            {...register("name")}
           />
 
-          <Select
-            className={styles.custom_input}
+          <SelectField
+            control={control}
+            name_="type"
+            options={TestTypeOptions}
+            placeholder="Test Type"
+          />
+          <SelectField
+            control={control}
+            name_="format"
+            options={TestFormatOptions}
+            placeholder="Test Format"
+          />
+          <SelectField
+            control={control}
+            name_="purpose"
+            options={TestPurposeOptions}
+            placeholder="Test Purpose"
+          />
+          <SelectField
+            control={control}
+            name_="platform"
+            options={TestPlatformOptions}
+            placeholder="Test Platform"
+          />
+          <SelectField
+            control={control}
+            name_="markingScheme"
             options={MarkingSchemeOptions}
-            value={testData.optionalLimit}
-            onChange={(selectedOption) =>
-              setTestData({
-                ...testData,
-                optionalLimit: selectedOption,
-              })
-            }
-            isSearchable
-            instanceId="Optional_limitSelect"
+            placeholder="Test Purpose"
+          />
+          <SelectField
+            control={control}
+            name_="optionalLimit"
+            options={OptionalLimitOptions}
             placeholder="Optional Limit"
           />
-          <input className={styles.custom_input} placeholder="Test id" />
+
           <input
+            required
+            className={styles.custom_input}
+            placeholder="Test id"
+            {...register("id")}
+          />
+          <input
+            required
             className={styles.custom_input}
             placeholder="Test Session id"
+            {...register("sessionId")}
           />
           <input
+            required
             className={styles.custom_input}
             placeholder="Test Session Link"
+            {...register("sessionLink")}
           />
-          <input className={styles.custom_input} placeholder="CMS Test id" />
+          <input
+            required
+            className={styles.custom_input}
+            placeholder="CMS Test id"
+            {...register("cmsId")}
+          />
+
           <div className="w-full flex justify-between">
             <button
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"
@@ -144,8 +112,8 @@ export function TestDetails({ setActiveStep, setData }: ActiveFormProps) {
               Back
             </button>
             <button
+              type="submit"
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"
-              onClick={(e: MouseEvent<HTMLButtonElement>) => handleClick(e)}
             >
               Next
             </button>

@@ -6,20 +6,21 @@ interface OptionType {
 }
 
 interface ActiveFormProps {
+  data: RowType;
   setActiveStep: Dispatch<SetStateAction<string>>;
-  setData: Dispatch<SetStateAction<Object>>;
+  setData: Dispatch<SetStateAction<RowType>>;
   createSession?: () => void;
 }
 
 interface RowType {
-  studentData: {
-    [key: string]: OptionType | string | number | boolean | null;
+  student: {
+    [key: string]: string | number | boolean | null;
   };
-  testData: {
-    [key: string]: OptionType | string | number | boolean | null;
+  test: {
+    [key: string]: string | number | boolean | null;
   };
-  timelineData: {
-    [key: string]: OptionType | string | number | boolean | null;
+  timeline: {
+    [key: string]: string | number | boolean | null;
   };
 }
 

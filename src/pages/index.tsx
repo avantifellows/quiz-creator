@@ -1,4 +1,3 @@
-import Button from "@/components/Buttons/Button";
 import DataDisplay from "@/components/displayTable/DataDisplay";
 import { data } from "@/utils/data";
 // import { Inter } from "next/font/google";
@@ -6,7 +5,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 // const inter = Inter({ subsets: ["latin"] });
 
-// TODO: Will Fetch data from the server using axios
+// TODO: Fetch data from the server using axios
 
 export default function Home() {
   const router = useRouter();
@@ -21,10 +20,9 @@ export default function Home() {
 
       <nav className="flex justify-between m-2 p-5">
         <div className="bg-[#B52326] text-white text-[10px] px-2 md:px-3 rounded-lg md:text-lg">
-          <Button
-            text="+ Create Quiz Session"
-            onClick={() => router.push("/SessionCreator")}
-          />
+          <button onClick={() => router.push("/SessionCreator")}>
+            + Create Quiz Session
+          </button>
         </div>
 
         <input
