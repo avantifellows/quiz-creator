@@ -21,7 +21,7 @@ const TableRow = ({ row, index }: { row: RowType; index: number }) => {
         <td className="border p-2">{testTakers}</td>
         <td className="border p-2">{reportLink}</td>
         <td className="border p-2">{sessionLink}</td>
-        <td className="border p-2 flex gap-2">
+        <td className="border p-2 flex gap-2 justify-center">
           <Copy
             className="cursor-pointer"
             onClick={(e) => {
@@ -46,10 +46,10 @@ const TableRow = ({ row, index }: { row: RowType; index: number }) => {
         </td>
       </tr>
 
-      {/* Collabsable Container */}
+      {/* Collapsible Container */}
       {isExpand && (
         <tr className="bg-slate-100">
-          <div>Helllo world</div>
+          <td colSpan={9}>Helllo world</td>
         </tr>
       )}
     </>
