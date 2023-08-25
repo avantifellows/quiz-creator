@@ -26,21 +26,18 @@ const TableRow = ({ row, index }: { row: RowType; index: number }) => {
             className="cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              console.log("copy");
             }}
           />
           <Edit
             className="cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              console.log("edit");
             }}
           />
           <Trash2
             className="cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              console.log("delete");
             }}
           />
         </td>

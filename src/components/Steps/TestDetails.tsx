@@ -84,19 +84,16 @@ export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
             {...register("id")}
           />
           <input
-            required
             className={styles.custom_input}
             placeholder="Test Session id"
             {...register("sessionId")}
           />
           <input
-            required
             className={styles.custom_input}
             placeholder="Test Session Link"
             {...register("sessionLink")}
           />
           <input
-            required
             className={styles.custom_input}
             placeholder="CMS Test id"
             {...register("cmsId")}
