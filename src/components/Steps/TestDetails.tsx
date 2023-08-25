@@ -1,117 +1,116 @@
-import React, { useState } from "react";
 import styles from "../../styles/Home.module.css";
 
-import Select from "react-select";
+import { Step } from "@/pages/SessionCreator";
+import { MyForm } from "@/types/FormTypes";
+import { ActiveFormProps } from "@/types/types";
+import { SubmitHandler, useForm } from "react-hook-form";
 import {
   MarkingSchemeOptions,
+  OptionalLimitOptions,
   TestFormatOptions,
   TestPlatformOptions,
   TestPurposeOptions,
   TestTypeOptions,
-  OptionalLimitOptions,
 } from "../Options/TestDetailsOptions";
+import SelectField from "./Form/SelectedField";
 
 // Renders sub-page containing test details
 
-export default function TestDetails({ setActiveStep }) {
-  const [selectedTestType, setSelectedTestType] = useState(null);
-  const [selectedTestFormat, setSelectedTestFormat] = useState(null);
-  const [selectedTestPurpose, setSelectedTestPurpose] = useState(null);
-  const [selectedTestPlatform, setSelectedTestPlatform] = useState(null);
-  const [selectedMarkingScheme, setSelectedMarkingScheme] = useState(null);
-  const [selectedOptionalLimit, setSelectedOptionalLimit] = useState(null);
+export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
+  const { register, handleSubmit, control } = useForm<MyForm>({
+    defaultValues: { ...data.test },
+  });
+
+  const onSubmit: SubmitHandler<MyForm> = (test) => {
+    setData((prevData) => ({ ...prevData, test }));
+
+    setActiveStep(Step.TIMELINE);
+  };
   return (
     <>
       <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
-        <form action="" className="flex flex-col items-center m-[60px]">
-          <input className={styles.custom_input} placeholder="Test Name" />
-          <Select
+        <form
+          className="flex flex-col items-center m-[60px]"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <input
+            required
             className={styles.custom_input}
+            placeholder="Test Name"
+            {...register("name")}
+          />
+
+          <SelectField
+            control={control}
+            name_="type"
             options={TestTypeOptions}
-            value={selectedTestType}
-            onChange={(selectedOption) => setSelectedTestType(selectedOption)}
-            instanceId="test_typeSelect"
-            isSearchable
             placeholder="Test Type"
           />
-          <Select
-            className={styles.custom_input}
+          <SelectField
+            control={control}
+            name_="format"
             options={TestFormatOptions}
-            value={selectedTestFormat}
-            onChange={(selectedOption) => setSelectedTestFormat(selectedOption)}
-            instanceId="test_formatSelect"
-            isSearchable
             placeholder="Test Format"
           />
-          <Select
-            className={styles.custom_input}
+          <SelectField
+            control={control}
+            name_="purpose"
             options={TestPurposeOptions}
-            value={selectedTestPurpose}
-            onChange={(selectedOption) =>
-              setSelectedTestPurpose(selectedOption)
-            }
-            instanceId="test_purposeSelect"
-            isSearchable
             placeholder="Test Purpose"
           />
-          <Select
-            className={styles.custom_input}
+          <SelectField
+            control={control}
+            name_="platform"
             options={TestPlatformOptions}
-            value={selectedTestPlatform}
-            onChange={(selectedOption) =>
-              setSelectedTestPlatform(selectedOption)
-            }
-            instanceId="test_platformSelect"
-            isSearchable
             placeholder="Test Platform"
           />
-          <Select
-            className={styles.custom_input}
+          <SelectField
+            control={control}
+            name_="markingScheme"
+            options={MarkingSchemeOptions}
+            placeholder="Test Purpose"
+          />
+          <SelectField
+            control={control}
+            name_="optionalLimit"
             options={OptionalLimitOptions}
-            value={selectedOptionalLimit}
-            onChange={(selectedOption) =>
-              setSelectedOptionalLimit(selectedOption)
-            }
-            instanceId="Optional_limitSelect"
-            isSearchable
             placeholder="Optional Limit"
           />
 
-          <Select
+          <input
+            required
             className={styles.custom_input}
-            options={MarkingSchemeOptions}
-            value={selectedMarkingScheme}
-            onChange={(selectedOption) =>
-              setSelectedMarkingScheme(selectedOption)
-            }
-            instanceId="marking_schemeSelect"
-            isSearchable
-            placeholder="Marking Scheme"
+            placeholder="Test id"
+            {...register("id")}
           />
-          <input className={styles.custom_input} placeholder="Test id" />
           <input
             className={styles.custom_input}
             placeholder="Test Session id"
+            {...register("sessionId")}
           />
           <input
             className={styles.custom_input}
             placeholder="Test Session Link"
+            {...register("sessionLink")}
           />
-          <input className={styles.custom_input} placeholder="CMS Test id" />
+          <input
+            className={styles.custom_input}
+            placeholder="CMS Test id"
+            {...register("cmsId")}
+          />
+
           <div className="w-full flex justify-between">
             <button
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"
               onClick={() => {
-                setActiveStep("StudentDetails");
+                setActiveStep(Step.STUDENT_DETAILS);
               }}
             >
               Back
             </button>
             <button
+              type="submit"
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"
-              onClick={() => {
-                setActiveStep("Timeline");
-              }}
             >
               Next
             </button>

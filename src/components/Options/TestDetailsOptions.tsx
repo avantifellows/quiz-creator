@@ -1,7 +1,4 @@
-export type OptionType = {
-  value: string;
-  label: string;
-};
+import { OptionType } from "./StudentDetailsOptions";
 
 const TestTypeOptions: OptionType[] = [
   { value: "assessment", label: "Assessment" },
@@ -44,9 +41,9 @@ const OptionalLimitOptions: OptionType[] = [
 
 export {
   MarkingSchemeOptions,
-  TestFormatOptions,
-  TestPurposeOptions,
-  TestPlatformOptions,
-  TestTypeOptions,
   OptionalLimitOptions,
+  TestFormatOptions,
+  TestPlatformOptions,
+  TestPurposeOptions,
+  TestTypeOptions,
 };
