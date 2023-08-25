@@ -27,12 +27,9 @@ export default function SessionCreator() {
     test: {},
     timeline: {},
   });
-  console.log(data!);
 
   const createSession = () => {
-    console.log(data!);
     // TODO: POST DATA FUNCTION HERE
-
     // setTimeout(() => router.push('/'), 2000);
   };
 
