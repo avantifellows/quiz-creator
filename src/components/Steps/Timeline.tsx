@@ -8,6 +8,8 @@ import {
   SessionTypeOptions,
 } from "../Options/TimelineOptions";
 import SelectField from "./Form/SelectedField";
+import fs from "fs/promises";
+import { useRouter } from "next/router";
 
 export default function Timeline({
   data,
@@ -23,6 +25,22 @@ export default function Timeline({
     setData((prevData) => ({ ...prevData, timeline }));
     createSession!();
     reset();
+    saveDataToJSON(data);
+  };
+  const router = useRouter();
+  const saveDataToJSON = async (data) => {
+    try {
+      const existingData = await fs.readFile("./quizData.json", "utf-8");
+      const jsonData = JSON.parse(existingData);
+
+      jsonData.push(data);
+
+      await fs.writeFile("./utils/quizData.json", JSON.stringify(jsonData));
+
+      router.push("/");
+    } catch (error) {
+      console.error("Error saving data:", error);
+    }
   };
 
   return (

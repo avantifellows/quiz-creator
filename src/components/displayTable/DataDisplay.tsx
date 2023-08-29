@@ -1,7 +1,24 @@
 import { RowType } from "@/types/types";
 import TableRow from "./Row";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
-const DataDisplay = ({ data }: { data: RowType[] }) => {
+const DataDisplay = ({ data: propData }: { data: RowType[] }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("srcapi\fetchData.ts");
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div className="overflow-x-auto">
@@ -20,7 +37,7 @@ const DataDisplay = ({ data }: { data: RowType[] }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((row, i) => (
+            {propData.map((row, i) => (
               <TableRow row={row} index={i} key={i} />
             ))}
           </tbody>
