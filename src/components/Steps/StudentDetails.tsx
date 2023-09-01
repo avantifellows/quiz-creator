@@ -10,7 +10,7 @@ import {
   ProgramOptions,
   StreamOptions,
 } from "../Options/StudentDetailsOptions";
-import SelectField from "./Form/SelectedField";
+import SelectField from "./Form/SelectField";
 
 export default function StudentDetails({
   data,
@@ -45,6 +45,7 @@ export default function StudentDetails({
         <input
           className={styles.custom_input}
           required
+          type="number"
           {...register("testTakers")}
           placeholder="Test Taker Count"
         />

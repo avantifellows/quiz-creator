@@ -3,7 +3,7 @@ import StudentDetails from "@/components/Steps/StudentDetails";
 import { TestDetails } from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
 import { RowType } from "@/types/types";
-import { useRouter } from "next/router";
+import { postFormData } from "@/utils/api";
 
 import { useState } from "react";
 
@@ -20,7 +20,8 @@ const stepArr: string[] = [
 ];
 
 export default function SessionCreator() {
-  const router = useRouter();
+  // const router = useRouter();
+
   const [activeStep, setActiveStep] = useState<string>(Step.STUDENT_DETAILS);
   const [data, setData] = useState<RowType>({
     student: {},
@@ -28,8 +29,10 @@ export default function SessionCreator() {
     timeline: {},
   });
 
-  const createSession = () => {
-    // TODO: POST DATA FUNCTION HERE
+  const createSession = async () => {
+    // @ts-ignore
+    await postFormData(data);
+
     // setTimeout(() => router.push('/'), 2000);
   };
 
