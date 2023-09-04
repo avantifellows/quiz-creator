@@ -9,6 +9,7 @@ import {
   SessionTypeOptions,
 } from "../Options/TimelineOptions";
 import SelectField from "./Form/SelectField";
+import { useRouter } from "next/router";
 
 export default function Timeline({
   data,
@@ -16,6 +17,7 @@ export default function Timeline({
   setData,
   createSession,
 }: ActiveFormProps) {
+  const router = useRouter();
   const [shouldSubmit, setShouldSubmit] = useState(false);
   const { register, handleSubmit, control, reset } = useForm<MyForm>({
     defaultValues: { ...data.timeline },
@@ -28,7 +30,7 @@ export default function Timeline({
 
   const onSubmit: SubmitHandler<MyForm> = (timeline) => {
     setData((prevData) => ({ ...prevData, timeline }));
-
+    router.push("/");
     setShouldSubmit(true);
   };
 

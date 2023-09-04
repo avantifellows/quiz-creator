@@ -33,58 +33,6 @@
         "isEnabled": false,
         "sessionType": "infinite"
       }
-    },
-    {
-      "student": {
-        "testTakers": "1000",
-        "program": "Haryana Students",
-        "batch": "DL-12-Alpha-Eng-23",
-        "grade": "11",
-        "course": "Catalyst",
-        "stream": "Maths"
-      },
-      "test": {
-        "name": "Prakhar",
-        "type": "homework",
-        "format": "part_test",
-        "purpose": "endline",
-        "platform": "Quiz",
-        "markingScheme": "4,-1",
-        "optionalLimit": "na"
-      },
-      "timeline": {},
-      "id": 2
-    },
-    {
-      "student": {
-        "testTakers": "299",
-        "program": "Himachal Students",
-        "batch": "DL-12-Catalyst-Eng-23",
-        "grade": "11",
-        "course": "Catalyst",
-        "stream": "Maths"
-      },
-      "test": {
-        "name": "Prakhar",
-        "type": "assessment",
-        "format": "part_test",
-        "purpose": "endline",
-        "platform": "Quiz",
-        "markingScheme": "4,-1",
-        "optionalLimit": "na"
-      },
-      "timeline": {
-        "startDate": "2023-09-13",
-        "endDate": "2023-09-22",
-        "startTime": "04:36",
-        "endTime": "05:39",
-        "reportSchedule": "afa",
-        "reportLink": "afa",
-        "isEnabled": false,
-        "sessionType": "infinite",
-        "synced": true
-      },
-      "id": 3
     }
   ]
 }
