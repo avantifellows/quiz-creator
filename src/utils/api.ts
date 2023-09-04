@@ -1,9 +1,9 @@
 import { RowType } from "@/types/types";
-import { axios_ } from "./axios";
+import { instance } from "./axios";
 
 // get data from the db
 async function getData() {
-  const { data } = await axios_.get("/quiz");
+  const { data } = await instance.get("/quiz");
 
   return data;
 }
@@ -12,7 +12,7 @@ async function getData() {
 async function postFormData(formData: RowType) {
   console.log(formData);
 
-  const res = await axios_.post("/quiz", formData);
+  const res = await instance.post("/quiz", formData);
   console.log(res.data);
 
   return res;
