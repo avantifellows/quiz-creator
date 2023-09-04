@@ -64,10 +64,10 @@ const TableRow = ({ row, index }: { row: RowType; index: number }) => {
             <table style={{ width: "100%" }}>
               <tbody>
                 <tr>
-                  <td>Test_type: {type} </td>
+                  <td>Test_type: {type}</td>
                   <td>Test Takers Count: {testTakers}</td>
                   <td>date_created: {formattedDate}</td>
-                  <td>infinite_session: {sessionType} </td>
+                  <td>infinite_session: {sessionType}</td>
                 </tr>
                 <tr>
                   <td>test_format: {format}</td>

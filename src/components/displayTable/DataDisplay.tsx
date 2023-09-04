@@ -3,18 +3,21 @@ import { RowType } from "@/types/types";
 import TableRow from "./Row";
 import { getData } from "@/utils/api";
 
-const DataDisplay = () => {
+type DataDisplayProps = {
+  getData: () => Promise<RowType[]>;
+};
+
+const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
   const [data, setData] = useState<RowType[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getData();
+      const result = await getData(); // using the passed getData function
       setData(result);
     };
 
     fetchData();
-  }, []);
-
+  }, [getData]);
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div className="overflow-x-auto">
