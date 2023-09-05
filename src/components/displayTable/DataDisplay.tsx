@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RowType } from "@/types/types";
 import TableRow from "./Row";
-import { getData } from "@/utils/api";
+import { getData } from "@/utils/forminputhandling";
 
 type DataDisplayProps = {
   getData: () => Promise<RowType[]>;

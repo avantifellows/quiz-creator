@@ -1,6 +1,5 @@
 import DataDisplay from "@/components/displayTable/DataDisplay";
-import { getData } from "@/utils/api";
-import { get } from "http";
+import { getData } from "@/utils/forminputhandling";
 // import { Inter } from "next/font/google";
 import Head from "next/head";
 import { useRouter } from "next/router";

@@ -1,5 +1,5 @@
 import { RowType } from "@/types/types";
-import { instance } from "./axios";
+import { instance } from "./rootclient";
 
 // get data from the db
 async function getData() {
