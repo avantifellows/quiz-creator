@@ -9,14 +9,17 @@
     "build-staging": "cross-env NODE_ENV=staging next build",
     "start:staging": "cross-env NODE_ENV=staging next start",
     "lint": "next lint",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "db": "json-server --watch db.json --port 3001"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "@types/react-select": "^5.0.1",
+    "axios": "^1.5.0",
     "cross-env": "^7.0.3",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
+    "json-server": "^0.17.3",
     "next": "13.4.9",
     "pre-commit": "^1.2.2",
     "react": "18.2.0",

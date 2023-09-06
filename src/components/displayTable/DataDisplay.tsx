@@ -1,11 +1,27 @@
+import React, { useState, useEffect } from "react";
 import { RowType } from "@/types/types";
 import TableRow from "./Row";
+import { getData } from "@/utils/forminputhandling";
 
-const DataDisplay = ({ data }: { data: RowType[] }) => {
+type DataDisplayProps = {
+  getData: () => Promise<RowType[]>;
+};
+
+const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
+  const [data, setData] = useState<RowType[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getData(); // using the passed getData function
+      setData(result);
+    };
+
+    fetchData();
+  }, [getData]);
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div className="overflow-x-auto">
-        <table className="min-w-full border text-cente">
+        <table className="min-w-full border text-center">
           <thead className="">
             <tr>
               <th className="border p-2">S.No</th>

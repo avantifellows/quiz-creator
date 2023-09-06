@@ -1,13 +1,15 @@
 import { Step } from "@/pages/SessionCreator";
 import { MyForm } from "@/types/FormTypes";
 import { ActiveFormProps } from "@/types/types";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
   HasSyncedOptions,
   IsEnabledOptions,
   SessionTypeOptions,
 } from "../Options/TimelineOptions";
-import SelectField from "./Form/SelectedField";
+import SelectField from "./Form/SelectField";
+import { useRouter } from "next/router";
 
 export default function Timeline({
   data,
@@ -15,14 +17,21 @@ export default function Timeline({
   setData,
   createSession,
 }: ActiveFormProps) {
+  const router = useRouter();
+  const [shouldSubmit, setShouldSubmit] = useState(false);
   const { register, handleSubmit, control, reset } = useForm<MyForm>({
     defaultValues: { ...data.timeline },
   });
 
+  useEffect(() => {
+    shouldSubmit && createSession!();
+    reset();
+  }, [shouldSubmit, data]);
+
   const onSubmit: SubmitHandler<MyForm> = (timeline) => {
     setData((prevData) => ({ ...prevData, timeline }));
-    createSession!();
-    reset();
+    router.push("/");
+    setShouldSubmit(true);
   };
 
   return (
@@ -51,7 +60,6 @@ export default function Timeline({
             />
           </div>
         </div>
-
         <div className="flex sm:mb-5 sm:space-x-5 space-x-1 mt-3 flex-col md:flex-row space-y-3 sm:space-y-0">
           <p className="text-xs sm:text-sm">Start Time</p>
           <input
@@ -70,7 +78,6 @@ export default function Timeline({
             {...register("endTime")}
           />
         </div>
-
         <SelectField
           control={control}
           name_="isEnabled"
@@ -86,6 +93,9 @@ export default function Timeline({
           name_="synced"
           options={HasSyncedOptions}
         />
+        {/*
+        // TODO: same as test details render acc to need
+         */}
         <input
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
           placeholder="Report Schedule"
@@ -98,7 +108,6 @@ export default function Timeline({
           required
           {...register("reportLink")}
         />
-
         <div className="w-full flex justify-between">
           <button
             className="rounded-lg sm:w-44 w-10 text-xs h-8 bg-[#B52326] text-white sm:h-11 mt-10"

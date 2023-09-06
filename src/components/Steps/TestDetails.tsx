@@ -12,7 +12,7 @@ import {
   TestPurposeOptions,
   TestTypeOptions,
 } from "../Options/TestDetailsOptions";
-import SelectField from "./Form/SelectedField";
+import SelectField from "./Form/SelectField";
 
 // Renders sub-page containing test details
 
@@ -39,7 +39,6 @@ export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
             placeholder="Test Name"
             {...register("name")}
           />
-
           <SelectField
             control={control}
             name_="type"
@@ -76,29 +75,37 @@ export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
             options={OptionalLimitOptions}
             placeholder="Optional Limit"
           />
-
-          <input
-            required
-            className={styles.custom_input}
-            placeholder="Test id"
-            {...register("id")}
-          />
-          <input
-            className={styles.custom_input}
-            placeholder="Test Session id"
-            {...register("sessionId")}
-          />
-          <input
-            className={styles.custom_input}
-            placeholder="Test Session Link"
-            {...register("sessionLink")}
-          />
-          <input
-            className={styles.custom_input}
-            placeholder="CMS Test id"
-            {...register("cmsId")}
-          />
-
+          {/* TODO: ADD more conditions realated to generated data */}
+          {data.test.id ? (
+            <>
+              <input
+                required
+                className={styles.custom_input}
+                placeholder="Test id"
+                {...register("id")}
+              />
+              <input
+                required
+                className={styles.custom_input}
+                placeholder="Test Session id"
+                {...register("sessionId")}
+              />
+              <input
+                required
+                className={styles.custom_input}
+                placeholder="Test Session Link"
+                {...register("sessionLink")}
+              />
+              <input
+                required
+                className={styles.custom_input}
+                placeholder="CMS Test id"
+                {...register("cmsId")}
+              />
+            </>
+          ) : (
+            <></>
+          )}
           <div className="w-full flex justify-between">
             <button
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"

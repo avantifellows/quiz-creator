@@ -1,5 +1,5 @@
 import DataDisplay from "@/components/displayTable/DataDisplay";
-import { data } from "@/utils/data";
+import { getData } from "@/utils/forminputhandling";
 // import { Inter } from "next/font/google";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -32,7 +32,7 @@ export default function Home() {
         />
       </nav>
 
-      <DataDisplay data={data} />
+      <DataDisplay getData={getData} />
     </>
   );
 }

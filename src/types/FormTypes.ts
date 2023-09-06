@@ -37,4 +37,4 @@ type TimelineForm = {
 type MyForm = StudentForm | TestForm | TimelineForm;
 type MyFormKey = keyof StudentForm | keyof TestForm | keyof TimelineForm;
 
-export type { MyForm, MyFormKey };
+export type { MyForm, MyFormKey, StudentForm, TestForm, TimelineForm };
