@@ -9,15 +9,15 @@ import {
   SessionTypeOptions,
 } from "../Options/TimelineOptions";
 import SelectField from "./Form/SelectField";
-import { useRouter } from "next/router";
+import { Success } from "../Modal/Success";
 
 export default function Timeline({
   data,
   setActiveStep,
   setData,
   createSession,
+  isSessionAdded,
 }: ActiveFormProps) {
-  const router = useRouter();
   const [shouldSubmit, setShouldSubmit] = useState(false);
   const { register, handleSubmit, control, reset } = useForm<MyForm>({
     defaultValues: { ...data.timeline },
@@ -30,12 +30,12 @@ export default function Timeline({
 
   const onSubmit: SubmitHandler<MyForm> = (timeline) => {
     setData((prevData) => ({ ...prevData, timeline }));
-    router.push("/");
+
     setShouldSubmit(true);
   };
 
   return (
-    <div className="bg-white rounded-2 border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
+    <div className="bg-white rounded-2  border border-solid border-[#B52326] sm:m-10 m-5 rounded-lg">
       <form
         className="flex flex-col items-center m-[60px]"
         onSubmit={handleSubmit(onSubmit)}
@@ -125,6 +125,7 @@ export default function Timeline({
           </button>
         </div>
       </form>
+      <Success show={isSessionAdded} />
     </div>
   );
 }

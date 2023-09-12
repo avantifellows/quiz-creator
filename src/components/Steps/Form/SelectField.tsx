@@ -23,6 +23,7 @@ const SelectField = ({
       render={({ field: { onChange, value, ref } }) => (
         <Select
           required
+          isSearchable={false}
           placeholder={
             placeholder ? placeholder : (name_ as string).toUpperCase()
           }

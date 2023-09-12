@@ -10,9 +10,11 @@ interface ActiveFormProps {
   setActiveStep: Dispatch<SetStateAction<string>>;
   setData: Dispatch<SetStateAction<RowType>>;
   createSession?: () => void;
+  isSessionAdded: boolean;
 }
 
 interface RowType {
+  dateCreated?: string;
   student: {
     [key: string]: string | number | boolean | null;
   };
