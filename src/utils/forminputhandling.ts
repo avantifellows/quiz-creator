@@ -2,9 +2,8 @@ import { RowType } from "@/types/types";
 import { instance } from "./rootclient";
 
 // get data from the db
-async function getData() {
-  const { data } = await instance.get("/quiz");
-
+async function getData(page = 1, limit = 5) {
+  const { data } = await instance.get(`/quiz?_page=${page}&_limit=${limit}`);
   return data;
 }
 
@@ -21,13 +20,3 @@ async function postFormData(formData: RowType) {
 }
 
 export { getData, postFormData };
-
-// import { SessionData } from "../types/FormTypes"; // Adjust the import based on where your types are defined
-// import { instance } from "./rootclient";
-
-// async function getData(): Promise<SessionData[]> {
-//   const { data } = await instance.get("/session"); // Assuming the endpoint is `/session` to get all sessions
-//   return data;
-// }
-
-// export { getData };

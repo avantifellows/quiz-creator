@@ -2,8 +2,9 @@
   "quiz": [
     {
       "id": 1,
+      "dateCreated": "8/7/2023",
       "student": {
-        "testTakers": "csdchsdcn",
+        "testTakers": "1500",
         "program": "Himachal Students",
         "batch": "DL-12-Alpha-Eng-23",
         "grade": "9",
@@ -11,7 +12,7 @@
         "stream": "Medical"
       },
       "test": {
-        "name": "cdsjcnjsnc",
+        "name": "Physics Rotational",
         "id": "1",
         "sessionId": "cdsc",
         "sessionLink": "cdscdsc",
@@ -36,188 +37,194 @@
     },
     {
       "student": {
-        "testTakers": "54654",
-        "program": "Haryana Students",
-        "batch": "DL-12-Photon-Eng-23",
-        "grade": "10",
-        "course": "Catalyst",
+        "testTakers": "1000",
+        "program": "Himachal Students",
+        "batch": "DL-12-Catalyst-Eng-23",
+        "grade": "9",
+        "course": "Certification",
         "stream": "Maths"
       },
       "test": {
-        "name": "sfaa",
+        "name": "Organic Chemistry",
         "type": "assessment",
         "format": "major_test",
-        "purpose": "endline",
+        "purpose": "baseline",
         "platform": "Quiz",
-        "markingScheme": "4,-1",
+        "markingScheme": "1,0",
         "optionalLimit": "na"
       },
       "timeline": {
-        "startDate": "2023-09-19",
-        "endDate": "2023-09-17",
-        "startTime": "15:35",
-        "endTime": "16:35",
-        "reportSchedule": "lgkhk",
-        "reportLink": "a",
+        "startDate": "2023-09-11",
+        "endDate": "2023-09-09",
+        "startTime": "14:04",
+        "endTime": "16:04",
+        "reportSchedule": "sample",
+        "reportLink": "tobeGenerated",
         "isEnabled": true,
         "sessionType": "infinite",
-        "synced": false
+        "synced": true
       },
+      "dateCreated": "9/7/2023",
       "id": 2
     },
     {
       "student": {
-        "testTakers": "54654",
-        "program": "Delhi Students",
-        "batch": "DL-12-Alpha-med-23",
+        "testTakers": "700",
+        "program": "Himachal Students",
+        "batch": "DL-12-Catalyst-Eng-23",
         "grade": "9",
-        "course": "Hiring",
-        "stream": "Medical"
+        "course": "Certification",
+        "stream": "Science"
       },
       "test": {
-        "name": "Prakhar Bansal Resume",
-        "type": "homework",
-        "format": "major_test",
-        "purpose": "monthly_test",
+        "name": "Biology",
+        "type": "assessment",
+        "format": "part_test",
+        "purpose": "endline",
         "platform": "Quiz",
-        "markingScheme": "4,-1",
+        "markingScheme": "1,0",
         "optionalLimit": "neet"
       },
       "timeline": {
-        "startDate": "2023-09-18",
-        "endDate": "2023-09-20",
-        "startTime": "14:54",
-        "endTime": "17:54",
-        "reportSchedule": "dad",
-        "reportLink": "halhala",
+        "startDate": "2023-09-19",
+        "endDate": "2023-09-24",
+        "startTime": "18:52",
+        "endTime": "21:52",
+        "reportSchedule": "To be generated",
+        "reportLink": "Sample link",
         "isEnabled": false,
         "sessionType": "infinite",
-        "synced": true
+        "synced": false
       },
+      "dateCreated": "9/7/2023",
       "id": 3
     },
     {
       "student": {
         "testTakers": "1000",
         "program": "Haryana Students",
-        "batch": "DL-12-Photon-Eng-23",
+        "batch": "DL-12-Alpha-med-23",
         "grade": "9",
-        "course": "Hiring",
+        "course": "Catalyst",
         "stream": "Maths"
       },
       "test": {
-        "name": "faf",
-        "type": "homework",
+        "name": "canem",
+        "type": "assessment",
         "format": "part_test",
-        "purpose": "endline",
+        "purpose": "weekly_test",
         "platform": "Quiz",
         "markingScheme": "4,-1",
         "optionalLimit": "na"
       },
       "timeline": {
-        "startDate": "2023-09-06",
-        "endDate": "2023-09-23",
-        "startTime": "15:03",
-        "endTime": "18:03",
-        "reportSchedule": "ljalfa",
-        "reportLink": "add",
+        "startDate": "2023-10-04",
+        "endDate": "2023-10-07",
+        "startTime": "12:00",
+        "endTime": "10:02",
+        "reportSchedule": "lgkhk",
+        "reportLink": "faass",
         "isEnabled": true,
         "sessionType": "infinite",
         "synced": true
       },
+      "dateCreated": "10/3/2023",
       "id": 4
     },
     {
       "student": {
-        "testTakers": "1500",
-        "program": "Delhi Students",
-        "batch": "DL-12-Alpha-med-23",
-        "grade": "11",
-        "course": "Certification",
-        "stream": "Physics"
-      },
-      "test": {
-        "name": "canem",
-        "type": "omr_assessment",
-        "format": "evaluation_test",
-        "purpose": "reshuffling_test",
-        "platform": "Quiz",
-        "markingScheme": "1,0",
-        "optionalLimit": "jee"
-      },
-      "timeline": {
-        "startDate": "2023-09-25",
-        "endDate": "2023-09-30",
-        "startTime": "17:38",
-        "endTime": "19:38",
-        "reportSchedule": "afa",
-        "reportLink": "ss",
-        "isEnabled": false,
-        "sessionType": "standard",
-        "synced": false
-      },
-      "id": 5
-    },
-    {
-      "student": {
-        "testTakers": "54654",
+        "testTakers": "1000",
         "program": "Haryana Students",
-        "batch": "DL-12-Alpha-Eng-23",
-        "grade": "10",
-        "course": "NEET",
-        "stream": "Medical"
-      },
-      "test": {
-        "name": "sfaa",
-        "type": "assessment",
-        "format": "major_test",
-        "purpose": "weekly_test",
-        "platform": "Quiz",
-        "markingScheme": "1,0",
-        "optionalLimit": "na"
-      },
-      "timeline": {
-        "startDate": "2023-09-19",
-        "endDate": "2023-09-23",
-        "startTime": "16:14",
-        "endTime": "19:14",
-        "reportSchedule": "FFFF",
-        "reportLink": "FFFFH",
-        "isEnabled": false,
-        "sessionType": "infinite",
-        "synced": true
-      },
-      "id": 6
-    },
-    {
-      "student": {
-        "testTakers": "8989",
-        "program": "Himachal Students",
-        "batch": "DL-12-Photon-Eng-23",
-        "grade": "10",
+        "batch": "DL-12-Alpha-med-23",
+        "grade": "9",
         "course": "Catalyst",
         "stream": "Maths"
       },
       "test": {
-        "name": "foo",
-        "type": "homework",
-        "format": "major_test",
-        "purpose": "endline",
+        "name": "canem",
+        "type": "assessment",
+        "format": "part_test",
+        "purpose": "weekly_test",
         "platform": "Quiz",
-        "markingScheme": "1,0",
-        "optionalLimit": "neet"
+        "markingScheme": "4,-1",
+        "optionalLimit": "na"
       },
       "timeline": {
-        "startDate": "2023-09-11",
-        "endDate": "2023-09-15",
-        "startTime": "17:24",
-        "endTime": "19:24",
-        "reportSchedule": "Hello",
-        "reportLink": "hellosa",
+        "startDate": "2023-10-04",
+        "endDate": "2023-10-07",
+        "startTime": "12:00",
+        "endTime": "10:02",
+        "reportSchedule": "lgkhk",
+        "reportLink": "faass",
         "isEnabled": true,
-        "sessionType": "standard",
+        "sessionType": "infinite",
         "synced": true
       },
+      "dateCreated": "10/3/2023",
+      "id": 5
+    },
+    {
+      "student": {
+        "testTakers": "1000",
+        "program": "Haryana Students",
+        "batch": "DL-12-Alpha-med-23",
+        "grade": "9",
+        "course": "Catalyst",
+        "stream": "Maths"
+      },
+      "test": {
+        "name": "canem",
+        "type": "assessment",
+        "format": "part_test",
+        "purpose": "weekly_test",
+        "platform": "Quiz",
+        "markingScheme": "4,-1",
+        "optionalLimit": "na"
+      },
+      "timeline": {
+        "startDate": "2023-10-04",
+        "endDate": "2023-10-07",
+        "startTime": "12:00",
+        "endTime": "10:02",
+        "reportSchedule": "lgkhk",
+        "reportLink": "faass",
+        "isEnabled": true,
+        "sessionType": "infinite",
+        "synced": true
+      },
+      "dateCreated": "10/3/2023",
+      "id": 6
+    },
+    {
+      "student": {
+        "testTakers": "1000",
+        "program": "Haryana Students",
+        "batch": "DL-12-Alpha-med-23",
+        "grade": "9",
+        "course": "Catalyst",
+        "stream": "Maths"
+      },
+      "test": {
+        "name": "canem",
+        "type": "assessment",
+        "format": "part_test",
+        "purpose": "weekly_test",
+        "platform": "Quiz",
+        "markingScheme": "4,-1",
+        "optionalLimit": "na"
+      },
+      "timeline": {
+        "startDate": "2023-10-04",
+        "endDate": "2023-10-07",
+        "startTime": "12:00",
+        "endTime": "10:02",
+        "reportSchedule": "lgkhk",
+        "reportLink": "faass",
+        "isEnabled": true,
+        "sessionType": "infinite",
+        "synced": true
+      },
+      "dateCreated": "10/3/2023",
       "id": 7
     }
   ]
