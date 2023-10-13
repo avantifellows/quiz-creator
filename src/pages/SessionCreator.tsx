@@ -2,7 +2,6 @@ import Stepper from "@/components/Stepper";
 import StudentDetails from "@/components/Steps/StudentDetails";
 import { TestDetails } from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
-// import { SessionData } from "@/types/FormTypes";
 import { RowType } from "@/types/types";
 import { postFormData } from "@/utils/forminputhandling";
 import { useRouter } from "next/router";
