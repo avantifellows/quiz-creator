@@ -4,7 +4,7 @@ import { TestDetails } from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
 // import { SessionData } from "@/types/FormTypes";
 import { RowType } from "@/types/types";
-import { postFormData } from "@/utils/forminputhandling";
+import { postFormData } from "@/utils/FormInputHandling";
 import { useRouter } from "next/router";
 
 import { useState } from "react";
