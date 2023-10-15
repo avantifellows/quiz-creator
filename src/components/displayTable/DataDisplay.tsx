@@ -5,6 +5,7 @@ import { getData } from "@/utils/FormInputHandling";
 import ReactPaginate from "react-paginate";
 import { instance } from "@/utils/RootClient";
 
+
 type DataDisplayProps = {
   getData: () => Promise<RowType[]>;
 };
