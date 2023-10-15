@@ -1,9 +1,8 @@
 import DataDisplay from "@/components/displayTable/DataDisplay";
-import { getData } from "@/utils/forminputhandling";
-// import { Inter } from "next/font/google";
+import { getData } from "@/utils/FormInputHandling";
+
 import Head from "next/head";
 import { useRouter } from "next/router";
-// const inter = Inter({ subsets: ["latin"] });
 
 // TODO: Fetch data from the server using axios
 

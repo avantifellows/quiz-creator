@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { RowType } from "@/types/types";
 import TableRow from "./Row";
-import { getData } from "@/utils/forminputhandling";
+import { getData } from "@/utils/FormInputHandling";
 import ReactPaginate from "react-paginate";
-import { instance } from "@/utils/rootclient";
+import { instance } from "@/utils/RootClient";
 
 type DataDisplayProps = {
   getData: () => Promise<RowType[]>;
@@ -44,9 +44,12 @@ const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((row, i) => (
-              <TableRow row={row} index={i} key={i} />
-            ))}
+            {data
+              .slice()
+              .reverse()
+              .map((row, i) => (
+                <TableRow row={row} index={i} key={i} />
+              ))}
           </tbody>
         </table>
         <ReactPaginate

@@ -1,5 +1,5 @@
 import { RowType } from "@/types/types";
-import { instance } from "./rootclient";
+import { instance } from "./RootClient";
 
 // get data from the db
 async function getData(page = 1, limit = 5) {
