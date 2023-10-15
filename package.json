@@ -26,6 +26,7 @@
     "react-dom": "18.2.0",
     "react-feather": "^2.0.10",
     "react-hook-form": "^7.45.4",
+    "react-paginate": "^8.2.0",
     "react-select": "^5.7.4",
     "typescript": "^5.1.6"
   },

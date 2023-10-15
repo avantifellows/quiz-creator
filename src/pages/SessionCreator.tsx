@@ -2,7 +2,6 @@ import Stepper from "@/components/Stepper";
 import StudentDetails from "@/components/Steps/StudentDetails";
 import { TestDetails } from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
-// import { SessionData } from "@/types/FormTypes";
 import { RowType } from "@/types/types";
 import { postFormData } from "@/utils/FormInputHandling";
 import { useRouter } from "next/router";
@@ -39,7 +38,7 @@ export default function SessionCreator() {
     setTimeout(() => {
       router.push("/");
       setIsSessionAdded(false);
-    }, 5000);
+    }, 2000);
   };
 
   const activeForm = () => {
