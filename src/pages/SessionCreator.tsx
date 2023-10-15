@@ -3,7 +3,8 @@ import StudentDetails from "@/components/Steps/StudentDetails";
 import { TestDetails } from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
 import { RowType } from "@/types/types";
-import { postFormData } from "@/utils/forminputhandling";
+import { postFormData } from "@/utils/FormInputHandling";
+import { useRouter } from "next/router";
 
 import { useState } from "react";
 
@@ -20,7 +21,8 @@ const stepArr: string[] = [
 ];
 
 export default function SessionCreator() {
-  // const router = useRouter();
+  const router = useRouter();
+  const [isSessionAdded, setIsSessionAdded] = useState(false);
 
   const [activeStep, setActiveStep] = useState<string>(Step.STUDENT_DETAILS);
   const [data, setData] = useState<RowType>({
@@ -30,10 +32,13 @@ export default function SessionCreator() {
   });
 
   const createSession = async () => {
-    // @ts-ignore
     await postFormData(data);
+    setIsSessionAdded(true);
 
-    // setTimeout(() => router.push('/'), 2000);
+    setTimeout(() => {
+      router.push("/");
+      setIsSessionAdded(false);
+    }, 2000);
   };
 
   const activeForm = () => {
@@ -43,6 +48,7 @@ export default function SessionCreator() {
           data={data}
           setActiveStep={setActiveStep}
           setData={setData}
+          isSessionAdded={isSessionAdded}
         />
       );
     } else if (activeStep === Step.TEST_DETAILS) {
@@ -51,6 +57,7 @@ export default function SessionCreator() {
           data={data}
           setActiveStep={setActiveStep}
           setData={setData}
+          isSessionAdded={isSessionAdded}
         />
       );
     } else {
@@ -60,6 +67,7 @@ export default function SessionCreator() {
           setActiveStep={setActiveStep}
           setData={setData}
           createSession={createSession}
+          isSessionAdded={isSessionAdded}
         />
       );
     }

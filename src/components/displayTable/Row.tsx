@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Copy, Edit, Trash2 } from "react-feather";
+import NextLink from "next/link";
+import { Copy, Edit, Link, Trash2 } from "react-feather";
 import { RowType } from "@/types/types";
 
 const TableRow = ({ row, index }: { row: RowType; index: number }) => {
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const {
+    dateCreated,
     student: { batch, testTakers },
     test: { name, sessionLink, type, format, purpose, optionalLimit },
     timeline: {
@@ -19,8 +21,7 @@ const TableRow = ({ row, index }: { row: RowType; index: number }) => {
       isEnabled,
     },
   } = row!;
-  const currentDate = new Date();
-  const formattedDate = currentDate.toLocaleDateString();
+
   return (
     <>
       <tr className="border text-center" onClick={() => setIsExpand(!isExpand)}>
@@ -30,8 +31,20 @@ const TableRow = ({ row, index }: { row: RowType; index: number }) => {
         <td className="border p-2">{startDate}</td>
         <td className="border p-2">{endDate}</td>
         <td className="border p-2">{testTakers}</td>
-        <td className="border p-2">{reportLink}</td>
-        <td className="border p-2">{sessionLink}</td>
+        <td className="border p-2">
+          {typeof reportLink === "string" && (
+            <NextLink href={reportLink}>
+              <Link className="mx-auto" />
+            </NextLink>
+          )}
+        </td>
+        <td className="border p-2">
+          {typeof sessionLink === "string" && (
+            <NextLink href={sessionLink}>
+              <Link className="mx-auto" />
+            </NextLink>
+          )}
+        </td>
         <td className="border p-2 flex gap-2 justify-center">
           <Copy
             className="cursor-pointer"
@@ -63,18 +76,18 @@ const TableRow = ({ row, index }: { row: RowType; index: number }) => {
                 <tr>
                   <td>Test_type: {type}</td>
                   <td>Test Takers Count: {testTakers}</td>
-                  <td>date_created: {formattedDate}</td>
+                  <td>date_created: {dateCreated}</td>
                   <td>infinite_session: {sessionType}</td>
                 </tr>
                 <tr>
                   <td>test_format: {format}</td>
                   <td>optinal_limit: {optionalLimit}</td>
                   <td>start_time: {startTime}</td>
-                  <td>has_synced: {synced}</td>
+                  <td>has_synced: {synced?.toString()}</td>
                 </tr>
                 <tr>
                   <td>test_purpose: {purpose}</td>
-                  <td>is_enabled: {isEnabled}</td>
+                  <td>is_enabled: {isEnabled?.toString()}</td>
                   <td>end_time: {endTime}</td>
                   <td>repeat_schedule: {reportSchedule}</td>
                 </tr>
