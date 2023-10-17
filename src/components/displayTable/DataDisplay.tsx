@@ -4,29 +4,25 @@ import TableRow from "./Row";
 import { getData } from "@/utils/FormInputHandling";
 import ReactPaginate from "react-paginate";
 import { instance } from "@/utils/RootClient";
-
+import { Welcome3 } from "@/types/ResponseTypes";
 
 type DataDisplayProps = {
-  getData: () => Promise<RowType[]>;
+  getData: (currentPage: number, itemsPerPage: number) => Promise<Welcome3[]>;
 };
 
 const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
-  const [data, setData] = useState<RowType[]>([]);
+  const [data, setData] = useState<Welcome3[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await instance.get(
-        `/quiz?_page=${currentPage + 1}&_limit=${itemsPerPage}`
-      );
-      setData(response.data);
-      const total = parseInt(response.headers["x-total-count"], 10);
-      setTotalItems(total);
-    };
-    fetchData();
-  }, [currentPage, getData]);
+    (async () => {
+      const res = await getData(currentPage, itemsPerPage);
+      setData(res);
+    })();
+  }, [currentPage]);
+
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div className="overflow-x-auto">
@@ -61,7 +57,9 @@ const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
           pageCount={Math.ceil(totalItems / itemsPerPage)}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          onPageChange={({ selected }) => setCurrentPage(selected)}
+          onPageChange={({ selected }) =>
+            setCurrentPage(selected * itemsPerPage)
+          }
           containerClassName={
             "pagination flex flex-wrap justify-center items-center my-4"
           }

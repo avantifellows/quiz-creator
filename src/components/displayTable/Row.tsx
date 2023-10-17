@@ -2,25 +2,39 @@ import React, { useState } from "react";
 import NextLink from "next/link";
 import { Copy, Edit, Link, Trash2 } from "react-feather";
 import { RowType } from "@/types/types";
+import { Welcome3 } from "@/types/ResponseTypes";
 
-const TableRow = ({ row, index }: { row: RowType; index: number }) => {
+const TableRow = ({ row, index }: { row: Welcome3; index: number }) => {
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const {
-    dateCreated,
-    student: { batch, testTakers },
-    test: { name, sessionLink, type, format, purpose, optionalLimit },
-    timeline: {
-      reportLink,
-      startDate,
-      endDate,
-      sessionType,
-      reportSchedule,
-      endTime,
-      startTime,
-      synced,
-      isEnabled,
-    },
+    meta_data,
+    start_time,
+    end_time,
+    repeat_schedule: reportSchedule,
+    name,
   } = row!;
+
+  const {
+    batch,
+
+    date_created: dateCreated,
+    test_format: format,
+    test_purpose: purpose,
+    optional_limits: optionalLimit,
+    test_type: type,
+    test_takers_count: testTakers,
+    report_link: reportLink,
+    infinite_session: sessionType,
+    has_synced_to_bq: synced,
+    enabled: isEnabled,
+  } = meta_data || {};
+
+  const startDate = new Date(start_time!).toLocaleDateString();
+
+  const endDate = new Date(end_time!).toLocaleDateString();
+
+  const startTime = new Date(start_time!).toLocaleTimeString();
+  const endTime = new Date(end_time!).toLocaleTimeString();
 
   return (
     <>
@@ -39,11 +53,11 @@ const TableRow = ({ row, index }: { row: RowType; index: number }) => {
           )}
         </td>
         <td className="border p-2">
-          {typeof sessionLink === "string" && (
+          {/* {typeof sessionLink === "string" && (
             <NextLink href={sessionLink}>
               <Link className="mx-auto" />
             </NextLink>
-          )}
+          )} */}
         </td>
         <td className="border p-2 flex gap-2 justify-center">
           <Copy
@@ -89,7 +103,7 @@ const TableRow = ({ row, index }: { row: RowType; index: number }) => {
                   <td>test_purpose: {purpose}</td>
                   <td>is_enabled: {isEnabled?.toString()}</td>
                   <td>end_time: {endTime}</td>
-                  <td>repeat_schedule: {reportSchedule}</td>
+                  <td>repeat_schedule: {reportSchedule?.type}</td>
                 </tr>
               </tbody>
             </table>

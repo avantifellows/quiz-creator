@@ -2,8 +2,10 @@ import { RowType } from "@/types/types";
 import { instance } from "./RootClient";
 
 // get data from the db
-async function getData(page = 1, limit = 5) {
-  const { data } = await instance.get(`/quiz?_page=${page}&_limit=${limit}`);
+async function getData(page: number, limit: number) {
+  const { data } = await instance.get(
+    `api/session?session_id_is_null=true&offset=${page}&limit=${limit}`
+  );
   return data;
 }
 
