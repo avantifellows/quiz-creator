@@ -2,9 +2,10 @@ import { RowType } from "@/types/types";
 import { instance } from "./RootClient";
 
 // get data from the db
-async function getData(page: number, limit: number) {
+async function getData(lastId: number, limit: number) {
+  const offsetParam = lastId ? `&offset_id=${lastId}` : " ";
   const { data } = await instance.get(
-    `api/session?session_id_is_null=true&offset=${page}&limit=${limit}`
+    `api/session?session_id_is_null=true${offsetParam}&limit=${limit}`
   );
   return data;
 }

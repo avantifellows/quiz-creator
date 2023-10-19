@@ -4,24 +4,27 @@ import TableRow from "./Row";
 import { getData } from "@/utils/FormInputHandling";
 import ReactPaginate from "react-paginate";
 import { instance } from "@/utils/RootClient";
-import { Welcome3 } from "@/types/ResponseTypes";
+import { DbTypes } from "@/types/ResponseTypes";
 
 type DataDisplayProps = {
-  getData: (currentPage: number, itemsPerPage: number) => Promise<Welcome3[]>;
+  getData: (currentPage: number, itemsPerPage: number) => Promise<DbTypes[]>;
 };
 
 const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
-  const [data, setData] = useState<Welcome3[]>([]);
+  const [data, setData] = useState<DbTypes[]>([]);
   const [totalItems, setTotalItems] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [lastId, setLastId] = useState(0);
   const itemsPerPage = 5;
 
   useEffect(() => {
     (async () => {
-      const res = await getData(currentPage, itemsPerPage);
+      const res = await getData(lastId, itemsPerPage);
       setData(res);
+      if (res.length) {
+        setLastId(res[res.length - 1].id);
+      }
     })();
-  }, [currentPage]);
+  }, [lastId]);
 
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -57,9 +60,12 @@ const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
           pageCount={Math.ceil(totalItems / itemsPerPage)}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          onPageChange={({ selected }) =>
-            setCurrentPage(selected * itemsPerPage)
-          }
+          onPageChange={({ selected }) => {
+            const newLastId = data[selected * itemsPerPage - 1]?.id;
+            if (newLastId) {
+              setLastId(newLastId);
+            }
+          }}
           containerClassName={
             "pagination flex flex-wrap justify-center items-center my-4"
           }

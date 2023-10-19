@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import NextLink from "next/link";
 import { Copy, Edit, Link, Trash2 } from "react-feather";
 import { RowType } from "@/types/types";
-import { Welcome3 } from "@/types/ResponseTypes";
+import { DbTypes } from "@/types/ResponseTypes";
 
-const TableRow = ({ row, index }: { row: Welcome3; index: number }) => {
+const TableRow = ({ row, index }: { row: DbTypes; index: number }) => {
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const {
     meta_data,
     start_time,
     end_time,
-    repeat_schedule: reportSchedule,
+    repeat_schedule: repeatSchedule,
     name,
   } = row!;
 
@@ -103,7 +103,7 @@ const TableRow = ({ row, index }: { row: Welcome3; index: number }) => {
                   <td>test_purpose: {purpose}</td>
                   <td>is_enabled: {isEnabled?.toString()}</td>
                   <td>end_time: {endTime}</td>
-                  <td>repeat_schedule: {reportSchedule?.type}</td>
+                  <td>repeat_schedule: {repeatSchedule?.type}</td>
                 </tr>
               </tbody>
             </table>

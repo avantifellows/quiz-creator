@@ -10,7 +10,7 @@ export interface Timeline {
   [key: string]: string | number | boolean | null;
 }
 
-export interface Welcome3 {
+export interface DbTypes {
   dateCreated?: string;
   student: Student;
   test: Test;
