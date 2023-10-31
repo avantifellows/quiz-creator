@@ -16,7 +16,6 @@ const TableRow = ({ row, index }: { row: DbTypes; index: number }) => {
 
   const {
     batch,
-
     date_created: dateCreated,
     test_format: format,
     test_purpose: purpose,
@@ -30,7 +29,6 @@ const TableRow = ({ row, index }: { row: DbTypes; index: number }) => {
   } = meta_data || {};
 
   const startDate = new Date(start_time!).toLocaleDateString();
-
   const endDate = new Date(end_time!).toLocaleDateString();
 
   const startTime = new Date(start_time!).toLocaleTimeString();

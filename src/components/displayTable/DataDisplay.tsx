@@ -13,18 +13,16 @@ type DataDisplayProps = {
 const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
   const [data, setData] = useState<DbTypes[]>([]);
   const [totalItems, setTotalItems] = useState(0);
-  const [lastId, setLastId] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
 
   useEffect(() => {
     (async () => {
-      const res = await getData(lastId, itemsPerPage);
+      const offset = currentPage * itemsPerPage;
+      const res = await getData(offset, itemsPerPage);
       setData(res);
-      if (res.length) {
-        setLastId(res[res.length - 1].id);
-      }
     })();
-  }, [lastId]);
+  }, [currentPage, itemsPerPage, getData]);
 
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -61,10 +59,7 @@ const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={({ selected }) => {
-            const newLastId = data[selected * itemsPerPage - 1]?.id;
-            if (newLastId) {
-              setLastId(newLastId);
-            }
+            setCurrentPage(selected);
           }}
           containerClassName={
             "pagination flex flex-wrap justify-center items-center my-4"
