@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { RowType } from "@/types/types";
 import TableRow from "./Row";
-import { getData } from "@/utils/FormInputHandling";
 import ReactPaginate from "react-paginate";
-import { instance } from "@/utils/RootClient";
 import { DbTypes } from "@/types/ResponseTypes";
 
 type DataDisplayProps = {
