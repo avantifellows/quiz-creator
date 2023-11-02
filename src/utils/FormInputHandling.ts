@@ -3,10 +3,16 @@ import { instance } from "./RootClient";
 
 // get data from the db
 async function getData(currentPage: number, limit: number) {
+  const offset = currentPage * limit;
   const { data } = await instance.get(
-    `api/session?session_id_is_null=true&offset=${currentPage}&limit=${limit}`
+    `api/session?session_id_is_null=true&offset=${offset}&limit=${limit + 1}`
   );
-  return data;
+  const hasMore = data.length > limit;
+  const items = hasMore ? data.slice(0, -1) : data;
+  return {
+    data: items,
+    hasMore,
+  };
 }
 
 // post data to the server

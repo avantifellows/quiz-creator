@@ -2,24 +2,23 @@ import React, { useState, useEffect } from "react";
 import TableRow from "./Row";
 import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
+import { getData } from "@/utils/FormInputHandling";
 
-type DataDisplayProps = {
-  getData: (currentPage: number, itemsPerPage: number) => Promise<DbTypes[]>;
-};
-
-const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
+const DataDisplay: React.FC = () => {
   const [data, setData] = useState<DbTypes[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const itemsPerPage = 5;
+  const pageCount = Math.ceil(totalItems / itemsPerPage);
 
   useEffect(() => {
     (async () => {
-      const offset = currentPage * itemsPerPage;
-      const res = await getData(offset, itemsPerPage);
-      setData(res);
+      const { data, hasMore } = await getData(currentPage, itemsPerPage);
+      setData(data);
+      setHasMore(hasMore);
     })();
-  }, [currentPage, itemsPerPage, getData]);
+  }, [currentPage, itemsPerPage]);
 
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -52,9 +51,9 @@ const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
           nextLabel={"next"}
           breakLabel={"..."}
           breakClassName={"break-me px-2 py-1"}
-          pageCount={Math.ceil(totalItems / itemsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
+          marginPagesDisplayed={0}
+          pageRangeDisplayed={0}
+          pageCount={hasMore ? currentPage + 2 : currentPage + 1}
           onPageChange={({ selected }) => {
             setCurrentPage(selected);
           }}
