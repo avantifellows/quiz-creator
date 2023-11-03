@@ -4,7 +4,17 @@ import { Copy, Edit, Link, Trash2 } from "react-feather";
 import { RowType } from "@/types/types";
 import { DbTypes } from "@/types/ResponseTypes";
 
-const TableRow = ({ row, index }: { row: DbTypes; index: number }) => {
+const TableRow = ({
+  row,
+  index,
+  currentPage,
+  itemsPerPage,
+}: {
+  row: DbTypes;
+  index: number;
+  currentPage: number;
+  itemsPerPage: number;
+}) => {
   const [isExpand, setIsExpand] = useState<boolean>(false);
   const {
     meta_data,
@@ -34,10 +44,12 @@ const TableRow = ({ row, index }: { row: DbTypes; index: number }) => {
   const startTime = new Date(start_time!).toLocaleTimeString();
   const endTime = new Date(end_time!).toLocaleTimeString();
 
+  const actualIndex = currentPage * itemsPerPage + index + 1;
+
   return (
     <>
       <tr className="border text-center" onClick={() => setIsExpand(!isExpand)}>
-        <td className="border p-2">{index}</td>
+        <td className="border p-2">{actualIndex}</td>
         <td className="border p-2">{batch}</td>
         <td className="border p-2">{name}</td>
         <td className="border p-2">{startDate}</td>

@@ -42,14 +42,19 @@ const DataDisplay: React.FC = () => {
               .slice()
               .reverse()
               .map((row, i) => (
-                <TableRow row={row} index={i} key={i} />
+                <TableRow
+                  row={row}
+                  index={i}
+                  key={i}
+                  currentPage={currentPage}
+                  itemsPerPage={itemsPerPage}
+                />
               ))}
           </tbody>
         </table>
         <ReactPaginate
-          previousLabel={"previous"}
-          nextLabel={"next"}
-          breakLabel={"..."}
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
           breakClassName={"break-me px-2 py-1"}
           marginPagesDisplayed={0}
           pageRangeDisplayed={0}
@@ -58,16 +63,15 @@ const DataDisplay: React.FC = () => {
             setCurrentPage(selected);
           }}
           containerClassName={
-            "pagination flex flex-wrap justify-center items-center my-4"
+            "pagination flex flex-wrap justify-between items-center my-4"
           }
-          pageClassName={"mx-1"}
+          pageClassName={"mx-1 hidden"}
           previousClassName={
             "mx-1 bg-[#B52326] text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]"
           }
           nextClassName={
             "mx-1  bg-[#B52326] text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover:bg- bg-[#B52326]"
           }
-          activeClassName={" bg-[#B52326] text-white rounded px-3 py-2"}
           disabledClassName={"opacity-50 cursor-not-allowed"}
         />
       </div>
