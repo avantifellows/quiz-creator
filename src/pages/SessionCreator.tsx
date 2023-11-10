@@ -3,9 +3,9 @@ import StudentDetails from "@/components/Steps/StudentDetails";
 import { TestDetails } from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
 import { RowType } from "@/types/types";
-import { postFormData } from "@/utils/FormInputHandling";
-import { useRouter } from "next/router";
+import { postFormData } from "../utils/FormInputHandling";
 
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 export enum Step {

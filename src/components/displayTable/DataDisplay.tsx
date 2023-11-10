@@ -1,32 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { RowType } from "@/types/types";
 import TableRow from "./Row";
-import { getData } from "@/utils/FormInputHandling";
 import ReactPaginate from "react-paginate";
-import { instance } from "@/utils/RootClient";
+import { DbTypes } from "@/types/ResponseTypes";
+import { getData } from "@/utils/FormInputHandling";
 
-
-type DataDisplayProps = {
-  getData: () => Promise<RowType[]>;
-};
-
-const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
-  const [data, setData] = useState<RowType[]>([]);
+const DataDisplay: React.FC = () => {
+  const [data, setData] = useState<DbTypes[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const itemsPerPage = 5;
+  const pageCount = Math.ceil(totalItems / itemsPerPage);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await instance.get(
-        `/quiz?_page=${currentPage + 1}&_limit=${itemsPerPage}`
-      );
-      setData(response.data);
-      const total = parseInt(response.headers["x-total-count"], 10);
-      setTotalItems(total);
-    };
-    fetchData();
-  }, [currentPage, getData]);
+    (async () => {
+      const { data, hasMore } = await getData(currentPage, itemsPerPage);
+      setData(data);
+      setHasMore(hasMore);
+    })();
+  }, [currentPage, itemsPerPage]);
+
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div className="overflow-x-auto">
@@ -49,30 +42,36 @@ const DataDisplay: React.FC<DataDisplayProps> = ({ getData }) => {
               .slice()
               .reverse()
               .map((row, i) => (
-                <TableRow row={row} index={i} key={i} />
+                <TableRow
+                  row={row}
+                  index={i}
+                  key={i}
+                  currentPage={currentPage}
+                  itemsPerPage={itemsPerPage}
+                />
               ))}
           </tbody>
         </table>
         <ReactPaginate
-          previousLabel={"previous"}
-          nextLabel={"next"}
-          breakLabel={"..."}
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
           breakClassName={"break-me px-2 py-1"}
-          pageCount={Math.ceil(totalItems / itemsPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={({ selected }) => setCurrentPage(selected)}
+          marginPagesDisplayed={0}
+          pageRangeDisplayed={0}
+          pageCount={hasMore ? currentPage + 2 : currentPage + 1}
+          onPageChange={({ selected }) => {
+            setCurrentPage(selected);
+          }}
           containerClassName={
-            "pagination flex flex-wrap justify-center items-center my-4"
+            "pagination flex flex-wrap justify-between items-center my-4"
           }
-          pageClassName={"mx-1"}
+          pageClassName={"mx-1 hidden"}
           previousClassName={
             "mx-1 bg-[#B52326] text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]"
           }
           nextClassName={
             "mx-1  bg-[#B52326] text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover:bg- bg-[#B52326]"
           }
-          activeClassName={" bg-[#B52326] text-white rounded px-3 py-2"}
           disabledClassName={"opacity-50 cursor-not-allowed"}
         />
       </div>
