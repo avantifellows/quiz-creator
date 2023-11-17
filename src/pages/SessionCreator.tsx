@@ -32,6 +32,8 @@ export default function SessionCreator() {
   });
 
   const createSession = async () => {
+    console.log(data);
+
     await postFormData(data);
     setIsSessionAdded(true);
 

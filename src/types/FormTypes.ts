@@ -27,7 +27,7 @@ type TimelineForm = {
   synced: string;
   sessionType: string;
   reportLink: string;
-  reportSchedule: string;
+  repeatSchedule: string;
   startDate: string;
   endDate: string;
   startTime: string;
