@@ -15,16 +15,29 @@ async function getData(currentPage: number, limit: number) {
   };
 }
 
+function formatDateTime(date: string, time: string) {
+  const [year, month, day] = date.split("-").map(Number);
+  const [hour, minute] = time.split(":").map(Number);
+
+  const combinedDate = new Date(year, month - 1, day, hour, minute);
+  console.log(combinedDate);
+
+  return combinedDate;
+}
 // post data to the server
 async function postFormData(formData: RowType) {
   const { student, test, timeline, dateCreated } = formData;
-  let start_time = timeline.startDate + "T" + timeline.startTime + ":00";
-  let end_time = timeline.endDate + "T" + timeline.endTime + ":00";
+  console.log(timeline);
+
+  let start_time = formatDateTime(timeline.startDate, timeline.startTime);
+  let end_time = formatDateTime(timeline.endDate, timeline.endTime);
+  console.log(start_time);
+
   const requestBody = {
     name: test.name,
     platform: test.platform,
     platform_link: test.platformLink,
-    portal_link: test.portalLink,
+    portal_link: "", //responds to the portal link
     start_time,
     end_time,
     is_active: "",
@@ -53,9 +66,9 @@ async function postFormData(formData: RowType) {
       test_purpose: test.purpose,
       enabled: timeline.isEnabled,
       infinite_session: true,
-      cms_test_id: test.cmdId,
+      cms_test_id: test.cmsId,
       test_takers_count: test.testTakers,
-      has_synced_to_bq: true,
+      has_synced_to_bq: false,
       optional_limits: test.optionalLimit,
       marking_scheme: test.markingScheme,
       test_type: test.type,
@@ -68,7 +81,7 @@ async function postFormData(formData: RowType) {
 
   try {
     const response = await instance.post(
-      "https://staging-db.avantifellows.org/api/session",
+      `${process.env.NEXT_PUBLIC_DB_URL}/api/session`,
       requestBody
     );
     return response.data;
