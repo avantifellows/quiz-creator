@@ -26,7 +26,7 @@ function formatDateTime(date: string, time: string) {
 }
 // post data to the server
 async function postFormData(formData: RowType) {
-  const { student, test, timeline, dateCreated } = formData;
+  const { student, test, timeline, dateCreated, session } = formData;
   console.log(timeline);
 
   let start_time = formatDateTime(timeline.startDate, timeline.startTime);
@@ -48,14 +48,14 @@ async function postFormData(formData: RowType) {
     repeat_schedule: { type: "weekly", params: [1, 2, 3, 4, 5, 6, 7] }, // this is hardcoded needs to be changed
     session_id: "",
     platform_id: "",
-    form_schema_id: "1",
+    form_schema_id: session.form_schema_id,
     type: "sign-in",
-    auth_type: "ID",
-    activate_signup: true,
-    id_generation: false,
-    redirection: false,
-    pop_up_form: true,
-    number_of_fields_in_pop_form: "3",
+    auth_type: session.auth_type,
+    activate_signup: session.activate_signup,
+    id_generation: session.id_generation,
+    redirection: session.redirection,
+    pop_up_form: session.pop_up_form,
+    number_of_fields_in_pop_form: session.number_of_fields_in_pop_form,
     meta_data: {
       group: student.group,
       batch: student.batch,

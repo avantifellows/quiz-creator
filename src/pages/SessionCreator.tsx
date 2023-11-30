@@ -29,6 +29,7 @@ export default function SessionCreator() {
     student: {},
     test: {},
     timeline: {},
+    session: {},
   });
 
   const createSession = async () => {

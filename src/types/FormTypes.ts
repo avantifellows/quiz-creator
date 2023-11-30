@@ -34,7 +34,28 @@ type TimelineForm = {
   endTime: string;
 };
 
-type MyForm = StudentForm | TestForm | TimelineForm;
-type MyFormKey = keyof StudentForm | keyof TestForm | keyof TimelineForm;
+type SessionType = {
+  number_of_fields_in_pop_form: number | null;
+  form_schema_id: number | null;
+  auth_type: null | string;
+  id_generation: boolean | null;
+  activate_signup: boolean | null;
+  redirection: boolean | null;
+  pop_up_form: boolean | null;
+};
 
-export type { MyForm, MyFormKey, StudentForm, TestForm, TimelineForm };
+type MyForm = StudentForm | TestForm | TimelineForm | SessionType;
+type MyFormKey =
+  | keyof StudentForm
+  | keyof TestForm
+  | keyof TimelineForm
+  | keyof SessionType;
+
+export type {
+  MyForm,
+  MyFormKey,
+  StudentForm,
+  TestForm,
+  TimelineForm,
+  SessionType,
+};
