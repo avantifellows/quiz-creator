@@ -20,23 +20,20 @@ function formatDateTime(date: string, time: string) {
   const [hour, minute] = time.split(":").map(Number);
 
   const combinedDate = new Date(year, month - 1, day, hour, minute);
-  console.log(combinedDate);
 
   return combinedDate;
 }
 // post data to the server
 async function postFormData(formData: RowType) {
   const { student, test, timeline, dateCreated, session } = formData;
-  console.log(timeline);
 
   let start_time = formatDateTime(timeline.startDate, timeline.startTime);
   let end_time = formatDateTime(timeline.endDate, timeline.endTime);
-  console.log(start_time);
 
   const requestBody = {
     name: test.name,
     platform: test.platform,
-    platform_link: test.platformLink,
+    platform_link: "",
     portal_link: "", //responds to the portal link
     start_time,
     end_time,

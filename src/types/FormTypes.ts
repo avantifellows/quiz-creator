@@ -44,16 +44,16 @@ type SessionType = {
   pop_up_form: boolean | null;
 };
 
-type MyForm = StudentForm | TestForm | TimelineForm | SessionType;
-type MyFormKey =
+type QuizCreatorForm = StudentForm | TestForm | TimelineForm | SessionType;
+type QuizCreatorFormKey =
   | keyof StudentForm
   | keyof TestForm
   | keyof TimelineForm
   | keyof SessionType;
 
 export type {
-  MyForm,
-  MyFormKey,
+  QuizCreatorForm,
+  QuizCreatorFormKey,
   StudentForm,
   TestForm,
   TimelineForm,

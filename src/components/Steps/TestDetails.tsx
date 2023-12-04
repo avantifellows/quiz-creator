@@ -1,7 +1,7 @@
 import styles from "../../styles/Home.module.css";
 
 import { Step } from "@/pages/SessionCreator";
-import { MyForm } from "@/types/FormTypes";
+import { QuizCreatorForm } from "@/types/FormTypes";
 import { ActiveFormProps } from "@/types/types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
@@ -17,11 +17,11 @@ import SelectField from "./Form/SelectField";
 // Renders sub-page containing test details
 
 export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
-  const { register, handleSubmit, control } = useForm<MyForm>({
+  const { register, handleSubmit, control } = useForm<QuizCreatorForm>({
     defaultValues: { ...data.test },
   });
 
-  const onSubmit: SubmitHandler<MyForm> = (test) => {
+  const onSubmit: SubmitHandler<QuizCreatorForm> = (test) => {
     setData((prevData) => ({ ...prevData, test }));
 
     setActiveStep(Step.TIMELINE);
@@ -75,7 +75,7 @@ export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
             options={OptionalLimitOptions}
             placeholder="Optional Limit"
           />
-          {/* TODO: ADD more conditions realated to generated data */}
+
           {data.test.id ? (
             <>
               <input

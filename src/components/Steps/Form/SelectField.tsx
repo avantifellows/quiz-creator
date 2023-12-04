@@ -1,12 +1,12 @@
 import styles from "@/styles/Home.module.css";
-import { MyForm, MyFormKey } from "@/types/FormTypes";
+import { QuizCreatorForm, QuizCreatorFormKey } from "@/types/FormTypes";
 import { OptionType } from "@/types/types";
 import { Control, Controller } from "react-hook-form";
 import Select from "react-select";
 interface SelectFieldProps {
-  control: Control<MyForm, any>;
+  control: Control<QuizCreatorForm, any>;
   options: OptionType[];
-  name_: MyFormKey;
+  name_: QuizCreatorFormKey;
   placeholder?: string;
 }
 
