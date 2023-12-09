@@ -24,6 +24,9 @@ interface RowType {
   timeline: {
     [key: string]: string | number | boolean | null;
   };
+  session: {
+    [key: string]: string | number | boolean | null;
+  };
 }
 
 export type { ActiveFormProps, OptionType, RowType };

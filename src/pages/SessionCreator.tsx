@@ -4,9 +4,9 @@ import { TestDetails } from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
 import { RowType } from "@/types/types";
 import { postFormData } from "../utils/FormInputHandling";
-
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { publishMessage } from "@/aws/aws-sdk";
 
 export enum Step {
   STUDENT_DETAILS = "StudentDetails",
@@ -29,11 +29,17 @@ export default function SessionCreator() {
     student: {},
     test: {},
     timeline: {},
+    session: {},
   });
 
   const createSession = async () => {
-    await postFormData(data);
+    const postResult = await postFormData(data);
+    console.log(postResult);
+
+    const sessionId = postResult.id;
     setIsSessionAdded(true);
+
+    publishMessage(sessionId);
 
     setTimeout(() => {
       router.push("/");

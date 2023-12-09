@@ -25,7 +25,10 @@ const TestPurposeOptions: OptionType[] = [
   { value: "one_time_test", label: "One Time Test" },
 ];
 
-const TestPlatformOptions = [{ value: "Quiz", label: "Quiz" }];
+const TestPlatformOptions = [
+  { value: "quiz", label: "Quiz" },
+  { value: "meet", label: "Live Class" },
+];
 
 const MarkingSchemeOptions: OptionType[] = [
   { value: "4,-1", label: "4 , -1" },

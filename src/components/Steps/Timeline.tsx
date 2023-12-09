@@ -1,5 +1,5 @@
 import { Step } from "@/pages/SessionCreator";
-import { MyForm } from "@/types/FormTypes";
+import { QuizCreatorForm } from "@/types/FormTypes";
 import { ActiveFormProps } from "@/types/types";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -19,7 +19,7 @@ export default function Timeline({
   isSessionAdded,
 }: ActiveFormProps) {
   const [shouldSubmit, setShouldSubmit] = useState(false);
-  const { register, handleSubmit, control, reset } = useForm<MyForm>({
+  const { register, handleSubmit, control, reset } = useForm<QuizCreatorForm>({
     defaultValues: { ...data.timeline },
   });
 
@@ -28,7 +28,7 @@ export default function Timeline({
     reset();
   }, [shouldSubmit, data]);
 
-  const onSubmit: SubmitHandler<MyForm> = (timeline) => {
+  const onSubmit: SubmitHandler<QuizCreatorForm> = (timeline) => {
     setData((prevData) => ({ ...prevData, timeline }));
 
     setShouldSubmit(true);
@@ -88,26 +88,32 @@ export default function Timeline({
           name_="sessionType"
           options={SessionTypeOptions}
         />
-        <SelectField
-          control={control}
-          name_="synced"
-          options={HasSyncedOptions}
-        />
-        {/*
+        {data.timeline.id ? (
+          <>
+            <SelectField
+              control={control}
+              name_="synced"
+              options={HasSyncedOptions}
+            />
+            {/*
         // TODO: same as test details render acc to need
          */}
-        <input
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
-          placeholder="Report Schedule"
-          required
-          {...register("reportSchedule")}
-        />
-        <input
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
-          placeholder="Report Link"
-          required
-          {...register("reportLink")}
-        />
+            <input
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+              placeholder="Repeat Schedule"
+              required
+              {...register("repeatSchedule")}
+            />
+            <input
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
+              placeholder="Report Link"
+              required
+              {...register("reportLink")}
+            />
+          </>
+        ) : (
+          <></>
+        )}
         <div className="w-full flex justify-between">
           <button
             className="rounded-lg sm:w-44 w-10 text-xs h-8 bg-[#B52326] text-white sm:h-11 mt-10"
