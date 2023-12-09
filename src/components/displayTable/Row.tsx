@@ -36,6 +36,7 @@ const TableRow = ({
     infinite_session: sessionType,
     has_synced_to_bq: synced,
     enabled: isEnabled,
+    shortened_link: shortenedLink,
   } = meta_data || {};
 
   const startDate = new Date(start_time!).toLocaleDateString();
@@ -63,11 +64,11 @@ const TableRow = ({
           )}
         </td>
         <td className="border p-2">
-          {/* {typeof sessionLink === "string" && (
-            <NextLink href={sessionLink}>
+          {typeof shortenedLink === "string" && (
+            <NextLink href={shortenedLink}>
               <Link className="mx-auto" />
             </NextLink>
-          )} */}
+          )}
         </td>
         <td className="border p-2 flex gap-2 justify-center">
           <Copy

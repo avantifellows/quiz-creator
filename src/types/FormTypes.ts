@@ -32,6 +32,7 @@ type TimelineForm = {
   endDate: string;
   startTime: string;
   endTime: string;
+  portal_link: string;
 };
 
 type SessionType = {

@@ -1,24 +1,30 @@
-import React, { useState, useEffect } from "react";
+import { getDataNoLinks } from "@/utils/FormInputHandling";
+import { useEffect, useState } from "react";
 import TableRow from "./Row";
 import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
-import { getData } from "@/utils/FormInputHandling";
 
-const DataDisplay: React.FC = () => {
+const DataDisplayNoLinks: React.FC = () => {
   const [data, setData] = useState<DbTypes[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const itemsPerPage = 5;
-  const pageCount = Math.ceil(totalItems / itemsPerPage);
 
   useEffect(() => {
     (async () => {
-      const { data, hasMore } = await getData(currentPage, itemsPerPage);
-      setData(data);
-      setHasMore(hasMore);
+      try {
+        const { data, hasMore } = await getDataNoLinks(
+          currentPage,
+          itemsPerPage
+        );
+        setData(data);
+        setHasMore(hasMore);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
     })();
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage]);
 
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -40,9 +46,9 @@ const DataDisplay: React.FC = () => {
           <tbody>
             {data.map((row, i) => (
               <TableRow
+                key={i}
                 row={row}
                 index={i}
-                key={i}
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
               />
@@ -52,13 +58,8 @@ const DataDisplay: React.FC = () => {
         <ReactPaginate
           previousLabel={"Previous"}
           nextLabel={"Next"}
-          breakClassName={"break-me px-2 py-1"}
-          marginPagesDisplayed={0}
-          pageRangeDisplayed={0}
           pageCount={hasMore ? currentPage + 2 : currentPage + 1}
-          onPageChange={({ selected }) => {
-            setCurrentPage(selected);
-          }}
+          onPageChange={({ selected }) => setCurrentPage(selected)}
           containerClassName={
             "pagination flex flex-wrap justify-between items-center my-4"
           }
@@ -76,4 +77,4 @@ const DataDisplay: React.FC = () => {
   );
 };
 
-export default DataDisplay;
+export default DataDisplayNoLinks;

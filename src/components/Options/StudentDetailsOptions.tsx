@@ -4,14 +4,14 @@ export interface OptionType {
 }
 
 const ProgramOptions: OptionType[] = [
-  { value: "Haryana Students", label: "Haryana Students" },
-  { value: "Himachal Students", label: "Himachal Students" },
-  { value: "Delhi Students", label: "Delhi Students" },
-  { value: "Enable Students", label: "Enable Students" },
-  { value: "AF Teachers", label: "AF Teachers" },
+  { value: "HaryanaStudents", label: "Haryana Students" },
+  { value: "HimachalStudents", label: "Himachal Students" },
+  { value: "DelhiStudents", label: "Delhi Students" },
+  { value: "EnableStudents", label: "Enable Students" },
+  { value: "AFTeachers", label: "AF Teachers" },
   { value: "Candidates", label: "Candidates" },
-  { value: "Gujarat Students", label: "Gujarat Students" },
-  { value: "AF Testing", label: "AF Testing" },
+  { value: "GujaratStudents", label: "Gujarat Students" },
+  { value: "AFTesting", label: "AF Testing" },
 ];
 
 const BatchOptions: OptionType[] = [

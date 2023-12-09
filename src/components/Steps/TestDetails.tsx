@@ -96,16 +96,16 @@ export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
                 placeholder="Test Session Link"
                 {...register("sessionLink")}
               />
-              <input
-                required
-                className={styles.custom_input}
-                placeholder="CMS Test id"
-                {...register("cmsId")}
-              />
             </>
           ) : (
             <></>
           )}
+          <input
+            required
+            className={styles.custom_input}
+            placeholder="CMS Test id"
+            {...register("cmsId")}
+          />
           <div className="w-full flex justify-between">
             <button
               className="rounded-lg sm:w-44 text-xs w-10 h-8 bg-[#B52326] text-white sm:h-11 mt-10"

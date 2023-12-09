@@ -1,4 +1,5 @@
 import DataDisplay from "@/components/displayTable/DataDisplay";
+import DataDisplayNoLinks from "@/components/displayTable/DataDisplayNoLinks";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
@@ -30,6 +31,10 @@ export default function Home() {
       </nav>
 
       <DataDisplay />
+      <div className="text-xl flex justify-center p-2 ">
+        <h1>Sessions With No links</h1>
+      </div>
+      <DataDisplayNoLinks />
     </>
   );
 }
