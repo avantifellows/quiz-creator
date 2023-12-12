@@ -1,11 +1,21 @@
 import DataDisplay from "@/components/displayTable/DataDisplay";
 import DataDisplayNoLinks from "@/components/displayTable/DataDisplayNoLinks";
+import { DbTypes } from "@/types/ResponseTypes";
+import { getData, getDataNoLinks } from "@/utils/FormInputHandling";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
 // TODO: Fetch data from the server using axios
 
-export default function Home() {
+export default function Home({
+  data,
+  hasMore,
+  currentPage,
+  dataNoLinks,
+  hasMoreNoLinks,
+  currentPageNoLinks,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
   return (
@@ -30,11 +40,42 @@ export default function Home() {
         />
       </nav>
 
-      <DataDisplay />
+      <DataDisplay data={data} hasMore={hasMore} currentPage={currentPage} />
       <div className="text-xl flex justify-center p-2 ">
         <h1>Sessions With No links</h1>
       </div>
-      <DataDisplayNoLinks />
+      <DataDisplayNoLinks
+        dataNoLinks={dataNoLinks}
+        hasMoreNoLinks={hasMoreNoLinks}
+        currentPageNoLinks={currentPageNoLinks}
+      />
     </>
   );
 }
+
+export const getServerSideProps = (async ({ query: { page = 0 } }) => {
+  const currentPage = Number(page);
+  const { data, hasMore } = await getData(currentPage, 5);
+  const currentPageNoLinks = Number(page);
+  const { dataNoLinks, hasMoreNoLinks } = await getDataNoLinks(
+    currentPageNoLinks,
+    5
+  );
+  return {
+    props: {
+      data,
+      hasMore,
+      currentPage,
+      dataNoLinks,
+      hasMoreNoLinks,
+      currentPageNoLinks,
+    },
+  };
+}) satisfies GetServerSideProps<{
+  data: DbTypes[];
+  hasMore: boolean;
+  currentPage: number;
+  dataNoLinks: DbTypes[];
+  hasMoreNoLinks: boolean;
+  currentPageNoLinks: number;
+}>;

@@ -53,8 +53,12 @@ const TableRow = ({
         <td className="border p-2">{actualIndex}</td>
         <td className="border p-2">{batch}</td>
         <td className="border p-2">{name}</td>
-        <td className="border p-2">{startDate}</td>
-        <td className="border p-2">{endDate}</td>
+        <td suppressHydrationWarning className="border p-2">
+          {startDate}
+        </td>
+        <td suppressHydrationWarning className="border p-2">
+          {endDate}
+        </td>
         <td className="border p-2">{testTakers}</td>
         <td className="border p-2">
           {typeof reportLink === "string" && (

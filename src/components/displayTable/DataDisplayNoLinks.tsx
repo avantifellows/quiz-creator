@@ -1,30 +1,21 @@
-import { getDataNoLinks } from "@/utils/FormInputHandling";
 import { useEffect, useState } from "react";
 import TableRow from "./Row";
 import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
+import { useRouter } from "next/router";
 
-const DataDisplayNoLinks: React.FC = () => {
-  const [data, setData] = useState<DbTypes[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+const DataDisplayNoLinks = ({
+  dataNoLinks,
+  hasMoreNoLinks,
+  currentPageNoLinks,
+}: {
+  dataNoLinks: DbTypes[];
+  hasMoreNoLinks: boolean;
+  currentPageNoLinks: number;
+}) => {
+  const router = useRouter();
+
   const itemsPerPage = 5;
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data, hasMore } = await getDataNoLinks(
-          currentPage,
-          itemsPerPage
-        );
-        setData(data);
-        setHasMore(hasMore);
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    })();
-  }, [currentPage]);
 
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -44,12 +35,12 @@ const DataDisplayNoLinks: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((row, i) => (
+            {dataNoLinks.map((row, i) => (
               <TableRow
                 key={i}
                 row={row}
                 index={i}
-                currentPage={currentPage}
+                currentPage={currentPageNoLinks}
                 itemsPerPage={itemsPerPage}
               />
             ))}
@@ -58,8 +49,12 @@ const DataDisplayNoLinks: React.FC = () => {
         <ReactPaginate
           previousLabel={"Previous"}
           nextLabel={"Next"}
-          pageCount={hasMore ? currentPage + 2 : currentPage + 1}
-          onPageChange={({ selected }) => setCurrentPage(selected)}
+          pageCount={
+            hasMoreNoLinks ? currentPageNoLinks + 2 : currentPageNoLinks + 1
+          }
+          onPageChange={({ selected }) => {
+            router.push(`/?page=${selected}`);
+          }}
           containerClassName={
             "pagination flex flex-wrap justify-between items-center my-4"
           }

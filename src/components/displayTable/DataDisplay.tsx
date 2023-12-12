@@ -1,24 +1,21 @@
-import React, { useState, useEffect } from "react";
 import TableRow from "./Row";
 import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
 import { getData } from "@/utils/FormInputHandling";
+import { useRouter } from "next/router";
 
-const DataDisplay: React.FC = () => {
-  const [data, setData] = useState<DbTypes[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+const DataDisplay = ({
+  data,
+  hasMore,
+  currentPage,
+}: {
+  data: DbTypes[];
+  hasMore: boolean;
+  currentPage: number;
+}) => {
+  const router = useRouter();
+
   const itemsPerPage = 5;
-  const pageCount = Math.ceil(totalItems / itemsPerPage);
-
-  useEffect(() => {
-    (async () => {
-      const { data, hasMore } = await getData(currentPage, itemsPerPage);
-      setData(data);
-      setHasMore(hasMore);
-    })();
-  }, [currentPage, itemsPerPage]);
 
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -57,7 +54,7 @@ const DataDisplay: React.FC = () => {
           pageRangeDisplayed={0}
           pageCount={hasMore ? currentPage + 2 : currentPage + 1}
           onPageChange={({ selected }) => {
-            setCurrentPage(selected);
+            router.push(`/?page=${selected}`);
           }}
           containerClassName={
             "pagination flex flex-wrap justify-between items-center my-4"
