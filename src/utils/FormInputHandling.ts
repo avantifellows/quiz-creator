@@ -1,11 +1,11 @@
 import { RowType } from "@/types/types";
-import { instance } from "./RootClient";
+import { dbInstance } from "./RootClient";
 import { DbTypes } from "@/types/ResponseTypes";
 
 // get data from the db when session id is generated
 async function getData(currentPage: number, limit: number) {
   const offset = currentPage * limit;
-  const { data } = await instance.get<DbTypes[]>(`api/session`, {
+  const { data } = await dbInstance.get<DbTypes[]>(`api/session`, {
     params: {
       session_id_is_null: false,
       offset,
@@ -25,7 +25,7 @@ async function getData(currentPage: number, limit: number) {
 // getting data from db when session_id is null
 async function getDataNoLinks(currentPage: number, limit: number) {
   const offset = currentPage * limit;
-  const { data } = await instance.get<DbTypes[]>(`api/session`, {
+  const { data } = await dbInstance.get<DbTypes[]>(`api/session`, {
     params: {
       session_id_is_null: true,
       offset,
@@ -112,7 +112,7 @@ async function postFormData(formData: RowType) {
   };
 
   try {
-    const response = await instance.post(
+    const response = await dbInstance.post(
       `${process.env.AF_DB_URL}/api/session`,
       requestBody
     );
