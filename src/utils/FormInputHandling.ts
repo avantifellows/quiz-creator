@@ -23,7 +23,7 @@ async function getData(currentPage: number, limit: number) {
 }
 
 // getting data from db when session_id is null
-async function getDataNoLinks(currentPage: number, limit: number) {
+async function getDataWithoutIds(currentPage: number, limit: number) {
   const offset = currentPage * limit;
   const { data } = await instance.get<DbTypes[]>(`api/session`, {
     params: {
@@ -126,4 +126,4 @@ async function postFormData(formData: RowType) {
   }
 }
 
-export { getData, postFormData, getDataNoLinks };
+export { getData, postFormData, getDataWithoutIds };

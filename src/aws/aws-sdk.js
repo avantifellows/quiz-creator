@@ -8,7 +8,7 @@ AWS.config.update({
 
 const sns = new AWS.SNS();
 function publishMessage(sessionId) {
-  const topicArn = process.env.NEXT_PUBLIC_TOPIC_ARN;
+  const topicArn = process.env.AF_TOPIC_ARN;
 
   const params = {
     Message: sessionId.toString(),

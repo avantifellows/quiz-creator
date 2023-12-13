@@ -1,7 +1,8 @@
+import { publishMessage } from "@/aws/aws-sdk";
 import DataDisplay from "@/components/displayTable/DataDisplay";
 import DataDisplayNoLinks from "@/components/displayTable/DataDisplayNoLinks";
 import { DbTypes } from "@/types/ResponseTypes";
-import { getData, getDataNoLinks } from "@/utils/FormInputHandling";
+import { getData, getDataWithoutIds } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -57,10 +58,11 @@ export const getServerSideProps = (async ({ query: { page = 0 } }) => {
   const currentPage = Number(page);
   const { data, hasMore } = await getData(currentPage, 5);
   const currentPageNoLinks = Number(page);
-  const { dataNoLinks, hasMoreNoLinks } = await getDataNoLinks(
+  const { dataNoLinks, hasMoreNoLinks } = await getDataWithoutIds(
     currentPageNoLinks,
     5
   );
+  publishMessage("56");
   return {
     props: {
       data,

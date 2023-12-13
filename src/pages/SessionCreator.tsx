@@ -33,12 +33,19 @@ export default function SessionCreator() {
   });
 
   const createSession = async () => {
-    const postResult = await postFormData(data);
+    const response = await fetch("/api/PostFormData", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const postResult = await response.json();
     console.log(postResult);
 
     const sessionId = postResult.id;
     setIsSessionAdded(true);
-
     publishMessage(sessionId);
 
     setTimeout(() => {
