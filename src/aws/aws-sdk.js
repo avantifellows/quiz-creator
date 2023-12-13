@@ -8,7 +8,7 @@ AWS.config.update({
 
 const sns = new AWS.SNS();
 function publishMessage(sessionId) {
-  const topicArn = process.env.NEXT_PUBLIC_TOPIC_ARN;
+  const topicArn = process.env.AF_TOPIC_ARN;
 
   const params = {
     Message: sessionId.toString(),
@@ -27,3 +27,7 @@ function publishMessage(sessionId) {
 module.exports = {
   publishMessage,
 };
+
+console.log("****************************************")
+console.log("Publishing message...");
+publishMessage("32");
