@@ -1,36 +1,13 @@
 import { RowType } from "@/types/types";
 import { instance } from "./RootClient";
+import { DbTypes } from "@/types/ResponseTypes";
 
 // get data from the db when session id is generated
 async function getData(currentPage: number, limit: number) {
   const offset = currentPage * limit;
-  const { data } = await instance.get(
-    // `api/session?session_id_is_null=true&offset=${offset}&limit=${limit + 1}`
-    `api/session`,
-    {
-      params: {
-        session_id_is_null: false,
-        offset,
-        limit: limit + 1,
-        sort_order: "desc",
-        platform: "quiz",
-      },
-    }
-  );
-  const hasMore = data.length > limit;
-  const items = hasMore ? data.slice(0, -1) : data;
-  return {
-    data: items,
-    hasMore,
-  };
-}
-
-// getting data from db when session_id is null
-async function getDataNoLinks(currentPage: number, limit: number) {
-  const offset = currentPage * limit;
-  const { data } = await instance.get("api/session", {
+  const { data } = await instance.get<DbTypes[]>(`api/session`, {
     params: {
-      session_id_is_null: true,
+      session_id_is_null: false,
       offset,
       limit: limit + 1,
       sort_order: "desc",
@@ -42,6 +19,26 @@ async function getDataNoLinks(currentPage: number, limit: number) {
   return {
     data: items,
     hasMore,
+  };
+}
+
+// getting data from db when session_id is null
+async function getDataNoLinks(currentPage: number, limit: number) {
+  const offset = currentPage * limit;
+  const { data } = await instance.get<DbTypes[]>(`api/session`, {
+    params: {
+      session_id_is_null: true,
+      offset,
+      limit: limit + 1,
+      sort_order: "desc",
+      platform: "quiz",
+    },
+  });
+  const hasMoreNoLinks = data.length > limit;
+  const items = hasMoreNoLinks ? data.slice(0, -1) : data;
+  return {
+    dataNoLinks: items,
+    hasMoreNoLinks,
   };
 }
 
@@ -116,7 +113,7 @@ async function postFormData(formData: RowType) {
 
   try {
     const response = await instance.post(
-      `${process.env.NEXT_PUBLIC_DB_URL}/api/session`,
+      `${process.env.AF_DB_URL}/api/session`,
       requestBody
     );
     const sessionId = response.data.id;
