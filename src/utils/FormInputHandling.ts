@@ -5,6 +5,8 @@ import { DbTypes } from "@/types/ResponseTypes";
 // get data from the db when session id is generated
 async function getData(currentPage: number, limit: number) {
   const offset = currentPage * limit;
+  console.log(dbInstance.defaults.baseURL);
+  console.log(dbInstance.defaults.headers); // Log the default headers
   const { data } = await dbInstance.get<DbTypes[]>(`api/session`, {
     params: {
       session_id_is_null: false,
