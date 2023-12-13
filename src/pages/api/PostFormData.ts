@@ -1,4 +1,5 @@
 import { RowType } from "@/types/types";
+import { publishMessage } from "@/utils/PublishSnsMessage";
 import { instance } from "@/utils/RootClient";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -78,7 +79,7 @@ async function postFormDataToBackend(formData: RowType) {
     );
 
     const sessionId = response.data.id;
-
+    publishMessage(sessionId);
     return {
       id: sessionId,
     };

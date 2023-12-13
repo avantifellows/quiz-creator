@@ -4,14 +4,14 @@ import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
 import { useRouter } from "next/router";
 
-const DataDisplayNoLinks = ({
-  dataNoLinks,
-  hasMoreNoLinks,
-  currentPageNoLinks,
+const DataDisplayNoIds = ({
+  dataNoIds,
+  hasMoreNoIds,
+  currentPageNoIds,
 }: {
-  dataNoLinks: DbTypes[];
-  hasMoreNoLinks: boolean;
-  currentPageNoLinks: number;
+  dataNoIds: DbTypes[];
+  hasMoreNoIds: boolean;
+  currentPageNoIds: number;
 }) => {
   const router = useRouter();
 
@@ -35,12 +35,12 @@ const DataDisplayNoLinks = ({
             </tr>
           </thead>
           <tbody>
-            {dataNoLinks.map((row, i) => (
+            {dataNoIds.map((row, i) => (
               <TableRow
                 key={i}
                 row={row}
                 index={i}
-                currentPage={currentPageNoLinks}
+                currentPage={currentPageNoIds}
                 itemsPerPage={itemsPerPage}
               />
             ))}
@@ -49,9 +49,7 @@ const DataDisplayNoLinks = ({
         <ReactPaginate
           previousLabel={"Previous"}
           nextLabel={"Next"}
-          pageCount={
-            hasMoreNoLinks ? currentPageNoLinks + 2 : currentPageNoLinks + 1
-          }
+          pageCount={hasMoreNoIds ? currentPageNoIds + 2 : currentPageNoIds + 1}
           onPageChange={({ selected }) => {
             router.push(`/?page=${selected}`);
           }}
@@ -72,4 +70,4 @@ const DataDisplayNoLinks = ({
   );
 };
 
-export default DataDisplayNoLinks;
+export default DataDisplayNoIds;

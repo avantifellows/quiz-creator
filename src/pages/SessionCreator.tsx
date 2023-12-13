@@ -3,10 +3,8 @@ import StudentDetails from "@/components/Steps/StudentDetails";
 import { TestDetails } from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
 import { RowType } from "@/types/types";
-import { postFormData } from "../utils/FormInputHandling";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { publishMessage } from "@/aws/aws-sdk";
 
 export enum Step {
   STUDENT_DETAILS = "StudentDetails",
@@ -45,8 +43,9 @@ export default function SessionCreator() {
     console.log(postResult);
 
     const sessionId = postResult.id;
+    console.log(sessionId);
+
     setIsSessionAdded(true);
-    publishMessage(sessionId);
 
     setTimeout(() => {
       router.push("/");

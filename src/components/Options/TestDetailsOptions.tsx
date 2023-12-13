@@ -3,7 +3,7 @@ import { OptionType } from "./StudentDetailsOptions";
 const TestTypeOptions: OptionType[] = [
   { value: "assessment", label: "Assessment" },
   { value: "homework", label: "Homework" },
-  { value: "omr_assessment", label: "Omr-Assessment" },
+  { value: "omr-assessment", label: "Omr-Assessment" },
 ];
 
 const TestFormatOptions: OptionType[] = [
