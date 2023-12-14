@@ -40,7 +40,12 @@ export default function Home({
         />
       </nav>
 
-      <DataDisplay data={data} hasMore={hasMore} currentPage={currentPage} />
+      <DataDisplay
+        data={data}
+        hasMore={hasMore}
+        currentPage={currentPage}
+        currentPageNoIds={currentPageNoIds}
+      />
       <div className="text-xl flex justify-center p-2 ">
         <h1>Sessions With No Ids</h1>
       </div>
@@ -48,15 +53,20 @@ export default function Home({
         dataNoIds={dataNoIds}
         hasMoreNoIds={hasMoreNoIds}
         currentPageNoIds={currentPageNoIds}
+        currentPage={currentPage}
       />
     </>
   );
 }
 
-export const getServerSideProps = (async ({ query: { page = 0 } }) => {
-  const currentPage = Number(page);
-  const { data, hasMore } = await getData(currentPage, 5);
-  const currentPageNoIds = Number(page);
+export const getServerSideProps = (async ({
+  query: { pageData, pageNoIds },
+}) => {
+  const currentPageData = Number(pageData) || 0;
+  const currentPageNoIds = Number(pageNoIds) || 0;
+
+  const { data, hasMore } = await getData(currentPageData, 5);
+
   const { dataNoIds, hasMoreNoIds } = await getDataWithoutIds(
     currentPageNoIds,
     5
@@ -66,7 +76,7 @@ export const getServerSideProps = (async ({ query: { page = 0 } }) => {
     props: {
       data,
       hasMore,
-      currentPage,
+      currentPage: currentPageData,
       dataNoIds,
       hasMoreNoIds,
       currentPageNoIds,

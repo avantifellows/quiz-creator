@@ -8,10 +8,12 @@ const DataDisplay = ({
   data,
   hasMore,
   currentPage,
+  currentPageNoIds,
 }: {
   data: DbTypes[];
   hasMore: boolean;
   currentPage: number;
+  currentPageNoIds: number;
 }) => {
   const router = useRouter();
 
@@ -54,7 +56,7 @@ const DataDisplay = ({
           pageRangeDisplayed={0}
           pageCount={hasMore ? currentPage + 2 : currentPage + 1}
           onPageChange={({ selected }) => {
-            router.push(`/?page=${selected}`);
+            router.push(`/?pageData=${selected}&pageNoIds=${currentPageNoIds}`);
           }}
           containerClassName={
             "pagination flex flex-wrap justify-between items-center my-4"
