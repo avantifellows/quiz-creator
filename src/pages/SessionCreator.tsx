@@ -40,7 +40,6 @@ export default function SessionCreator() {
     });
 
     const postResult = await response.json();
-    console.log(postResult);
 
     const sessionId = postResult.id;
     console.log(sessionId);

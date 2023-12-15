@@ -59,6 +59,7 @@ export interface MetaData {
   test_purpose: string;
   test_takers_count: string;
   test_type: string;
+  admin_testing_link: string;
 }
 
 export interface Purpose {

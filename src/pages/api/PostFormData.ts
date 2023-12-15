@@ -69,6 +69,7 @@ async function postFormDataToBackend(formData: RowType) {
       shortened_link: "",
       report_link: "",
       date_created: new Date().toISOString().split("T")[0],
+      admin_testing_link: "",
     },
   };
 

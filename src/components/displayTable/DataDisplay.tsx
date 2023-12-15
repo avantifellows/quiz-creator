@@ -33,6 +33,7 @@ const DataDisplay = ({
               <th className="border p-2">Test Taker</th>
               <th className="border p-2">Report Link</th>
               <th className="border p-2">Portal Link</th>
+              <th className="border p-2">Admin Testing Link</th>
               <th className="border p-2">Actions</th>
             </tr>
           </thead>

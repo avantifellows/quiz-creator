@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import TableRow from "./Row";
 import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
