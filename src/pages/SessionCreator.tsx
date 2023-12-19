@@ -42,7 +42,6 @@ export default function SessionCreator() {
     const postResult = await response.json();
 
     const sessionId = postResult.id;
-    console.log(sessionId);
 
     setIsSessionAdded(true);
 
