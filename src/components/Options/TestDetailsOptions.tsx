@@ -3,7 +3,7 @@ import { OptionType } from "./StudentDetailsOptions";
 const TestTypeOptions: OptionType[] = [
   { value: "assessment", label: "Assessment" },
   { value: "homework", label: "Homework" },
-  { value: "omr_assessment", label: "Omr-Assessment" },
+  { value: "omr-assessment", label: "Omr-Assessment" },
 ];
 
 const TestFormatOptions: OptionType[] = [
@@ -25,7 +25,10 @@ const TestPurposeOptions: OptionType[] = [
   { value: "one_time_test", label: "One Time Test" },
 ];
 
-const TestPlatformOptions = [{ value: "Quiz", label: "Quiz" }];
+const TestPlatformOptions = [
+  { value: "quiz", label: "Quiz" },
+  { value: "meet", label: "Live Class" },
+];
 
 const MarkingSchemeOptions: OptionType[] = [
   { value: "4,-1", label: "4 , -1" },

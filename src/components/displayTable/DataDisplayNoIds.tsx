@@ -1,19 +1,18 @@
 import TableRow from "./Row";
 import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
-import { getData } from "@/utils/FormInputHandling";
 import { useRouter } from "next/router";
 
-const DataDisplay = ({
-  data,
-  hasMore,
-  currentPage,
+const DataDisplayNoIds = ({
+  dataNoIds,
+  hasMoreNoIds,
   currentPageNoIds,
+  currentPage,
 }: {
-  data: DbTypes[];
-  hasMore: boolean;
-  currentPage: number;
+  dataNoIds: DbTypes[];
+  hasMoreNoIds: boolean;
   currentPageNoIds: number;
+  currentPage: number;
 }) => {
   const router = useRouter();
 
@@ -38,12 +37,12 @@ const DataDisplay = ({
             </tr>
           </thead>
           <tbody>
-            {data.map((row, i) => (
+            {dataNoIds.map((row, i) => (
               <TableRow
+                key={i}
                 row={row}
                 index={i}
-                key={i}
-                currentPage={currentPage}
+                currentPage={currentPageNoIds}
                 itemsPerPage={itemsPerPage}
               />
             ))}
@@ -52,12 +51,9 @@ const DataDisplay = ({
         <ReactPaginate
           previousLabel={"Previous"}
           nextLabel={"Next"}
-          breakClassName={"break-me px-2 py-1"}
-          marginPagesDisplayed={0}
-          pageRangeDisplayed={0}
-          pageCount={hasMore ? currentPage + 2 : currentPage + 1}
+          pageCount={hasMoreNoIds ? currentPageNoIds + 2 : currentPageNoIds + 1}
           onPageChange={({ selected }) => {
-            router.push(`/?pageData=${selected}&pageNoIds=${currentPageNoIds}`);
+            router.push(`/?pageData=${currentPage}&pageNoIds=${selected}`);
           }}
           containerClassName={
             "pagination flex flex-wrap justify-between items-center my-4"
@@ -76,4 +72,4 @@ const DataDisplay = ({
   );
 };
 
-export default DataDisplay;
+export default DataDisplayNoIds;

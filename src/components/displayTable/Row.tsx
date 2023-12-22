@@ -36,6 +36,8 @@ const TableRow = ({
     infinite_session: sessionType,
     has_synced_to_bq: synced,
     enabled: isEnabled,
+    shortened_link: shortenedLink,
+    admin_testing_link: adminTestingLink,
   } = meta_data || {};
 
   const startDate = new Date(start_time!).toLocaleDateString();
@@ -52,22 +54,33 @@ const TableRow = ({
         <td className="border p-2">{actualIndex}</td>
         <td className="border p-2">{batch}</td>
         <td className="border p-2">{name}</td>
-        <td className="border p-2">{startDate}</td>
-        <td className="border p-2">{endDate}</td>
+        <td suppressHydrationWarning className="border p-2">
+          {startDate}
+        </td>
+        <td suppressHydrationWarning className="border p-2">
+          {endDate}
+        </td>
         <td className="border p-2">{testTakers}</td>
         <td className="border p-2">
           {typeof reportLink === "string" && (
-            <NextLink href={reportLink}>
+            <NextLink href={reportLink} target="_blank">
               <Link className="mx-auto" />
             </NextLink>
           )}
         </td>
         <td className="border p-2">
-          {/* {typeof sessionLink === "string" && (
-            <NextLink href={sessionLink}>
+          {typeof shortenedLink === "string" && (
+            <NextLink href={shortenedLink} target="_blank">
               <Link className="mx-auto" />
             </NextLink>
-          )} */}
+          )}
+        </td>
+        <td className="border p-2">
+          {typeof adminTestingLink === "string" && (
+            <NextLink href={adminTestingLink} target="_blank">
+              <Link className="mx-auto" />
+            </NextLink>
+          )}
         </td>
         <td className="border p-2 flex gap-2 justify-center">
           <Copy

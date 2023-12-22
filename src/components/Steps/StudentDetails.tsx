@@ -1,6 +1,6 @@
 import { Step } from "@/pages/SessionCreator";
 import styles from "@/styles/Home.module.css";
-import { MyForm } from "@/types/FormTypes";
+import { QuizCreatorForm } from "@/types/FormTypes";
 import { ActiveFormProps } from "@/types/types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
@@ -17,11 +17,11 @@ export default function StudentDetails({
   setActiveStep,
   setData,
 }: ActiveFormProps) {
-  const { register, handleSubmit, control } = useForm<MyForm>({
+  const { register, handleSubmit, control } = useForm<QuizCreatorForm>({
     defaultValues: { ...data.student },
   });
 
-  const onSubmit: SubmitHandler<MyForm> = (student) => {
+  const onSubmit: SubmitHandler<QuizCreatorForm> = (student) => {
     setData((prevData) => ({ ...prevData, student }));
 
     setActiveStep(Step.TEST_DETAILS);

@@ -3,8 +3,6 @@ import StudentDetails from "@/components/Steps/StudentDetails";
 import { TestDetails } from "@/components/Steps/TestDetails";
 import Timeline from "@/components/Steps/Timeline";
 import { RowType } from "@/types/types";
-import { postFormData } from "../utils/FormInputHandling";
-
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -29,10 +27,22 @@ export default function SessionCreator() {
     student: {},
     test: {},
     timeline: {},
+    session: {},
   });
 
   const createSession = async () => {
-    await postFormData(data);
+    const response = await fetch("/api/PostFormData", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const postResult = await response.json();
+
+    const sessionId = postResult.id;
+
     setIsSessionAdded(true);
 
     setTimeout(() => {

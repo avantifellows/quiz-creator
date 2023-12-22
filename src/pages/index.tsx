@@ -1,10 +1,21 @@
 import DataDisplay from "@/components/displayTable/DataDisplay";
+import DataDisplayNoIds from "@/components/displayTable/DataDisplayNoIds";
+import { DbTypes } from "@/types/ResponseTypes";
+import { getData, getDataWithoutIds } from "@/utils/FormInputHandling";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
 // TODO: Fetch data from the server using axios
 
-export default function Home() {
+export default function Home({
+  data,
+  hasMore,
+  currentPage,
+  dataNoIds,
+  hasMoreNoIds,
+  currentPageNoIds,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
   return (
@@ -29,7 +40,53 @@ export default function Home() {
         />
       </nav>
 
-      <DataDisplay />
+      <DataDisplay
+        data={data}
+        hasMore={hasMore}
+        currentPage={currentPage}
+        currentPageNoIds={currentPageNoIds}
+      />
+      <div className="text-xl flex justify-center p-2 ">
+        <h1>Sessions With No Ids</h1>
+      </div>
+      <DataDisplayNoIds
+        dataNoIds={dataNoIds}
+        hasMoreNoIds={hasMoreNoIds}
+        currentPageNoIds={currentPageNoIds}
+        currentPage={currentPage}
+      />
     </>
   );
 }
+
+export const getServerSideProps = (async ({
+  query: { pageData, pageNoIds },
+}) => {
+  const currentPageData = Number(pageData) || 0;
+  const currentPageNoIds = Number(pageNoIds) || 0;
+
+  const { data, hasMore } = await getData(currentPageData, 5);
+
+  const { dataNoIds, hasMoreNoIds } = await getDataWithoutIds(
+    currentPageNoIds,
+    5
+  );
+
+  return {
+    props: {
+      data,
+      hasMore,
+      currentPage: currentPageData,
+      dataNoIds,
+      hasMoreNoIds,
+      currentPageNoIds,
+    },
+  };
+}) satisfies GetServerSideProps<{
+  data: DbTypes[];
+  hasMore: boolean;
+  currentPage: number;
+  dataNoIds: DbTypes[];
+  hasMoreNoIds: boolean;
+  currentPageNoIds: number;
+}>;
