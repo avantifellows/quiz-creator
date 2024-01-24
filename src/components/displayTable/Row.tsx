@@ -9,6 +9,7 @@ const TableRow = ({
   index,
   currentPage,
   itemsPerPage,
+  deleteRow,
 }: {
   row: DbTypes;
   index: number;
@@ -99,6 +100,7 @@ const TableRow = ({
             className="cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
+              deleteRow(index);
             }}
           />
         </td>

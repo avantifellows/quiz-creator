@@ -3,9 +3,10 @@ import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
 import { getData } from "@/utils/FormInputHandling";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 const DataDisplay = ({
-  data,
+  data: initialData,
   hasMore,
   currentPage,
   currentPageNoIds,
@@ -15,9 +16,14 @@ const DataDisplay = ({
   currentPage: number;
   currentPageNoIds: number;
 }) => {
+  const [data, setData] = useState(initialData);
   const router = useRouter();
-
   const itemsPerPage = 5;
+
+  const deleteRow = (indexToDelete: number) => {
+    const newData = data.filter((_, index) => index !== indexToDelete);
+    setData(newData);
+  };
 
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -43,6 +49,7 @@ const DataDisplay = ({
                 row={row}
                 index={i}
                 key={i}
+                deleteRow={deleteRow}
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
               />
