@@ -20,11 +20,6 @@ const DataDisplay = ({
   const router = useRouter();
   const itemsPerPage = 5;
 
-  const deleteRow = (indexToDelete: number) => {
-    const newData = data.filter((_, index) => index !== indexToDelete);
-    setData(newData);
-  };
-
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div className="overflow-x-auto">
@@ -49,7 +44,6 @@ const DataDisplay = ({
                 row={row}
                 index={i}
                 key={i}
-                deleteRow={deleteRow}
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
               />

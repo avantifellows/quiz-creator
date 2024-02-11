@@ -9,7 +9,7 @@ interface ActiveFormProps {
   data: RowType;
   setActiveStep: Dispatch<SetStateAction<string>>;
   setData: Dispatch<SetStateAction<RowType>>;
-  createSession?: () => void;
+  OnSubmitSession?: () => void;
   isSessionAdded: boolean;
 }
 

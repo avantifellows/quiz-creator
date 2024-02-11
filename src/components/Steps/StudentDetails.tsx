@@ -1,4 +1,4 @@
-import { Step } from "@/pages/SessionCreator";
+import { Step } from "@/pages/Session";
 import styles from "@/styles/Home.module.css";
 import { QuizCreatorForm } from "@/types/FormTypes";
 import { ActiveFormProps } from "@/types/types";

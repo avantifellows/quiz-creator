@@ -39,6 +39,35 @@ export interface DbTypes {
   start_time: Date | null;
   type: null | string;
 }
+export interface PatchTypes {
+  dateCreated?: string;
+  student: Student;
+  test: Test;
+  timeline: Timeline;
+  activate_signup: boolean | null;
+  auth_type: null | string;
+  created_by_id: null;
+  end_time: Date | null;
+  form_schema_id: number | null;
+  id: number;
+  id_generation: boolean | null;
+  is_active: boolean;
+  meta_data: MetaData | null;
+  name: string;
+  number_of_fields_in_pop_form: number | null;
+  owner_id: null;
+  platform: string;
+  pop_up_form: boolean | null;
+  purpose: Purpose | null;
+  redirection: boolean | null;
+  repeat_schedule: RepeatSchedule | null;
+  start_time: Date | null;
+  type: null | string;
+  is_id_generation_allowed: boolean | null;
+  session: {
+    [key: string]: string | number | boolean | null;
+  };
+}
 
 export interface MetaData {
   batch: string;

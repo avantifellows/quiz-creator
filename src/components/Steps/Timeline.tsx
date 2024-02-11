@@ -1,4 +1,4 @@
-import { Step } from "@/pages/SessionCreator";
+import { Step } from "@/pages/Session";
 import { QuizCreatorForm } from "@/types/FormTypes";
 import { ActiveFormProps } from "@/types/types";
 import { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ export default function Timeline({
   data,
   setActiveStep,
   setData,
-  createSession,
+  OnSubmitSession,
   isSessionAdded,
 }: ActiveFormProps) {
   const [shouldSubmit, setShouldSubmit] = useState(false);
@@ -24,7 +24,7 @@ export default function Timeline({
   });
 
   useEffect(() => {
-    shouldSubmit && createSession!();
+    shouldSubmit && OnSubmitSession!();
     reset();
   }, [shouldSubmit, data]);
 

@@ -25,20 +25,21 @@ async function postFormDataToBackend(formData: RowType) {
   );
 
   const requestBody = {
-    name: test.name,
-    platform: test.platform,
-    platform_link: "",
-    portal_link: "", //responds to the portal link
+    name: test.name, //x
+    platform: test.platform, //x
+    platform_link: "", //x
+    portal_link: "", //responds to the portal link //x
     start_time: start_time,
     end_time: end_time,
     is_active: "",
     purpose: {
+      //x
       type: "attendance",
       params: "quiz",
     },
     repeat_schedule: { type: "weekly", params: [1, 2, 3, 4, 5, 6, 7] }, // this is hardcoded needs to be changed
-    session_id: "",
-    platform_id: "",
+    session_id: "", //x
+    platform_id: "", //x
     // form_schema_id: session.form_schema_id, // should be signup_form_name
     signup_form_name: "Haryana Registration Form",
     type: "sign-in",
@@ -49,27 +50,26 @@ async function postFormDataToBackend(formData: RowType) {
     pop_up_form: session.pop_up_form,
     number_of_fields_in_pop_form: session.number_of_fields_in_pop_form,
     meta_data: {
-      group: student.program,
+      group: student.program, //x
       batch: student.batch,
       grade: student.grade,
       course: student.course,
       stream: student.stream,
       test_format: test.format,
       test_purpose: test.purpose,
-      enabled: timeline.isEnabled,
-      infinite_session: true,
+      enabled: timeline.isEnabled, //remove it as it not used
       cms_test_id:
         // "https://cms.peerlearning.com/chapter_tests/655df9a23562d97a6300b53e",
-        test.cmsId,
+        test.cmsId, //x
       test_takers_count: student.testTakers,
       has_synced_to_bq: false,
       optional_limits: test.optionalLimit,
       marking_scheme: test.markingScheme,
       test_type: test.type,
-      shortened_link: "",
-      report_link: "",
-      date_created: new Date().toISOString().split("T")[0],
-      admin_testing_link: "",
+      shortened_link: "", //x
+      report_link: "", //x
+      date_created: new Date().toISOString().split("T")[0], //x
+      admin_testing_link: "", //x
     },
   };
 
@@ -80,7 +80,11 @@ async function postFormDataToBackend(formData: RowType) {
     );
 
     const sessionId = response.data.id;
-    publishMessage(sessionId);
+    const message = {
+      action: "db_id",
+      id: sessionId,
+    };
+    publishMessage(message);
     return {
       id: sessionId,
     };
