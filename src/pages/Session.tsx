@@ -30,7 +30,6 @@ export default function SessionCreator(
   const [data, setData] = useState<RowType>({
     ...props.FormData,
   });
-  console.log(props.FormData.test.id);
 
   const OnSubmitSession = async () => {
     let response;
@@ -43,16 +42,13 @@ export default function SessionCreator(
         body: JSON.stringify(data),
       });
     } else if (props.FormType === "edit") {
-      response = await fetch(
-        `/api/UpdateFormData?id=${props.FormData.test.id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      response = await fetch(`/api/PostFormData?id=${props.FormData.test.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
     }
 
     const postResult = await response!.json();

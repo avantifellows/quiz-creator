@@ -1,4 +1,4 @@
-import AWS from "aws-sdk";
+const AWS = require("aws-sdk");
 
 AWS.config.update({
   accessKeyId: process.env.AF_ACCESS_KEY_ID,
@@ -7,7 +7,7 @@ AWS.config.update({
 });
 
 const sns = new AWS.SNS();
-export function publishMessage(sessionId: string) {
+function publishMessage(sessionId) {
   const topicArn = process.env.AF_TOPIC_ARN;
 
   const params = {
@@ -23,3 +23,7 @@ export function publishMessage(sessionId: string) {
     }
   });
 }
+
+module.exports = {
+  publishMessage,
+};

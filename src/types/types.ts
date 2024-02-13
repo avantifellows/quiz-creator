@@ -29,4 +29,9 @@ interface RowType {
   };
 }
 
-export type { ActiveFormProps, OptionType, RowType };
+interface MessageObject {
+  action: string;
+  id: string;
+  patch_session: any;
+}
+export type { ActiveFormProps, OptionType, RowType, MessageObject };
