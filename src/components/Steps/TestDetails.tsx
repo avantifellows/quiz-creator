@@ -16,7 +16,12 @@ import SelectField from "./Form/SelectField";
 
 // Renders sub-page containing test details
 
-export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
+export function TestDetails({
+  data,
+  setActiveStep,
+  setData,
+  type,
+}: ActiveFormProps) {
   const { register, handleSubmit, control } = useForm<QuizCreatorForm>({
     defaultValues: { ...data.test },
   });
@@ -35,9 +40,12 @@ export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
         >
           <input
             required
-            className={styles.custom_input}
+            className={`${styles.custom_input} ${
+              type === "edit" ? styles.custom_input_disabled : ""
+            }`}
             placeholder="Test Name"
             {...register("name")}
+            disabled={type === "edit"}
           />
           <SelectField
             control={control}
@@ -64,6 +72,7 @@ export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
             placeholder="Test Platform"
           />
           <SelectField
+            isDisabled={type === "edit" ? true : false}
             control={control}
             name_="markingScheme"
             options={MarkingSchemeOptions}
@@ -80,21 +89,30 @@ export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
             <>
               <input
                 required
-                className={styles.custom_input}
+                className={`${styles.custom_input} ${
+                  type === "edit" ? styles.custom_input_disabled : ""
+                }`}
                 placeholder="Test id"
                 {...register("id")}
+                disabled={type === "edit"}
               />
               <input
                 required
-                className={styles.custom_input}
+                className={`${styles.custom_input} ${
+                  type === "edit" ? styles.custom_input_disabled : ""
+                }`}
                 placeholder="Test Session id"
                 {...register("sessionId")}
+                disabled={type === "edit"}
               />
               <input
                 required
-                className={styles.custom_input}
+                className={`${styles.custom_input} ${
+                  type === "edit" ? styles.custom_input_disabled : ""
+                }`}
                 placeholder="Test Session Link"
                 {...register("sessionLink")}
+                disabled={type === "edit"}
               />
             </>
           ) : (
@@ -102,9 +120,12 @@ export function TestDetails({ data, setActiveStep, setData }: ActiveFormProps) {
           )}
           <input
             required
-            className={styles.custom_input}
+            className={`${styles.custom_input} ${
+              type === "edit" ? styles.custom_input_disabled : ""
+            }`}
             placeholder="CMS Test id"
             {...register("cmsId")}
+            disabled={type === "edit"}
           />
           <div className="w-full flex justify-between">
             <button

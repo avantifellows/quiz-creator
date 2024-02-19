@@ -16,6 +16,7 @@ async function getData(currentPage: number, limit: number) {
   });
   const hasMore = data.length > limit;
   const items = hasMore ? data.slice(0, -1) : data;
+
   return {
     data: items,
     hasMore,
@@ -36,6 +37,8 @@ async function getDataWithoutIds(currentPage: number, limit: number) {
   });
   const hasMoreNoIds = data.length > limit;
   const items = hasMoreNoIds ? data.slice(0, -1) : data;
+  console.log(items);
+
   return {
     dataNoIds: items,
     hasMoreNoIds,
@@ -68,6 +71,7 @@ async function getASession(id: number) {
 
   const startTime = formatTimeForPicker(new Date(data.start_time!));
   const endTime = formatTimeForPicker(new Date(data.end_time!));
+  console.log(data);
 
   return {
     student: {
@@ -103,8 +107,8 @@ async function getASession(id: number) {
       startTime: startTime,
       endTime: endTime,
       portal_link: data.portal_link,
+      date_created: data.meta_data?.date_created,
     },
-    session: {},
   };
 }
 

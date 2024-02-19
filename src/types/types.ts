@@ -11,6 +11,7 @@ interface ActiveFormProps {
   setData: Dispatch<SetStateAction<RowType>>;
   OnSubmitSession?: () => void;
   isSessionAdded: boolean;
+  type: string;
 }
 
 interface RowType {
@@ -22,9 +23,6 @@ interface RowType {
     [key: string]: string | number | boolean | null;
   };
   timeline: {
-    [key: string]: string | number | boolean | null;
-  };
-  session: {
     [key: string]: string | number | boolean | null;
   };
 }

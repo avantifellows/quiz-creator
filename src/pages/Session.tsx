@@ -30,6 +30,7 @@ export default function SessionCreator(
   const [data, setData] = useState<RowType>({
     ...props.FormData,
   });
+  console.log(data);
 
   const OnSubmitSession = async () => {
     let response;
@@ -71,6 +72,7 @@ export default function SessionCreator(
           setActiveStep={setActiveStep}
           setData={setData}
           isSessionAdded={isSessionAdded}
+          type={props.FormType}
         />
       );
     } else if (activeStep === Step.TEST_DETAILS) {
@@ -80,6 +82,7 @@ export default function SessionCreator(
           setActiveStep={setActiveStep}
           setData={setData}
           isSessionAdded={isSessionAdded}
+          type={props.FormType}
         />
       );
     } else {
@@ -90,17 +93,13 @@ export default function SessionCreator(
           setData={setData}
           OnSubmitSession={OnSubmitSession}
           isSessionAdded={isSessionAdded}
+          type={props.FormType}
         />
       );
     }
   };
   return (
     <>
-      <div className="md:flex md:justify-around mt-5 flex flex-col items-center md:flex-row text-xs md:text-lg">
-        <div>Session Creator</div>
-        <div>Created Date: 26-06-2023</div>
-        <div>Created By: Arya Jain</div>
-      </div>
       <Stepper steps={stepArr} activeStep={activeStep} />
       {activeForm()}
     </>
@@ -114,7 +113,6 @@ export const getServerSideProps = (async ({ query: { type, sessionId } }) => {
           student: {},
           test: {},
           timeline: {},
-          session: {},
         },
         FormType: type,
       },
@@ -133,7 +131,6 @@ export const getServerSideProps = (async ({ query: { type, sessionId } }) => {
           student: {},
           test: {},
           timeline: {},
-          session: {},
         },
         FormType: type as string,
       },

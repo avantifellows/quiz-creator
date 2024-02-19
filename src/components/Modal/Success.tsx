@@ -1,7 +1,17 @@
 import React from "react";
 import { Check } from "react-feather";
 
-export const Success = ({ show }: { show: boolean }) => {
+export const Success = ({ show, type }: { show: boolean; type: string }) => {
+  let message = "";
+  if (type === "create") {
+    message =
+      "Your session request is added. Please wait while we generate quiz links. Redirecting to Home";
+  } else if (type === "edit") {
+    message = "Your changes have been saved. Redirecting to Home.";
+  } else {
+    message = "Redirecting to home";
+  }
+
   return (
     <section
       className={`fixed ${
@@ -16,10 +26,7 @@ export const Success = ({ show }: { show: boolean }) => {
             size={100}
           />
         </div>
-        <p className="text-xl">
-          Your session request is added. Please wait while we generate quiz
-          links. Redirecting to Home
-        </p>
+        <p className="text-xl">{message}</p>
       </div>
     </section>
   );

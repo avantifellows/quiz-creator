@@ -17,14 +17,17 @@ export default function Timeline({
   setData,
   OnSubmitSession,
   isSessionAdded,
+  type,
 }: ActiveFormProps) {
   const [shouldSubmit, setShouldSubmit] = useState(false);
+
   const { register, handleSubmit, control, reset } = useForm<QuizCreatorForm>({
     defaultValues: { ...data.timeline },
   });
 
   useEffect(() => {
     shouldSubmit && OnSubmitSession!();
+
     reset();
   }, [shouldSubmit, data]);
 
@@ -85,14 +88,14 @@ export default function Timeline({
         />
         <SelectField
           control={control}
-          name_="sessionType"
+          name_="infinite_session"
           options={SessionTypeOptions}
         />
         {data.timeline.id ? (
           <>
             <SelectField
               control={control}
-              name_="synced"
+              name_="has_synced_to_bq"
               options={HasSyncedOptions}
             />
             {/*
@@ -131,7 +134,7 @@ export default function Timeline({
           </button>
         </div>
       </form>
-      <Success show={isSessionAdded} />
+      <Success type={type} show={isSessionAdded} />
     </div>
   );
 }

@@ -14,7 +14,7 @@ async function formatDateTime(date: string, time: string) {
 }
 
 async function postFormDataToBackend(formData: RowType) {
-  const { student, test, timeline, dateCreated, session } = formData;
+  const { student, test, timeline, dateCreated } = formData;
 
   let start_time = await formatDateTime(
     timeline.startDate as string,
@@ -24,7 +24,14 @@ async function postFormDataToBackend(formData: RowType) {
     timeline.endDate as string,
     timeline.endTime as string
   );
-
+  const sessionStage = {
+    number_of_fields_in_pop_form: 3,
+    auth_type: "sign-in",
+    id_generation: false,
+    activate_signup: true,
+    redirection: true,
+    pop_up_form: true,
+  };
   const requestBody = {
     name: test.name,
     platform: test.platform,
@@ -43,12 +50,7 @@ async function postFormDataToBackend(formData: RowType) {
     // form_schema_id: session.form_schema_id, // should be signup_form_name
     signup_form_name: "Haryana Registration Form",
     type: "sign-in",
-    auth_type: session.auth_type,
-    activate_signup: session.activate_signup,
-    id_generation: session.id_generation,
-    redirection: session.redirection,
-    pop_up_form: session.pop_up_form,
-    number_of_fields_in_pop_form: session.number_of_fields_in_pop_form,
+    ...sessionStage,
     meta_data: {
       group: student.program,
       batch: student.batch,
@@ -60,7 +62,7 @@ async function postFormDataToBackend(formData: RowType) {
       enabled: timeline.isEnabled,
       cms_test_id:
         // "https://cms.peerlearning.com/chapter_tests/655df9a23562d97a6300b53e",
-        test.cmsId, //x
+        test.cmsId,
       test_takers_count: student.testTakers,
       has_synced_to_bq: false,
       optional_limits: test.optionalLimit,
@@ -68,8 +70,9 @@ async function postFormDataToBackend(formData: RowType) {
       test_type: test.type,
       shortened_link: "",
       report_link: "",
-      date_created: new Date().toISOString().split("T")[0], //x
+      date_created: new Date().toISOString().split("T")[0],
       admin_testing_link: "",
+      infinite_session: timeline.infinite_session,
     },
   };
 
@@ -98,7 +101,7 @@ async function UpdateFormDataToBackend(
   formData: PatchTypes,
   sessionId: string
 ) {
-  const { student, test, timeline, session } = formData;
+  const { student, test, timeline } = formData;
 
   let start_time = await formatDateTime(
     timeline.startDate as string,
@@ -114,12 +117,12 @@ async function UpdateFormDataToBackend(
     end_time,
     signup_form_name: "Haryana Registration Form",
     type: "sign-in",
-    auth_type: session.auth_type,
-    activate_signup: session.activate_signup,
-    id_generation: session.id_generation,
-    redirection: session.redirection,
-    pop_up_form: session.pop_up_form,
-    number_of_fields_in_pop_form: session.number_of_fields_in_pop_form,
+    number_of_fields_in_pop_form: 3,
+    auth_type: "sign-in",
+    id_generation: false,
+    activate_signup: true,
+    redirection: true,
+    pop_up_form: true,
   };
 
   if (student || test || timeline) {
