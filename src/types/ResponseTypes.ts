@@ -40,7 +40,7 @@ export interface DbTypes {
   type: null | string;
 }
 export interface PatchTypes {
-  dateCreated?: string;
+  dateCreated?: string | null;
   student: Student;
   test: Test;
   timeline: Timeline;
@@ -73,7 +73,7 @@ export interface MetaData {
   batch: string;
   cms_test_id: string;
   course: string;
-  date_created: string;
+  date_created: string | null;
   enabled: number;
   grade: string;
   group: string;

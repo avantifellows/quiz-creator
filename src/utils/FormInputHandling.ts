@@ -37,7 +37,6 @@ async function getDataWithoutIds(currentPage: number, limit: number) {
   });
   const hasMoreNoIds = data.length > limit;
   const items = hasMoreNoIds ? data.slice(0, -1) : data;
-  console.log(items);
 
   return {
     dataNoIds: items,
@@ -71,7 +70,6 @@ async function getASession(id: number) {
 
   const startTime = formatTimeForPicker(new Date(data.start_time!));
   const endTime = formatTimeForPicker(new Date(data.end_time!));
-  console.log(data);
 
   return {
     student: {
@@ -99,7 +97,7 @@ async function getASession(id: number) {
     timeline: {
       isEnabled: data.meta_data?.enabled || null,
       synced: data.meta_data?.has_synced_to_bq,
-      sessionType: data.meta_data?.infinite_session,
+      infinite_session: data.meta_data?.infinite_session,
       reportLink: data.meta_data?.report_link || null,
       repeatSchedule: data.repeat_schedule,
       startDate: startDate,

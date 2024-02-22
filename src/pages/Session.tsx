@@ -30,7 +30,6 @@ export default function SessionCreator(
   const [data, setData] = useState<RowType>({
     ...props.FormData,
   });
-  console.log(data);
 
   const OnSubmitSession = async () => {
     let response;
@@ -119,6 +118,7 @@ export const getServerSideProps = (async ({ query: { type, sessionId } }) => {
     };
   } else if (type === "edit" && sessionId) {
     const FormData = await getASession(Number(sessionId));
+    console.log({ FormData });
 
     return {
       props: { FormData: FormData as RowType, FormType: type },

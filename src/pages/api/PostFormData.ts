@@ -97,10 +97,7 @@ async function postFormDataToBackend(formData: RowType) {
   }
 }
 
-async function UpdateFormDataToBackend(
-  formData: PatchTypes,
-  sessionId: string
-) {
+async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
   const { student, test, timeline } = formData;
 
   let start_time = await formatDateTime(
@@ -123,28 +120,28 @@ async function UpdateFormDataToBackend(
     activate_signup: true,
     redirection: true,
     pop_up_form: true,
-  };
-
-  if (student || test || timeline) {
-    patchBody.meta_data = {
-      ...(student.program ? { group: student.program } : {}),
-      ...(student.batch ? { batch: student.batch } : {}),
-      ...(student.grade ? { grade: student.grade } : {}),
-      ...(student.course ? { course: student.course } : {}),
-      ...(student.stream ? { stream: student.stream } : {}),
-      ...(test.format ? { test_format: test.format } : {}),
-      ...(test.purpose ? { test_purpose: test.purpose } : {}),
-      ...(test.cmsId ? { cms_test_id: test.cmsId } : {}),
-      ...(student.testTakers ? { test_takers_count: student.testTakers } : {}),
-      ...(test.optionalLimit ? { optional_limits: test.optionalLimit } : {}),
-      ...(test.markingScheme ? { marking_scheme: test.markingScheme } : {}),
-      ...(test.type ? { test_type: test.type } : {}),
-      ...(test.shortened_link ? { test_type: test.shortened_link } : {}),
-      date_created: timeline.date_created,
-      infinite_session: true,
+    meta_data: {
+      group: student.program,
+      batch: student.batch,
+      grade: student.grade,
+      course: student.course,
+      stream: student.stream,
+      test_format: test.format,
+      test_purpose: test.purpose,
+      enabled: timeline.isEnabled,
+      cms_test_id: test.cmsId,
+      test_takers_count: student.testTakers,
       has_synced_to_bq: false,
-    };
-  }
+      optional_limits: test.optionalLimit,
+      marking_scheme: test.markingScheme,
+      test_type: test.type,
+      shortened_link: test.sessionLink,
+      report_link: timeline.reportLink,
+      date_created: timeline.date_created,
+      admin_testing_link: test.link,
+      infinite_session: timeline.infinite_session,
+    },
+  };
 
   try {
     const message = {
@@ -153,7 +150,7 @@ async function UpdateFormDataToBackend(
       patch_session: patchBody,
     };
 
-    publishMessage(JSON.stringify(message));
+    publishMessage(message);
 
     return {
       id: sessionId,
