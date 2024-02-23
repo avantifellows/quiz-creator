@@ -81,11 +81,17 @@ export default function Timeline({
             {...register("endTime")}
           />
         </div>
+        <div className="flex md:w-full md:justify-start m-1 ">
+          <label className="text-gray-400 text-md  ">Enabled</label>
+        </div>
         <SelectField
           control={control}
           name_="isEnabled"
           options={IsEnabledOptions}
         />
+        <div className="flex md:w-full md:justify-start m-1 ">
+          <label className="text-gray-400 text-md  ">Session Type</label>
+        </div>
         <SelectField
           control={control}
           name_="infinite_session"

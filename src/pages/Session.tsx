@@ -5,6 +5,7 @@ import Timeline from "@/components/Steps/Timeline";
 import { RowType } from "@/types/types";
 import { getASession } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -59,8 +60,9 @@ export default function SessionCreator(
 
     setTimeout(() => {
       router.push("/");
+      redirect;
       setIsSessionAdded(false);
-    }, 2000);
+    }, 10000);
   };
 
   const activeForm = () => {

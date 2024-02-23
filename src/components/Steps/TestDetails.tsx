@@ -38,6 +38,9 @@ export function TestDetails({
           className="flex flex-col items-center m-[60px]"
           onSubmit={handleSubmit(onSubmit)}
         >
+          <div className="flex md:w-full md:justify-start m-1 ">
+            <label className="text-gray-400 text-md  ">Test Name</label>
+          </div>
           <input
             required
             className={`${styles.custom_input} ${
@@ -47,37 +50,55 @@ export function TestDetails({
             {...register("name")}
             disabled={type === "edit"}
           />
+          <div className="flex md:w-full md:justify-start m-1 ">
+            <label className="text-gray-400 text-md  ">Test Type</label>
+          </div>
           <SelectField
             control={control}
             name_="type"
             options={TestTypeOptions}
             placeholder="Test Type"
           />
+          <div className="flex md:w-full md:justify-start m-1 ">
+            <label className="text-gray-400 text-md  ">Test Format</label>
+          </div>
           <SelectField
             control={control}
             name_="format"
             options={TestFormatOptions}
             placeholder="Test Format"
           />
+          <div className="flex md:w-full md:justify-start m-1 ">
+            <label className="text-gray-400 text-md  ">Test Purpose</label>
+          </div>
           <SelectField
             control={control}
             name_="purpose"
             options={TestPurposeOptions}
             placeholder="Test Purpose"
           />
+          <div className="flex md:w-full md:justify-start m-1 ">
+            <label className="text-gray-400 text-md  ">Test Platform</label>
+          </div>
           <SelectField
             control={control}
             name_="platform"
             options={TestPlatformOptions}
             placeholder="Test Platform"
           />
+          <div className="flex md:w-full md:justify-start m-1 ">
+            <label className="text-gray-400 text-md  ">Marking Scheme</label>
+          </div>
           <SelectField
             isDisabled={type === "edit" ? true : false}
             control={control}
             name_="markingScheme"
             options={MarkingSchemeOptions}
-            placeholder="Test Purpose"
+            placeholder="Marking Scheme"
           />
+          <div className="flex md:w-full md:justify-start m-1 ">
+            <label className="text-gray-400 text-md  ">Optional Limit</label>
+          </div>
           <SelectField
             control={control}
             name_="optionalLimit"
@@ -87,6 +108,9 @@ export function TestDetails({
 
           {data.test.id ? (
             <>
+              <div className="flex md:w-full md:justify-start m-1 ">
+                <label className="text-gray-400 text-md  ">Test id</label>
+              </div>
               <input
                 required
                 className={`${styles.custom_input} ${
@@ -96,6 +120,9 @@ export function TestDetails({
                 {...register("id")}
                 disabled={type === "edit"}
               />
+              <div className="flex md:w-full md:justify-start m-1 ">
+                <label className="text-gray-400 text-md  ">Session Id</label>
+              </div>
               <input
                 required
                 className={`${styles.custom_input} ${
@@ -105,6 +132,9 @@ export function TestDetails({
                 {...register("sessionId")}
                 disabled={type === "edit"}
               />
+              <div className="flex md:w-full md:justify-start m-1 ">
+                <label className="text-gray-400 text-md  ">Session Link</label>
+              </div>
               <input
                 required
                 className={`${styles.custom_input} ${
@@ -118,6 +148,9 @@ export function TestDetails({
           ) : (
             <></>
           )}
+          <div className="flex md:w-full md:justify-start m-1 ">
+            <label className="text-gray-400 text-md  ">CMS TEST ID</label>
+          </div>
           <input
             required
             className={`${styles.custom_input} ${
