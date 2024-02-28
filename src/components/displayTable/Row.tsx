@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import NextLink from "next/link";
 import { Copy, Edit, Link, Trash2 } from "react-feather";
-import { RowType } from "@/types/types";
 import { DbTypes } from "@/types/ResponseTypes";
 import { useRouter } from "next/router";
 

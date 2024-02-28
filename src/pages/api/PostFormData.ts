@@ -1,4 +1,3 @@
-import { PatchTypes } from "@/types/ResponseTypes";
 import { RowType } from "@/types/types";
 import { publishMessage } from "@/utils/PublishSnsMessage";
 import { instance } from "@/utils/RootClient";
