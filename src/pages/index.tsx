@@ -5,8 +5,7 @@ import { getData, getDataWithoutIds } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-
-// TODO: Fetch data from the server using axios
+import { useEffect } from "react";
 
 export default function Home({
   data,
@@ -17,7 +16,15 @@ export default function Home({
   currentPageNoIds,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+  useEffect(() => {
+    const { type } = router.query;
+    if (type === "edit") {
+      refreshData();
+    }
+  }, [router.query]);
   return (
     <>
       <Head>
@@ -28,7 +35,7 @@ export default function Home({
 
       <nav className="flex justify-between m-2 p-5">
         <div className="bg-[#B52326] text-white text-[10px] px-2 md:px-3 rounded-lg md:text-lg">
-          <button onClick={() => router.push("/SessionCreator")}>
+          <button onClick={() => router.push("/Session?type=create")}>
             + Create Quiz Session
           </button>
         </div>

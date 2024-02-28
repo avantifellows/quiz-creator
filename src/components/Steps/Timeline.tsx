@@ -1,4 +1,4 @@
-import { Step } from "@/pages/SessionCreator";
+import { Step } from "@/pages/Session";
 import { QuizCreatorForm } from "@/types/FormTypes";
 import { ActiveFormProps } from "@/types/types";
 import { useEffect, useState } from "react";
@@ -15,16 +15,19 @@ export default function Timeline({
   data,
   setActiveStep,
   setData,
-  createSession,
+  OnSubmitSession,
   isSessionAdded,
+  type,
 }: ActiveFormProps) {
   const [shouldSubmit, setShouldSubmit] = useState(false);
+
   const { register, handleSubmit, control, reset } = useForm<QuizCreatorForm>({
     defaultValues: { ...data.timeline },
   });
 
   useEffect(() => {
-    shouldSubmit && createSession!();
+    shouldSubmit && OnSubmitSession!();
+
     reset();
   }, [shouldSubmit, data]);
 
@@ -78,21 +81,27 @@ export default function Timeline({
             {...register("endTime")}
           />
         </div>
+        <div className="flex md:w-full md:justify-start m-1 ">
+          <label className="text-gray-400 text-md  ">Enabled</label>
+        </div>
         <SelectField
           control={control}
           name_="isEnabled"
           options={IsEnabledOptions}
         />
+        <div className="flex md:w-full md:justify-start m-1 ">
+          <label className="text-gray-400 text-md  ">Session Type</label>
+        </div>
         <SelectField
           control={control}
-          name_="sessionType"
+          name_="infinite_session"
           options={SessionTypeOptions}
         />
         {data.timeline.id ? (
           <>
             <SelectField
               control={control}
-              name_="synced"
+              name_="has_synced_to_bq"
               options={HasSyncedOptions}
             />
             {/*
@@ -131,7 +140,7 @@ export default function Timeline({
           </button>
         </div>
       </form>
-      <Success show={isSessionAdded} />
+      <Success type={type} show={isSessionAdded} />
     </div>
   );
 }

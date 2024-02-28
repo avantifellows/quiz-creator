@@ -13,7 +13,7 @@ async function formatDateTime(date: string, time: string) {
 }
 
 async function postFormDataToBackend(formData: RowType) {
-  const { student, test, timeline, dateCreated, session } = formData;
+  const { student, test, timeline, dateCreated } = formData;
 
   let start_time = await formatDateTime(
     timeline.startDate as string,
@@ -23,12 +23,19 @@ async function postFormDataToBackend(formData: RowType) {
     timeline.endDate as string,
     timeline.endTime as string
   );
-
+  const sessionStage = {
+    number_of_fields_in_pop_form: 3,
+    auth_type: "sign-in",
+    id_generation: false,
+    activate_signup: true,
+    redirection: true,
+    pop_up_form: true,
+  };
   const requestBody = {
     name: test.name,
     platform: test.platform,
     platform_link: "",
-    portal_link: "", //responds to the portal link
+    portal_link: "",
     start_time: start_time,
     end_time: end_time,
     is_active: "",
@@ -42,12 +49,7 @@ async function postFormDataToBackend(formData: RowType) {
     // form_schema_id: session.form_schema_id, // should be signup_form_name
     signup_form_name: "Haryana Registration Form",
     type: "sign-in",
-    auth_type: session.auth_type,
-    activate_signup: session.activate_signup,
-    id_generation: session.id_generation,
-    redirection: session.redirection,
-    pop_up_form: session.pop_up_form,
-    number_of_fields_in_pop_form: session.number_of_fields_in_pop_form,
+    ...sessionStage,
     meta_data: {
       group: student.program,
       batch: student.batch,
@@ -57,7 +59,6 @@ async function postFormDataToBackend(formData: RowType) {
       test_format: test.format,
       test_purpose: test.purpose,
       enabled: timeline.isEnabled,
-      infinite_session: true,
       cms_test_id:
         // "https://cms.peerlearning.com/chapter_tests/655df9a23562d97a6300b53e",
         test.cmsId,
@@ -70,6 +71,7 @@ async function postFormDataToBackend(formData: RowType) {
       report_link: "",
       date_created: new Date().toISOString().split("T")[0],
       admin_testing_link: "",
+      infinite_session: timeline.infinite_session,
     },
   };
 
@@ -80,7 +82,75 @@ async function postFormDataToBackend(formData: RowType) {
     );
 
     const sessionId = response.data.id;
-    publishMessage(sessionId);
+    const message = {
+      action: "db_id",
+      id: sessionId,
+    };
+    publishMessage(message);
+    return {
+      id: sessionId,
+    };
+  } catch (error) {
+    console.error("Error posting form data", error);
+    throw error;
+  }
+}
+
+async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
+  const { student, test, timeline } = formData;
+
+  let start_time = await formatDateTime(
+    timeline.startDate as string,
+    timeline.startTime as string
+  );
+  let end_time = await formatDateTime(
+    timeline.endDate as string,
+    timeline.endTime as string
+  );
+
+  let patchBody: any = {
+    start_time,
+    end_time,
+    signup_form_name: "Haryana Registration Form",
+    type: "sign-in",
+    number_of_fields_in_pop_form: 3,
+    auth_type: "sign-in",
+    id_generation: false,
+    activate_signup: true,
+    redirection: true,
+    pop_up_form: true,
+    meta_data: {
+      group: student.program,
+      batch: student.batch,
+      grade: student.grade,
+      course: student.course,
+      stream: student.stream,
+      test_format: test.format,
+      test_purpose: test.purpose,
+      enabled: timeline.isEnabled,
+      cms_test_id: test.cmsId,
+      test_takers_count: student.testTakers,
+      has_synced_to_bq: false,
+      optional_limits: test.optionalLimit,
+      marking_scheme: test.markingScheme,
+      test_type: test.type,
+      shortened_link: test.sessionLink,
+      report_link: timeline.reportLink,
+      date_created: timeline.date_created,
+      admin_testing_link: test.link,
+      infinite_session: timeline.infinite_session,
+    },
+  };
+
+  try {
+    const message = {
+      action: "patch",
+      id: sessionId,
+      patch_session: patchBody,
+    };
+
+    publishMessage(message);
+
     return {
       id: sessionId,
     };
@@ -97,6 +167,18 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const response = await postFormDataToBackend(req.body);
+      res.status(200).json(response);
+    } catch (error) {
+      console.error("Error in API route", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  } else if (req.method === "PATCH") {
+    try {
+      const sessionId = req.query.id;
+      const response = await UpdateFormDataToBackend(
+        req.body,
+        sessionId as string
+      );
       res.status(200).json(response);
     } catch (error) {
       console.error("Error in API route", error);

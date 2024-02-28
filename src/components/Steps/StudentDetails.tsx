@@ -1,4 +1,4 @@
-import { Step } from "@/pages/SessionCreator";
+import { Step } from "@/pages/Session";
 import styles from "@/styles/Home.module.css";
 import { QuizCreatorForm } from "@/types/FormTypes";
 import { ActiveFormProps } from "@/types/types";
@@ -33,15 +33,45 @@ export default function StudentDetails({
         className="flex flex-col items-center m-[60px]"
         onSubmit={handleSubmit(onSubmit)}
       >
+        <div className="flex md:w-full md:justify-start md:ml-1 ">
+          <label htmlFor="program" className="text-gray-400 text-md">
+            Program
+          </label>
+        </div>
         <SelectField
           control={control}
           name_="program"
           options={ProgramOptions}
         />
+        <div className="flex md:w-full md:justify-start m-1 ">
+          <label htmlFor="program" className="text-gray-400 text-md ">
+            Batch
+          </label>
+        </div>
         <SelectField control={control} name_="batch" options={BatchOptions} />
+        <div className="flex md:w-full md:justify-start m-1 ">
+          <label htmlFor="program" className="text-gray-400 text-md  ">
+            Grade
+          </label>
+        </div>
         <SelectField control={control} name_="grade" options={GradeOptions} />
+        <div className="flex md:w-full justify-start m-1 ">
+          <label htmlFor="program" className="text-gray-400 text-md ">
+            Course
+          </label>
+        </div>
         <SelectField control={control} name_="course" options={CourseOptions} />
+        <div className="flex md:w-full justify-start m-1 ">
+          <label htmlFor="program" className="text-gray-400 text-md ">
+            Stream
+          </label>
+        </div>
         <SelectField control={control} name_="stream" options={StreamOptions} />
+        <div className="flex md:w-full justify-start m-1 ">
+          <label htmlFor="program" className="text-gray-400 text-md ">
+            Test Takers Count
+          </label>
+        </div>
         <input
           className={styles.custom_input}
           required

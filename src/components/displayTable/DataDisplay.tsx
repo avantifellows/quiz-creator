@@ -1,11 +1,11 @@
 import TableRow from "./Row";
 import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
-import { getData } from "@/utils/FormInputHandling";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 const DataDisplay = ({
-  data,
+  data: initialData,
   hasMore,
   currentPage,
   currentPageNoIds,
@@ -15,8 +15,8 @@ const DataDisplay = ({
   currentPage: number;
   currentPageNoIds: number;
 }) => {
+  const [data, setData] = useState(initialData);
   const router = useRouter();
-
   const itemsPerPage = 5;
 
   return (

@@ -7,11 +7,11 @@ AWS.config.update({
 });
 
 const sns = new AWS.SNS();
-function publishMessage(sessionId) {
+function publishMessage(message) {
   const topicArn = process.env.AF_TOPIC_ARN;
 
   const params = {
-    Message: sessionId.toString(),
+    Message: JSON.stringify(message),
     TopicArn: topicArn,
   };
 

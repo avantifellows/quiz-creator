@@ -8,6 +8,7 @@ interface SelectFieldProps {
   options: OptionType[];
   name_: QuizCreatorFormKey;
   placeholder?: string;
+  isDisabled?: boolean;
 }
 
 const SelectField = ({
@@ -15,6 +16,7 @@ const SelectField = ({
   options,
   name_,
   placeholder,
+  isDisabled,
 }: SelectFieldProps) => {
   return (
     <Controller
@@ -22,6 +24,7 @@ const SelectField = ({
       control={control}
       render={({ field: { onChange, value, ref } }) => (
         <Select
+          isDisabled={isDisabled}
           required
           isSearchable={false}
           placeholder={

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import NextLink from "next/link";
 import { Copy, Edit, Link, Trash2 } from "react-feather";
-import { RowType } from "@/types/types";
 import { DbTypes } from "@/types/ResponseTypes";
+import { useRouter } from "next/router";
 
 const TableRow = ({
   row,
@@ -22,6 +22,7 @@ const TableRow = ({
     end_time,
     repeat_schedule: repeatSchedule,
     name,
+    id,
   } = row!;
 
   const {
@@ -40,6 +41,7 @@ const TableRow = ({
     admin_testing_link: adminTestingLink,
   } = meta_data || {};
 
+  const router = useRouter();
   const startDate = new Date(start_time!).toLocaleDateString();
   const endDate = new Date(end_time!).toLocaleDateString();
 
@@ -83,15 +85,11 @@ const TableRow = ({
           )}
         </td>
         <td className="border p-2 flex gap-2 justify-center">
-          <Copy
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          />
+          <Copy className="cursor-pointer" />
           <Edit
             className="cursor-pointer"
             onClick={(e) => {
+              router.push(`/Session?type=edit&sessionId=${id}`);
               e.stopPropagation();
             }}
           />

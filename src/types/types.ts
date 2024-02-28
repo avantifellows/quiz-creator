@@ -9,8 +9,9 @@ interface ActiveFormProps {
   data: RowType;
   setActiveStep: Dispatch<SetStateAction<string>>;
   setData: Dispatch<SetStateAction<RowType>>;
-  createSession?: () => void;
+  OnSubmitSession?: () => void;
   isSessionAdded: boolean;
+  type: string;
 }
 
 interface RowType {
@@ -24,9 +25,11 @@ interface RowType {
   timeline: {
     [key: string]: string | number | boolean | null;
   };
-  session: {
-    [key: string]: string | number | boolean | null;
-  };
 }
 
-export type { ActiveFormProps, OptionType, RowType };
+interface MessageObject {
+  action: string;
+  id: string;
+  patch_session: any;
+}
+export type { ActiveFormProps, OptionType, RowType, MessageObject };
