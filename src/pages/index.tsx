@@ -5,6 +5,7 @@ import { getData, getDataWithoutIds } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Home({
   data,
@@ -15,7 +16,15 @@ export default function Home({
   currentPageNoIds,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+  useEffect(() => {
+    const { type } = router.query;
+    if (type === "edit") {
+      refreshData();
+    }
+  }, [router.query]);
   return (
     <>
       <Head>

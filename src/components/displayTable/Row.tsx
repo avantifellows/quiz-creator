@@ -91,6 +91,7 @@ const TableRow = ({
             className="cursor-pointer"
             onClick={(e) => {
               router.push(`/Session?type=edit&sessionId=${id}`);
+              e.stopPropagation();
             }}
           />
           <Trash2

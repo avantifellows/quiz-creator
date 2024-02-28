@@ -1,7 +1,6 @@
 import TableRow from "./Row";
 import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
-import { getData } from "@/utils/FormInputHandling";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
