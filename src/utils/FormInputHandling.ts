@@ -1,6 +1,5 @@
-import { RowType } from "@/types/types";
 import { instance } from "./RootClient";
-import { DbTypes, PatchTypes } from "@/types/ResponseTypes";
+import { DbTypes } from "@/types/ResponseTypes";
 
 // get data from the db when session id is generated
 async function getData(currentPage: number, limit: number) {
@@ -41,17 +40,6 @@ async function getDataWithoutIds(currentPage: number, limit: number) {
   return {
     dataNoIds: items,
     hasMoreNoIds,
-  };
-}
-
-async function updateData(id: number, updatedSessionData: Partial<RowType>) {
-  const { data } = await instance.patch<PatchTypes[]>(
-    `api/session/${id}`,
-    updatedSessionData
-  );
-
-  return {
-    data,
   };
 }
 
@@ -110,4 +98,4 @@ async function getASession(id: number) {
   };
 }
 
-export { getData, getDataWithoutIds, updateData, getASession };
+export { getData, getDataWithoutIds, getASession };
