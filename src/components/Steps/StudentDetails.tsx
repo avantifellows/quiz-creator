@@ -16,6 +16,7 @@ export default function StudentDetails({
   data,
   setActiveStep,
   setData,
+  type,
 }: ActiveFormProps) {
   const { register, handleSubmit, control } = useForm<QuizCreatorForm>({
     defaultValues: { ...data.student },
@@ -40,6 +41,7 @@ export default function StudentDetails({
         </div>
         <SelectField
           control={control}
+          isDisabled={type === "edit" ? true : false}
           name_="program"
           options={ProgramOptions}
         />

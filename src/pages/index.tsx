@@ -11,20 +11,18 @@ export default function Home({
   data,
   hasMore,
   currentPage,
-  dataNoIds,
-  hasMoreNoIds,
-  currentPageNoIds,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-  const refreshData = () => {
-    router.replace(router.asPath);
-  };
-  useEffect(() => {
-    const { type } = router.query;
-    if (type === "edit") {
-      refreshData();
-    }
-  }, [router.query]);
+
+  // const refreshData = () => {
+  //   router.replace(router.asPath);
+  // };
+  // useEffect(() => {
+  //   const { type } = router.query;
+  //   if (type === "edit") {
+  //     // refreshData();
+  //   }
+  // }, [router.query]);
   return (
     <>
       <Head>
@@ -47,53 +45,26 @@ export default function Home({
         />
       </nav>
 
-      <DataDisplay
-        data={data}
-        hasMore={hasMore}
-        currentPage={currentPage}
-        currentPageNoIds={currentPageNoIds}
-      />
-      <div className="text-xl flex justify-center p-2 ">
-        <h1>Sessions With No Ids</h1>
-      </div>
-      <DataDisplayNoIds
-        dataNoIds={dataNoIds}
-        hasMoreNoIds={hasMoreNoIds}
-        currentPageNoIds={currentPageNoIds}
-        currentPage={currentPage}
-      />
+      <DataDisplay data={data} hasMore={hasMore} currentPage={currentPage} />
     </>
   );
 }
 
-export const getServerSideProps = (async ({
-  query: { pageData, pageNoIds },
-}) => {
-  const currentPageData = Number(pageData) || 0;
-  const currentPageNoIds = Number(pageNoIds) || 0;
+export const getServerSideProps = (async ({ query: { pageNo } }) => {
+  const currentPage = Number(pageNo) || 0;
 
-  const { data, hasMore } = await getData(currentPageData, 5);
-
-  const { dataNoIds, hasMoreNoIds } = await getDataWithoutIds(
-    currentPageNoIds,
-    5
-  );
+  const { data, hasMore } = await getData(currentPage, 10);
+  // console.log(data);
 
   return {
     props: {
       data,
       hasMore,
-      currentPage: currentPageData,
-      dataNoIds,
-      hasMoreNoIds,
-      currentPageNoIds,
+      currentPage,
     },
   };
 }) satisfies GetServerSideProps<{
   data: DbTypes[];
   hasMore: boolean;
   currentPage: number;
-  dataNoIds: DbTypes[];
-  hasMoreNoIds: boolean;
-  currentPageNoIds: number;
 }>;

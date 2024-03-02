@@ -55,6 +55,7 @@ export function TestDetails({
           </div>
           <SelectField
             control={control}
+            isDisabled={type === "edit" ? true : false}
             name_="type"
             options={TestTypeOptions}
             placeholder="Test Type"
@@ -82,6 +83,7 @@ export function TestDetails({
           </div>
           <SelectField
             control={control}
+            isDisabled={type === "edit" ? true : false}
             name_="platform"
             options={TestPlatformOptions}
             placeholder="Test Platform"
@@ -89,6 +91,7 @@ export function TestDetails({
           <div className="flex md:w-full md:justify-start m-1 ">
             <label className="text-gray-400 text-md  ">Marking Scheme</label>
           </div>
+          {/* program, */}
           <SelectField
             isDisabled={type === "edit" ? true : false}
             control={control}
@@ -101,6 +104,7 @@ export function TestDetails({
           </div>
           <SelectField
             control={control}
+            isDisabled={type === "edit" ? true : false}
             name_="optionalLimit"
             options={OptionalLimitOptions}
             placeholder="Optional Limit"

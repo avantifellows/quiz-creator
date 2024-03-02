@@ -41,6 +41,8 @@ const TableRow = ({
     admin_testing_link: adminTestingLink,
   } = meta_data || {};
 
+  // console.log(id);
+  const hasNoId = !id;
   const router = useRouter();
   const startDate = new Date(start_time!).toLocaleDateString();
   const endDate = new Date(end_time!).toLocaleDateString();
@@ -49,10 +51,14 @@ const TableRow = ({
   const endTime = new Date(end_time!).toLocaleTimeString();
 
   const actualIndex = currentPage * itemsPerPage + index + 1;
+  console.log({ currentPage, itemsPerPage });
 
   return (
     <>
-      <tr className="border text-center" onClick={() => setIsExpand(!isExpand)}>
+      <tr
+        className={`${hasNoId && `text-gray-400`} border text-center`}
+        onClick={() => setIsExpand(!isExpand)}
+      >
         <td className="border p-2">{actualIndex}</td>
         <td className="border p-2">{batch}</td>
         <td className="border p-2">{name}</td>
@@ -64,21 +70,21 @@ const TableRow = ({
         </td>
         <td className="border p-2">{testTakers}</td>
         <td className="border p-2">
-          {typeof reportLink === "string" && (
+          {typeof reportLink === "string" && !hasNoId && (
             <NextLink href={reportLink} target="_blank">
               <Link className="mx-auto" />
             </NextLink>
           )}
         </td>
         <td className="border p-2">
-          {typeof shortenedLink === "string" && (
+          {typeof shortenedLink === "string" && !hasNoId && (
             <NextLink href={shortenedLink} target="_blank">
               <Link className="mx-auto" />
             </NextLink>
           )}
         </td>
         <td className="border p-2">
-          {typeof adminTestingLink === "string" && (
+          {typeof adminTestingLink === "string" && !hasNoId && (
             <NextLink href={adminTestingLink} target="_blank">
               <Link className="mx-auto" />
             </NextLink>
@@ -90,12 +96,6 @@ const TableRow = ({
             className="cursor-pointer"
             onClick={(e) => {
               router.push(`/Session?type=edit&sessionId=${id}`);
-              e.stopPropagation();
-            }}
-          />
-          <Trash2
-            className="cursor-pointer"
-            onClick={(e) => {
               e.stopPropagation();
             }}
           />

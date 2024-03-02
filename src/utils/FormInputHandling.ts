@@ -6,7 +6,7 @@ async function getData(currentPage: number, limit: number) {
   const offset = currentPage * limit;
   const { data } = await instance.get<DbTypes[]>(`api/session`, {
     params: {
-      session_id_is_null: false,
+      // session_id_is_null: false,
       offset,
       limit: limit + 1,
       sort_order: "desc",

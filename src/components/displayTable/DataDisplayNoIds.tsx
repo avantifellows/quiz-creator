@@ -53,7 +53,7 @@ const DataDisplayNoIds = ({
           nextLabel={"Next"}
           pageCount={hasMoreNoIds ? currentPageNoIds + 2 : currentPageNoIds + 1}
           onPageChange={({ selected }) => {
-            router.push(`/?pageData=${currentPage}&pageNoIds=${selected}`);
+            router.push(`/?pageNo=${currentPage}&pageNoIds=${selected}`);
           }}
           containerClassName={
             "pagination flex flex-wrap justify-between items-center my-4"
