@@ -2,7 +2,6 @@ import TableRow from "./Row";
 import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 const DataDisplay = ({
   data,
@@ -18,19 +17,19 @@ const DataDisplay = ({
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div className="overflow-x-auto">
-        <table className="min-w-full border text-center">
-          <thead className="">
-            <tr>
-              <th className="border p-2">S.No</th>
-              <th className="border p-2">Batch</th>
-              <th className="border p-2">Test Name</th>
-              <th className="border p-2">Start Date</th>
-              <th className="border p-2">End Date</th>
-              <th className="border p-2">Test Taker</th>
-              <th className="border p-2">Report Link</th>
-              <th className="border p-2">Portal Link</th>
-              <th className="border p-2">Admin Testing Link</th>
-              <th className="border p-2">Actions</th>
+        <table className="min-w-full text-center">
+          <thead>
+            <tr className="border-black border-2  p-2">
+              <th className="border-none p-2">S.No</th>
+              <th className="border-none p-2">Batch</th>
+              <th className="border-none p-2">Test Name</th>
+              <th className="border-none p-2">Start Date</th>
+              <th className="border-none p-2">End Date</th>
+              <th className="border-none p-2">Test Taker</th>
+              <th className="border-none p-2">Report Link</th>
+              <th className="border-none p-2">Portal Link</th>
+              <th className="border-none p-2">Admin Testing Link</th>
+              <th className="border-none p-2">Actions</th>
             </tr>
           </thead>
           <tbody>

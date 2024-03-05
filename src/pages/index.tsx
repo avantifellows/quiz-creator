@@ -1,11 +1,11 @@
 import DataDisplay from "@/components/displayTable/DataDisplay";
-import DataDisplayNoIds from "@/components/displayTable/DataDisplayNoIds";
 import { DbTypes } from "@/types/ResponseTypes";
-import { getData, getDataWithoutIds } from "@/utils/FormInputHandling";
+import { getData } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { Search } from "react-feather";
 
 export default function Home({
   data,
@@ -14,15 +14,15 @@ export default function Home({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
-  // const refreshData = () => {
-  //   router.replace(router.asPath);
-  // };
-  // useEffect(() => {
-  //   const { type } = router.query;
-  //   if (type === "edit") {
-  //     // refreshData();
-  //   }
-  // }, [router.query]);
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+  useEffect(() => {
+    const { type } = router.query;
+    if (type === "edit") {
+      refreshData();
+    }
+  }, [router.query]);
   return (
     <>
       <Head>
@@ -32,7 +32,7 @@ export default function Home({
       </Head>
 
       <nav className="flex justify-between m-2 p-5">
-        <div className="bg-[#B52326] text-white text-[10px] px-2 md:px-3 rounded-lg md:text-lg">
+        <div className="bg-[#B52326] text-[#FFFFFF] text-[20px] px-2 py-2 md:px-3 rounded-md md:text-lg">
           <button onClick={() => router.push("/Session?type=create")}>
             + Create Quiz Session
           </button>
@@ -41,7 +41,7 @@ export default function Home({
         <input
           type="text"
           placeholder="Search by CMS_id or Test_name"
-          className="rounded-md border-black border-solid border text-xs md:text-md md:px-4 md:w-1/5"
+          className="rounded-md border-black border-solid border text-md text-[#868585] md:text-md md:px-4 md:w-2/5"
         />
       </nav>
 
@@ -54,7 +54,6 @@ export const getServerSideProps = (async ({ query: { pageNo } }) => {
   const currentPage = Number(pageNo) || 0;
 
   const { data, hasMore } = await getData(currentPage, 10);
-  // console.log(data);
 
   return {
     props: {

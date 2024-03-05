@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import NextLink from "next/link";
-import { Copy, Edit, Link, Trash2 } from "react-feather";
+import { Copy, Edit, Link } from "react-feather";
 import { DbTypes } from "@/types/ResponseTypes";
 import { useRouter } from "next/router";
 
@@ -43,6 +43,9 @@ const TableRow = ({
 
   // console.log(id);
   const hasNoId = !id;
+  const hasNoreportlink = !reportLink;
+  const hasNoportallink = !shortenedLink;
+  const hasNoadmintestinglink = !adminTestingLink;
   const router = useRouter();
   const startDate = new Date(start_time!).toLocaleDateString();
   const endDate = new Date(end_time!).toLocaleDateString();
@@ -51,46 +54,51 @@ const TableRow = ({
   const endTime = new Date(end_time!).toLocaleTimeString();
 
   const actualIndex = currentPage * itemsPerPage + index + 1;
-  console.log({ currentPage, itemsPerPage });
 
   return (
     <>
       <tr
-        className={`${hasNoId && `text-gray-400`} border text-center`}
+        className={`${
+          hasNoreportlink && `text-gray-400`
+        } hover:bg-gray-50 border-none text-center`}
         onClick={() => setIsExpand(!isExpand)}
       >
-        <td className="border p-2">{actualIndex}</td>
-        <td className="border p-2">{batch}</td>
-        <td className="border p-2">{name}</td>
-        <td suppressHydrationWarning className="border p-2">
+        <td className="border-b border-black p-2">{actualIndex}</td>
+        <td className="border-b border-black p-2">{batch}</td>
+        <td className="border-b border-black p-2">{name}</td>
+        <td suppressHydrationWarning className="border-b border-black p-2">
           {startDate}
         </td>
-        <td suppressHydrationWarning className="border p-2">
+        <td suppressHydrationWarning className="border-b border-black p-2">
           {endDate}
         </td>
-        <td className="border p-2">{testTakers}</td>
-        <td className="border p-2">
-          {typeof reportLink === "string" && !hasNoId && (
+        <td className="border-b border-black p-2">{testTakers}</td>
+        <td className="border-b border-black p-2">
+          {typeof reportLink === "string" && !hasNoId && !hasNoreportlink && (
             <NextLink href={reportLink} target="_blank">
               <Link className="mx-auto" />
             </NextLink>
           )}
         </td>
-        <td className="border p-2">
-          {typeof shortenedLink === "string" && !hasNoId && (
-            <NextLink href={shortenedLink} target="_blank">
-              <Link className="mx-auto" />
-            </NextLink>
-          )}
+        <td className="border-b border-black p-2">
+          {typeof shortenedLink === "string" &&
+            !hasNoId &&
+            !hasNoportallink && (
+              <NextLink href={shortenedLink} target="_blank">
+                <Link className="mx-auto" />
+              </NextLink>
+            )}
         </td>
-        <td className="border p-2">
-          {typeof adminTestingLink === "string" && !hasNoId && (
-            <NextLink href={adminTestingLink} target="_blank">
-              <Link className="mx-auto" />
-            </NextLink>
-          )}
+        <td className="border-b border-black p-2">
+          {typeof adminTestingLink === "string" &&
+            !hasNoId &&
+            !hasNoadmintestinglink && (
+              <NextLink href={adminTestingLink} target="_blank">
+                <Link className="mx-auto" />
+              </NextLink>
+            )}
         </td>
-        <td className="border p-2 flex gap-2 justify-center">
+        <td className="border-b border-black p-2 flex gap-2 justify-center">
           <Copy className="cursor-pointer" />
           <Edit
             className="cursor-pointer"
@@ -104,27 +112,27 @@ const TableRow = ({
 
       {/* Collapsible Container */}
       {isExpand && (
-        <tr className="bg-slate-100">
-          <td colSpan={9}>
+        <tr className="bg-slate-100 text-[#3F3F3F]">
+          <td colSpan={10}>
             <table style={{ width: "100%" }}>
-              <tbody>
+              <tbody className="border-[#b52326] border-l-4 border-r-4">
                 <tr>
-                  <td>Test_type: {type}</td>
+                  <td>Test type: {type}</td>
                   <td>Test Takers Count: {testTakers}</td>
-                  <td>date_created: {dateCreated}</td>
-                  <td>infinite_session: {sessionType}</td>
+                  <td>Date Created: {dateCreated}</td>
+                  <td>Infinite Session: {sessionType}</td>
                 </tr>
                 <tr>
-                  <td>test_format: {format}</td>
-                  <td>optinal_limit: {optionalLimit}</td>
-                  <td>start_time: {startTime}</td>
-                  <td>has_synced: {synced?.toString()}</td>
+                  <td>Test Format: {format}</td>
+                  <td>Optinal Limit: {optionalLimit}</td>
+                  <td>Start Time: {startTime}</td>
+                  <td>Has Synced: {synced?.toString()}</td>
                 </tr>
                 <tr>
-                  <td>test_purpose: {purpose}</td>
-                  <td>is_enabled: {isEnabled?.toString()}</td>
-                  <td>end_time: {endTime}</td>
-                  <td>repeat_schedule: {repeatSchedule?.type}</td>
+                  <td>Test Purpose: {purpose}</td>
+                  <td>Is Enabled: {isEnabled?.toString()}</td>
+                  <td>End Time: {endTime}</td>
+                  <td>Repeat Schedule: {repeatSchedule?.type}</td>
                 </tr>
               </tbody>
             </table>
