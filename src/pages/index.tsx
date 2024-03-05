@@ -38,11 +38,14 @@ export default function Home({
           </button>
         </div>
 
-        <input
-          type="text"
-          placeholder="Search by CMS_id or Test_name"
-          className="rounded-md border-black border-solid border text-md text-[#868585] md:text-md md:px-4 md:w-2/5"
-        />
+        <div className="flex items-center border-black border-solid border rounded-md text-md text-[#868585] md:text-md md:w-2/5">
+          <Search className="m-2 " />
+          <input
+            type="text"
+            placeholder="Search by CMS_id or Test_name"
+            className="flex-grow p-2 rounded-md md:w-2/5 outline-none"
+          />
+        </div>
       </nav>
 
       <DataDisplay data={data} hasMore={hasMore} currentPage={currentPage} />
