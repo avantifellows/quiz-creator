@@ -41,7 +41,6 @@ const TableRow = ({
     admin_testing_link: adminTestingLink,
   } = meta_data || {};
 
-  // console.log(id);
   const hasNoId = !id;
   const hasNoreportlink = !reportLink;
   const hasNoportallink = !shortenedLink;
@@ -98,8 +97,8 @@ const TableRow = ({
               </NextLink>
             )}
         </td>
-        <td className="border-b border-black p-2 flex gap-2 justify-center">
-          <Copy className="cursor-pointer" />
+        <td className="border-b border-black flex-wrap">
+          <Copy className="cursor-pointer float-left" />
           <Edit
             className="cursor-pointer"
             onClick={(e) => {

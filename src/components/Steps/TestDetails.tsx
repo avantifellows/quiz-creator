@@ -38,8 +38,8 @@ export function TestDetails({
           className="flex flex-col items-center m-[60px]"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="flex md:w-full md:justify-start m-1 ">
-            <label className="text-gray-400 text-md  ">Test Name</label>
+          <div className="flex md:w-full md:justify-start  ">
+            <label className="text-gray-400 text-md mt-2 ">Test Name</label>
           </div>
           <input
             required
@@ -50,8 +50,8 @@ export function TestDetails({
             {...register("name")}
             disabled={type === "edit"}
           />
-          <div className="flex md:w-full md:justify-start m-1 ">
-            <label className="text-gray-400 text-md  ">Test Type</label>
+          <div className="flex md:w-full md:justify-start  ">
+            <label className="text-gray-400 text-md mt-2 ">Test Type</label>
           </div>
           <SelectField
             control={control}
@@ -60,8 +60,8 @@ export function TestDetails({
             options={TestTypeOptions}
             placeholder="Test Type"
           />
-          <div className="flex md:w-full md:justify-start m-1 ">
-            <label className="text-gray-400 text-md  ">Test Format</label>
+          <div className="flex md:w-full md:justify-start  ">
+            <label className="text-gray-400 text-md mt-2 ">Test Format</label>
           </div>
           <SelectField
             control={control}
@@ -69,8 +69,8 @@ export function TestDetails({
             options={TestFormatOptions}
             placeholder="Test Format"
           />
-          <div className="flex md:w-full md:justify-start m-1 ">
-            <label className="text-gray-400 text-md  ">Test Purpose</label>
+          <div className="flex md:w-full md:justify-start ">
+            <label className="text-gray-400 text-md  mt-2">Test Purpose</label>
           </div>
           <SelectField
             control={control}
@@ -78,8 +78,8 @@ export function TestDetails({
             options={TestPurposeOptions}
             placeholder="Test Purpose"
           />
-          <div className="flex md:w-full md:justify-start m-1 ">
-            <label className="text-gray-400 text-md  ">Test Platform</label>
+          <div className="flex md:w-full md:justify-start  ">
+            <label className="text-gray-400 text-md  mt-2">Test Platform</label>
           </div>
           <SelectField
             control={control}
@@ -88,8 +88,10 @@ export function TestDetails({
             options={TestPlatformOptions}
             placeholder="Test Platform"
           />
-          <div className="flex md:w-full md:justify-start m-1 ">
-            <label className="text-gray-400 text-md  ">Marking Scheme</label>
+          <div className="flex md:w-full md:justify-start  ">
+            <label className="text-gray-400 text-md mt-2 ">
+              Marking Scheme
+            </label>
           </div>
           {/* program, */}
           <SelectField
@@ -99,8 +101,10 @@ export function TestDetails({
             options={MarkingSchemeOptions}
             placeholder="Marking Scheme"
           />
-          <div className="flex md:w-full md:justify-start m-1 ">
-            <label className="text-gray-400 text-md  ">Optional Limit</label>
+          <div className="flex md:w-full md:justify-start  ">
+            <label className="text-gray-400 text-md  mt-2">
+              Optional Limit
+            </label>
           </div>
           <SelectField
             control={control}
@@ -112,8 +116,8 @@ export function TestDetails({
 
           {data.test.id ? (
             <>
-              <div className="flex md:w-full md:justify-start m-1 ">
-                <label className="text-gray-400 text-md  ">Test id</label>
+              <div className="flex md:w-full md:justify-start ">
+                <label className="text-gray-400 text-md  mt-2">Test id</label>
               </div>
               <input
                 required
@@ -124,8 +128,10 @@ export function TestDetails({
                 {...register("id")}
                 disabled={type === "edit"}
               />
-              <div className="flex md:w-full md:justify-start m-1 ">
-                <label className="text-gray-400 text-md  ">Session Id</label>
+              <div className="flex md:w-full md:justify-start  ">
+                <label className="text-gray-400 text-md mt-2 ">
+                  Session Id
+                </label>
               </div>
               <input
                 required
@@ -136,8 +142,10 @@ export function TestDetails({
                 {...register("sessionId")}
                 disabled={type === "edit"}
               />
-              <div className="flex md:w-full md:justify-start m-1 ">
-                <label className="text-gray-400 text-md  ">Session Link</label>
+              <div className="flex md:w-full md:justify-start ">
+                <label className="text-gray-400 text-md  mt-2">
+                  Session Link
+                </label>
               </div>
               <input
                 required
@@ -152,8 +160,8 @@ export function TestDetails({
           ) : (
             <></>
           )}
-          <div className="flex md:w-full md:justify-start m-1 ">
-            <label className="text-gray-400 text-md  ">CMS TEST ID</label>
+          <div className="flex md:w-full md:justify-start ">
+            <label className="text-gray-400 text-md  mt-2">CMS TEST ID</label>
           </div>
           <input
             required

@@ -35,7 +35,7 @@ export default function StudentDetails({
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex md:w-full md:justify-start md:ml-1 ">
-          <label htmlFor="program" className="text-gray-400 text-md">
+          <label htmlFor="program" className="text-gray-400 text-md mt-2 ">
             Program
           </label>
         </div>
@@ -45,32 +45,32 @@ export default function StudentDetails({
           name_="program"
           options={ProgramOptions}
         />
-        <div className="flex md:w-full md:justify-start m-1 ">
-          <label htmlFor="program" className="text-gray-400 text-md ">
+        <div className="flex md:w-full md:justify-start ">
+          <label htmlFor="program" className="text-gray-400 text-md mt-2   ">
             Batch
           </label>
         </div>
         <SelectField control={control} name_="batch" options={BatchOptions} />
-        <div className="flex md:w-full md:justify-start m-1 ">
-          <label htmlFor="program" className="text-gray-400 text-md  ">
+        <div className="flex md:w-full md:justify-start  ">
+          <label htmlFor="program" className="text-gray-400 text-md  mt-2  ">
             Grade
           </label>
         </div>
         <SelectField control={control} name_="grade" options={GradeOptions} />
-        <div className="flex md:w-full justify-start m-1 ">
-          <label htmlFor="program" className="text-gray-400 text-md ">
+        <div className="flex md:w-full justify-start ">
+          <label htmlFor="program" className="text-gray-400 text-md mt-2">
             Course
           </label>
         </div>
         <SelectField control={control} name_="course" options={CourseOptions} />
-        <div className="flex md:w-full justify-start m-1 ">
-          <label htmlFor="program" className="text-gray-400 text-md ">
+        <div className="flex md:w-full justify-start ">
+          <label htmlFor="program" className="text-gray-400 text-md mt-2">
             Stream
           </label>
         </div>
         <SelectField control={control} name_="stream" options={StreamOptions} />
-        <div className="flex md:w-full justify-start m-1 ">
-          <label htmlFor="program" className="text-gray-400 text-md ">
+        <div className="flex md:w-full justify-start ">
+          <label htmlFor="program" className="text-gray-400 text-md mt-2">
             Test Takers Count
           </label>
         </div>
