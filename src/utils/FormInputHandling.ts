@@ -14,7 +14,6 @@ async function getData(currentPage: number, limit: number) {
   });
   const hasMore = data.length > limit;
   const items = hasMore ? data.slice(0, -1) : data;
-  console.log(data);
 
   return {
     data: items,
