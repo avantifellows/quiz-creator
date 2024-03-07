@@ -2,6 +2,7 @@ import TableRow from "./Row";
 import ReactPaginate from "react-paginate";
 import { DbTypes } from "@/types/ResponseTypes";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const DataDisplay = ({
   data,
@@ -13,6 +14,11 @@ const DataDisplay = ({
   currentPage: number;
 }) => {
   const router = useRouter();
+  const [expandedRow, setExpandedRow] = useState<number | null>(null);
+
+  useEffect(() => {
+    setExpandedRow(null);
+  }, [currentPage]);
 
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -40,6 +46,10 @@ const DataDisplay = ({
                 key={i}
                 currentPage={currentPage}
                 itemsPerPage={10}
+                isExpanded={i === expandedRow}
+                toggleExpand={() =>
+                  setExpandedRow(expandedRow === i ? null : i)
+                }
               />
             ))}
           </tbody>

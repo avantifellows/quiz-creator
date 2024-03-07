@@ -9,13 +9,16 @@ const TableRow = ({
   index,
   currentPage,
   itemsPerPage,
+  isExpanded,
+  toggleExpand,
 }: {
   row: DbTypes;
   index: number;
   currentPage: number;
   itemsPerPage: number;
+  isExpanded: boolean;
+  toggleExpand: () => void;
 }) => {
-  const [isExpand, setIsExpand] = useState<boolean>(false);
   const {
     meta_data,
     start_time,
@@ -60,7 +63,7 @@ const TableRow = ({
         className={`${
           hasNoreportlink && `text-gray-400`
         } hover:bg-gray-50 border-none text-center`}
-        onClick={() => setIsExpand(!isExpand)}
+        onClick={() => toggleExpand()}
       >
         <td className="border-b border-black p-2">{actualIndex}</td>
         <td className="border-b border-black p-2">{batch}</td>
@@ -100,7 +103,7 @@ const TableRow = ({
         <td className="border-b border-black flex-wrap">
           <Copy className="cursor-pointer float-left" />
           <Edit
-            className="cursor-pointer"
+            className="cursor-pointer float-right"
             onClick={(e) => {
               router.push(`/Session?type=edit&sessionId=${id}`);
               e.stopPropagation();
@@ -110,7 +113,7 @@ const TableRow = ({
       </tr>
 
       {/* Collapsible Container */}
-      {isExpand && (
+      {isExpanded && (
         <tr className="bg-slate-100 text-[#3F3F3F]">
           <td colSpan={10}>
             <table style={{ width: "100%" }}>
