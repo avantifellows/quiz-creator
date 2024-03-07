@@ -6,7 +6,6 @@ async function getData(currentPage: number, limit: number) {
   const offset = currentPage * limit;
   const { data } = await instance.get<DbTypes[]>(`api/session`, {
     params: {
-      session_id_is_null: false,
       offset,
       limit: limit + 1,
       sort_order: "desc",
@@ -19,27 +18,6 @@ async function getData(currentPage: number, limit: number) {
   return {
     data: items,
     hasMore,
-  };
-}
-
-// getting data from db when session_id is null
-async function getDataWithoutIds(currentPage: number, limit: number) {
-  const offset = currentPage * limit;
-  const { data } = await instance.get<DbTypes[]>(`api/session`, {
-    params: {
-      session_id_is_null: true,
-      offset,
-      limit: limit + 1,
-      sort_order: "desc",
-      platform: "quiz",
-    },
-  });
-  const hasMoreNoIds = data.length > limit;
-  const items = hasMoreNoIds ? data.slice(0, -1) : data;
-
-  return {
-    dataNoIds: items,
-    hasMoreNoIds,
   };
 }
 
@@ -98,4 +76,4 @@ async function getASession(id: number) {
   };
 }
 
-export { getData, getDataWithoutIds, getASession };
+export { getData, getASession };

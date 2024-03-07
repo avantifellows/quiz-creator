@@ -45,7 +45,7 @@ export interface MetaData {
   cms_test_id: string;
   course: string;
   date_created: string | null;
-  enabled: number;
+  enabled: boolean;
   grade: string;
   group: string;
   has_synced_to_bq: string;

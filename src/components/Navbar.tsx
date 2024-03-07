@@ -14,7 +14,9 @@ const Navbar = ({ item1, item2 }: { item1: string; item2: string }) => {
               fill
             />
           </div>
-          <p className={`md:text-2xl md:first-letter:text-3xl text-xs `}>
+          <p
+            className={`md:text-2xl md:first-letter:text-3xl md:first-letter:text-bold text-xs `}
+          >
             SESSION MANAGER
           </p>
         </div>

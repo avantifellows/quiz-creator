@@ -13,7 +13,7 @@ async function formatDateTime(date: string, time: string) {
 }
 
 async function postFormDataToBackend(formData: RowType) {
-  const { student, test, timeline, dateCreated } = formData;
+  const { student, test, timeline } = formData;
 
   let start_time = await formatDateTime(
     timeline.startDate as string,
@@ -36,8 +36,8 @@ async function postFormDataToBackend(formData: RowType) {
     platform: test.platform,
     platform_link: "",
     portal_link: "",
-    start_time: start_time,
-    end_time: end_time,
+    start_time,
+    end_time,
     is_active: "",
     purpose: {
       type: "attendance",

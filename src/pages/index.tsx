@@ -1,21 +1,19 @@
 import DataDisplay from "@/components/displayTable/DataDisplay";
-import DataDisplayNoIds from "@/components/displayTable/DataDisplayNoIds";
 import { DbTypes } from "@/types/ResponseTypes";
-import { getData, getDataWithoutIds } from "@/utils/FormInputHandling";
+import { getData } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { Search } from "react-feather";
 
 export default function Home({
   data,
   hasMore,
   currentPage,
-  dataNoIds,
-  hasMoreNoIds,
-  currentPageNoIds,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
+
   const refreshData = () => {
     router.replace(router.asPath);
   };
@@ -34,66 +32,41 @@ export default function Home({
       </Head>
 
       <nav className="flex justify-between m-2 p-5">
-        <div className="bg-[#B52326] text-white text-[10px] px-2 md:px-3 rounded-lg md:text-lg">
+        <div className="bg-[#B52326] text-[#FFFFFF] text-[20px] px-2 py-2 md:px-3 rounded-md md:text-lg">
           <button onClick={() => router.push("/Session?type=create")}>
             + Create Quiz Session
           </button>
         </div>
 
-        <input
-          type="text"
-          placeholder="Search by CMS_id or Test_name"
-          className="rounded-md border-black border-solid border text-xs md:text-md md:px-4 md:w-1/5"
-        />
+        <div className="flex items-center border-black border-solid border rounded-md text-md text-[#868585] md:text-md md:w-2/5">
+          <Search className="m-2 " />
+          <input
+            type="text"
+            placeholder="Search by CMS_id or Test_name"
+            className="flex-grow p-2 rounded-md md:w-2/5 outline-none"
+          />
+        </div>
       </nav>
 
-      <DataDisplay
-        data={data}
-        hasMore={hasMore}
-        currentPage={currentPage}
-        currentPageNoIds={currentPageNoIds}
-      />
-      <div className="text-xl flex justify-center p-2 ">
-        <h1>Sessions With No Ids</h1>
-      </div>
-      <DataDisplayNoIds
-        dataNoIds={dataNoIds}
-        hasMoreNoIds={hasMoreNoIds}
-        currentPageNoIds={currentPageNoIds}
-        currentPage={currentPage}
-      />
+      <DataDisplay data={data} hasMore={hasMore} currentPage={currentPage} />
     </>
   );
 }
 
-export const getServerSideProps = (async ({
-  query: { pageData, pageNoIds },
-}) => {
-  const currentPageData = Number(pageData) || 0;
-  const currentPageNoIds = Number(pageNoIds) || 0;
+export const getServerSideProps = (async ({ query: { pageNo } }) => {
+  const currentPage = Number(pageNo) || 0;
 
-  const { data, hasMore } = await getData(currentPageData, 5);
-
-  const { dataNoIds, hasMoreNoIds } = await getDataWithoutIds(
-    currentPageNoIds,
-    5
-  );
+  const { data, hasMore } = await getData(currentPage, 10);
 
   return {
     props: {
       data,
       hasMore,
-      currentPage: currentPageData,
-      dataNoIds,
-      hasMoreNoIds,
-      currentPageNoIds,
+      currentPage,
     },
   };
 }) satisfies GetServerSideProps<{
   data: DbTypes[];
   hasMore: boolean;
   currentPage: number;
-  dataNoIds: DbTypes[];
-  hasMoreNoIds: boolean;
-  currentPageNoIds: number;
 }>;

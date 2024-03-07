@@ -45,7 +45,7 @@ export default function Timeline({
       >
         <div>
           <div className="flex sm:mb-5 sm:space-x-5 mb-3 space-x-1 flex-col sm:flex-row space-y-3 sm:space-y-0">
-            <label className="text-xs sm:text-sm">Start Date</label>
+            <label className="text-xs sm:text-sm ">Start Date</label>
             <input
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded sm:w-full sm:p-2.5 w-20"
               placeholder="Start Date"
