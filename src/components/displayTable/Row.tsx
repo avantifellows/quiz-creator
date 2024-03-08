@@ -101,7 +101,12 @@ const TableRow = ({
             )}
         </td>
         <td className="border-b border-black flex-wrap">
-          <Copy className="cursor-pointer float-left" />
+          <Copy
+            className="cursor-pointer float-left"
+            onClick={(e) => {
+              router.push(`/Session?type=duplicate&sessionId=${id}`);
+            }}
+          />
           <Edit
             className="cursor-pointer float-right"
             onClick={(e) => {

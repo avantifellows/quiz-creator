@@ -124,6 +124,13 @@ export const getServerSideProps = (async ({ query: { type, sessionId } }) => {
     return {
       props: { FormData: FormData as RowType, FormType: type },
     };
+  } else if (type === "duplicate" && sessionId) {
+    let FormData = await getASession(Number(sessionId));
+    FormData.test.name = "";
+    FormData.test.cmsId = "";
+    return {
+      props: { FormData: FormData as RowType, FormType: "create" },
+    };
   } else {
     return {
       //Todo:Redirect to the error page
