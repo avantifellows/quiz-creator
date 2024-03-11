@@ -105,6 +105,7 @@ const TableRow = ({
             className="cursor-pointer float-left"
             onClick={(e) => {
               router.push(`/Session?type=duplicate&sessionId=${id}`);
+              e.stopPropagation();
             }}
           />
           <Edit

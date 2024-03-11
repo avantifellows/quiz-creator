@@ -7,7 +7,7 @@ import { getASession } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export enum Step {
   STUDENT_DETAILS = "StudentDetails",
@@ -31,6 +31,12 @@ export default function SessionCreator(
   const [data, setData] = useState<RowType>({
     ...props.FormData,
   });
+
+  // useEffect(() => {
+  //   if (true) {
+  //     router.replace("/");
+  //   }
+  // }, []);
 
   const OnSubmitSession = async () => {
     let response;
@@ -128,6 +134,8 @@ export const getServerSideProps = (async ({ query: { type, sessionId } }) => {
     let FormData = await getASession(Number(sessionId));
     FormData.test.name = "";
     FormData.test.cmsId = "";
+    FormData.test.id = null;
+
     return {
       props: { FormData: FormData as RowType, FormType: "create" },
     };

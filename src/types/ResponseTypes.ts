@@ -20,7 +20,7 @@ export interface DbTypes {
   created_by_id: null;
   end_time: Date | null;
   form_schema_id: number | null;
-  id: number;
+  id: number | null;
   id_generation: boolean | null;
   is_active: boolean;
   meta_data: MetaData | null;
