@@ -4,7 +4,8 @@ import { getData } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import { Search } from "react-feather";
 
 export default function Home({
@@ -14,15 +15,25 @@ export default function Home({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
-  const refreshData = () => {
-    router.replace(router.asPath);
-  };
+  const [queryParamChanged, setQueryParamChanged] = useState(false);
+
   useEffect(() => {
-    const { type } = router.query;
-    if (type === "edit") {
-      refreshData();
+    const handleRouteChange = () => {
+      setQueryParamChanged(true);
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router]);
+
+  useEffect(() => {
+    if (queryParamChanged) {
+      setQueryParamChanged(false);
     }
-  }, [router.query]);
+  }, [queryParamChanged, router]);
   return (
     <>
       <Head>
@@ -38,14 +49,14 @@ export default function Home({
           </button>
         </div>
 
-        <div className="flex items-center border-black border-solid border rounded-md text-md text-[#868585] md:text-md md:w-2/5">
+        {/* <div className="flex items-center border-black border-solid border rounded-md text-md text-[#868585] md:text-md md:w-2/5">
           <Search className="m-2 " />
           <input
             type="text"
             placeholder="Search by CMS_id or Test_name"
             className="flex-grow p-2 rounded-md md:w-2/5 outline-none"
           />
-        </div>
+        </div> */}
       </nav>
 
       <DataDisplay data={data} hasMore={hasMore} currentPage={currentPage} />

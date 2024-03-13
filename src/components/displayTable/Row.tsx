@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import NextLink from "next/link";
 import { Copy, Edit, Link } from "react-feather";
 import { DbTypes } from "@/types/ResponseTypes";
@@ -151,4 +151,4 @@ const TableRow = ({
   );
 };
 
-export default TableRow;
+export default React.memo(TableRow);

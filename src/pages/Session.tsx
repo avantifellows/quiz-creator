@@ -5,7 +5,7 @@ import Timeline from "@/components/Steps/Timeline";
 import { RowType } from "@/types/types";
 import { getASession } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { redirect } from "next/dist/server/api-utils";
+
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -26,7 +26,7 @@ export default function SessionCreator(
 ) {
   const router = useRouter();
   const [isSessionAdded, setIsSessionAdded] = useState(false);
-
+  const [showMessage, setShowMessage] = useState(false);
   const [activeStep, setActiveStep] = useState<string>(Step.STUDENT_DETAILS);
   const [data, setData] = useState<RowType>({
     ...props.FormData,
@@ -37,6 +37,19 @@ export default function SessionCreator(
   //     router.replace("/");
   //   }
   // }, []);
+
+  useEffect(() => {
+    if (isSessionAdded) {
+      setShowMessage(true);
+
+      const timeout = setTimeout(() => {
+        setShowMessage(false);
+        setIsSessionAdded(false);
+      }, 10000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isSessionAdded]);
 
   const OnSubmitSession = async () => {
     let response;
@@ -58,17 +71,13 @@ export default function SessionCreator(
       });
     }
 
-    const postResult = await response!.json();
-
-    const sessionId = postResult.id;
-
     setIsSessionAdded(true);
 
     setTimeout(() => {
       router.push("/");
-      redirect;
+
       setIsSessionAdded(false);
-    }, 10000);
+    }, 5000);
   };
 
   const activeForm = () => {
@@ -109,6 +118,12 @@ export default function SessionCreator(
     <>
       <Stepper steps={stepArr} activeStep={activeStep} />
       {activeForm()}
+      {showMessage && (
+        <p className="px-2 py-2 md:px-3 rounded-md md:text-lg text-[20px] text-black text-center">
+          Your edit request is being processed, please refresh the page after a
+          minute
+        </p>
+      )}
     </>
   );
 }

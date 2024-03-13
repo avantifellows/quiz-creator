@@ -167,6 +167,7 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const response = await postFormDataToBackend(req.body);
+
       res.status(200).json(response);
     } catch (error) {
       console.error("Error in API route", error);
@@ -179,6 +180,7 @@ export default async function handler(
         req.body,
         sessionId as string
       );
+
       res.status(200).json(response);
     } catch (error) {
       console.error("Error in API route", error);
