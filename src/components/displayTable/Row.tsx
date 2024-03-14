@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import NextLink from "next/link";
 import { Copy, Edit, Link } from "react-feather";
 import { DbTypes } from "@/types/ResponseTypes";
@@ -49,13 +49,30 @@ const TableRow = ({
   const hasNoportallink = !shortenedLink;
   const hasNoadmintestinglink = !adminTestingLink;
   const router = useRouter();
+
+  const formatTime = (timeString: string): string => {
+    const time = new Date(timeString);
+
+    const localTime = time.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return localTime;
+  };
+
+  const startTime = formatTime(start_time!);
+  const endTime = formatTime(end_time!);
+
   const startDate = new Date(start_time!).toLocaleDateString();
   const endDate = new Date(end_time!).toLocaleDateString();
 
-  const startTime = new Date(start_time!).toLocaleTimeString();
-  const endTime = new Date(end_time!).toLocaleTimeString();
-
   const actualIndex = currentPage * itemsPerPage + index + 1;
+
+  const copyToClipboard = useCallback(async (link: string) => {
+    await navigator.clipboard.writeText(link);
+    alert("Link copied");
+  }, []);
 
   return (
     <>
@@ -77,8 +94,15 @@ const TableRow = ({
         <td className="border-b border-black p-2">{testTakers}</td>
         <td className="border-b border-black p-2">
           {typeof reportLink === "string" && !hasNoId && !hasNoreportlink && (
-            <NextLink href={reportLink} target="_blank">
-              <Link className="mx-auto" />
+            <NextLink href={reportLink}>
+              <Link
+                className="mx-auto"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  copyToClipboard(reportLink);
+                }}
+              />
             </NextLink>
           )}
         </td>
@@ -87,7 +111,14 @@ const TableRow = ({
             !hasNoId &&
             !hasNoportallink && (
               <NextLink href={shortenedLink} target="_blank">
-                <Link className="mx-auto" />
+                <Link
+                  className="mx-auto"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    copyToClipboard(shortenedLink);
+                  }}
+                />
               </NextLink>
             )}
         </td>
@@ -101,20 +132,25 @@ const TableRow = ({
             )}
         </td>
         <td className="border-b border-black flex-wrap">
-          <Copy
-            className="cursor-pointer float-left"
-            onClick={(e) => {
-              router.push(`/Session?type=duplicate&sessionId=${id}`);
-              e.stopPropagation();
-            }}
-          />
-          <Edit
-            className="cursor-pointer float-right"
-            onClick={(e) => {
-              router.push(`/Session?type=edit&sessionId=${id}`);
-              e.stopPropagation();
-            }}
-          />
+          <div title="Duplicate">
+            <Copy
+              className="cursor-pointer float-left"
+              onClick={(e) => {
+                router.push(`/Session?type=duplicate&sessionId=${id}`);
+                e.stopPropagation();
+              }}
+            />
+          </div>
+
+          <div title="Edit">
+            <Edit
+              className="cursor-pointer float-right"
+              onClick={(e) => {
+                router.push(`/Session?type=edit&sessionId=${id}`);
+                e.stopPropagation();
+              }}
+            />
+          </div>
         </td>
       </tr>
 
@@ -151,4 +187,4 @@ const TableRow = ({
   );
 };
 
-export default React.memo(TableRow);
+export default TableRow;

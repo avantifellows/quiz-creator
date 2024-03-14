@@ -35,6 +35,7 @@ export default function Home({
       setQueryParamChanged(false);
     }
   }, [queryParamChanged, router]);
+
   return (
     <>
       <Head>
