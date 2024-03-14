@@ -31,6 +31,7 @@ export default function Home({
 
   useEffect(() => {
     if (queryParamChanged) {
+      router.replace(router.asPath);
       setQueryParamChanged(false);
     }
   }, [queryParamChanged, router]);
