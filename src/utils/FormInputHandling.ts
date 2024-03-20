@@ -26,7 +26,10 @@ function formatDateForPicker(date: Date): string {
 }
 
 function formatTimeForPicker(date: Date): string {
-  return date.toISOString().split("T")[1].slice(0, 5); // Extracts the time part
+  const localTime = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  ).toISOString();
+  return localTime.split("T")[1].slice(0, 5);
 }
 
 async function getASession(id: number) {
@@ -35,6 +38,7 @@ async function getASession(id: number) {
   const endDate = formatDateForPicker(new Date(data.end_time!));
 
   const startTime = formatTimeForPicker(new Date(data.start_time!));
+
   const endTime = formatTimeForPicker(new Date(data.end_time!));
 
   return {
