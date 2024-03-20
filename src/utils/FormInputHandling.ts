@@ -1,5 +1,7 @@
 import { instance } from "./RootClient";
 import { DbTypes } from "@/types/ResponseTypes";
+import { formatDateForPicker } from "./timeformater";
+import { formatTimeForPicker } from "./timeformater";
 
 // get data from the db when session id is generated
 async function getData(currentPage: number, limit: number) {
@@ -19,17 +21,6 @@ async function getData(currentPage: number, limit: number) {
     data: items,
     hasMore,
   };
-}
-
-function formatDateForPicker(date: Date): string {
-  return date.toISOString().split("T")[0]; // Extracts the date part
-}
-
-function formatTimeForPicker(date: Date): string {
-  const localTime = new Date(
-    date.getTime() - date.getTimezoneOffset() * 60000
-  ).toISOString();
-  return localTime.split("T")[1].slice(0, 5);
 }
 
 async function getASession(id: number) {

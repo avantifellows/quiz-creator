@@ -1,8 +1,9 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import NextLink from "next/link";
-import { Copy, Edit, Link } from "react-feather";
+import { Check, Copy, Edit, Link } from "react-feather";
 import { DbTypes } from "@/types/ResponseTypes";
 import { useRouter } from "next/router";
+import { formatTime } from "@/utils/timeformater";
 
 const TableRow = ({
   row,
@@ -50,18 +51,6 @@ const TableRow = ({
   const hasNoadmintestinglink = !adminTestingLink;
   const router = useRouter();
 
-  const formatTime = (timeString: string): string => {
-    const time = new Date(timeString);
-
-    const hours = time.getHours();
-    const minutes = time.getMinutes();
-    const period = hours >= 12 ? "PM" : "AM";
-    const formattedHours = hours % 12 || 12;
-    const formattedMinutes = minutes.toString().padStart(2, "0");
-
-    return `${formattedHours}:${formattedMinutes} ${period}`;
-  };
-
   const startTime = formatTime(start_time!);
   const endTime = formatTime(end_time!);
 
@@ -69,10 +58,13 @@ const TableRow = ({
   const endDate = new Date(end_time!).toLocaleDateString();
 
   const actualIndex = currentPage * itemsPerPage + index + 1;
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const copyToClipboard = useCallback(async (link: string) => {
     await navigator.clipboard.writeText(link);
-    alert("Link copied");
+
+    setIsModalVisible(true);
+    setTimeout(() => setIsModalVisible(false), 250);
   }, []);
 
   return (
@@ -183,6 +175,22 @@ const TableRow = ({
             </table>
           </td>
         </tr>
+      )}
+      {isModalVisible && (
+        <section
+          className={`fixed  inset-0 w-screen bg-gray-400/40 backdrop-blur-md`}
+        >
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 rounded-md px-5 py-10 bg-white text-center ">
+            <div className="relative">
+              <div className="m-auto h-32 aspect-square rounded-full border-4 border-solid border-current border-r-transparent text-primary animate-spin " />
+              <Check
+                className=" text-green-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                size={100}
+              />
+            </div>
+            <p className="text-xl">{`Link Copied`}</p>
+          </div>
+        </section>
       )}
     </>
   );
