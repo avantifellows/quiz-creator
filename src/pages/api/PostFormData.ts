@@ -7,7 +7,7 @@ async function formatDateTime(date: string, time: string) {
   const [year, month, day] = date.split("-").map(Number);
   const [hour, minute] = time.split(":").map(Number);
 
-  const combinedDate = new Date(year, month - 1, day, hour, minute);
+  const combinedDate = new Date(year, month - 1, day, hour, minute); // if communication is in IST or the backend expects in IST we will convert this to IST
 
   return combinedDate;
 }
@@ -19,6 +19,8 @@ async function postFormDataToBackend(formData: RowType) {
     timeline.startDate as string,
     timeline.startTime as string
   );
+  console.log("start time before posting: ", start_time); //
+
   let end_time = await formatDateTime(
     timeline.endDate as string,
     timeline.endTime as string
@@ -75,6 +77,7 @@ async function postFormDataToBackend(formData: RowType) {
     },
   };
 
+  console.log(start_time);
   try {
     const response = await instance.post(
       `${process.env.AF_DB_URL}/api/session`,
@@ -86,9 +89,18 @@ async function postFormDataToBackend(formData: RowType) {
       action: "db_id",
       id: sessionId,
     };
+
     publishMessage(message);
+    // console.log("Setting the refreshNeeded cookie!");
+    // setCookie("refreshNeeded", "true", {
+    //   // secure: process.env.NODE_ENV !== "development", // Adjust 'secure' for development
+    //   secure: false,
+    //   path: "/", // Ensure the path is suitable
+    // });
+
     return {
       id: sessionId,
+      estimatedCompletionTime: 60,
     };
   } catch (error) {
     console.error("Error posting form data", error);
@@ -148,8 +160,8 @@ async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
       id: sessionId,
       patch_session: patchBody,
     };
-
     publishMessage(message);
+    sessionStorage.setItem("refresh", "true");
 
     return {
       id: sessionId,

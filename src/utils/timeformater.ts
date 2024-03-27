@@ -1,17 +1,31 @@
+// const formatTime = (timeString: string): string => {
+//   const time = new Date(timeString);
+
+//   const hours = time.getHours();
+//   const minutes = time.getMinutes();
+//   const period = hours >= 12 ? "PM" : "AM";
+//   const formattedHours = hours % 12 || 12;
+//   const formattedMinutes = minutes.toString().padStart(2, "0");
+
+//   return `${formattedHours}:${formattedMinutes} ${period}`;
+// };
+
 const formatTime = (timeString: string): string => {
   const time = new Date(timeString);
 
-  const hours = time.getHours();
-  const minutes = time.getMinutes();
-  const period = hours >= 12 ? "PM" : "AM";
-  const formattedHours = hours % 12 || 12;
-  const formattedMinutes = minutes.toString().padStart(2, "0");
+  const options: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  };
 
-  return `${formattedHours}:${formattedMinutes} ${period}`;
+  const formattedTime = time.toLocaleString("en-IN", options);
+
+  return formattedTime;
 };
 
 function formatDateForPicker(date: Date): string {
-  return date.toISOString().split("T")[0]; // Extracts the date part
+  return date.toISOString().split("T")[0];
 }
 
 function formatTimeForPicker(date: Date): string {

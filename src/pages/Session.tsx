@@ -32,12 +32,6 @@ export default function SessionCreator(
     ...props.FormData,
   });
 
-  // useEffect(() => {
-  //   if (true) {
-  //     router.replace("/");
-  //   }
-  // }, []);
-
   useEffect(() => {
     if (isSessionAdded) {
       setShowMessage(true);
@@ -74,6 +68,7 @@ export default function SessionCreator(
     setIsSessionAdded(true);
 
     setTimeout(() => {
+      sessionStorage.setItem("refresh", "true");
       router.push("/");
 
       setIsSessionAdded(false);
@@ -118,12 +113,6 @@ export default function SessionCreator(
     <>
       <Stepper steps={stepArr} activeStep={activeStep} />
       {activeForm()}
-      {showMessage && (
-        <p className="px-2 py-2 md:px-3 rounded-md md:text-lg text-[20px] text-black text-center">
-          Your edit request is being processed, please refresh the page after a
-          minute
-        </p>
-      )}
     </>
   );
 }

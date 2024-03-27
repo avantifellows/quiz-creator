@@ -61,7 +61,13 @@ const DataDisplay = ({
           breakClassName={"break-me px-2 py-1"}
           pageCount={hasMore ? currentPage + 2 : currentPage + 1}
           onPageChange={({ selected }) => {
-            router.push(`/?pageNo=${selected}`);
+            router.push({
+              pathname: router.pathname,
+              query: {
+                ...router.query,
+                pageNo: selected,
+              },
+            });
           }}
           containerClassName={
             "flex flex-wrap justify-between items-center my-4 w-full"
