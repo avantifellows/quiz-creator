@@ -9,7 +9,7 @@ const Navbar = ({ item1, item2 }: { item1: string; item2: string }) => {
         <div className="flex flex-row justify-between items-center md:px-5">
           <div className="relative w-32 aspect-video">
             <Image
-              src="/AvantiFellowsLogo.svg"
+              src="/AvantiFellowsLogo_1.svg"
               alt="Avanti fellows logo"
               fill
             />

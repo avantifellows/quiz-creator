@@ -9,8 +9,7 @@
     "build-staging": "cross-env NODE_ENV=staging next build",
     "start:staging": "cross-env NODE_ENV=staging next start",
     "lint": "next lint",
-    "format": "npx prettier --write .",
-    "db": "json-server --watch db.json --port 3001"
+    "format": "npx prettier --write ."
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
