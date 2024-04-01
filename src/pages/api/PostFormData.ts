@@ -26,12 +26,13 @@ async function postFormDataToBackend(formData: RowType) {
     timeline.endTime as string
   );
   const sessionStage = {
-    number_of_fields_in_pop_form: 3,
     auth_type: "sign-in",
     id_generation: false,
     activate_signup: true,
     redirection: true,
     pop_up_form: true,
+    popup_form_id: 3,
+    days_active: "1,2,3,4,5,6,7",
   };
   const requestBody = {
     name: test.name,
@@ -74,6 +75,7 @@ async function postFormDataToBackend(formData: RowType) {
       date_created: new Date().toISOString().split("T")[0],
       admin_testing_link: "",
       infinite_session: timeline.infinite_session,
+      number_of_fields_in_popup_form: 3,
     },
   };
 
@@ -130,7 +132,8 @@ async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
     id_generation: false,
     activate_signup: true,
     redirection: true,
-    pop_up_form: true,
+    popup_form: true,
+    days_active: "1,2,3,4,5,6,7",
     meta_data: {
       group: student.program,
       batch: student.batch,
@@ -151,6 +154,7 @@ async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
       date_created: timeline.date_created,
       admin_testing_link: test.link,
       infinite_session: timeline.infinite_session,
+      number_of_fields_in_popup_form: 3,
     },
   };
 
