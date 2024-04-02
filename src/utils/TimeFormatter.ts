@@ -24,7 +24,6 @@
 //   return formattedTime;
 // };
 const formatTime = (timeString: string): string => {
-  console.log(timeString);
   const isoDate = new Date(timeString);
   const hours = isoDate.getUTCHours();
   const minutes = isoDate.getUTCMinutes();
@@ -40,10 +39,13 @@ function formatDateForPicker(date: Date): string {
 }
 
 function formatTimeForPicker(date: Date): string {
-  const localTime = new Date(
-    date.getTime() - date.getTimezoneOffset()
-  ).toISOString();
+  const localTime = new Date(date.getTime()).toISOString();
   return localTime.split("T")[1].slice(0, 5);
 }
+function formatDateTime(date: string, time: string) {
+  const formattedDateTime = date + " " + time;
 
-export { formatTime, formatDateForPicker, formatTimeForPicker };
+  return formattedDateTime;
+}
+
+export { formatTime, formatDateForPicker, formatTimeForPicker, formatDateTime };

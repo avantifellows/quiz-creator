@@ -1,26 +1,18 @@
 import { RowType } from "@/types/types";
 import { publishMessage } from "@/utils/PublishSnsMessage";
 import { instance } from "@/utils/RootClient";
+import { formatDateTime } from "@/utils/TimeFormatter";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-async function formatDateTime(date: string, time: string) {
-  const [year, month, day] = date.split("-").map(Number);
-  const [hour, minute] = time.split(":").map(Number);
-
-  const combinedDate = new Date(year, month - 1, day, hour, minute); // if communication is in IST or the backend expects in IST we will convert this to IST
-
-  return combinedDate;
-}
 
 async function postFormDataToBackend(formData: RowType) {
   const { student, test, timeline } = formData;
 
-  let start_time = await formatDateTime(
+  let start_time = formatDateTime(
     timeline.startDate as string,
     timeline.startTime as string
   );
 
-  let end_time = await formatDateTime(
+  let end_time = formatDateTime(
     timeline.endDate as string,
     timeline.endTime as string
   );
