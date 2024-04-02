@@ -9,7 +9,7 @@ AWS.config.update({
 const sns = new AWS.SNS();
 function publishMessage(message) {
   const topicArn = process.env.AF_TOPIC_ARN;
-
+  message.environment = "production";
   const params = {
     Message: JSON.stringify(message),
     TopicArn: topicArn,

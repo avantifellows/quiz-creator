@@ -1,7 +1,7 @@
 import { instance } from "./RootClient";
 import { DbTypes } from "@/types/ResponseTypes";
-import { formatDateForPicker } from "./timeformater";
-import { formatTimeForPicker } from "./timeformater";
+import { formatDateForPicker } from "./TimeFormatter";
+import { formatTimeForPicker } from "./TimeFormatter";
 
 // get data from the db when session id is generated
 async function getData(currentPage: number, limit: number) {

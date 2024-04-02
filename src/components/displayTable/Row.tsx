@@ -3,7 +3,7 @@ import NextLink from "next/link";
 import { Check, Copy, Edit, Link } from "react-feather";
 import { DbTypes } from "@/types/ResponseTypes";
 import { useRouter } from "next/router";
-import { formatTime } from "@/utils/timeformater";
+import { formatTime } from "@/utils/TimeFormatter";
 
 const TableRow = ({
   row,
@@ -87,7 +87,7 @@ const TableRow = ({
         <td className="border-b border-black p-2">{testTakers}</td>
         <td className="border-b border-black p-2">
           {typeof reportLink === "string" && !hasNoId && !hasNoreportlink && (
-            <NextLink href={reportLink}>
+            <NextLink href={reportLink} target="_blank">
               <Link
                 className="mx-auto"
                 onClick={(e) => {
