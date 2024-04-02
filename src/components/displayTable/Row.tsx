@@ -62,9 +62,9 @@ const TableRow = ({
 
   const copyToClipboard = useCallback(async (link: string) => {
     await navigator.clipboard.writeText(link);
-
-    setIsModalVisible(true);
-    setTimeout(() => setIsModalVisible(false), 250);
+    alert("Link Copied");
+    // setIsModalVisible(true);
+    // setTimeout(() => setIsModalVisible(false), 250);
   }, []);
 
   return (

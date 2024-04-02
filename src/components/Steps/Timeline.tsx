@@ -104,9 +104,7 @@ export default function Timeline({
               name_="has_synced_to_bq"
               options={HasSyncedOptions}
             />
-            {/*
-        // TODO: same as test details render acc to need
-         */}
+
             <input
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
               placeholder="Repeat Schedule"

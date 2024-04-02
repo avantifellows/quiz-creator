@@ -72,7 +72,7 @@ export default function SessionCreator(
       router.push("/");
 
       setIsSessionAdded(false);
-    }, 5000);
+    }, 2000);
   };
 
   const activeForm = () => {

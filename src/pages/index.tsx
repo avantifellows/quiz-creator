@@ -12,7 +12,6 @@ export default function Home({
   currentPage,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [refreshPage, setrefreshPage] = useState<null | boolean>(null);
-  console.log("refreshPage :", refreshPage);
 
   useEffect(() => {
     const shouldRefresh = sessionStorage.getItem("refresh") === "true";
@@ -23,7 +22,7 @@ export default function Home({
       timeout = setTimeout(() => {
         sessionStorage.removeItem("refresh");
         setrefreshPage(false);
-      }, 5000);
+      }, 8000);
     }
     return () => {
       clearTimeout(timeout);

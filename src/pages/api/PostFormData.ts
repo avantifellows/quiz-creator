@@ -19,14 +19,13 @@ async function postFormDataToBackend(formData: RowType) {
     timeline.startDate as string,
     timeline.startTime as string
   );
-  console.log("start time before posting: ", start_time); //
 
   let end_time = await formatDateTime(
     timeline.endDate as string,
     timeline.endTime as string
   );
   const sessionStage = {
-    auth_type: "sign-in",
+    auth_type: "ID",
     id_generation: false,
     activate_signup: true,
     redirection: true,
@@ -51,11 +50,12 @@ async function postFormDataToBackend(formData: RowType) {
     platform_id: "",
     // form_schema_id: session.form_schema_id, // should be signup_form_name
     signup_form_name: "Haryana Registration Form",
-    type: "sign-in",
+    session_type: "sign-in",
     ...sessionStage,
     meta_data: {
       group: student.program,
-      batch: student.batch,
+      // batch: student.batch,
+      batch: "DL-11-Photon-Eng-23",
       grade: student.grade,
       course: student.course,
       stream: student.stream,
@@ -93,12 +93,6 @@ async function postFormDataToBackend(formData: RowType) {
     };
 
     publishMessage(message);
-    // console.log("Setting the refreshNeeded cookie!");
-    // setCookie("refreshNeeded", "true", {
-    //   // secure: process.env.NODE_ENV !== "development", // Adjust 'secure' for development
-    //   secure: false,
-    //   path: "/", // Ensure the path is suitable
-    // });
 
     return {
       id: sessionId,
@@ -126,9 +120,9 @@ async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
     start_time,
     end_time,
     signup_form_name: "Haryana Registration Form",
-    type: "sign-in",
+    session_type: "sign-in",
     number_of_fields_in_pop_form: 3,
-    auth_type: "sign-in",
+    auth_type: "ID",
     id_generation: false,
     activate_signup: true,
     redirection: true,
@@ -136,7 +130,8 @@ async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
     days_active: "1,2,3,4,5,6,7",
     meta_data: {
       group: student.program,
-      batch: student.batch,
+      // batch: student.batch,
+      batch: "DL-11-Photon-Eng-23",
       grade: student.grade,
       course: student.course,
       stream: student.stream,
