@@ -88,7 +88,6 @@ async function postFormDataToBackend(formData: RowType) {
 
     return {
       id: sessionId,
-      estimatedCompletionTime: 60,
     };
   } catch (error) {
     console.error("Error posting form data", error);
@@ -99,11 +98,11 @@ async function postFormDataToBackend(formData: RowType) {
 async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
   const { student, test, timeline } = formData;
 
-  let start_time = await formatDateTime(
+  let start_time = formatDateTime(
     timeline.startDate as string,
     timeline.startTime as string
   );
-  let end_time = await formatDateTime(
+  let end_time = formatDateTime(
     timeline.endDate as string,
     timeline.endTime as string
   );
@@ -152,7 +151,6 @@ async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
       patch_session: patchBody,
     };
     publishMessage(message);
-    sessionStorage.setItem("refresh", "true");
 
     return {
       id: sessionId,
