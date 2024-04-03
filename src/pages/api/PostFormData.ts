@@ -1,35 +1,29 @@
 import { RowType } from "@/types/types";
 import { publishMessage } from "@/utils/PublishSnsMessage";
 import { instance } from "@/utils/RootClient";
+import { formatDateTime } from "@/utils/TimeFormatter";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-async function formatDateTime(date: string, time: string) {
-  const [year, month, day] = date.split("-").map(Number);
-  const [hour, minute] = time.split(":").map(Number);
-
-  const combinedDate = new Date(year, month - 1, day, hour, minute);
-
-  return combinedDate;
-}
 
 async function postFormDataToBackend(formData: RowType) {
   const { student, test, timeline } = formData;
 
-  let start_time = await formatDateTime(
+  let start_time = formatDateTime(
     timeline.startDate as string,
     timeline.startTime as string
   );
-  let end_time = await formatDateTime(
+
+  let end_time = formatDateTime(
     timeline.endDate as string,
     timeline.endTime as string
   );
   const sessionStage = {
-    number_of_fields_in_pop_form: 3,
-    auth_type: "sign-in",
+    auth_type: "ID",
     id_generation: false,
     activate_signup: true,
     redirection: true,
     pop_up_form: true,
+    popup_form_id: 3,
+    days_active: "1,2,3,4,5,6,7",
   };
   const requestBody = {
     name: test.name,
@@ -48,11 +42,12 @@ async function postFormDataToBackend(formData: RowType) {
     platform_id: "",
     // form_schema_id: session.form_schema_id, // should be signup_form_name
     signup_form_name: "Haryana Registration Form",
-    type: "sign-in",
+    session_type: "sign-in",
     ...sessionStage,
     meta_data: {
       group: student.program,
-      batch: student.batch,
+      // batch: student.batch,
+      batch: "DL-11-Photon-Eng-23",
       grade: student.grade,
       course: student.course,
       stream: student.stream,
@@ -72,6 +67,7 @@ async function postFormDataToBackend(formData: RowType) {
       date_created: new Date().toISOString().split("T")[0],
       admin_testing_link: "",
       infinite_session: timeline.infinite_session,
+      number_of_fields_in_popup_form: 3,
     },
   };
 
@@ -86,7 +82,9 @@ async function postFormDataToBackend(formData: RowType) {
       action: "db_id",
       id: sessionId,
     };
+
     publishMessage(message);
+
     return {
       id: sessionId,
     };
@@ -99,11 +97,11 @@ async function postFormDataToBackend(formData: RowType) {
 async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
   const { student, test, timeline } = formData;
 
-  let start_time = await formatDateTime(
+  let start_time = formatDateTime(
     timeline.startDate as string,
     timeline.startTime as string
   );
-  let end_time = await formatDateTime(
+  let end_time = formatDateTime(
     timeline.endDate as string,
     timeline.endTime as string
   );
@@ -112,16 +110,18 @@ async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
     start_time,
     end_time,
     signup_form_name: "Haryana Registration Form",
-    type: "sign-in",
+    session_type: "sign-in",
     number_of_fields_in_pop_form: 3,
-    auth_type: "sign-in",
+    auth_type: "ID",
     id_generation: false,
     activate_signup: true,
     redirection: true,
-    pop_up_form: true,
+    popup_form: true,
+    days_active: "1,2,3,4,5,6,7",
     meta_data: {
       group: student.program,
-      batch: student.batch,
+      // batch: student.batch,
+      batch: "DL-11-Photon-Eng-23",
       grade: student.grade,
       course: student.course,
       stream: student.stream,
@@ -139,6 +139,7 @@ async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
       date_created: timeline.date_created,
       admin_testing_link: test.link,
       infinite_session: timeline.infinite_session,
+      number_of_fields_in_popup_form: 3,
     },
   };
 
@@ -148,7 +149,6 @@ async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
       id: sessionId,
       patch_session: patchBody,
     };
-
     publishMessage(message);
 
     return {
@@ -167,6 +167,7 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const response = await postFormDataToBackend(req.body);
+
       res.status(200).json(response);
     } catch (error) {
       console.error("Error in API route", error);
@@ -179,6 +180,7 @@ export default async function handler(
         req.body,
         sessionId as string
       );
+
       res.status(200).json(response);
     } catch (error) {
       console.error("Error in API route", error);

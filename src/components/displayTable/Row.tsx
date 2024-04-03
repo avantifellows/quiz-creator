@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import NextLink from "next/link";
-import { Copy, Edit, Link } from "react-feather";
+import { Check, Copy, Edit, Link } from "react-feather";
 import { DbTypes } from "@/types/ResponseTypes";
 import { useRouter } from "next/router";
+import { formatTime } from "@/utils/TimeFormatter";
 
 const TableRow = ({
   row,
@@ -49,13 +50,22 @@ const TableRow = ({
   const hasNoportallink = !shortenedLink;
   const hasNoadmintestinglink = !adminTestingLink;
   const router = useRouter();
+
+  const startTime = formatTime(start_time!);
+  const endTime = formatTime(end_time!);
+
   const startDate = new Date(start_time!).toLocaleDateString();
   const endDate = new Date(end_time!).toLocaleDateString();
 
-  const startTime = new Date(start_time!).toLocaleTimeString();
-  const endTime = new Date(end_time!).toLocaleTimeString();
-
   const actualIndex = currentPage * itemsPerPage + index + 1;
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const copyToClipboard = useCallback(async (link: string) => {
+    await navigator.clipboard.writeText(link);
+    alert("Link Copied");
+    // setIsModalVisible(true);
+    // setTimeout(() => setIsModalVisible(false), 250);
+  }, []);
 
   return (
     <>
@@ -78,7 +88,14 @@ const TableRow = ({
         <td className="border-b border-black p-2">
           {typeof reportLink === "string" && !hasNoId && !hasNoreportlink && (
             <NextLink href={reportLink} target="_blank">
-              <Link className="mx-auto" />
+              <Link
+                className="mx-auto"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  copyToClipboard(reportLink);
+                }}
+              />
             </NextLink>
           )}
         </td>
@@ -87,7 +104,14 @@ const TableRow = ({
             !hasNoId &&
             !hasNoportallink && (
               <NextLink href={shortenedLink} target="_blank">
-                <Link className="mx-auto" />
+                <Link
+                  className="mx-auto"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    copyToClipboard(shortenedLink);
+                  }}
+                />
               </NextLink>
             )}
         </td>
@@ -101,14 +125,25 @@ const TableRow = ({
             )}
         </td>
         <td className="border-b border-black flex-wrap">
-          <Copy className="cursor-pointer float-left" />
-          <Edit
-            className="cursor-pointer float-right"
-            onClick={(e) => {
-              router.push(`/Session?type=edit&sessionId=${id}`);
-              e.stopPropagation();
-            }}
-          />
+          <div title="Duplicate">
+            <Copy
+              className="cursor-pointer float-left"
+              onClick={(e) => {
+                router.push(`/Session?type=duplicate&sessionId=${id}`);
+                e.stopPropagation();
+              }}
+            />
+          </div>
+
+          <div title="Edit">
+            <Edit
+              className="cursor-pointer float-right"
+              onClick={(e) => {
+                router.push(`/Session?type=edit&sessionId=${id}`);
+                e.stopPropagation();
+              }}
+            />
+          </div>
         </td>
       </tr>
 
@@ -140,6 +175,22 @@ const TableRow = ({
             </table>
           </td>
         </tr>
+      )}
+      {isModalVisible && (
+        <section
+          className={`fixed  inset-0 w-screen bg-gray-400/40 backdrop-blur-md`}
+        >
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 rounded-md px-5 py-10 bg-white text-center ">
+            <div className="relative">
+              <div className="m-auto h-32 aspect-square rounded-full border-4 border-solid border-current border-r-transparent text-primary animate-spin " />
+              <Check
+                className=" text-green-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                size={100}
+              />
+            </div>
+            <p className="text-xl">{`Link Copied`}</p>
+          </div>
+        </section>
       )}
     </>
   );

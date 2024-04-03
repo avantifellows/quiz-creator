@@ -5,9 +5,9 @@ import Timeline from "@/components/Steps/Timeline";
 import { RowType } from "@/types/types";
 import { getASession } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { redirect } from "next/dist/server/api-utils";
+
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export enum Step {
   STUDENT_DETAILS = "StudentDetails",
@@ -26,11 +26,24 @@ export default function SessionCreator(
 ) {
   const router = useRouter();
   const [isSessionAdded, setIsSessionAdded] = useState(false);
-
+  const [showMessage, setShowMessage] = useState(false);
   const [activeStep, setActiveStep] = useState<string>(Step.STUDENT_DETAILS);
   const [data, setData] = useState<RowType>({
     ...props.FormData,
   });
+
+  useEffect(() => {
+    if (isSessionAdded) {
+      setShowMessage(true);
+
+      const timeout = setTimeout(() => {
+        setShowMessage(false);
+        setIsSessionAdded(false);
+      }, 10000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isSessionAdded]);
 
   const OnSubmitSession = async () => {
     let response;
@@ -52,17 +65,14 @@ export default function SessionCreator(
       });
     }
 
-    const postResult = await response!.json();
-
-    const sessionId = postResult.id;
-
     setIsSessionAdded(true);
 
     setTimeout(() => {
+      sessionStorage.setItem("refresh", "true");
       router.push("/");
-      redirect;
+
       setIsSessionAdded(false);
-    }, 10000);
+    }, 2000);
   };
 
   const activeForm = () => {
@@ -123,6 +133,15 @@ export const getServerSideProps = (async ({ query: { type, sessionId } }) => {
 
     return {
       props: { FormData: FormData as RowType, FormType: type },
+    };
+  } else if (type === "duplicate" && sessionId) {
+    let FormData = await getASession(Number(sessionId));
+    FormData.test.name = "";
+    FormData.test.cmsId = "";
+    FormData.test.id = null;
+
+    return {
+      props: { FormData: FormData as RowType, FormType: "create" },
     };
   } else {
     return {

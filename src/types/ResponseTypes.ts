@@ -18,9 +18,9 @@ export interface DbTypes {
   activate_signup: boolean | null;
   auth_type: null | string;
   created_by_id: null;
-  end_time: Date | null;
+  end_time: string | null;
   form_schema_id: number | null;
-  id: number;
+  id: number | null;
   id_generation: boolean | null;
   is_active: boolean;
   meta_data: MetaData | null;
@@ -36,7 +36,7 @@ export interface DbTypes {
   redirection: boolean | null;
   repeat_schedule: RepeatSchedule | null;
   session_id: null;
-  start_time: Date | null;
+  start_time: null | string;
   type: null | string;
 }
 
