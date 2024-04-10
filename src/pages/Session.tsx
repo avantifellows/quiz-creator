@@ -1,18 +1,18 @@
-import Stepper from "@/components/Stepper";
-import StudentDetails from "@/components/Steps/StudentDetails";
-import { TestDetails } from "@/components/Steps/TestDetails";
-import Timeline from "@/components/Steps/Timeline";
-import { RowType } from "@/types/types";
-import { getASession } from "@/utils/FormInputHandling";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import Stepper from '@/components/Stepper';
+import StudentDetails from '@/components/Steps/StudentDetails';
+import { TestDetails } from '@/components/Steps/TestDetails';
+import Timeline from '@/components/Steps/Timeline';
+import { getASession } from '@/services/services';
+import { RowType } from '@/types/types';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 export enum Step {
-  STUDENT_DETAILS = "StudentDetails",
-  TEST_DETAILS = "TestDetails",
-  TIMELINE = "Timeline",
+  STUDENT_DETAILS = 'StudentDetails',
+  TEST_DETAILS = 'TestDetails',
+  TIMELINE = 'Timeline',
 }
 
 const stepArr: string[] = [
@@ -47,19 +47,19 @@ export default function SessionCreator(
 
   const OnSubmitSession = async () => {
     let response;
-    if (props.FormType == "create") {
-      response = await fetch("/api/PostFormData", {
-        method: "POST",
+    if (props.FormType == 'create') {
+      response = await fetch('/api/PostFormData', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
-    } else if (props.FormType === "edit") {
+    } else if (props.FormType === 'edit') {
       response = await fetch(`/api/PostFormData?id=${props.FormData.test.id}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
@@ -68,8 +68,8 @@ export default function SessionCreator(
     setIsSessionAdded(true);
 
     setTimeout(() => {
-      sessionStorage.setItem("refresh", "true");
-      router.push("/");
+      sessionStorage.setItem('refresh', 'true');
+      router.push('/');
 
       setIsSessionAdded(false);
     }, 2000);
@@ -117,7 +117,7 @@ export default function SessionCreator(
   );
 }
 export const getServerSideProps = (async ({ query: { type, sessionId } }) => {
-  if (type === "create") {
+  if (type === 'create') {
     return {
       props: {
         FormData: {
@@ -128,20 +128,20 @@ export const getServerSideProps = (async ({ query: { type, sessionId } }) => {
         FormType: type,
       },
     };
-  } else if (type === "edit" && sessionId) {
+  } else if (type === 'edit' && sessionId) {
     const FormData = await getASession(Number(sessionId));
 
     return {
       props: { FormData: FormData as RowType, FormType: type },
     };
-  } else if (type === "duplicate" && sessionId) {
+  } else if (type === 'duplicate' && sessionId) {
     let FormData = await getASession(Number(sessionId));
-    FormData.test.name = "";
-    FormData.test.cmsId = "";
+    FormData.test.name = '';
+    FormData.test.cmsId = '';
     FormData.test.id = null;
 
     return {
-      props: { FormData: FormData as RowType, FormType: "create" },
+      props: { FormData: FormData as RowType, FormType: 'create' },
     };
   } else {
     return {

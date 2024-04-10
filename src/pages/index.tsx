@@ -1,10 +1,10 @@
-import DataDisplay from "@/components/displayTable/DataDisplay";
-import { DbTypes } from "@/types/ResponseTypes";
-import { getData } from "@/utils/FormInputHandling";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import DataDisplay from '@/components/Table';
+import { getData } from '@/services/services';
+import { DbTypes } from '@/types/ResponseTypes';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Home({
   data,
@@ -14,13 +14,13 @@ export default function Home({
   const [refreshPage, setrefreshPage] = useState<null | boolean>(null);
 
   useEffect(() => {
-    const shouldRefresh = sessionStorage.getItem("refresh") === "true";
+    const shouldRefresh = sessionStorage.getItem('refresh') === 'true';
 
     let timeout: NodeJS.Timeout;
     if (shouldRefresh) {
       setrefreshPage(true);
       timeout = setTimeout(() => {
-        sessionStorage.removeItem("refresh");
+        sessionStorage.removeItem('refresh');
         setrefreshPage(false);
       }, 8000);
     }
@@ -38,7 +38,7 @@ export default function Home({
       </Head>
       <nav className="flex justify-between m-2 p-5">
         <div className="bg-[#B52326] text-[#FFFFFF] text-[20px] px-2 py-2 md:px-3 rounded-md md:text-lg">
-          <Link href={"/Session?type=create"}>+ Create Quiz Session</Link>
+          <Link href={'/Session?type=create'}>+ Create Quiz Session</Link>
         </div>
       </nav>
       {refreshPage && <p>Refresh the page after 1 min</p>}

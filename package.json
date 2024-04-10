@@ -1,7 +1,8 @@
 {
   "name": "quizcreator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
+  "license": "GPL-3.0-only",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,33 +10,42 @@
     "build-staging": "cross-env NODE_ENV=staging next build",
     "start:staging": "cross-env NODE_ENV=staging next start",
     "lint": "next lint",
-    "format": "npx prettier --write ."
+    "format": "prettier -w ."
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "next/core-web-vitals",
+      "next"
+    ]
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true
   },
   "dependencies": {
-    "@heroicons/react": "^2.0.18",
-    "@types/react-select": "^5.0.1",
-    "aws-sdk": "^2.1512.0",
-    "axios": "^1.5.0",
-    "cross-env": "^7.0.3",
-    "eslint": "8.44.0",
-    "eslint-config-next": "13.4.9",
-    "json-server": "^0.17.3",
-    "next": "13.4.9",
-    "pre-commit": "^1.2.2",
+    "aws-sdk": "^2.1597.0",
+    "axios": "^1.6.8",
+    "next": "14.1.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-feather": "^2.0.10",
-    "react-hook-form": "^7.45.4",
+    "react-hook-form": "^7.51.2",
     "react-paginate": "^8.2.0",
-    "react-select": "^5.7.4",
-    "typescript": "^5.1.6"
+    "react-select": "^5.8.0"
   },
   "devDependencies": {
-    "@types/node": "^20.4.5",
-    "@types/react": "^18.2.17",
-    "@types/react-dom": "^18.2.7",
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.25",
-    "tailwindcss": "^3.3.2"
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.2.75",
+    "@types/react-dom": "^18.2.24",
+    "autoprefixer": "^10.4.19",
+    "cross-env": "^7.0.3",
+    "eslint": "9.0.0",
+    "eslint-config-next": "14.1.4",
+    "postcss": "^8.4.38",
+    "pre-commit": "^1.2.2",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5"
   }
 }

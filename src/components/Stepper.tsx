@@ -11,12 +11,12 @@ export default function Stepper({
         <li
           key={index}
           className={`flex items-center ${
-            step === activeStep ? "text-black" : "text-gray-400"
+            step === activeStep ? 'text-black' : 'text-gray-400'
           } space-x-2.5 `}
         >
           <span
             className={`flex items-center justify-center w-[20px] h-[20px] text-[10px] sm:w-[35px] sm:h-[35px] sm:text-[20px] border rounded-full ${
-              step === activeStep ? "text-white bg-[#A82929]" : ""
+              step === activeStep ? 'text-white bg-[#A82929]' : ''
             } shadow-md`}
           >
             {index + 1}

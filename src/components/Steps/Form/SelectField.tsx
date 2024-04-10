@@ -1,8 +1,8 @@
-import styles from "@/styles/Home.module.css";
-import { QuizCreatorForm, QuizCreatorFormKey } from "@/types/FormTypes";
-import { OptionType } from "@/types/types";
-import { Control, Controller } from "react-hook-form";
-import Select from "react-select";
+import styles from '@/styles/Home.module.css';
+import { QuizCreatorForm, QuizCreatorFormKey } from '@/types/FormTypes';
+import { OptionType } from '@/types/types';
+import { Control, Controller } from 'react-hook-form';
+import Select from 'react-select';
 interface SelectFieldProps {
   control: Control<QuizCreatorForm, any>;
   options: OptionType[];

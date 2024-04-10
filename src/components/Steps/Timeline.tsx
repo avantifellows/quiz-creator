@@ -1,15 +1,15 @@
-import { Step } from "@/pages/Session";
-import { QuizCreatorForm } from "@/types/FormTypes";
-import { ActiveFormProps } from "@/types/types";
-import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Step } from '@/pages/Session';
+import { QuizCreatorForm } from '@/types/FormTypes';
+import { ActiveFormProps } from '@/types/types';
+import { useEffect, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   HasSyncedOptions,
   IsEnabledOptions,
   SessionTypeOptions,
-} from "../Options/TimelineOptions";
-import SelectField from "./Form/SelectField";
-import { Success } from "../Modal/Success";
+} from '../../Constants/TimelineOptions';
+import { Success } from '../Modal/Success';
+import SelectField from './Form/SelectField';
 
 export default function Timeline({
   data,
@@ -51,7 +51,7 @@ export default function Timeline({
               placeholder="Start Date"
               type="date"
               required
-              {...register("startDate")}
+              {...register('startDate')}
             />
             <label className="text-xs sm:text-sm">End Date</label>
             <input
@@ -59,7 +59,7 @@ export default function Timeline({
               placeholder="End Date"
               type="date"
               required
-              {...register("endDate")}
+              {...register('endDate')}
             />
           </div>
         </div>
@@ -70,7 +70,7 @@ export default function Timeline({
             placeholder="Start Time"
             type="time"
             required
-            {...register("startTime")}
+            {...register('startTime')}
           />
           <p className="text-xs sm:text-sm">End Time</p>
           <input
@@ -78,7 +78,7 @@ export default function Timeline({
             placeholder="End Time"
             type="time"
             required
-            {...register("endTime")}
+            {...register('endTime')}
           />
         </div>
         <div className="flex md:w-full md:justify-start m-1 ">
@@ -109,13 +109,13 @@ export default function Timeline({
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
               placeholder="Repeat Schedule"
               required
-              {...register("repeatSchedule")}
+              {...register('repeatSchedule')}
             />
             <input
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded block w-full p-2.5 mt-10"
               placeholder="Report Link"
               required
-              {...register("reportLink")}
+              {...register('reportLink')}
             />
           </>
         ) : (

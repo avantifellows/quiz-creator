@@ -1,9 +1,9 @@
-import styles from "../../styles/Home.module.css";
+import styles from '../../styles/Home.module.css';
 
-import { Step } from "@/pages/Session";
-import { QuizCreatorForm } from "@/types/FormTypes";
-import { ActiveFormProps } from "@/types/types";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Step } from '@/pages/Session';
+import { QuizCreatorForm } from '@/types/FormTypes';
+import { ActiveFormProps } from '@/types/types';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   MarkingSchemeOptions,
   OptionalLimitOptions,
@@ -11,8 +11,8 @@ import {
   TestPlatformOptions,
   TestPurposeOptions,
   TestTypeOptions,
-} from "../Options/TestDetailsOptions";
-import SelectField from "./Form/SelectField";
+} from '../../Constants/TestDetailsOptions';
+import SelectField from './Form/SelectField';
 
 // Renders sub-page containing test details
 
@@ -44,18 +44,18 @@ export function TestDetails({
           <input
             required
             className={`${styles.custom_input} ${
-              type === "edit" ? styles.custom_input_disabled : ""
+              type === 'edit' ? styles.custom_input_disabled : ''
             }`}
             placeholder="Test Name"
-            {...register("name")}
-            disabled={type === "edit"}
+            {...register('name')}
+            disabled={type === 'edit'}
           />
           <div className="flex md:w-full md:justify-start  ">
             <label className="text-gray-400 text-md mt-2 ">Test Type</label>
           </div>
           <SelectField
             control={control}
-            isDisabled={type === "edit" ? true : false}
+            isDisabled={type === 'edit' ? true : false}
             name_="type"
             options={TestTypeOptions}
             placeholder="Test Type"
@@ -83,7 +83,7 @@ export function TestDetails({
           </div>
           <SelectField
             control={control}
-            isDisabled={type === "edit" ? true : false}
+            isDisabled={type === 'edit' ? true : false}
             name_="platform"
             options={TestPlatformOptions}
             placeholder="Test Platform"
@@ -95,7 +95,7 @@ export function TestDetails({
           </div>
           {/* program, */}
           <SelectField
-            isDisabled={type === "edit" ? true : false}
+            isDisabled={type === 'edit' ? true : false}
             control={control}
             name_="markingScheme"
             options={MarkingSchemeOptions}
@@ -108,7 +108,7 @@ export function TestDetails({
           </div>
           <SelectField
             control={control}
-            isDisabled={type === "edit" ? true : false}
+            isDisabled={type === 'edit' ? true : false}
             name_="optionalLimit"
             options={OptionalLimitOptions}
             placeholder="Optional Limit"
@@ -122,11 +122,11 @@ export function TestDetails({
               <input
                 required
                 className={`${styles.custom_input} ${
-                  type === "edit" ? styles.custom_input_disabled : ""
+                  type === 'edit' ? styles.custom_input_disabled : ''
                 }`}
                 placeholder="Test id"
-                {...register("id")}
-                disabled={type === "edit"}
+                {...register('id')}
+                disabled={type === 'edit'}
               />
               <div className="flex md:w-full md:justify-start  ">
                 <label className="text-gray-400 text-md mt-2 ">
@@ -136,11 +136,11 @@ export function TestDetails({
               <input
                 required
                 className={`${styles.custom_input} ${
-                  type === "edit" ? styles.custom_input_disabled : ""
+                  type === 'edit' ? styles.custom_input_disabled : ''
                 }`}
                 placeholder="Test Session id"
-                {...register("sessionId")}
-                disabled={type === "edit"}
+                {...register('sessionId')}
+                disabled={type === 'edit'}
               />
               <div className="flex md:w-full md:justify-start ">
                 <label className="text-gray-400 text-md  mt-2">
@@ -150,11 +150,11 @@ export function TestDetails({
               <input
                 required
                 className={`${styles.custom_input} ${
-                  type === "edit" ? styles.custom_input_disabled : ""
+                  type === 'edit' ? styles.custom_input_disabled : ''
                 }`}
                 placeholder="Test Session Link"
-                {...register("sessionLink")}
-                disabled={type === "edit"}
+                {...register('sessionLink')}
+                disabled={type === 'edit'}
               />
             </>
           ) : (
@@ -166,11 +166,11 @@ export function TestDetails({
           <input
             required
             className={`${styles.custom_input} ${
-              type === "edit" ? styles.custom_input_disabled : ""
+              type === 'edit' ? styles.custom_input_disabled : ''
             }`}
             placeholder="CMS Test id"
-            {...register("cmsId")}
-            disabled={type === "edit"}
+            {...register('cmsId')}
+            disabled={type === 'edit'}
           />
           <div className="w-full flex justify-between">
             <button

@@ -1,16 +1,16 @@
-import { Step } from "@/pages/Session";
-import styles from "@/styles/Home.module.css";
-import { QuizCreatorForm } from "@/types/FormTypes";
-import { ActiveFormProps } from "@/types/types";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Step } from '@/pages/Session';
+import styles from '@/styles/Home.module.css';
+import { QuizCreatorForm } from '@/types/FormTypes';
+import { ActiveFormProps } from '@/types/types';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   BatchOptions,
   CourseOptions,
   GradeOptions,
   ProgramOptions,
   StreamOptions,
-} from "../Options/StudentDetailsOptions";
-import SelectField from "./Form/SelectField";
+} from '../../Constants/StudentDetailsOptions';
+import SelectField from './Form/SelectField';
 
 export default function StudentDetails({
   data,
@@ -41,7 +41,7 @@ export default function StudentDetails({
         </div>
         <SelectField
           control={control}
-          isDisabled={type === "edit" ? true : false}
+          isDisabled={type === 'edit' ? true : false}
           name_="program"
           options={ProgramOptions}
         />
@@ -78,7 +78,7 @@ export default function StudentDetails({
           className={styles.custom_input}
           required
           type="number"
-          {...register("testTakers")}
+          {...register('testTakers')}
           placeholder="Test Taker Count"
         />
 

@@ -1,7 +1,6 @@
-import { instance } from "./RootClient";
-import { DbTypes } from "@/types/ResponseTypes";
-import { formatDateForPicker } from "./TimeFormatter";
-import { formatTimeForPicker } from "./TimeFormatter";
+import { DbTypes } from '@/types/ResponseTypes';
+import { formatDateForPicker, formatTimeForPicker } from '../utils/TimeFormatter';
+import { instance } from '../utils/axios';
 
 // get data from the db when session id is generated
 async function getData(currentPage: number, limit: number) {
@@ -10,8 +9,8 @@ async function getData(currentPage: number, limit: number) {
     params: {
       offset,
       limit: limit + 1,
-      sort_order: "desc",
-      platform: "quiz",
+      sort_order: 'desc',
+      platform: 'quiz',
     },
   });
   const hasMore = data.length > limit;
@@ -71,4 +70,5 @@ async function getASession(id: number) {
   };
 }
 
-export { getData, getASession };
+export { getASession, getData };
+
