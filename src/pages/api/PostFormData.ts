@@ -73,7 +73,7 @@ async function postFormDataToBackend(formData: RowType) {
 
   try {
     const response = await instance.post(
-      `${process.env.AF_DB_URL}/api/session`,
+      `${process.env.AF_DB_URL}/api`,
       requestBody
     );
 

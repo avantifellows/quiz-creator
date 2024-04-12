@@ -6,14 +6,7 @@ import { formatTimeForPicker } from "./TimeFormatter";
 // get data from the db when session id is generated
 async function getData(currentPage: number, limit: number) {
   const offset = currentPage * limit;
-  const { data } = await instance.get<DbTypes[]>(`api/session`, {
-    params: {
-      offset,
-      limit: limit + 1,
-      sort_order: "desc",
-      platform: "quiz",
-    },
-  });
+  const { data } = await instance.get<DbTypes[]>(`api`)
   const hasMore = data.length > limit;
   const items = hasMore ? data.slice(0, -1) : data;
 
@@ -24,7 +17,7 @@ async function getData(currentPage: number, limit: number) {
 }
 
 async function getASession(id: number) {
-  const { data } = await instance.get<DbTypes>(`api/session/${id}`);
+  const { data } = await instance.get<DbTypes>(`api/${id}`);
   const startDate = formatDateForPicker(new Date(data.start_time!));
   const endDate = formatDateForPicker(new Date(data.end_time!));
 

@@ -1,0 +1,124 @@
+{
+    "api": [
+        {
+            "auth_type": "ID,DOB",
+            "created_by_id": null,
+            "end_time": "2024-04-27T23:45:00Z",
+            "id": 0,
+            "id_generation": false,
+            "is_active": true,
+            "meta_data": {
+                "admin_testing_link": "https://quiz.avantifellows.org/quiz/6614d02b587416eee700bab9?apiKey=6qOO8UdF1EGxLgzwIbQN&userId=test_admin",
+                "batch": "DL-11-Photon-Eng-23",
+                "cms_test_id": "https://cms.peerlearning.com/tests/6597dc0b3562d92ee5000260",
+                "course": "Photon",
+                "date_created": "2024-04-09",
+                "enabled": 1,
+                "grade": "12",
+                "group": "DelhiStudents",
+                "has_synced_to_bq": "FALSE",
+                "infinite_session": false,
+                "marking_scheme": "4,-1",
+                "number_of_fields_in_popup_form": "",
+                "optional_limits": "NEET",
+                "report_link": "https://lnk.avantifellows.org/J31f",
+                "shortened_link": "https://lnk.avantifellows.org/ZHmU",
+                "stream": "medical",
+                "test_format": "mock_test",
+                "test_purpose": "weekly_test",
+                "test_takers_count": "500",
+                "test_type": "assessment"
+            },
+            "name": "NEET DEMO TEST",
+            "owner_id": null,
+            "platform": "quiz",
+            "platform_id": "6614d02b587416eee700bab9",
+            "platform_link": "6614d02b587416eee700bab9",
+            "popup_form": false,
+            "popup_form_id": null,
+            "portal_link": "https://auth.avantifellows.org?sessionId=DelhiStudents_6614d02b587416eee700bab9",
+            "purpose": {
+                "params": "quiz",
+                "type": "attendance"
+            },
+            "redirection": true,
+            "repeat_schedule": {
+                "params": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
+                ],
+                "type": "weekly"
+            },
+            "session_id": "DelhiStudents_6614d02b587416eee700bab9",
+            "signup_form": false,
+            "signup_form_id": null,
+            "start_time": "2024-04-07T08:00:00Z",
+            "type": "sign-in"
+        },
+        {
+            "auth_type": "ID,DOB",
+            "created_by_id": null,
+            "end_time": "2024-04-27T23:45:00Z",
+            "id": 1,
+            "id_generation": false,
+            "is_active": true,
+            "meta_data": {
+                "admin_testing_link": "https://quiz.avantifellows.org/quiz/6614d02b587416eee700bab9?apiKey=6qOO8UdF1EGxLgzwIbQN&userId=test_admin",
+                "batch": "DL-11-Photon-Eng-23",
+                "cms_test_id": "https://cms.peerlearning.com/tests/6597dc0b3562d92ee5000260",
+                "course": "Photon",
+                "date_created": "2024-04-09",
+                "enabled": 1,
+                "grade": "12",
+                "group": "DelhiStudents",
+                "has_synced_to_bq": "FALSE",
+                "infinite_session": false,
+                "marking_scheme": "4,-1",
+                "number_of_fields_in_popup_form": "",
+                "optional_limits": "NEET",
+                "report_link": "https://lnk.avantifellows.org/J31f",
+                "shortened_link": "https://lnk.avantifellows.org/ZHmU",
+                "stream": "medical",
+                "test_format": "mock_test",
+                "test_purpose": "weekly_test",
+                "test_takers_count": "500",
+                "test_type": "assessment"
+            },
+            "name": "NEET DEMO TEST 2",
+            "owner_id": null,
+            "platform": "quiz",
+            "platform_id": "6614d02b587416eee700bab9",
+            "platform_link": "6614d02b587416eee700bab9",
+            "popup_form": false,
+            "popup_form_id": null,
+            "portal_link": "https://auth.avantifellows.org?sessionId=DelhiStudents_6614d02b587416eee700bab9",
+            "purpose": {
+                "params": "quiz",
+                "type": "attendance"
+            },
+            "redirection": true,
+            "repeat_schedule": {
+                "params": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
+                ],
+                "type": "weekly"
+            },
+            "session_id": "DelhiStudents_6614d02b587416eee700bab9",
+            "signup_form": false,
+            "signup_form_id": null,
+            "start_time": "2024-04-07T08:00:00Z",
+            "type": "sign-in"
+        }
+    ]
+}
