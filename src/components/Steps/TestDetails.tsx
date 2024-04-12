@@ -1,6 +1,6 @@
 import styles from '../../styles/Home.module.css';
 
-import { Step } from '@/pages/Session';
+import { Step } from '@/app/session/page';
 import { QuizCreatorForm } from '@/types/FormTypes';
 import { ActiveFormProps } from '@/types/types';
 import { SubmitHandler, useForm } from 'react-hook-form';

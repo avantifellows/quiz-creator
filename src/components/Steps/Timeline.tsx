@@ -1,4 +1,4 @@
-import { Step } from '@/pages/Session';
+import { Step } from '@/app/session/page';
 import { QuizCreatorForm } from '@/types/FormTypes';
 import { ActiveFormProps } from '@/types/types';
 import { useEffect, useState } from 'react';

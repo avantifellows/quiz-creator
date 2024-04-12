@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from "react";
-import NextLink from "next/link";
-import { Check, Copy, Edit, Link } from "react-feather";
-import { DbTypes } from "@/types/ResponseTypes";
-import { useRouter } from "next/router";
-import { formatTime } from "@/utils/TimeFormatter";
+import React, { useCallback, useState } from 'react';
+import NextLink from 'next/link';
+import { Check, Copy, Edit, Link } from 'react-feather';
+import { DbTypes } from '@/types/ResponseTypes';
+import { useRouter } from 'next/router';
+import { formatTime } from '@/utils/TimeFormatter';
 
 const TableRow = ({
   row,
@@ -62,7 +62,7 @@ const TableRow = ({
 
   const copyToClipboard = useCallback(async (link: string) => {
     await navigator.clipboard.writeText(link);
-    alert("Link Copied");
+    alert('Link Copied');
     // setIsModalVisible(true);
     // setTimeout(() => setIsModalVisible(false), 250);
   }, []);
@@ -86,7 +86,7 @@ const TableRow = ({
         </td>
         <td className="border-b border-black p-2">{testTakers}</td>
         <td className="border-b border-black p-2">
-          {typeof reportLink === "string" && !hasNoId && !hasNoreportlink && (
+          {typeof reportLink === 'string' && !hasNoId && !hasNoreportlink && (
             <NextLink href={reportLink} target="_blank">
               <Link
                 className="mx-auto"
@@ -100,7 +100,7 @@ const TableRow = ({
           )}
         </td>
         <td className="border-b border-black p-2">
-          {typeof shortenedLink === "string" &&
+          {typeof shortenedLink === 'string' &&
             !hasNoId &&
             !hasNoportallink && (
               <NextLink href={shortenedLink} target="_blank">
@@ -116,7 +116,7 @@ const TableRow = ({
             )}
         </td>
         <td className="border-b border-black p-2">
-          {typeof adminTestingLink === "string" &&
+          {typeof adminTestingLink === 'string' &&
             !hasNoId &&
             !hasNoadmintestinglink && (
               <NextLink href={adminTestingLink} target="_blank">
@@ -151,7 +151,7 @@ const TableRow = ({
       {isExpanded && (
         <tr className="bg-slate-100 text-[#3F3F3F]">
           <td colSpan={10}>
-            <table style={{ width: "100%" }}>
+            <table style={{ width: '100%' }}>
               <tbody className="border-[#b52326] border-l-4 border-r-4">
                 <tr>
                   <td>Test type: {type}</td>

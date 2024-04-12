@@ -1,5 +1,8 @@
 import { DbTypes } from '@/types/ResponseTypes';
-import { formatDateForPicker, formatTimeForPicker } from '../utils/TimeFormatter';
+import {
+  formatDateForPicker,
+  formatTimeForPicker,
+} from '../utils/TimeFormatter';
 import { instance } from '../utils/axios';
 
 // get data from the db when session id is generated
@@ -71,4 +74,3 @@ async function getASession(id: number) {
 }
 
 export { getASession, getData };
-

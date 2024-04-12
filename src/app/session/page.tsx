@@ -1,10 +1,9 @@
+// TODO: fix this page
 import Stepper from '@/components/Stepper';
 import StudentDetails from '@/components/Steps/StudentDetails';
 import { TestDetails } from '@/components/Steps/TestDetails';
 import Timeline from '@/components/Steps/Timeline';
-import { getASession } from '@/services/services';
 import { RowType } from '@/types/types';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -21,9 +20,7 @@ const stepArr: string[] = [
   Step.TIMELINE,
 ];
 
-export default function SessionCreator(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
-) {
+export default function SessionCreator() {
   const router = useRouter();
   const [isSessionAdded, setIsSessionAdded] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
@@ -116,44 +113,3 @@ export default function SessionCreator(
     </>
   );
 }
-export const getServerSideProps = (async ({ query: { type, sessionId } }) => {
-  if (type === 'create') {
-    return {
-      props: {
-        FormData: {
-          student: {},
-          test: {},
-          timeline: {},
-        },
-        FormType: type,
-      },
-    };
-  } else if (type === 'edit' && sessionId) {
-    const FormData = await getASession(Number(sessionId));
-
-    return {
-      props: { FormData: FormData as RowType, FormType: type },
-    };
-  } else if (type === 'duplicate' && sessionId) {
-    let FormData = await getASession(Number(sessionId));
-    FormData.test.name = '';
-    FormData.test.cmsId = '';
-    FormData.test.id = null;
-
-    return {
-      props: { FormData: FormData as RowType, FormType: 'create' },
-    };
-  } else {
-    return {
-      //Todo:Redirect to the error page
-      props: {
-        FormData: {
-          student: {},
-          test: {},
-          timeline: {},
-        },
-        FormType: type as string,
-      },
-    };
-  }
-}) satisfies GetServerSideProps<{ FormData: RowType; FormType: string }>;

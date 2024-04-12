@@ -1,8 +1,8 @@
-import TableRow from "./Row";
-import ReactPaginate from "react-paginate";
-import { DbTypes } from "@/types/ResponseTypes";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import TableRow from './Row';
+import ReactPaginate from 'react-paginate';
+import { DbTypes } from '@/types/ResponseTypes';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const DataDisplay = ({
   data,
@@ -56,9 +56,9 @@ const DataDisplay = ({
         </table>
         <ReactPaginate
           initialPage={currentPage}
-          previousLabel={"Previous"}
-          nextLabel={"Next    "}
-          breakClassName={"break-me px-2 py-1"}
+          previousLabel={'Previous'}
+          nextLabel={'Next    '}
+          breakClassName={'break-me px-2 py-1'}
           pageCount={hasMore ? currentPage + 2 : currentPage + 1}
           onPageChange={({ selected }) => {
             router.push({
@@ -70,16 +70,16 @@ const DataDisplay = ({
             });
           }}
           containerClassName={
-            "flex flex-wrap justify-between items-center my-4 w-full"
+            'flex flex-wrap justify-between items-center my-4 w-full'
           }
-          pageClassName={"mx-1 hidden"}
+          pageClassName={'mx-1 hidden'}
           previousClassName={
-            "mx-1 bg-[#B52326] text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]"
+            'mx-1 bg-[#B52326] text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'
           }
           nextClassName={
-            "mx-1  bg-[#B52326] w-24 text-center text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]"
+            'mx-1  bg-[#B52326] w-24 text-center text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'
           }
-          disabledClassName={"opacity-50 cursor-not-allowed"}
+          disabledClassName={'opacity-50 cursor-not-allowed'}
         />
       </div>
     </div>

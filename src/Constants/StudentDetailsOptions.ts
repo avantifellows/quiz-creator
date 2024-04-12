@@ -179,6 +179,5 @@ export {
   GradeOptions,
   ProgramOptions,
   StreamOptions,
-  TestTakersOptions
+  TestTakersOptions,
 };
-

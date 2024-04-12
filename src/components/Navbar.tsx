@@ -1,7 +1,9 @@
 import Image from 'next/image';
 
+const NAV_LINKS = [{ label: 'Quizzing Engine', path: '/' }];
+
 // Renders Navbar as General Component
-const Navbar = ({ item1, item2 }: { item1: string; item2: string }) => {
+const Navbar = () => {
   return (
     <header>
       <nav className="flex flex-row justify-between items-center md:px-5">
@@ -20,12 +22,14 @@ const Navbar = ({ item1, item2 }: { item1: string; item2: string }) => {
       </nav>
       <nav>
         <div className="flex text-white text-l gap-5 pl-10 items-center bg-[#B52326] w-full h-16">
-          <p className="hover:font-semibold active:font-light cursor-pointer ">
-            {item1}
-          </p>
-          <p className="hover:font-semibold active:font-light cursor-pointer ">
-            {item2}
-          </p>
+          {NAV_LINKS.map(({ label }) => (
+            <p
+              key={label}
+              className="hover:font-semibold active:font-light cursor-pointer "
+            >
+              {label}
+            </p>
+          ))}
         </div>
       </nav>
     </header>

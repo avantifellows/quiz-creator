@@ -1,8 +1,7 @@
+import { publishMessage } from '@/services/Aws.lamda';
 import { RowType } from '@/types/types';
-import { publishMessage } from '@/utils/PublishSnsMessage';
 import { formatDateTime } from '@/utils/TimeFormatter';
 import { instance } from '@/utils/axios';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
 async function postFormDataToBackend(formData: RowType) {
   const { student, test, timeline } = formData;
@@ -160,33 +159,4 @@ async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
   }
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === 'POST') {
-    try {
-      const response = await postFormDataToBackend(req.body);
-
-      res.status(200).json(response);
-    } catch (error) {
-      console.error('Error in API route', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  } else if (req.method === 'PATCH') {
-    try {
-      const sessionId = req.query.id;
-      const response = await UpdateFormDataToBackend(
-        req.body,
-        sessionId as string
-      );
-
-      res.status(200).json(response);
-    } catch (error) {
-      console.error('Error in API route', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  } else {
-    res.status(405).json({ error: 'Method Not Allowed' });
-  }
-}
+export { UpdateFormDataToBackend, postFormDataToBackend };
