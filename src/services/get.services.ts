@@ -1,4 +1,4 @@
-import { DbTypes } from '@/types/ResponseTypes';
+import { Session } from '@/types/api.types';
 import {
   formatDateForPicker,
   formatTimeForPicker,
@@ -8,25 +8,21 @@ import { instance } from '../utils/axios';
 // get data from the db when session id is generated
 async function getData(currentPage: number, limit: number) {
   const offset = currentPage * limit;
-  const { data } = await instance.get<DbTypes[]>(`api/session`, {
-    params: {
-      offset,
-      limit: limit + 1,
-      sort_order: 'desc',
-      platform: 'quiz',
-    },
+  const { data } = await instance.get<Session[]>(`/session`, {
+    // params: {
+    //   offset,
+    //   limit: limit + 1,
+    //   sort_order: 'desc',
+    //   platform: 'quiz',
+    // },
   });
   const hasMore = data.length > limit;
   const items = hasMore ? data.slice(0, -1) : data;
-
-  return {
-    data: items,
-    hasMore,
-  };
+  return { data: items, hasMore };
 }
 
 async function getASession(id: number) {
-  const { data } = await instance.get<DbTypes>(`api/session/${id}`);
+  const { data } = await instance.get<Session>(`/session/${id}`);
   const startDate = formatDateForPicker(new Date(data.start_time!));
   const endDate = formatDateForPicker(new Date(data.end_time!));
 

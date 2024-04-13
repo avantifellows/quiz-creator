@@ -1,5 +1,5 @@
 import { publishMessage } from '@/services/Aws.lamda';
-import { RowType } from '@/types/types';
+import { RowType } from '@/types';
 import { formatDateTime } from '@/utils/TimeFormatter';
 import { instance } from '@/utils/axios';
 

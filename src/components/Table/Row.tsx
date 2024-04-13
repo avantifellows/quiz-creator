@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import NextLink from 'next/link';
-import { Check, Copy, Edit, Link } from 'react-feather';
-import { DbTypes } from '@/types/ResponseTypes';
-import { useRouter } from 'next/router';
+import { Session } from '@/types/api.types';
 import { formatTime } from '@/utils/TimeFormatter';
+import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
+import { Check, Copy, Edit, Link } from 'react-feather';
 
 const TableRow = ({
   row,
@@ -13,21 +13,14 @@ const TableRow = ({
   isExpanded,
   toggleExpand,
 }: {
-  row: DbTypes;
+  row: Session;
   index: number;
   currentPage: number;
   itemsPerPage: number;
   isExpanded: boolean;
   toggleExpand: () => void;
 }) => {
-  const {
-    meta_data,
-    start_time,
-    end_time,
-    repeat_schedule: repeatSchedule,
-    name,
-    id,
-  } = row!;
+  const { meta_data, start_time, end_time, repeat_schedule: repeatSchedule, name, id } = row!;
 
   const {
     batch,
@@ -69,12 +62,7 @@ const TableRow = ({
 
   return (
     <>
-      <tr
-        className={`${
-          hasNoreportlink && `text-gray-400`
-        } hover:bg-gray-50 border-none text-center`}
-        onClick={() => toggleExpand()}
-      >
+      <tr className={`${hasNoreportlink && `text-gray-400`} hover:bg-gray-50 border-none text-center`} onClick={() => toggleExpand()}>
         <td className="border-b border-black p-2">{actualIndex}</td>
         <td className="border-b border-black p-2">{batch}</td>
         <td className="border-b border-black p-2">{name}</td>
@@ -100,29 +88,25 @@ const TableRow = ({
           )}
         </td>
         <td className="border-b border-black p-2">
-          {typeof shortenedLink === 'string' &&
-            !hasNoId &&
-            !hasNoportallink && (
-              <NextLink href={shortenedLink} target="_blank">
-                <Link
-                  className="mx-auto"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    copyToClipboard(shortenedLink);
-                  }}
-                />
-              </NextLink>
-            )}
+          {typeof shortenedLink === 'string' && !hasNoId && !hasNoportallink && (
+            <NextLink href={shortenedLink} target="_blank">
+              <Link
+                className="mx-auto"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  copyToClipboard(shortenedLink);
+                }}
+              />
+            </NextLink>
+          )}
         </td>
         <td className="border-b border-black p-2">
-          {typeof adminTestingLink === 'string' &&
-            !hasNoId &&
-            !hasNoadmintestinglink && (
-              <NextLink href={adminTestingLink} target="_blank">
-                <Link className="mx-auto" />
-              </NextLink>
-            )}
+          {typeof adminTestingLink === 'string' && !hasNoId && !hasNoadmintestinglink && (
+            <NextLink href={adminTestingLink} target="_blank">
+              <Link className="mx-auto" />
+            </NextLink>
+          )}
         </td>
         <td className="border-b border-black flex-wrap">
           <div title="Duplicate">
@@ -177,16 +161,11 @@ const TableRow = ({
         </tr>
       )}
       {isModalVisible && (
-        <section
-          className={`fixed  inset-0 w-screen bg-gray-400/40 backdrop-blur-md`}
-        >
+        <section className={`fixed  inset-0 w-screen bg-gray-400/40 backdrop-blur-md`}>
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 rounded-md px-5 py-10 bg-white text-center ">
             <div className="relative">
               <div className="m-auto h-32 aspect-square rounded-full border-4 border-solid border-current border-r-transparent text-primary animate-spin " />
-              <Check
-                className=" text-green-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                size={100}
-              />
+              <Check className=" text-green-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" size={100} />
             </div>
             <p className="text-xl">{`Link Copied`}</p>
           </div>

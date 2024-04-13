@@ -3,7 +3,7 @@ import Stepper from '@/components/Stepper';
 import StudentDetails from '@/components/Steps/StudentDetails';
 import { TestDetails } from '@/components/Steps/TestDetails';
 import Timeline from '@/components/Steps/Timeline';
-import { RowType } from '@/types/types';
+import { RowType } from '@/types';
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';

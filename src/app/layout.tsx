@@ -1,17 +1,18 @@
+import '@/app/globals.css';
 import Navbar from '@/components/Navbar';
-import '@/styles/globals.css';
-import { Metadata } from 'next';
-import { ReactNode } from 'react';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 
-const Layout = ({ children }: { children: ReactNode }) => {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <>
-      <Navbar />
-      <main>{children}</main>
-    </>
+    <html lang="en">
+      <body>
+        <Navbar />
+        <main>{children}</main>
+      </body>
+    </html>
   );
-};
-export default Layout;
+}
 
 export const metadata: Metadata = {
   title: 'Quiz creator',

@@ -29,7 +29,8 @@
   },
   "prettier": {
     "trailingComma": "es5",
-    "singleQuote": true
+    "singleQuote": true,
+    "printWidth": 180
   },
   "dependencies": {
     "aws-sdk": "^2.1598.0",

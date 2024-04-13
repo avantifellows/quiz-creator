@@ -1,12 +1,14 @@
-import DataDisplay from '@/components/Table';
+import Table from '@/components/Table';
 import { getData } from '@/services/get.services';
 import Link from 'next/link';
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: { pageNo: string };
-}) {
+interface HomeProps {
+  searchParams: {
+    pageNo: string;
+  };
+}
+
+export default async function Home({ searchParams }: HomeProps) {
   const currentPage = Number(searchParams?.pageNo || 0);
   const { data, hasMore } = await getData(currentPage, 10);
 
@@ -17,7 +19,7 @@ export default async function Home({
           <Link href={'/Session?type=create'}>+ Create Quiz Session</Link>
         </div>
       </nav>
-      <DataDisplay data={data} hasMore={hasMore} currentPage={currentPage} />
+      <Table data={data} hasMore={hasMore} />
     </>
   );
 }

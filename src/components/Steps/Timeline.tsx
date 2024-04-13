@@ -1,6 +1,6 @@
 import { Step } from '@/app/session/page';
-import { QuizCreatorForm } from '@/types/FormTypes';
-import { ActiveFormProps } from '@/types/types';
+import { ActiveFormProps } from '@/types';
+import { QuizCreatorForm } from '@/types/form.types';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {

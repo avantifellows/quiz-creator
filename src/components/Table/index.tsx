@@ -1,24 +1,23 @@
-import TableRow from './Row';
-import ReactPaginate from 'react-paginate';
-import { DbTypes } from '@/types/ResponseTypes';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+'use client';
 
-const DataDisplay = ({
-  data,
-  hasMore,
-  currentPage,
-}: {
-  data: DbTypes[];
+import type { Session } from '@/types/api.types';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import ReactPaginate from 'react-paginate';
+import TableRow from './Row';
+
+interface TableProps {
+  data: Session[];
   hasMore: boolean;
-  currentPage: number;
-}) => {
+}
+
+const Table = ({ data, hasMore }: TableProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentPage = useMemo(() => Number(searchParams.get('pageNo')) || 0, [searchParams]);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
-  useEffect(() => {
-    setExpandedRow(null);
-  }, [currentPage]);
+  useEffect(() => setExpandedRow(null), [currentPage]);
 
   return (
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -39,17 +38,15 @@ const DataDisplay = ({
             </tr>
           </thead>
           <tbody>
-            {data.map((row, i) => (
+            {data.map((row, idx) => (
               <TableRow
                 row={row}
-                index={i}
-                key={i}
-                currentPage={currentPage}
+                index={idx}
                 itemsPerPage={10}
-                isExpanded={i === expandedRow}
-                toggleExpand={() =>
-                  setExpandedRow(expandedRow === i ? null : i)
-                }
+                key={row.id}
+                currentPage={currentPage}
+                isExpanded={row.id === expandedRow}
+                toggleExpand={() => setExpandedRow(expandedRow === row.id ? null : row.id)}
               />
             ))}
           </tbody>
@@ -60,25 +57,11 @@ const DataDisplay = ({
           nextLabel={'Next    '}
           breakClassName={'break-me px-2 py-1'}
           pageCount={hasMore ? currentPage + 2 : currentPage + 1}
-          onPageChange={({ selected }) => {
-            router.push({
-              pathname: router.pathname,
-              query: {
-                ...router.query,
-                pageNo: selected,
-              },
-            });
-          }}
-          containerClassName={
-            'flex flex-wrap justify-between items-center my-4 w-full'
-          }
+          onPageChange={({ selected }) => router.push(`?pageNo=${selected}`)}
+          containerClassName={'flex flex-wrap justify-between items-center my-4 w-full'}
           pageClassName={'mx-1 hidden'}
-          previousClassName={
-            'mx-1 bg-[#B52326] text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'
-          }
-          nextClassName={
-            'mx-1  bg-[#B52326] w-24 text-center text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'
-          }
+          previousClassName={'mx-1 bg-[#B52326] text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'}
+          nextClassName={'mx-1  bg-[#B52326] w-24 text-center text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'}
           disabledClassName={'opacity-50 cursor-not-allowed'}
         />
       </div>
@@ -86,4 +69,4 @@ const DataDisplay = ({
   );
 };
 
-export default DataDisplay;
+export default Table;
