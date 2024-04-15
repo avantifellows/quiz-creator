@@ -15,6 +15,7 @@ const ProgramOptions: OptionType[] = [
 ];
 
 const BatchOptions: OptionType[] = [
+  { value: "DL-11-Photon-Eng-23", label: "DL-11-Photon-Eng-23" },
   { value: "DL-12-Alpha-Eng-23", label: "DL-12-Alpha-Eng-23" },
   { value: "DL-12-Photon-Eng-23", label: "DL-12-Photon-Eng-23" },
   { value: "DL-12-Catalyst-Eng-23", label: "DL-12-Catalyst-Eng-23" },
@@ -25,7 +26,6 @@ const BatchOptions: OptionType[] = [
   { value: "DL-11-Photon-med-23", label: "DL-11-Photon-med-23" },
   { value: "DL-11-Catalyst-med-23", label: "DL-11-Catalyst-med-23" },
   { value: "DL-11-Alpha-eng-23", label: "DL-11-Alpha-eng-23" },
-  { value: "DL-11-Photon-eng-23", label: "DL-11-Photon-eng-23" },
   { value: "DL-11-Catalyst-eng-23", label: "DL-11-Catalyst-eng-23" },
   { value: "DL-12-Alpha-Eng-22", label: "DL-12-Alpha-Eng-22" },
   { value: "DL-12-Photon-Eng-22", label: "DL-12-Photon-Eng-22" },
