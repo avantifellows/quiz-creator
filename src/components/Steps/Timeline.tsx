@@ -1,5 +1,5 @@
 import { Step } from "@/pages/Session";
-import { QuizCreatorForm } from "@/types/FormTypes";
+import { QuizCreatorForm, QuizCreatorFormKey, TimelineForm } from "@/types/FormTypes";
 import { ActiveFormProps } from "@/types/types";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -21,17 +21,40 @@ export default function Timeline({
 }: ActiveFormProps) {
   const [shouldSubmit, setShouldSubmit] = useState(false);
 
-  const { register, handleSubmit, control, reset } = useForm<QuizCreatorForm>({
+  const { register, handleSubmit, control, reset,watch } = useForm<QuizCreatorForm>({
     defaultValues: { ...data.timeline },
   });
+  const [message,setMessage] = useState("")
 
   useEffect(() => {
     shouldSubmit && OnSubmitSession!();
 
     reset();
   }, [shouldSubmit, data]);
+  function checkDateTime(startDate:Date, endDate:Date, startTime:Date, endTime:Date) {
+    // Combine start date and time 
+    var startDateTime = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), startTime.getHours(), startTime.getMinutes());
+    
+    // Combine end date and time
+    var endDateTime = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), endTime.getHours(), endTime.getMinutes());
+    // Check if start datetime is after end datetime
+    if (startDateTime >= endDateTime) {
+        return false;
+    } else {
+        return true;
+    }
+}
+  useEffect(()=>{
+    setMessage("")
+  },[watch("startDate"),watch("endDate"),watch("endTime"),watch("startTime")]);
 
   const onSubmit: SubmitHandler<QuizCreatorForm> = (timeline) => {
+    const data = timeline as TimelineForm; 
+    if(!checkDateTime(new Date(data.startDate),new Date(data.endDate),new Date("1970-01-01T"+data.startTime),new Date("1970-01-01T"+data.endTime))) {
+      setMessage("Start Date/Time must be before End Date/Time")
+      return;
+    }
+
     setData((prevData) => ({ ...prevData, timeline }));
 
     setShouldSubmit(true);
@@ -80,6 +103,9 @@ export default function Timeline({
             required
             {...register("endTime")}
           />
+        </div>
+        <div className="text-rose-500">
+        <p>{message}</p>
         </div>
         <div className="flex md:w-full md:justify-start m-1 ">
           <label className="text-gray-400 text-md  ">Enabled</label>
