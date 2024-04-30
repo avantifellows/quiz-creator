@@ -11,13 +11,7 @@ interface SelectFieldProps {
   isDisabled?: boolean;
 }
 
-const SelectField = ({
-  control,
-  options,
-  name_,
-  placeholder,
-  isDisabled,
-}: SelectFieldProps) => {
+const SelectField = ({ control, options, name_, placeholder, isDisabled }: SelectFieldProps) => {
   return (
     <Controller
       name={name_}
@@ -27,9 +21,7 @@ const SelectField = ({
           isDisabled={isDisabled}
           required
           isSearchable={false}
-          placeholder={
-            placeholder ? placeholder : (name_ as string).toUpperCase()
-          }
+          placeholder={placeholder ? placeholder : (name_ as string).toUpperCase()}
           className={styles.custom_input}
           options={options}
           value={options.find((c) => c.value === value)}

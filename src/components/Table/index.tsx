@@ -60,8 +60,12 @@ const Table = ({ data, hasMore }: TableProps) => {
           onPageChange={({ selected }) => router.push(`?pageNo=${selected}`)}
           containerClassName={'flex flex-wrap justify-between items-center my-4 w-full'}
           pageClassName={'mx-1 hidden'}
-          previousClassName={'mx-1 bg-[#B52326] text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'}
-          nextClassName={'mx-1  bg-[#B52326] w-24 text-center text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'}
+          previousClassName={
+            'mx-1 bg-[#B52326] text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'
+          }
+          nextClassName={
+            'mx-1  bg-[#B52326] w-24 text-center text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'
+          }
           disabledClassName={'opacity-50 cursor-not-allowed'}
         />
       </div>

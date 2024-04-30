@@ -1,9 +1,9 @@
 // import { Dispatch, SetStateAction } from 'react';
 
-// interface OptionType {
-//   value: string | boolean;
-//   label: string;
-// }
+export interface OptionType {
+  value: string | boolean;
+  label: string;
+}
 
 // interface ActiveFormProps {
 //   data: RowType;
@@ -36,3 +36,24 @@
 
 export * from './api.types';
 export * from './form.types';
+
+export enum SessionType {
+  CREATE = 'create',
+  EDIT = 'edit',
+  DUPPLICATE = 'duplicate',
+}
+
+export enum Steps {
+  STUDENT = 'student',
+  TEST = 'test',
+  TIMELINE = 'timeline',
+}
+
+export type SessionParams = {
+  type: string;
+};
+
+export type SessionSearchParams = {
+  step: string;
+  id?: string;
+};

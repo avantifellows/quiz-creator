@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>
+      <body className="w-full min-h-screen">
         <Navbar />
         <main>{children}</main>
       </body>

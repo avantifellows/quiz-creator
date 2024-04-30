@@ -62,7 +62,10 @@ const TableRow = ({
 
   return (
     <>
-      <tr className={`${hasNoreportlink && `text-gray-400`} hover:bg-gray-50 border-none text-center`} onClick={() => toggleExpand()}>
+      <tr
+        className={`${hasNoreportlink && `text-gray-400`} hover:bg-gray-50 border-none text-center`}
+        onClick={() => toggleExpand()}
+      >
         <td className="border-b border-black p-2">{actualIndex}</td>
         <td className="border-b border-black p-2">{batch}</td>
         <td className="border-b border-black p-2">{name}</td>
@@ -165,7 +168,10 @@ const TableRow = ({
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/3 rounded-md px-5 py-10 bg-white text-center ">
             <div className="relative">
               <div className="m-auto h-32 aspect-square rounded-full border-4 border-solid border-current border-r-transparent text-primary animate-spin " />
-              <Check className=" text-green-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" size={100} />
+              <Check
+                className=" text-green-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                size={100}
+              />
             </div>
             <p className="text-xl">{`Link Copied`}</p>
           </div>

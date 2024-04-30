@@ -6,15 +6,9 @@ import { instance } from '@/utils/axios';
 async function postFormDataToBackend(formData: RowType) {
   const { student, test, timeline } = formData;
 
-  let start_time = formatDateTime(
-    timeline.startDate as string,
-    timeline.startTime as string
-  );
+  let start_time = formatDateTime(timeline.startDate as string, timeline.startTime as string);
 
-  let end_time = formatDateTime(
-    timeline.endDate as string,
-    timeline.endTime as string
-  );
+  let end_time = formatDateTime(timeline.endDate as string, timeline.endTime as string);
   const sessionStage = {
     auth_type: 'ID',
     id_generation: false,
@@ -71,10 +65,7 @@ async function postFormDataToBackend(formData: RowType) {
   };
 
   try {
-    const response = await instance.post(
-      `${process.env.AF_DB_URL}/api/session`,
-      requestBody
-    );
+    const response = await instance.post(`${process.env.AF_DB_URL}/api/session`, requestBody);
 
     const sessionId = response.data.id;
     const message = {
@@ -96,14 +87,8 @@ async function postFormDataToBackend(formData: RowType) {
 async function UpdateFormDataToBackend(formData: RowType, sessionId: string) {
   const { student, test, timeline } = formData;
 
-  let start_time = formatDateTime(
-    timeline.startDate as string,
-    timeline.startTime as string
-  );
-  let end_time = formatDateTime(
-    timeline.endDate as string,
-    timeline.endTime as string
-  );
+  let start_time = formatDateTime(timeline.startDate as string, timeline.startTime as string);
+  let end_time = formatDateTime(timeline.endDate as string, timeline.endTime as string);
 
   let patchBody: any = {
     start_time,

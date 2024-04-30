@@ -1,7 +1,4 @@
-export interface OptionType {
-  value: string | boolean;
-  label: string;
-}
+import { OptionType } from '@/types';
 
 const ProgramOptions: OptionType[] = [
   { value: 'HaryanaStudents', label: 'Haryana Students' },
@@ -169,9 +166,7 @@ const StreamOptions: OptionType[] = [
   { value: 'Zoology', label: 'Zoology' },
 ];
 
-const TestTakersOptions = [
-  { value: 'Test Takers Count', label: 'Test Takers Count' },
-];
+const TestTakersOptions = [{ value: 'Test Takers Count', label: 'Test Takers Count' }];
 
 export {
   BatchOptions,
@@ -179,5 +174,6 @@ export {
   GradeOptions,
   ProgramOptions,
   StreamOptions,
-  TestTakersOptions,
+  TestTakersOptions
 };
+

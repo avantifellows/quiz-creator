@@ -25,12 +25,17 @@
     "ignorePatterns": [
       "**/*.test.*",
       "**/*.cy.*"
-    ]
+    ],
+    "rules": {
+      "no-undef": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "no-unused-vars": "off"
+    }
   },
   "prettier": {
     "trailingComma": "es5",
     "singleQuote": true,
-    "printWidth": 180
+    "printWidth": 100
   },
   "dependencies": {
     "aws-sdk": "^2.1598.0",
