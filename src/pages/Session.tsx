@@ -25,6 +25,7 @@ export default function SessionCreator(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [isSessionAdded, setIsSessionAdded] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [activeStep, setActiveStep] = useState<string>(Step.STUDENT_DETAILS);
@@ -46,6 +47,7 @@ export default function SessionCreator(
   }, [isSessionAdded]);
 
   const OnSubmitSession = async () => {
+    setLoading(true);
     let response;
     if (props.FormType == "create") {
       response = await fetch("/api/PostFormData", {
@@ -55,6 +57,11 @@ export default function SessionCreator(
         },
         body: JSON.stringify(data),
       });
+      if (!response.ok) {
+        throw new Error("Error while creting the session");
+      } else {
+        setLoading(false);
+      }
     } else if (props.FormType === "edit") {
       response = await fetch(`/api/PostFormData?id=${props.FormData.test.id}`, {
         method: "PATCH",
@@ -63,6 +70,11 @@ export default function SessionCreator(
         },
         body: JSON.stringify(data),
       });
+      if (!response.ok) {
+        throw new Error("Error while updating the session");
+      } else {
+        setLoading(false);
+      }
     }
 
     setIsSessionAdded(true);
@@ -98,14 +110,22 @@ export default function SessionCreator(
       );
     } else {
       return (
-        <Timeline
-          data={data}
-          setActiveStep={setActiveStep}
-          setData={setData}
-          OnSubmitSession={OnSubmitSession}
-          isSessionAdded={isSessionAdded}
-          type={props.FormType}
-        />
+        <>
+          {loading ? (
+            <div className="flex justify-center items-center h-screen">
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+            </div>
+          ) : (
+            <Timeline
+              data={data}
+              setActiveStep={setActiveStep}
+              setData={setData}
+              isSessionAdded={isSessionAdded}
+              type={props.FormType}
+              OnSubmitSession={OnSubmitSession}
+            />
+          )} 
+        </>
       );
     }
   };
