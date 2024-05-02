@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"next dev\" \"node src/deploy-commands.js\" \"node src/bot.js\"",
     "build": "next build",
     "start": "next start",
     "build-staging": "cross-env NODE_ENV=staging next build",
@@ -17,6 +17,8 @@
     "aws-sdk": "^2.1512.0",
     "axios": "^1.5.0",
     "cross-env": "^7.0.3",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
     "json-server": "^0.17.3",
@@ -35,6 +37,7 @@
     "@types/react": "^18.2.17",
     "@types/react-dom": "^18.2.7",
     "autoprefixer": "^10.4.14",
+    "concurrently": "^8.2.2",
     "postcss": "^8.4.25",
     "tailwindcss": "^3.3.2"
   }
