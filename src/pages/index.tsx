@@ -15,7 +15,6 @@ export default function Home({
   const [refreshPage, setrefreshPage] = useState<null | boolean>(null);
   const [searchQuery, setSearchQuery] = useState(""); // State to manage search input
   const [filteredData, setFilteredData] = useState<DbTypes[]>(data); // State for filtered data
-  console.log(data);
   useEffect(() => {
     const shouldRefresh = sessionStorage.getItem("refresh") === "true";
 
@@ -37,13 +36,12 @@ const filterData = () => {
   const query = searchQuery.toLowerCase();
   const filtered = data.filter((item) => {
     // Accessing nested properties of DbTypes
-    let session_id = item.session_id?item.session_id:'';
-    session_id = session_id.toLowerCase();
+    let batch_name = item.meta_data?.batch?item.meta_data?.batch:'';
+    batch_name = batch_name.toLowerCase();
     const test_name = item.name.toLowerCase();
-    console.log(session_id);
     // Check if the search query matches any of the desired properties
     return (
-      session_id.includes(query) ||
+      batch_name.includes(query) ||
       test_name.includes(query)
     );
   });

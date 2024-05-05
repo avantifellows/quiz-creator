@@ -178,6 +178,65 @@
         "infinite_session": "infinite",
         "number_of_fields_in_popup_form": 3
       }
+    },
+    {
+      "id": "cd54",
+      "name": "ITPC",
+      "platform": "meet",
+      "platform_link": "",
+      "portal_link": "",
+      "start_time": "2024-05-16 12:00",
+      "end_time": "2024-05-16 12:30",
+      "is_active": "",
+      "purpose": {
+        "type": "attendance",
+        "params": "quiz"
+      },
+      "repeat_schedule": {
+        "type": "weekly",
+        "params": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "session_id": "",
+      "platform_id": "",
+      "signup_form_name": "Haryana Registration Form",
+      "session_type": "sign-in",
+      "auth_type": "ID",
+      "id_generation": false,
+      "activate_signup": true,
+      "redirection": true,
+      "pop_up_form": true,
+      "popup_form_id": 3,
+      "days_active": "1,2,3,4,5,6,7",
+      "meta_data": {
+        "group": "HimachalStudents",
+        "batch": "DL-11-Photon-Eng-23",
+        "grade": "12",
+        "course": "Hiring",
+        "stream": "Chemistry",
+        "test_format": "evaluation_test",
+        "test_purpose": "monthly_test",
+        "enabled": false,
+        "cms_test_id": "1234",
+        "test_takers_count": "100",
+        "has_synced_to_bq": false,
+        "optional_limits": "neet",
+        "marking_scheme": "4,-1",
+        "test_type": "homework",
+        "shortened_link": "",
+        "report_link": "",
+        "date_created": "2024-05-05",
+        "admin_testing_link": "",
+        "infinite_session": "standard",
+        "number_of_fields_in_popup_form": 3
+      }
     }
   ]
 }
