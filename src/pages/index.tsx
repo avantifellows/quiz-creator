@@ -2,6 +2,7 @@ import DataDisplay from "@/components/displayTable/DataDisplay";
 import { DbTypes } from "@/types/ResponseTypes";
 import { getData } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Search } from "react-feather";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -12,7 +13,9 @@ export default function Home({
   currentPage,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [refreshPage, setrefreshPage] = useState<null | boolean>(null);
-
+  const [searchQuery, setSearchQuery] = useState(""); // State to manage search input
+  const [filteredData, setFilteredData] = useState<DbTypes[]>(data); // State for filtered data
+  console.log(data);
   useEffect(() => {
     const shouldRefresh = sessionStorage.getItem("refresh") === "true";
 
@@ -28,7 +31,41 @@ export default function Home({
       clearTimeout(timeout);
     };
   }, []);
+// Filter data based on search query
+ // Function to filter data based on search query
+const filterData = () => {
+  const query = searchQuery.toLowerCase();
+  const filtered = data.filter((item) => {
+    // Accessing nested properties of DbTypes
+    let session_id = item.session_id?item.session_id:'';
+    session_id = session_id.toLowerCase();
+    const test_name = item.name.toLowerCase();
+    console.log(session_id);
+    // Check if the search query matches any of the desired properties
+    return (
+      session_id.includes(query) ||
+      test_name.includes(query)
+    );
+  });
+  setFilteredData(filtered);
+};
 
+  // Handle search input change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handle search action (perform filtering of the rows)
+  const handleSearchAction = () => {
+    filterData(); // Call the filterData function to filter the data based on the search query
+  };
+
+  // Handle filter button action
+  const handleFilterAction = () => {
+    console.log("Filter button clicked");
+    // Add code to perform filtering or fetch new data based on filter options
+  };
+  
   return (
     <>
       <Head>
@@ -40,10 +77,38 @@ export default function Home({
         <div className="bg-[#B52326] text-[#FFFFFF] text-[20px] px-2 py-2 md:px-3 rounded-md md:text-lg">
           <Link href={"/Session?type=create"}>+ Create Quiz Session</Link>
         </div>
+        <div className="flex flex-1 justify-center">
+            <div className="flex items-center w-3/4 border border-gray-300 rounded-md">
+                <div className="flex items-center justify-center px-2">
+                    <Search className="text-gray-400" />
+                </div>
+                
+                <input
+                    type="text"
+                    placeholder="Search by CMS_id or Test_name"
+                    className="w-full px-3 py-2 border-none outline-none"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                />
+                <button
+                    onClick={handleSearchAction}
+                    className="bg-[#B52326] text-white rounded-md px-4 py-2 ml-2"
+                >
+                    Search
+                </button>
+            </div>
+        </div>
+
+        <button
+          onClick={handleFilterAction}
+          className="bg-[#B52326] text-white rounded-md px-4 py-2"
+        >
+          Filter
+        </button>
       </nav>
       {refreshPage && <p>Refresh the page after 1 min</p>}
 
-      <DataDisplay data={data} hasMore={hasMore} currentPage={currentPage} />
+      <DataDisplay data={filteredData} hasMore={hasMore} currentPage={currentPage} />
     </>
   );
 }
@@ -52,7 +117,7 @@ export const getServerSideProps = (async ({ query: { pageNo } }) => {
   const currentPage = Number(pageNo) || 0;
 
   const { data, hasMore } = await getData(currentPage, 10);
-
+  
   return {
     props: {
       data,

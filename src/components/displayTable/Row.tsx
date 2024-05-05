@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import NextLink from "next/link";
-import { Check, Copy, Edit, Link } from "react-feather";
+import { Check, Copy, Edit, Link, Trash } from "react-feather";
 import { DbTypes } from "@/types/ResponseTypes";
 import { useRouter } from "next/router";
 import { formatTime } from "@/utils/TimeFormatter";
@@ -124,10 +124,10 @@ const TableRow = ({
               </NextLink>
             )}
         </td>
-        <td className="border-b border-black flex-wrap">
+        <td className="border-b border-black flex justify-evenly p-2">
           <div title="Duplicate">
             <Copy
-              className="cursor-pointer float-left"
+              className="cursor-pointer"
               onClick={(e) => {
                 router.push(`/Session?type=duplicate&sessionId=${id}`);
                 e.stopPropagation();
@@ -137,13 +137,23 @@ const TableRow = ({
 
           <div title="Edit">
             <Edit
-              className="cursor-pointer float-right"
+              className="cursor-pointer"
               onClick={(e) => {
                 router.push(`/Session?type=edit&sessionId=${id}`);
                 e.stopPropagation();
               }}
             />
           </div>
+          <div title="Delete">
+        <Trash
+          className="cursor-pointer"
+          onClick={(e) => {
+            // Implement the delete functionality here
+            // For example, calling an API to delete the item
+            e.stopPropagation();
+          }}
+        />
+      </div>
         </td>
       </tr>
 
