@@ -2,10 +2,11 @@ import DataDisplay from "@/components/displayTable/DataDisplay";
 import { DbTypes } from "@/types/ResponseTypes";
 import { getData } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { Search } from "react-feather";
+import { Search, Square } from "react-feather";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Home({
   data,
@@ -13,8 +14,8 @@ export default function Home({
   currentPage,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [refreshPage, setrefreshPage] = useState<null | boolean>(null);
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState(""); // State to manage search input
-  const [filteredData, setFilteredData] = useState<DbTypes[]>(data); // State for filtered data
   useEffect(() => {
     const shouldRefresh = sessionStorage.getItem("refresh") === "true";
 
@@ -30,23 +31,6 @@ export default function Home({
       clearTimeout(timeout);
     };
   }, []);
-// Filter data based on search query
- // Function to filter data based on search query
-const filterData = () => {
-  const query = searchQuery.toLowerCase();
-  const filtered = data.filter((item) => {
-    // Accessing nested properties of DbTypes
-    let batch_name = item.meta_data?.batch?item.meta_data?.batch:'';
-    batch_name = batch_name.toLowerCase();
-    const test_name = item.name.toLowerCase();
-    // Check if the search query matches any of the desired properties
-    return (
-      batch_name.includes(query) ||
-      test_name.includes(query)
-    );
-  });
-  setFilteredData(filtered);
-};
 
   // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,7 +39,13 @@ const filterData = () => {
 
   // Handle search action (perform filtering of the rows)
   const handleSearchAction = () => {
-    filterData(); // Call the filterData function to filter the data based on the search query
+    router.push({
+      pathname: router.pathname,
+      query: {
+        ...router.query,
+        string_query: searchQuery
+      },
+    });
   };
 
   // Handle filter button action
@@ -106,15 +96,15 @@ const filterData = () => {
       </nav>
       {refreshPage && <p>Refresh the page after 1 min</p>}
 
-      <DataDisplay data={filteredData} hasMore={hasMore} currentPage={currentPage} />
+      <DataDisplay data={data} hasMore={hasMore} currentPage={currentPage} />
     </>
   );
 }
 
-export const getServerSideProps = (async ({ query: { pageNo } }) => {
+export const getServerSideProps = (async ({ query: { pageNo, string_query } }) => {
   const currentPage = Number(pageNo) || 0;
-
-  const { data, hasMore } = await getData(currentPage, 10);
+  string_query = string_query?.toString();
+  const { data, hasMore } = await getData(currentPage, 10, string_query);
   
   return {
     props: {

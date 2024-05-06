@@ -2,14 +2,36 @@ import { instance } from "./RootClient";
 import { DbTypes } from "@/types/ResponseTypes";
 import { formatDateForPicker } from "./TimeFormatter";
 import { formatTimeForPicker } from "./TimeFormatter";
+import { off } from "process";
 
 // get data from the db when session id is generated
-async function getData(currentPage: number, limit: number) {
+async function getData(
+  currentPage: number,
+  limit: number,
+  string_query: string | undefined
+) {
   const offset = currentPage * limit;
-  const { data } = await instance.get<DbTypes[]>(`api`)
-  const hasMore = data.length > limit;
-  const items = hasMore ? data.slice(0, -1) : data;
+  const { data } = await instance.get<DbTypes[]>(`api`);
 
+  //  search in the db for the specific keyword
+  let query = string_query == undefined ? "" : string_query.toLowerCase();
+
+  const filteredData = data.filter((item) => {
+
+    // Accessing nested properties of DbTypes
+    let batch_name = item.meta_data?.batch ? item.meta_data?.batch : "";
+    batch_name = batch_name.toLowerCase();
+    const test_name = item.name.toLowerCase();
+
+    // Check if the search query matches any of the desired properties
+    return batch_name.includes(query) || test_name.includes(query);
+  });
+
+  // pagination
+  //to check is there any more entry present or not
+  const hasMore = filteredData.length>(limit+offset);
+  const limit_idx = offset + (hasMore?limit:filteredData.length);
+  const items = filteredData.slice(offset, limit_idx);
   return {
     data: items,
     hasMore,
