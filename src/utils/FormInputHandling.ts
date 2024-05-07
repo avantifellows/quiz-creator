@@ -4,17 +4,24 @@ import { formatDateForPicker } from "./TimeFormatter";
 import { formatTimeForPicker } from "./TimeFormatter";
 
 // get data from the db when session id is generated
-async function getData(currentPage: number, limit: number) {
+async function getData(
+  currentPage: number,
+  limit: number,
+  string_query: string | undefined
+) {
   const offset = currentPage * limit;
-  const { data } = await instance.get<DbTypes[]>(`api`)
-  const hasMore = data.length > limit;
-  const items = hasMore ? data.slice(0, -1) : data;
-
+  const { data } = await instance.get<DbTypes[]>(`api`);
+    // pagination
+  //to check is there any more entry present or not
+  const hasMore = data.length>(limit+offset);
+  const limit_idx = offset + (hasMore?limit:data.length);
+  const items = data.slice(offset, limit_idx);
   return {
     data: items,
     hasMore,
-  };
-}
+  }
+};
+
 
 async function getASession(id: number) {
   const { data } = await instance.get<DbTypes>(`api/${id}`);
