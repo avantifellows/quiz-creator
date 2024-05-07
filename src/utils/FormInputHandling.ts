@@ -6,8 +6,7 @@ import { formatTimeForPicker } from "./TimeFormatter";
 // get data from the db when session id is generated
 async function getData(
   currentPage: number,
-  limit: number,
-  string_query: string | undefined
+  limit: number
 ) {
   const offset = currentPage * limit;
   const { data } = await instance.get<DbTypes[]>(`api`);
