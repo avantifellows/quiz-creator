@@ -57,7 +57,7 @@ const DataDisplay = ({
         <ReactPaginate
           initialPage={currentPage}
           previousLabel={"Previous"}
-          nextLabel={"Next    "}
+          nextLabel={"Next"}
           breakClassName={"break-me px-2 py-1"}
           pageCount={hasMore ? currentPage + 2 : currentPage + 1}
           onPageChange={({ selected }) => {

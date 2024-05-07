@@ -2,9 +2,11 @@ import DataDisplay from "@/components/displayTable/DataDisplay";
 import { DbTypes } from "@/types/ResponseTypes";
 import { getData } from "@/utils/FormInputHandling";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Search, Square } from "react-feather";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Home({
   data,
@@ -12,7 +14,8 @@ export default function Home({
   currentPage,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [refreshPage, setrefreshPage] = useState<null | boolean>(null);
-
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState(""); // State to manage search input
   useEffect(() => {
     const shouldRefresh = sessionStorage.getItem("refresh") === "true";
 
@@ -29,6 +32,28 @@ export default function Home({
     };
   }, []);
 
+  // Handle search input change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handle search action (perform filtering of the rows)
+  const handleSearchAction = () => {
+    router.push({
+      pathname: router.pathname,
+      query: {
+        ...router.query,
+        string_query: searchQuery
+      },
+    });
+  };
+
+  // Handle filter button action
+  const handleFilterAction = () => {
+    console.log("Filter button clicked");
+    // Add code to perform filtering or fetch new data based on filter options
+  };
+  
   return (
     <>
       <Head>
@@ -40,6 +65,34 @@ export default function Home({
         <div className="bg-[#B52326] text-[#FFFFFF] text-[20px] px-2 py-2 md:px-3 rounded-md md:text-lg">
           <Link href={"/Session?type=create"}>+ Create Quiz Session</Link>
         </div>
+        <div className="flex flex-1 justify-center">
+            <div className="flex items-center w-3/4 border border-gray-300 rounded-md">
+                <div className="flex items-center justify-center px-2">
+                    <Search className="text-gray-400" />
+                </div>
+                
+                <input
+                    type="text"
+                    placeholder="Search by CMS_id or Test_name"
+                    className="w-full px-3 py-2 border-none outline-none"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                />
+                <button
+                    onClick={handleSearchAction}
+                    className="bg-[#B52326] text-white rounded-md px-4 py-2 ml-2"
+                >
+                    Search
+                </button>
+            </div>
+        </div>
+
+        <button
+          onClick={handleFilterAction}
+          className="bg-[#B52326] text-white rounded-md px-4 py-2"
+        >
+          Filter
+        </button>
       </nav>
       {refreshPage && <p>Refresh the page after 1 min</p>}
 
@@ -48,11 +101,11 @@ export default function Home({
   );
 }
 
-export const getServerSideProps = (async ({ query: { pageNo } }) => {
+export const getServerSideProps = (async ({ query: { pageNo, string_query } }) => {
   const currentPage = Number(pageNo) || 0;
-
-  const { data, hasMore } = await getData(currentPage, 10);
-
+  string_query = string_query?.toString();
+  const { data, hasMore } = await getData(currentPage, 10, string_query);
+  
   return {
     props: {
       data,

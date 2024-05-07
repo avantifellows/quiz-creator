@@ -19,7 +19,7 @@
     "cross-env": "^7.0.3",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
-    "json-server": "^0.17.3",
+    "json-server": "^0.17.4",
     "next": "13.4.9",
     "pre-commit": "^1.2.2",
     "react": "18.2.0",
