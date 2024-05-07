@@ -144,16 +144,6 @@ const TableRow = ({
               }}
             />
           </div>
-          <div title="Delete">
-        <Trash
-          className="cursor-pointer"
-          onClick={(e) => {
-            // Implement the delete functionality here
-            // For example, calling an API to delete the item
-            e.stopPropagation();
-          }}
-        />
-      </div>
         </td>
       </tr>
 
