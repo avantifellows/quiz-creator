@@ -8,13 +8,19 @@ const DataDisplay = ({
   data,
   hasMore,
   currentPage,
+  sortData
 }: {
   data: DbTypes[];
   hasMore: boolean;
   currentPage: number;
+  sortData:any
 }) => {
   const router = useRouter();
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  console.log(sortData)
+  console.log(data);
+  
+
 
   useEffect(() => {
     setExpandedRow(null);
@@ -39,7 +45,12 @@ const DataDisplay = ({
             </tr>
           </thead>
           <tbody>
-            {data.map((row, i) => (
+          {/* data.filter(item => item.name.includes(dataSearch)) */
+           
+          }
+            {
+            
+            data.filter(item => item.name.toLowerCase().includes(sortData.toLowerCase()) || item?.meta_data?.batch.toLowerCase().includes(sortData.toLowerCase())).map((row, i) => (
               <TableRow
                 row={row}
                 index={i}
