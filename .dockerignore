@@ -1,0 +1,13 @@
+./docker
+.dockerignore
+
+**/node_modules/
+npm-debug.log
+
+.git
+.gitignore
+
+.husky
+.vscode
+README.md
+.next

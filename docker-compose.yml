@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+  local:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.local
+    container_name: quiz-creator_local
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env.local
+    depends_on:
+      - json-server
+
+  json-server:
+    image: clue/json-server
+    container_name: json-server
+    ports:
+      - "3001:80"
+    volumes:
+      - "./sessions_db.json:/data/db.json"
+    restart: always
+
+  staging:
+    build:
+      context: .
+      dockerfile: docker\Dockerfile.staging
+    container_name: quiz-creator_staging
+    ports:
+      - 3010:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env.local
+
+  prod:
+    container_name: quiz-creator_prod
+    build:
+      context: .
+      dockerfile: docker\Dockerfile.prod
+    ports:
+      - 3020:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env.local
