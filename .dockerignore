@@ -1,4 +1,4 @@
-./docker
+docker
 .dockerignore
 
 **/node_modules/
@@ -11,3 +11,4 @@ npm-debug.log
 .vscode
 README.md
 .next
+.docs
