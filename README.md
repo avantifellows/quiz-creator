@@ -1,17 +1,21 @@
-## Getting Started
+# Session Creator
 
-First, install dependencies (`npm install`) run the development server:
+[![License: MIT](https://img.shields.io/github/license/avantifellows/quiz-creator?color=blue)](LICENSE)
+![GitHub issues](https://img.shields.io/github/issues-raw/avantifellows/quiz-creator)
+[![Discord](https://img.shields.io/discord/717975833226248303.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/29qYD7fZtZ)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Overview
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Session Creator is a web application designed to streamline the management of educational resources for Avanti Fellows like quizzes, live sessions, and forms, etc. It helps instructors to create quizzes, schedule live sessions, and design various forms effortlessly. The platform aims to replace manual processes of maintaining a google sheet or excel with a centralized, automated solution, ultimately enhancing the efficiency and impact of Avanti Fellows' educational support programs.
 
-## Project
+## Guide
 
-An interface to create quizzes for the Avanti Fellows Quiz Engine, and remove the dependence on Google Sheets completely.
+To know more about the features and tech used of the project, visit [Guide](docs/GUIDE.md)
+
+## Installation
+
+To set up this project, visit the [installation steps](docs/INSTALATION.md).
+
+## Contributing
+
+Visit [Contribution](docs/CONTRIBUTION.md) to learn more about how to start contributing to the project.
