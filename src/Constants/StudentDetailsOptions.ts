@@ -1,6 +1,6 @@
-import { OptionType } from '@/types';
+import { Option } from '@/types';
 
-const ProgramOptions: OptionType[] = [
+const GroupOptions: Option[] = [
   { value: 'HaryanaStudents', label: 'Haryana Students' },
   { value: 'HimachalStudents', label: 'Himachal Students' },
   { value: 'DelhiStudents', label: 'Delhi Students' },
@@ -11,7 +11,7 @@ const ProgramOptions: OptionType[] = [
   { value: 'AFTesting', label: 'AF Testing' },
 ];
 
-const BatchOptions: OptionType[] = [
+const BatchOptions: Option[] = [
   { value: 'DL-12-Alpha-Eng-23', label: 'DL-12-Alpha-Eng-23' },
   { value: 'DL-12-Photon-Eng-23', label: 'DL-12-Photon-Eng-23' },
   { value: 'DL-12-Catalyst-Eng-23', label: 'DL-12-Catalyst-Eng-23' },
@@ -144,7 +144,7 @@ const GradeOptions = [
   { value: '12', label: '12' },
 ];
 
-const CourseOptions: OptionType[] = [
+const CourseOptions: Option[] = [
   { value: 'NEET', label: 'NEET' },
   { value: 'Catalyst', label: 'Catalyst' },
   { value: 'Alpha', label: 'Alpha' },
@@ -154,7 +154,7 @@ const CourseOptions: OptionType[] = [
   { value: 'Photon', label: 'Photon' },
 ];
 
-const StreamOptions: OptionType[] = [
+const StreamOptions: Option[] = [
   { value: 'Medical', label: 'Medical' },
   { value: 'Maths', label: 'Maths' },
   { value: 'Science', label: 'Science' },
@@ -166,14 +166,4 @@ const StreamOptions: OptionType[] = [
   { value: 'Zoology', label: 'Zoology' },
 ];
 
-const TestTakersOptions = [{ value: 'Test Takers Count', label: 'Test Takers Count' }];
-
-export {
-  BatchOptions,
-  CourseOptions,
-  GradeOptions,
-  ProgramOptions,
-  StreamOptions,
-  TestTakersOptions
-};
-
+export { BatchOptions, CourseOptions, GradeOptions, GroupOptions, StreamOptions };

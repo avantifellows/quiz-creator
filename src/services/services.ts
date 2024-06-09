@@ -1,6 +1,6 @@
 import { DATA_PER_PAGE } from '@/Constants';
 import { Session } from '@/types/api.types';
-import { instance } from '../utils/axios';
+import { instance } from '../lib/axios';
 
 // get data from the db when session id is generated
 async function getData(currentPage: number) {
@@ -28,3 +28,4 @@ async function getASession(id: number | null) {
 }
 
 export { getASession, getData };
+

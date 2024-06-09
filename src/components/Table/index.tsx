@@ -3,7 +3,7 @@
 import type { Session } from '@/types/api.types';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import ReactPaginate from 'react-paginate';
+// import ReactPaginate from 'react-paginate';
 import TableRow from './Row';
 
 interface TableProps {
@@ -51,7 +51,7 @@ const Table = ({ data, hasMore }: TableProps) => {
             ))}
           </tbody>
         </table>
-        <ReactPaginate
+        {/* <ReactPaginate
           initialPage={currentPage}
           previousLabel={'Previous'}
           nextLabel={'Next    '}
@@ -67,7 +67,7 @@ const Table = ({ data, hasMore }: TableProps) => {
             'mx-1  bg-[#B52326] w-24 text-center text-white rounded px-2 py-1 sm:px-3 sm:py-2 hover: bg-[#B52326]'
           }
           disabledClassName={'opacity-50 cursor-not-allowed'}
-        />
+        /> */}
       </div>
     </div>
   );

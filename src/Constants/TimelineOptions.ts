@@ -1,16 +1,16 @@
-import { OptionType } from './StudentDetailsOptions';
+import { Option } from '@/types';
 
-const IsEnabledOptions: OptionType[] = [
-  { value: true, label: 'ON' },
-  { value: false, label: 'OFF' },
+const IsEnabledOptions: Option[] = [
+  { value: 'true', label: 'ON' },
+  { value: 'false', label: 'OFF' },
 ];
 
-const HasSyncedOptions: OptionType[] = [
-  { value: true, label: 'TRUE' },
-  { value: false, label: 'FALSE' },
+const HasSyncedOptions: Option[] = [
+  { value: 'true', label: 'TRUE' },
+  { value: 'false', label: 'FALSE' },
 ];
 
-const SessionTypeOptions: OptionType[] = [
+const SessionTypeOptions: Option[] = [
   { value: 'infinite', label: 'Infinite' },
   { value: 'standard', label: 'Standard' },
 ];

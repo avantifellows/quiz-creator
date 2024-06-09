@@ -1,12 +1,12 @@
-import { OptionType } from './StudentDetailsOptions';
+import { Option } from '@/types';
 
-const TestTypeOptions: OptionType[] = [
+const TestTypeOptions: Option[] = [
   { value: 'assessment', label: 'Assessment' },
   { value: 'homework', label: 'Homework' },
   { value: 'omr-assessment', label: 'Omr-Assessment' },
 ];
 
-const TestFormatOptions: OptionType[] = [
+const TestFormatOptions: Option[] = [
   { value: 'part_test', label: 'Part Test' },
   { value: 'major_test', label: 'Major Test' },
   { value: 'full_syllabus_test', label: 'Full Syllabus Test' },
@@ -15,7 +15,7 @@ const TestFormatOptions: OptionType[] = [
   { value: 'homework', label: 'Homework' },
 ];
 
-const TestPurposeOptions: OptionType[] = [
+const TestPurposeOptions: Option[] = [
   { value: 'baseline', label: 'Baseline' },
   { value: 'endline', label: 'Endline' },
   { value: 'weekly_test', label: 'Weekly Test' },
@@ -30,12 +30,12 @@ const TestPlatformOptions = [
   { value: 'meet', label: 'Live Class' },
 ];
 
-const MarkingSchemeOptions: OptionType[] = [
+const MarkingSchemeOptions: Option[] = [
   { value: '4,-1', label: '4 , -1' },
   { value: '1,0', label: '1, 0' },
 ];
 
-const OptionalLimitOptions: OptionType[] = [
+const OptionalLimitOptions: Option[] = [
   { value: 'na', label: 'NA' },
   { value: 'neet', label: 'NEET' },
   { value: 'jee', label: 'JEE' },
@@ -48,5 +48,6 @@ export {
   TestFormatOptions,
   TestPlatformOptions,
   TestPurposeOptions,
-  TestTypeOptions,
+  TestTypeOptions
 };
+

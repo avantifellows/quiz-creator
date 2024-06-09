@@ -1,9 +1,9 @@
+import { formatTime } from '@/lib/TimeFormatter';
 import { Session } from '@/types/api.types';
-import { formatTime } from '@/utils/TimeFormatter';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
-import { Check, Copy, Edit, Link } from 'react-feather';
+// import { Check, Copy, Edit, Link } from 'react-feather';
 
 const TableRow = ({
   row,
@@ -105,15 +105,15 @@ const TableRow = ({
           )}
         </td>
         <td className="border-b border-black p-2">
-          {typeof adminTestingLink === 'string' && !hasNoId && !hasNoadmintestinglink && (
+          {/* {typeof adminTestingLink === 'string' && !hasNoId && !hasNoadmintestinglink && (
             <NextLink href={adminTestingLink} target="_blank">
               <Link className="mx-auto" />
             </NextLink>
-          )}
+          )} */}
         </td>
         <td className="border-b border-black flex-wrap">
           <div title="Duplicate">
-            <Copy
+            {/* <Copy
               className="cursor-pointer float-left"
               onClick={(e) => {
                 router.push(`/Session?type=duplicate&sessionId=${id}`);
@@ -129,7 +129,7 @@ const TableRow = ({
                 router.push(`/Session?type=edit&sessionId=${id}`);
                 e.stopPropagation();
               }}
-            />
+            /> */}
           </div>
         </td>
       </tr>

@@ -1,4 +1,4 @@
-import { toTitleCase } from '@/utils';
+import { toTitleCase } from '@/lib';
 
 export default function Stepper({ steps, activeStep }: { steps: string[]; activeStep: string }) {
   return (

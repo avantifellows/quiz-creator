@@ -1,5 +1,5 @@
 import Table from '@/components/Table';
-import { getData } from '@/services/get.services';
+import { getData } from '@/services/services';
 import Link from 'next/link';
 
 interface HomeProps {

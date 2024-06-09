@@ -1,61 +1,142 @@
-type StudentForm = {
-  program: string;
-  batch: string;
-  grade: string;
-  course: string;
-  stream: string;
-  testTakers: number;
-};
+import {
+  BatchOptions,
+  CourseOptions,
+  GradeOptions,
+  GroupOptions,
+  StreamOptions,
+} from '@/Constants/StudentDetailsOptions';
+import {
+  MarkingSchemeOptions,
+  OptionalLimitOptions,
+  TestFormatOptions,
+  TestPlatformOptions,
+  TestPurposeOptions,
+  TestTypeOptions,
+} from '@/Constants/TestDetailsOptions';
+import {
+  HasSyncedOptions,
+  IsEnabledOptions,
+  SessionTypeOptions,
+} from '@/Constants/TimelineOptions';
+import { z } from 'zod';
 
-type TestForm = {
-  name: string;
-  type: string;
-  format: string;
-  purpose: string;
-  platform: string;
-  markingScheme: string;
-  optionalLimit: string;
-  link: string;
-  id: string;
-  sessionId: string;
-  sessionLink: string;
-  cmsId: string;
-};
+export const studentSchema = z.object({
+  group: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => GroupOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  batch: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => BatchOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  grade: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => GradeOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  course: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => CourseOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  stream: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => StreamOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  testTakers: z.coerce
+    .number({ required_error: 'This field is required' })
+    .int()
+    .min(0, 'Test Takers must be greater than 0'),
+});
 
-type TimelineForm = {
-  isEnabled: string;
-  has_synced_to_bq: string;
-  infinite_session: boolean;
-  reportLink: string;
-  repeatSchedule: string;
-  startDate: string;
-  endDate: string;
-  startTime: string;
-  endTime: string;
-  portal_link: string;
-};
+export const testSchema = z.object({
+  name: z.string({ required_error: 'This field is required' }),
+  testType: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => TestTypeOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  testFormat: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => TestFormatOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  testPurpose: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => TestPurposeOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  testPlatform: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => TestPlatformOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  markingScheme: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => MarkingSchemeOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  optionalLimit: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => OptionalLimitOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  id: z.number().optional(),
+  sessionId: z.string().optional(),
+  sessionLink: z.string().url('This is not a valid url').optional(),
+  cmsId: z.string({ required_error: 'This field is required' }).url('This is not a valid url'),
+});
 
-type SessionType = {
-  number_of_fields_in_pop_form: number | null;
-  auth_type: null | string;
-  id_generation: boolean | null;
-  activate_signup: boolean | null;
-  redirection: boolean | null;
-  pop_up_form: boolean | null;
-};
+export const timelineSchema = z.object({
+  startDate: z.date({
+    required_error: 'This field is required',
+    message: 'This is not a valid date',
+  }),
+  startTime: z
+    .string({ required_error: 'This field is required' })
+    .time('This is not a valid time'),
+  endDate: z.date({
+    required_error: 'This field is required',
+    message: 'This is not a valid date',
+  }),
+  endTime: z.string({ required_error: 'This field is required' }).time('This is not a valid time'),
+  isEnabled: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => IsEnabledOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  sessionType: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => SessionTypeOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  has_synced_to_bq: z
+    .string()
+    .refine(
+      (value) => HasSyncedOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    )
+    .optional(),
+  repeatSchedule: z.string().optional(),
+  reportLink: z.string().url('This is not a valid url').optional(),
+});
 
-type QuizCreatorForm = StudentForm | TestForm | TimelineForm | SessionType;
-type QuizCreatorFormKey =
-  | keyof StudentForm
-  | keyof TestForm
-  | keyof TimelineForm
-  | keyof SessionType;
-
-export type {
-  QuizCreatorForm,
-  QuizCreatorFormKey,
-  StudentForm,
-  TestForm,
-  TimelineForm,
-  SessionType,
-};
+export type studentFields = z.infer<typeof studentSchema>;
+export type testFields = z.infer<typeof testSchema>;
+export type timelineFields = z.infer<typeof timelineSchema>;

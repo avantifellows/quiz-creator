@@ -1,5 +1,5 @@
-import StepsController from '@/components/Steps';
-import { getASession } from '@/services/get.services';
+import StepsController from '@/app/session/[type]/Steps';
+import { getASession } from '@/services/services';
 import { SessionParams, SessionSearchParams, SessionType, Steps } from '@/types';
 import { notFound } from 'next/navigation';
 

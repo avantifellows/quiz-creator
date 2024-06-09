@@ -1,7 +1,7 @@
 // import { Dispatch, SetStateAction } from 'react';
 
-export interface OptionType {
-  value: string | boolean;
+export interface Option {
+  value: string;
   label: string;
 }
 
@@ -32,7 +32,7 @@ export interface OptionType {
 //   id: string;
 //   patch_session: any;
 // }
-// export type { ActiveFormProps, OptionType, RowType, MessageObject };
+// export type { ActiveFormProps, Option, RowType, MessageObject };
 
 export * from './api.types';
 export * from './form.types';
