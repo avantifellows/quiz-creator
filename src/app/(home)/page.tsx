@@ -1,16 +1,16 @@
-import Table from '@/components/Table';
-import { getData } from '@/services/services';
+import { getTableData } from '@/services/services';
+import { TablePrams } from '@/types';
 import Link from 'next/link';
+import { DataTable } from './Table/Table';
 
 interface HomeProps {
-  searchParams: {
-    page?: string;
-  };
+  searchParams: TablePrams;
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const currentPage = Number(searchParams?.page || 0);
-  const { data, hasMore } = await getData(currentPage);
+  const currentPage = parseInt(searchParams?.page || '0');
+  const limit = parseInt(searchParams?.per_page || '10');
+  const { data, hasMore } = await getTableData(currentPage, limit + 1);
 
   return (
     <>
@@ -19,7 +19,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <Link href={'/session/create?step=student'}>+ Create Quiz Session</Link>
         </div>
       </nav>
-      <Table data={data} hasMore={hasMore} />
+      <DataTable data={data} hasMore={hasMore} />
     </>
   );
 }
