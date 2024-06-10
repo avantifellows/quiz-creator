@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 services:
   local:
     build:
@@ -18,9 +18,9 @@ services:
     image: clue/json-server
     container_name: json-server
     ports:
-      - "3001:80"
+      - '3001:80'
     volumes:
-      - "./sessions_db.json:/data/db.json"
+      - './sessions_db.json:/data/db.json'
     restart: always
 
   staging:

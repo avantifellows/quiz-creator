@@ -48,6 +48,5 @@ export {
   TestFormatOptions,
   TestPlatformOptions,
   TestPurposeOptions,
-  TestTypeOptions
+  TestTypeOptions,
 };
-
