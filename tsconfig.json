@@ -9,15 +9,18 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "plugins": [{ "name": "next" }],
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/public/*": ["./public/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/utils/PublishSnsMessage.js", "src/pages/api/PostFormData.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next.config.mjs"],
   "exclude": ["node_modules"]
 }
