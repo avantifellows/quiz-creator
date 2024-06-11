@@ -9,12 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Session } from '@/types';
 import { type Table } from '@tanstack/react-table';
 import { Settings2, X } from 'lucide-react';
+import { useMemo } from 'react';
 
 const Filters = ({ table }: { table: Table<Session> }) => {
-  const isFiltered = table.getState().columnFilters.length > 0;
+  const isFiltered = useMemo(() => table.getState().columnFilters.length > 0, [table]);
 
   return (
-    <div className="flex items-center py-4">
+    <div className="flex items-center py-4 gap-4">
       <div className="flex flex-1 items-center gap-4">
         <Input
           placeholder="Filter Name..."
@@ -63,7 +64,3 @@ const Filters = ({ table }: { table: Table<Session> }) => {
 };
 
 export default Filters;
-
-const FilterSelect = () => {
-  return <div></div>;
-};

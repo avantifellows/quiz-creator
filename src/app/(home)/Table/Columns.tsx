@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Platform, Session, Status } from '@/types';
-import { MoreHorizontal } from 'lucide-react';
+import { LinkIcon, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 
 export const columns: ColumnDef<Session>[] = [
@@ -36,6 +36,47 @@ export const columns: ColumnDef<Session>[] = [
     cell: ({ row }) => <div>{format(new Date(row.getValue('startDate')), 'dd/MM/yyyy')}</div>,
   },
   {
+    id: 'endDate',
+    accessorKey: 'end_time',
+    header: 'End Date',
+    cell: ({ row }) => <div>{format(new Date(row.getValue('endDate')), 'dd/MM/yyyy')}</div>,
+  },
+  {
+    accessorKey: 'platform',
+    header: 'Platform',
+    cell: ({ row }) => <div className="capitalize">{row.getValue('platform')}</div>,
+  },
+  {
+    id: 'portalLink',
+    accessorKey: 'portal_link',
+    header: 'Portal Link',
+    cell: ({ row }) => (
+      <Link href={row.getValue('portalLink')} target="_blank">
+        <LinkIcon className="size-4 mx-auto cursor-pointer" />
+      </Link>
+    ),
+  },
+  {
+    id: 'reportLink',
+    accessorKey: 'meta_data.report_link',
+    header: 'Report Link',
+    cell: ({ row }) => (
+      <Link href={row.getValue('reportLink')} target="_blank">
+        <LinkIcon className="size-4 mx-auto cursor-pointer" />
+      </Link>
+    ),
+  },
+  {
+    id: 'adminLink',
+    accessorKey: 'meta_data.admin_testing_link',
+    header: 'Admin Link',
+    cell: ({ row }) => (
+      <Link href={row.getValue('adminLink')} target="_blank">
+        <LinkIcon className="size-4 mx-auto cursor-pointer" />
+      </Link>
+    ),
+  },
+  {
     id: 'actions',
     enableHiding: false,
     header: 'Actions',
@@ -56,7 +97,7 @@ export const columns: ColumnDef<Session>[] = [
               <Link href={`/session/duplicate?step=student&id=${row.original.id}`}>Dulplicate</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={`/session/view?id=${row.original.id}`}>View Details</Link>
+              <Link href={`/session?id=${row.original.id}`}>View Details</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
