@@ -126,7 +126,7 @@ const TimelineDetails = () => {
           />
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4 justify-between">
+        {/* <div className="flex flex-col md:flex-row gap-4 justify-between">
           <FormField
             control={form.control}
             name="startTime"
@@ -144,7 +144,7 @@ const TimelineDetails = () => {
                         )}
                       >
                         {field.value ? (
-                          field.value.toLocaleDateString('en-IN')
+                          new Date(field.value).toLocaleDateString('en-IN')
                         ) : (
                           <span>Pick a Time</span>
                         )}
@@ -183,7 +183,7 @@ const TimelineDetails = () => {
                         )}
                       >
                         {field.value ? (
-                          field.value.toLocaleDateString('en-IN')
+                          new Date(field.value).toLocaleDateString('en-IN')
                         ) : (
                           <span>Pick a Time</span>
                         )}
@@ -205,7 +205,7 @@ const TimelineDetails = () => {
               </FormItem>
             )}
           />
-        </div>
+        </div> */}
         <FormField
           control={form.control}
           name="isEnabled"
