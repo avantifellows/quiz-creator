@@ -309,7 +309,7 @@ const TimelineDetails = () => {
           </>
         ) : null}
         <div className="flex gap-4 flex-row justify-between">
-          <Button type="reset" onClick={() => pushStep(Steps.STUDENT)}>
+          <Button type="reset" onClick={() => pushStep(Steps.PLATFORM)}>
             Back
           </Button>
           <Button type="submit">Next</Button>

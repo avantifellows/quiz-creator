@@ -43,7 +43,7 @@ const StudentDetails = () => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => addFormData(data, Steps.TEST))}
+        onSubmit={form.handleSubmit((data) => addFormData(data, Steps.PLATFORM))}
         className="flex flex-col gap-4"
       >
         <FormField

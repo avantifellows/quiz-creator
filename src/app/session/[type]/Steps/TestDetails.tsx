@@ -269,7 +269,7 @@ const TestDetails = () => {
           )}
         />
         <div className="flex gap-4 flex-row justify-between">
-          <Button type="reset" onClick={() => pushStep(Steps.STUDENT)}>
+          <Button type="reset" onClick={() => pushStep(Steps.BASIC)}>
             Back
           </Button>
           <Button type="submit">Next</Button>
