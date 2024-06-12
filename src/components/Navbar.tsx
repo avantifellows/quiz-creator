@@ -1,27 +1,26 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 const NAV_LINKS = [{ label: 'Quizzing Engine', path: '/' }];
 
-// Renders Navbar as General Component
 const Navbar = () => {
   return (
     <header>
-      <nav className="flex flex-row justify-between items-center md:px-5">
-        <div className="relative w-32 aspect-video">
+      <nav className="flex flex-row justify-between items-center px-8">
+        <Link href="/" className="relative w-32 aspect-video" title="Avanti Fellows">
           <Image src="/AvantiFellowsLogo_1.svg" alt="Avanti fellows logo" fill priority />
-        </div>
-        <p className={`md:text-2xl md:first-letter:text-3xl md:first-letter:text-bold text-xs `}>
-          SESSION MANAGER
-        </p>
+        </Link>
+        <h1 className="text-lg md:text-2xl">
+          <span className="text-2xl md:text-3xl text-bold">S</span>ESSION{' '}
+          <span className="text-2xl md:text-3xl text-bold">M</span>ANAGER
+        </h1>
       </nav>
-      <nav>
-        <div className="flex text-white text-l gap-5 pl-10 items-center bg-[#B52326] w-full h-16">
-          {NAV_LINKS.map(({ label }) => (
-            <p key={label} className="hover:font-semibold active:font-light cursor-pointer ">
-              {label}
-            </p>
-          ))}
-        </div>
+      <nav className="flex flex-row items-center bg-primary text-primary-foreground w-full h-16 px-8">
+        {NAV_LINKS.map((link) => (
+          <Link href={link.path} key={link.label} className="font-medium hover:font-semibold">
+            {link.label}
+          </Link>
+        ))}
       </nav>
     </header>
   );

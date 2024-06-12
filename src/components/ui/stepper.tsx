@@ -1,16 +1,16 @@
-import { toTitleCase } from '@/lib';
+import { toTitleCase } from '@/lib/utils';
 
 export default function Stepper({ steps, activeStep }: { steps: string[]; activeStep: string }) {
   return (
-    <ol className="flex items-center justify-center w-full space-x-10 md:space-x-32 mt-16">
+    <ol className="flex items-center justify-center w-full gap-10 md:gap-32">
       {steps.map((step, index) => (
         <li
           key={step}
           className={`flex items-center ${step === activeStep ? 'text-black' : 'text-gray-400'} space-x-2.5 `}
         >
           <span
-            className={`flex items-center justify-center w-[20px] h-[20px] text-[10px] sm:w-[35px] sm:h-[35px] sm:text-[20px] border rounded-full ${
-              step === activeStep ? 'text-white bg-[#A82929]' : ''
+            className={`flex items-center justify-center size-5 text-xs sm:size-8 sm:text-xl border rounded-full ${
+              step === activeStep ? 'text-primary-foreground bg-primary' : ''
             } shadow-md`}
           >
             {index + 1}

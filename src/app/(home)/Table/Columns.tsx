@@ -18,28 +18,37 @@ export const columns: ColumnDef<Session>[] = [
   {
     accessorKey: 'id',
     header: 'S.No.',
+    enableHiding: false,
   },
   {
     accessorKey: 'name',
     header: 'Name',
     enableColumnFilter: true,
+    enableHiding: false,
   },
   {
     id: 'batch',
     accessorKey: 'meta_data.batch',
     header: 'Batch',
+    enableHiding: false,
   },
   {
     id: 'startDate',
     accessorKey: 'start_time',
     header: 'Start Date',
-    cell: ({ row }) => <div>{format(new Date(row.getValue('startDate')), 'dd/MM/yyyy')}</div>,
+    cell: ({ row }) => format(new Date(row.getValue('startDate')), 'dd/MM/yyyy'),
   },
   {
     id: 'endDate',
     accessorKey: 'end_time',
     header: 'End Date',
-    cell: ({ row }) => <div>{format(new Date(row.getValue('endDate')), 'dd/MM/yyyy')}</div>,
+    cell: ({ row }) => format(new Date(row.getValue('endDate')), 'dd/MM/yyyy'),
+  },
+  {
+    id: 'createdAt',
+    accessorKey: 'meta_data.date_created',
+    header: 'Created At',
+    cell: ({ row }) => format(new Date(row.getValue('createdAt')), 'dd/MM/yyyy'),
   },
   {
     accessorKey: 'platform',
@@ -47,11 +56,16 @@ export const columns: ColumnDef<Session>[] = [
     cell: ({ row }) => <div className="capitalize">{row.getValue('platform')}</div>,
   },
   {
+    id: 'testTakersCount',
+    accessorKey: 'meta_data.test_takers_count',
+    header: 'Test Takers',
+  },
+  {
     id: 'portalLink',
     accessorKey: 'portal_link',
     header: 'Portal Link',
     cell: ({ row }) => (
-      <Link href={row.getValue('portalLink')} target="_blank">
+      <Link href={row.getValue('portalLink')} target="_blank" rel="noopener noreferrer">
         <LinkIcon className="size-4 mx-auto cursor-pointer" />
       </Link>
     ),
@@ -61,7 +75,7 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'meta_data.report_link',
     header: 'Report Link',
     cell: ({ row }) => (
-      <Link href={row.getValue('reportLink')} target="_blank">
+      <Link href={row.getValue('reportLink')} target="_blank" rel="noopener noreferrer">
         <LinkIcon className="size-4 mx-auto cursor-pointer" />
       </Link>
     ),
@@ -71,15 +85,15 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'meta_data.admin_testing_link',
     header: 'Admin Link',
     cell: ({ row }) => (
-      <Link href={row.getValue('adminLink')} target="_blank">
+      <Link href={row.getValue('adminLink')} target="_blank" rel="noopener noreferrer">
         <LinkIcon className="size-4 mx-auto cursor-pointer" />
       </Link>
     ),
   },
   {
     id: 'actions',
-    enableHiding: false,
     header: 'Actions',
+    enableHiding: false,
     cell: function Cell({ row }) {
       return (
         <DropdownMenu>
@@ -129,3 +143,77 @@ export const filterFields = [
     })),
   },
 ];
+
+export const displayData = (data: Session) => {
+  interface DataItem {
+    label: string;
+    value: any;
+    isLink?: boolean;
+  }
+
+  interface DataSection {
+    title: string;
+    data: DataItem[];
+  }
+
+  const basicDetails: DataSection = {
+    title: 'Basic Details',
+    data: [
+      { label: 'Platform', value: data.platform },
+      { label: 'Program', value: data.meta_data?.group },
+      { label: 'Batch', value: data.meta_data?.batch },
+      { label: 'Grade', value: data.meta_data?.grade },
+      { label: 'Session Type', value: data.type },
+      { label: 'Auth Type', value: data.auth_type },
+      { label: 'Activate Sign-Up', value: data.is_active ? 'Yes' : 'No' },
+      { label: 'Is pop up form allowed', value: data.popup_form ? 'Yes' : 'No' },
+      {
+        label: 'Number fields in pop up form',
+        value: data.meta_data?.number_of_fields_in_popup_form,
+      },
+      { label: 'Is redirection allowed', value: data.redirection ? 'Yes' : 'No' },
+      { label: 'Is Id generation allowed', value: data.id_generation ? 'Yes' : 'No' },
+      // { label: 'Signup form name', value: data.signup_form },
+    ],
+  };
+
+  const quizDetails: DataSection | null =
+    data.platform === 'quiz'
+      ? {
+          title: 'Quiz Details',
+          data: [
+            { label: 'Course', value: data.meta_data?.course },
+            { label: 'Stream', value: data.meta_data?.stream },
+            { label: 'Test Name', value: data.name },
+            { label: 'Test Format', value: data.meta_data?.test_format },
+            { label: 'Test Purpose', value: data.meta_data?.test_purpose },
+            { label: 'Test Type', value: data.meta_data?.test_type },
+            { label: 'CMS Link', value: data.meta_data?.cms_test_id, isLink: true },
+            { label: 'Marking Scheme', value: data.meta_data?.marking_scheme },
+            { label: 'Optional Limits', value: data.meta_data?.optional_limits },
+            { label: 'Portal Link', value: data.portal_link, isLink: true },
+            { label: 'Admin Link', value: data.meta_data?.admin_testing_link, isLink: true },
+            { label: 'Report Link', value: data.meta_data?.report_link, isLink: true },
+          ],
+        }
+      : null;
+
+  const timeDetails: DataSection = {
+    title: 'Time Details',
+    data: [
+      { label: 'Start Date & Time', value: format(new Date(data.start_time!), 'PPp') },
+      { label: 'End Date & Time', value: format(new Date(data.end_time!), 'PPp') },
+      { label: 'Test Takers', value: data.meta_data?.test_takers_count },
+      { label: 'Is Enabled', value: data.meta_data?.enabled ? 'Yes' : 'No' },
+      { label: 'Has Synced', value: data.meta_data?.has_synced_to_bq },
+      { label: 'Created At', value: format(new Date(data.meta_data?.date_created ?? ''), 'PPp') },
+    ],
+  };
+
+  // Filter out any null sections
+  const showingData: DataSection[] = [basicDetails, quizDetails, timeDetails].filter(
+    Boolean
+  ) as DataSection[];
+
+  return showingData;
+};

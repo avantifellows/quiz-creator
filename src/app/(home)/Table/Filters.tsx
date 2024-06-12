@@ -9,14 +9,15 @@ import { Input } from '@/components/ui/input';
 import { Session } from '@/types';
 import { type Table } from '@tanstack/react-table';
 import { Settings2, X } from 'lucide-react';
+import Link from 'next/link';
 import { useMemo } from 'react';
 
 const Filters = ({ table }: { table: Table<Session> }) => {
   const isFiltered = useMemo(() => table.getState().columnFilters.length > 0, [table]);
 
   return (
-    <div className="flex items-center py-4 gap-4">
-      <div className="flex flex-1 items-center gap-4">
+    <div className="flex mb-4 gap-4 flex-col md:flex-row justify-between">
+      <div className="flex items-center justify-between gap-2 md:gap-4">
         <Input
           placeholder="Filter Name..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
@@ -34,31 +35,36 @@ const Filters = ({ table }: { table: Table<Session> }) => {
           </Button>
         )}
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="ml-auto">
-            <Settings2 className="mr-2 size-4" />
-            View
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {table
-            .getAllColumns()
-            .filter((column) => column.getCanHide())
-            .map((column) => {
-              return (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.columnDef?.header?.toString()}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex items-center justify-between gap-2 md:gap-4">
+        <Button asChild>
+          <Link href={'/session/create?step=basic'}>+ Create Session</Link>
+        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              <Settings2 className="mr-2 size-4" />
+              View
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
+                    {column.columnDef?.header?.toString()}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 };

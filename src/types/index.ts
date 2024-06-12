@@ -13,8 +13,8 @@ export enum SessionType {
 }
 
 export enum Steps {
-  STUDENT = 'student',
-  TEST = 'test',
+  BASIC = 'basic',
+  PLATFORM = 'platform',
   TIMELINE = 'timeline',
 }
 

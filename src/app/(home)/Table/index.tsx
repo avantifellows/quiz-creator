@@ -26,8 +26,9 @@ import { useEffect, useState } from 'react';
 import { columns } from './Columns';
 import Filters from './Filters';
 import Pagination from './Pagination';
+import { SheetTableRow } from './Row';
 
-export function DataTable({ data, hasMore }: { data: Session[]; hasMore: boolean }) {
+export default function DataTable({ data, hasMore }: { data: Session[]; hasMore: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -48,6 +49,14 @@ export function DataTable({ data, hasMore }: { data: Session[]; hasMore: boolean
       pagination,
       sorting,
       columnFilters,
+    },
+    initialState: {
+      columnVisibility: {
+        startDate: false,
+        endDate: false,
+        createdAt: false,
+        testTakersCount: false,
+      },
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -75,7 +84,7 @@ export function DataTable({ data, hasMore }: { data: Session[]; hasMore: boolean
   }, [pagination.pageIndex, pagination.pageSize]);
 
   return (
-    <section className="mx-8">
+    <>
       <Filters table={table} />
       <div className="rounded-md text-center border">
         <Table>
@@ -96,15 +105,7 @@ export function DataTable({ data, hasMore }: { data: Session[]; hasMore: boolean
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              <SheetTableRow table={table} />
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
@@ -116,6 +117,6 @@ export function DataTable({ data, hasMore }: { data: Session[]; hasMore: boolean
         </Table>
       </div>
       <Pagination table={table} />
-    </section>
+    </>
   );
 }

@@ -12,8 +12,8 @@ interface StepsControllerProps {
   sessionData: Session | {};
 }
 const StepForms = {
-  [Steps.STUDENT]: StudentDetails,
-  [Steps.TEST]: TestDetails,
+  [Steps.BASIC]: StudentDetails,
+  [Steps.PLATFORM]: TestDetails,
   [Steps.TIMELINE]: TimelineDetails,
 };
 
