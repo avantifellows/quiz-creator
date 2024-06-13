@@ -17,7 +17,7 @@ const Filters = ({ table }: { table: Table<Session> }) => {
 
   return (
     <div className="flex mb-4 gap-4 flex-col md:flex-row justify-between">
-      <div className="flex items-center justify-between gap-2 md:gap-4">
+      <div className="flex items-center justify-between gap-2 md:gap-4 flex-1">
         <Input
           placeholder="Filter Name..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}

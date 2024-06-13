@@ -8,7 +8,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="w-full min-h-screen">
         <Navbar />
-        <main className="m-8">{children}</main>
+        <main className="mx-4 my-8 md:mx-8">{children}</main>
       </body>
     </html>
   );

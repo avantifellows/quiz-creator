@@ -8,15 +8,18 @@ interface Props {
   searchParams: SessionSearchParams;
 }
 
+export function generateStaticParams() {
+  return Object.values(SessionType).map((item) => ({ type: item }));
+}
+
 export default async function SessionCreator({
   params,
   searchParams: { step = Steps.BASIC, id },
 }: Props) {
-  if (!Object.values(SessionType).includes(params.type as SessionType)) {
-    notFound();
-  }
-
-  if (!Object.values(Steps).includes(step as Steps)) {
+  if (
+    !Object.values(SessionType).includes(params.type as SessionType) ||
+    !Object.values(Steps).includes(step as Steps)
+  ) {
     notFound();
   }
 

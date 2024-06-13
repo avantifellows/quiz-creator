@@ -25,28 +25,44 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useFormData } from '@/hooks/useFormData';
-import { Session, SessionParams, SessionType, Steps, testFields, testSchema } from '@/types';
+import { useFormContext } from '@/hooks/useFormContext';
+import {
+  PartialSession,
+  Session,
+  SessionParams,
+  SessionType,
+  Steps,
+  quizFields,
+  quizSchema,
+} from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams } from 'next/navigation';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 
-const TestDetails = () => {
+const QuizForm = () => {
   const { type } = useParams<SessionParams>();
 
-  const { formData, addFormData, pushStep } = useFormData();
+  const { formData, updateFormData, pushStep } = useFormContext();
 
-  const form = useForm<testFields>({
-    resolver: zodResolver(testSchema),
-    defaultValues: formData,
+  const form = useForm<quizFields>({
+    resolver: zodResolver(quizSchema),
+    defaultValues: {
+      // TODO: Populate default values
+    },
   });
+
+  const onSubmit = useCallback((data: quizFields) => {
+    const addedData: PartialSession = {
+      // TODO: add payload here
+    };
+
+    updateFormData(addedData, Steps.TIMELINE);
+  }, []);
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data) => addFormData(data, Steps.TIMELINE))}
-        className="flex flex-col gap-4"
-      >
+      <form onSubmit={form.handleSubmit((data) => onSubmit(data))} className="flex flex-col gap-4">
         <FormField
           disabled={type === SessionType.EDIT}
           control={form.control}
@@ -268,15 +284,22 @@ const TestDetails = () => {
             </FormItem>
           )}
         />
-        <div className="flex gap-4 flex-row justify-between">
-          <Button type="reset" onClick={() => pushStep(Steps.BASIC)}>
+        <div className="flex gap-4 flex-col-reverse md:flex-row justify-between mt-4">
+          <Button
+            className="min-w-32"
+            variant="outline"
+            type="reset"
+            onClick={() => pushStep(Steps.BASIC)}
+          >
             Back
           </Button>
-          <Button type="submit">Next</Button>
+          <Button className="min-w-32" type="submit">
+            Next
+          </Button>
         </div>
       </form>
     </Form>
   );
 };
 
-export default TestDetails;
+export default QuizForm;

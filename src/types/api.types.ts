@@ -24,7 +24,7 @@ export interface Session {
   type?: string;
 }
 
-export interface MetaData {
+interface MetaData {
   admin_testing_link?: string;
   batch?: string;
   cms_test_id?: string;
@@ -47,12 +47,14 @@ export interface MetaData {
   test_type?: string;
 }
 
-export interface Purpose {
+interface Purpose {
   params?: string;
   type?: string;
 }
 
-export interface RepeatSchedule {
+interface RepeatSchedule {
   params?: number[];
   type?: string;
 }
+
+export type PartialSession = Partial<Session>;

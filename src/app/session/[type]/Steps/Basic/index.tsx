@@ -25,27 +25,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useFormData } from '@/hooks/useFormData';
-import { SessionParams, SessionType, Steps, studentFields, studentSchema } from '@/types';
+import { useFormContext } from '@/hooks/useFormContext';
+import {
+  PartialSession,
+  SessionParams,
+  SessionType,
+  Steps,
+  basicFields,
+  basicSchema,
+} from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 
-const StudentDetails = () => {
+const BasicForm = () => {
   const { type } = useParams<SessionParams>();
-  const { formData, addFormData } = useFormData();
+  const router = useRouter();
+  const { formData, updateFormData } = useFormContext();
 
-  const form = useForm<studentFields>({
-    resolver: zodResolver(studentSchema),
-    defaultValues: formData,
+  const form = useForm<basicFields>({
+    resolver: zodResolver(basicSchema),
+    defaultValues: {
+      // TODO: Populate default values
+    },
   });
+
+  const onSubmit = useCallback((data: basicFields) => {
+    const addedData: PartialSession = {
+      // TODO: add payload here
+    };
+
+    updateFormData(addedData, Steps.PLATFORM);
+  }, []);
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data) => addFormData(data, Steps.PLATFORM))}
-        className="flex flex-col gap-4"
-      >
+      <form onSubmit={form.handleSubmit((data) => onSubmit(data))} className="flex flex-col gap-4">
         <FormField
           disabled={type === SessionType.EDIT}
           control={form.control}
@@ -184,12 +200,22 @@ const StudentDetails = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="min-w-40 ml-auto">
-          Next
-        </Button>
+        <div className="flex gap-4 flex-col-reverse md:flex-row justify-between mt-4">
+          <Button
+            className="min-w-32"
+            variant="outline"
+            type="reset"
+            onClick={() => router.push('/')}
+          >
+            Back
+          </Button>
+          <Button className="min-w-32" type="submit">
+            Next
+          </Button>
+        </div>
       </form>
     </Form>
   );
 };
 
-export default StudentDetails;
+export default BasicForm;

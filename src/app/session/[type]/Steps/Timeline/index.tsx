@@ -24,27 +24,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useFormData } from '@/hooks/useFormData';
+import { useFormContext } from '@/hooks/useFormContext';
 import { cn } from '@/lib/utils';
-import { Session, Steps, timelineFields, timelineSchema } from '@/types';
+import { createSession } from '@/services/services';
+import { PartialSession, Session, Steps, timelineFields, timelineSchema } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Calendar as CalendarIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const TimelineDetails = () => {
-  const { formData, addFormData, pushStep } = useFormData();
+  const [isLoading, setIsLoading] = useState(false);
+  const { formData, updateFormData, pushStep } = useFormContext();
+  const router = useRouter();
 
   const form = useForm<timelineFields>({
     resolver: zodResolver(timelineSchema),
-    defaultValues: formData,
+    defaultValues: {
+      // TODO: Populate default values
+    },
   });
+
+  const onSubmit = useCallback(async (data: timelineFields) => {
+    setIsLoading(true);
+    const addedData: PartialSession = {
+      // TODO: add payload here
+    };
+
+    updateFormData(addedData);
+    const finalPayload = { ...formData, ...addedData };
+    const { isSuccess } = await createSession(finalPayload);
+    setIsLoading(false);
+    if (isSuccess) {
+      router.push(`/`);
+    }
+  }, []);
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data) => addFormData(data, Steps.TIMELINE))}
-        className="flex flex-col gap-4"
-      >
+      <form onSubmit={form.handleSubmit((data) => onSubmit(data))} className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row gap-4 justify-between">
           <FormField
             control={form.control}
@@ -126,86 +145,6 @@ const TimelineDetails = () => {
           />
         </div>
 
-        {/* <div className="flex flex-col md:flex-row gap-4 justify-between">
-          <FormField
-            control={form.control}
-            name="startTime"
-            render={({ field }) => (
-              <FormItem className="flex flex-col flex-grow basis-1/2">
-                <FormLabel>Start Time</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={'outline'}
-                        className={cn(
-                          'w-full pl-3 text-left font-normal',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        {field.value ? (
-                          new Date(field.value).toLocaleDateString('en-IN')
-                        ) : (
-                          <span>Pick a Time</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      fromDate={new Date()}
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="endTime"
-            render={({ field }) => (
-              <FormItem className="flex flex-col flex-grow basis-1/2">
-                <FormLabel>End Time</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={'outline'}
-                        className={cn(
-                          'w-full pl-3 text-left font-normal',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        {field.value ? (
-                          new Date(field.value).toLocaleDateString('en-IN')
-                        ) : (
-                          <span>Pick a Time</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      fromDate={new Date()}
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div> */}
         <FormField
           control={form.control}
           name="isEnabled"
@@ -308,11 +247,18 @@ const TimelineDetails = () => {
             />
           </>
         ) : null}
-        <div className="flex gap-4 flex-row justify-between">
-          <Button type="reset" onClick={() => pushStep(Steps.PLATFORM)}>
+        <div className="flex gap-4 flex-col-reverse md:flex-row justify-between mt-4">
+          <Button
+            className="min-w-32"
+            variant="outline"
+            type="reset"
+            onClick={() => pushStep(Steps.PLATFORM)}
+          >
             Back
           </Button>
-          <Button type="submit">Next</Button>
+          <Button className="min-w-32" type="submit">
+            Next
+          </Button>
         </div>
       </form>
     </Form>

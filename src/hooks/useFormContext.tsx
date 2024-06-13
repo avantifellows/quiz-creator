@@ -1,38 +1,35 @@
 'use client';
 
-import { Session, SessionParams, Steps } from '@/types';
+import { PartialSession, SessionParams, Steps } from '@/types';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 interface FormContextValue {
-  formData: {};
-  addFormData: (formData: object, step?: Steps) => void;
-  submitForm: () => void;
-  pushStep: (step: Steps) => void;
+  formData: PartialSession;
+  updateFormData: (formData: PartialSession, nextStep?: Steps) => void;
+  pushStep: (step: Steps | string) => void;
 }
 
 const FormContext = createContext<FormContextValue>({
   formData: {},
-  addFormData: () => {},
-  submitForm: () => {},
+  updateFormData: () => {},
   pushStep: () => {},
 });
 
-const FormDataProvider = ({
+export const FormDataProvider = ({
   children,
   sessionData = {},
 }: {
   children: ReactNode;
-  sessionData: Session | {};
+  sessionData: PartialSession;
 }) => {
   const params = useParams<SessionParams>();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [formData, setFormData] = useState(sessionData);
-  const [submit, setSubmit] = useState(false);
+  const [formData, setFormData] = useState<PartialSession>(sessionData);
 
-  const addFormData = useCallback(
-    (data: object, step?: Steps) => {
+  const updateFormData = useCallback(
+    (data: PartialSession, nextStep?: Steps) => {
       console.info('[Form Context] Data : ', data);
       setFormData((prevFormData) => {
         const updatedData = { ...prevFormData, ...data };
@@ -40,8 +37,8 @@ const FormDataProvider = ({
         return updatedData;
       });
 
-      if (step) {
-        pushStep(step);
+      if (nextStep) {
+        pushStep(nextStep);
       }
     },
     [params, searchParams]
@@ -50,12 +47,12 @@ const FormDataProvider = ({
   useEffect(() => {
     const sessionFormData = sessionStorage.getItem(`formData_${params.type}`);
     if (sessionFormData) {
-      setFormData(JSON.parse(sessionFormData));
+      updateFormData(JSON.parse(sessionFormData));
     }
   }, []);
 
   const pushStep = useCallback(
-    (step: Steps) => {
+    (step: Steps | string) => {
       const id = searchParams.get('id');
       const route = `/session/${params.type}?step=${step}${id ? `&id=${id}` : ''}`;
       router.push(route);
@@ -63,27 +60,16 @@ const FormDataProvider = ({
     [router, params, searchParams]
   );
 
-  const submitForm = useCallback(() => setSubmit(true), []);
-
   return (
-    <FormContext.Provider
-      value={{
-        formData,
-        addFormData,
-        submitForm,
-        pushStep,
-      }}
-    >
+    <FormContext.Provider value={{ formData, updateFormData, pushStep }}>
       {children}
     </FormContext.Provider>
   );
 };
 
-const useFormData = () => {
+export const useFormContext = () => {
   if (!FormContext) {
     throw new Error('useFormData must be used within a FormDataProvider');
   }
   return useContext(FormContext);
 };
-
-export { FormDataProvider, useFormData };

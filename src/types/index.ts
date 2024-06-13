@@ -1,21 +1,12 @@
+import { type FC } from 'react';
+
 export * from './api.types';
+export * from './enums';
 export * from './form.types';
 
 export interface Option {
   value: string;
   label: string;
-}
-
-export enum SessionType {
-  CREATE = 'create',
-  EDIT = 'edit',
-  DUPPLICATE = 'duplicate',
-}
-
-export enum Steps {
-  BASIC = 'basic',
-  PLATFORM = 'platform',
-  TIMELINE = 'timeline',
 }
 
 export type TablePrams = {
@@ -32,13 +23,10 @@ export type SessionSearchParams = {
   id?: string;
 };
 
-export enum Status {
-  Processing = 'processing',
-  Success = 'success',
-  Failed = 'failed',
-}
-
-export enum Platform {
-  Quiz = 'quiz',
-  Live = 'live',
+export interface StepperSteps {
+  [key: string]: {
+    label: string;
+    component: FC;
+    hide?: boolean;
+  };
 }

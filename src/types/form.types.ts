@@ -20,7 +20,7 @@ import {
 } from '@/Constants/TimelineOptions';
 import { z } from 'zod';
 
-export const studentSchema = z.object({
+export const basicSchema = z.object({
   group: z
     .string({ required_error: 'This field is required' })
     .refine(
@@ -57,7 +57,7 @@ export const studentSchema = z.object({
     .min(0, 'Test Takers must be greater than 0'),
 });
 
-export const testSchema = z.object({
+export const quizSchema = z.object({
   name: z.string({ required_error: 'This field is required' }),
   testType: z
     .string({ required_error: 'This field is required' })
@@ -137,6 +137,9 @@ export const timelineSchema = z.object({
   reportLink: z.string().url('This is not a valid url').optional(),
 });
 
-export type studentFields = z.infer<typeof studentSchema>;
-export type testFields = z.infer<typeof testSchema>;
+export const liveSchema = z.object({});
+
+export type basicFields = z.infer<typeof basicSchema>;
+export type quizFields = z.infer<typeof quizSchema>;
+export type liveFields = z.infer<typeof liveSchema>;
 export type timelineFields = z.infer<typeof timelineSchema>;

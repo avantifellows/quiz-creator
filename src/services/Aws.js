@@ -7,23 +7,19 @@ AWS.config.update({
 });
 
 const sns = new AWS.SNS();
-function publishMessage(message) {
-  const topicArn = process.env.AF_TOPIC_ARN;
-  message.environment = 'production';
-  const params = {
-    Message: JSON.stringify(message),
-    TopicArn: topicArn,
-  };
 
-  sns.publish(params, (err, data) => {
-    if (err) {
-      console.error('Error publishing message:', err);
+function publishMessage(message) {
+  const TopicArn = process.env.AF_TOPIC_ARN;
+  const Message = { environment: 'production', ...message };
+  const params = { Message, TopicArn };
+
+  sns.publish(params, (error, data) => {
+    if (error) {
+      console.error('[SNS ERROR] publishing message : ', error);
     } else {
-      console.log('Message published:', data.MessageId);
+      console.info('[SNS SUCCESS] publishing message : ', data.MessageId);
     }
   });
 }
 
-module.exports = {
-  publishMessage,
-};
+module.exports = { publishMessage };
