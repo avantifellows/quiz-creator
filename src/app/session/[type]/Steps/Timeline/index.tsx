@@ -29,7 +29,7 @@ import { cn } from '@/lib/utils';
 import { createSession } from '@/services/services';
 import { PartialSession, Session, Steps, timelineFields, timelineSchema } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, LoaderCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -256,8 +256,8 @@ const TimelineDetails = () => {
           >
             Back
           </Button>
-          <Button className="min-w-32" type="submit">
-            Next
+          <Button className="min-w-32" type="submit" disabled={isLoading}>
+            {isLoading ? <LoaderCircle className="animate-spin" /> : 'Next'}
           </Button>
         </div>
       </form>

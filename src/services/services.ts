@@ -31,6 +31,7 @@ export async function getTableData(currentPage: number, limit: number) {
     return { data: items, hasMore };
   } catch (error) {
     console.error(`[API ERROR]  fetching sessions : ${error}`);
+    return { data: [], hasMore: false };
   }
 }
 
@@ -39,14 +40,15 @@ export async function getTableData(currentPage: number, limit: number) {
  * @param {number} id - The id of the session.
  * @return {Promise<Session>} data - Session data for the given id
  */
-export async function getASession(id: number | null) {
-  if (!id) return null;
+export async function getASession(id: number | null): Promise<Session | {}> {
+  if (!id) return {};
   try {
     const { data } = await instance.get<Session>(`/session/${id}`);
     console.info(`[API SUCCESS] fetching session ${id} : ${data}`);
     return data;
   } catch (error) {
     console.error(`[API ERROR] fetching session for ${id} : ${error}`);
+    return {};
   }
 }
 
