@@ -31,12 +31,12 @@ interface MetaData {
   course?: string;
   date_created?: Date;
   enabled?: number;
-  grade?: string;
+  grade?: number;
   group?: string;
   has_synced_to_bq?: string;
   infinite_session?: boolean;
   marking_scheme?: string;
-  number_of_fields_in_popup_form?: string;
+  number_of_fields_in_popup_form?: number;
   optional_limits?: string;
   report_link?: string;
   shortened_link?: string;

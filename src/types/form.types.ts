@@ -3,21 +3,16 @@ import {
   CourseOptions,
   GradeOptions,
   GroupOptions,
-  StreamOptions,
-} from '@/Constants/StudentDetailsOptions';
-import {
+  IsEnabledOptions,
   MarkingSchemeOptions,
   OptionalLimitOptions,
+  SessionTypeOptions,
+  StreamOptions,
   TestFormatOptions,
   TestPlatformOptions,
   TestPurposeOptions,
   TestTypeOptions,
-} from '@/Constants/TestDetailsOptions';
-import {
-  HasSyncedOptions,
-  IsEnabledOptions,
-  SessionTypeOptions,
-} from '@/Constants/TimelineOptions';
+} from '@/Constants';
 import { z } from 'zod';
 
 export const basicSchema = z.object({
@@ -33,12 +28,40 @@ export const basicSchema = z.object({
       (value) => BatchOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
-  grade: z
-    .string({ required_error: 'This field is required' })
+  grade: z.coerce
+    .number({ required_error: 'This field is required' })
     .refine(
       (value) => GradeOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
+  sessionType: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => SessionTypeOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+  authType: z.string({ required_error: 'This field is required' }),
+  activateSignUp: z.boolean().default(false),
+  isPopupForm: z.boolean().default(false),
+  noOfFieldsInPopup: z.coerce
+    .number({
+      required_error: 'This field is required',
+      message: 'This is not a valid number',
+    })
+    .int()
+    .min(0),
+  isRedirection: z.boolean().default(false),
+  isIdGeneration: z.boolean().default(false),
+  signupFormName: z.string({ required_error: 'This field is required' }),
+  platform: z
+    .string({ required_error: 'This field is required' })
+    .refine(
+      (value) => TestPlatformOptions.some((option) => option.value === value),
+      'Invalid option selected'
+    ),
+});
+
+export const quizSchema = z.object({
   course: z
     .string({ required_error: 'This field is required' })
     .refine(
@@ -49,20 +72,6 @@ export const basicSchema = z.object({
     .string({ required_error: 'This field is required' })
     .refine(
       (value) => StreamOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  testTakers: z.coerce
-    .number({ required_error: 'This field is required' })
-    .int()
-    .min(0, 'Test Takers must be greater than 0'),
-});
-
-export const quizSchema = z.object({
-  name: z.string({ required_error: 'This field is required' }),
-  testType: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => TestTypeOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
   testFormat: z
@@ -77,10 +86,12 @@ export const quizSchema = z.object({
       (value) => TestPurposeOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
-  testPlatform: z
+  cmsUrl: z.string({ required_error: 'This field is required' }).url('This is not a valid url'),
+  name: z.string({ required_error: 'This field is required' }),
+  testType: z
     .string({ required_error: 'This field is required' })
     .refine(
-      (value) => TestPlatformOptions.some((option) => option.value === value),
+      (value) => TestTypeOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
   markingScheme: z
@@ -95,49 +106,43 @@ export const quizSchema = z.object({
       (value) => OptionalLimitOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
-  id: z.number().optional(),
-  sessionId: z.string().optional(),
-  sessionLink: z.string().url('This is not a valid url').optional(),
-  cmsId: z.string({ required_error: 'This field is required' }).url('This is not a valid url'),
 });
 
 export const timelineSchema = z.object({
-  startDate: z.date({
-    required_error: 'This field is required',
-    message: 'This is not a valid date',
-  }),
-  startTime: z
-    .string({ required_error: 'This field is required' })
-    .time('This is not a valid time'),
-  endDate: z.date({
-    required_error: 'This field is required',
-    message: 'This is not a valid date',
-  }),
-  endTime: z.string({ required_error: 'This field is required' }).time('This is not a valid time'),
+  startDate: z
+    .date({
+      required_error: 'This field is required',
+      message: 'This is not a valid date and time',
+    })
+    .min(new Date(), 'Start date cannot be in the past'),
+  endDate: z
+    .date({
+      required_error: 'This field is required',
+      message: 'This is not a valid date and time',
+    })
+    .min(new Date(), 'End date cannot be in the past'),
   isEnabled: z
     .string({ required_error: 'This field is required' })
     .refine(
       (value) => IsEnabledOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
-  sessionType: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => SessionTypeOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  has_synced_to_bq: z
-    .string()
-    .refine(
-      (value) => HasSyncedOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    )
-    .optional(),
-  repeatSchedule: z.string().optional(),
-  reportLink: z.string().url('This is not a valid url').optional(),
+  // repeatSchedule: z.string().optional(),
+  testTakers: z.coerce
+    .number({
+      required_error: 'This field is required',
+      message: 'This is not a valid number',
+    })
+    .int()
+    .min(0, 'Test Takers must be greater than 0'),
 });
 
-export const liveSchema = z.object({});
+export const liveSchema = z.object({
+  platformLink: z
+    .string({ required_error: 'This field is required' })
+    .url('This is not a valid url'),
+  name: z.string({ required_error: 'This field is required' }),
+});
 
 export type basicFields = z.infer<typeof basicSchema>;
 export type quizFields = z.infer<typeof quizSchema>;

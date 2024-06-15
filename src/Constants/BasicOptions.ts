@@ -138,10 +138,10 @@ const BatchOptions: Option[] = [
   { value: 'NEEV SCERT', label: 'NEEV SCERT' },
 ];
 const GradeOptions = [
-  { value: '9', label: '9' },
-  { value: '10', label: '10' },
-  { value: '11', label: '11' },
-  { value: '12', label: '12' },
+  { value: 9, label: '9' },
+  { value: 10, label: '10' },
+  { value: 11, label: '11' },
+  { value: 12, label: '12' },
 ];
 
 const CourseOptions: Option[] = [
