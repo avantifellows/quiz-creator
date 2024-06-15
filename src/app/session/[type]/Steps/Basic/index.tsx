@@ -2,219 +2,142 @@
 
 import {
   BatchOptions,
-  CourseOptions,
   GradeOptions,
   GroupOptions,
-  StreamOptions,
-} from '@/Constants/StudentDetailsOptions';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  SessionTypeOptions,
+  TestPlatformOptions,
+} from '@/Constants';
+import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
 import {
+  FieldSchema,
   PartialSession,
   SessionParams,
-  SessionType,
   Steps,
   basicFields,
   basicSchema,
 } from '@/types';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useParams, useRouter } from 'next/navigation';
-import { useCallback } from 'react';
-import { useForm } from 'react-hook-form';
+import { useParams } from 'next/navigation';
+import { useCallback, useMemo, type FC } from 'react';
 
-const BasicForm = () => {
+const BasicForm: FC = () => {
   const { type } = useParams<SessionParams>();
-  const router = useRouter();
   const { formData, updateFormData } = useFormContext();
 
-  const form = useForm<basicFields>({
-    resolver: zodResolver(basicSchema),
-    defaultValues: {
-      // TODO: Populate default values
-    },
-  });
+  const fieldsSchema: FieldSchema<basicFields> = useMemo(
+    () => ({
+      group: {
+        type: 'select',
+        options: GroupOptions,
+        placeholder: 'Select a group',
+        label: 'Group',
+      },
+      batch: {
+        type: 'select',
+        options: BatchOptions,
+        placeholder: 'Select a batch',
+        label: 'Batch',
+      },
+      grade: {
+        type: 'select',
+        options: GradeOptions,
+        placeholder: 'Select a grade',
+        label: 'Grade',
+      },
+      sessionType: {
+        type: 'select',
+        options: SessionTypeOptions,
+        placeholder: 'Select a session type',
+        label: 'Session type',
+      },
+      authType: {
+        type: 'text',
+        label: 'Auth type',
+        placeholder: 'Enter auth type',
+      },
+      activateSignUp: {
+        type: 'switch',
+        label: 'Activate sign up',
+      },
+      isPopupForm: {
+        type: 'switch',
+        label: 'Is pop up form allowed',
+      },
+      noOfFieldsInPopup: {
+        type: 'number',
+        label: 'No of fields in popup',
+        placeholder: 'Enter no of fields in popup',
+        min: 0,
+        step: 1,
+      },
+      isRedirection: {
+        type: 'switch',
+        label: 'Is redirection allowed',
+      },
+      isIdGeneration: {
+        type: 'switch',
+        label: 'Is id generation allowed',
+      },
+      signupFormName: {
+        type: 'text',
+        label: 'Signup form name',
+        placeholder: 'Enter form name',
+      },
+      platform: {
+        type: 'select',
+        options: TestPlatformOptions,
+        placeholder: 'Select a platform',
+        label: 'Platform',
+      },
+    }),
+    []
+  );
+
+  const defaultValues = useMemo(
+    () => ({
+      group: formData?.meta_data?.group,
+      batch: formData?.meta_data?.batch,
+      grade: formData?.meta_data?.grade,
+      authType: formData?.auth_type,
+      activateSignUp: formData?.signup_form,
+      isPopupForm: formData?.popup_form,
+      noOfFieldsInPopup: formData?.meta_data?.number_of_fields_in_popup_form,
+      isRedirection: formData?.redirection,
+      isIdGeneration: formData?.id_generation,
+      platform: formData?.platform,
+      // TODO: signupFormName and sessionType key should be added
+    }),
+    [formData]
+  );
 
   const onSubmit = useCallback((data: basicFields) => {
     const addedData: PartialSession = {
-      // TODO: add payload here
+      meta_data: {
+        group: data.group,
+        batch: data.batch,
+        grade: data.grade,
+        number_of_fields_in_popup_form: data.noOfFieldsInPopup,
+      },
+      auth_type: data.authType,
+      signup_form: data.activateSignUp,
+      popup_form: data.isPopupForm,
+      redirection: data.isRedirection,
+      id_generation: data.isIdGeneration,
+      platform: data.platform,
+      // TODO: signupFormName and sessionType key should be added
     };
+    console.log('Sumbitted data Successfully', data);
 
     updateFormData(addedData, Steps.PLATFORM);
   }, []);
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => onSubmit(data))} className="flex flex-col gap-4">
-        <FormField
-          disabled={type === SessionType.EDIT}
-          control={form.control}
-          name="group"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Program</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Program" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {GroupOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="batch"
-          rules={{
-            required: true,
-          }}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Batch</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Batch" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {BatchOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="grade"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Grade</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Grade" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {GradeOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="course"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Course</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Course" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {CourseOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="stream"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Stream</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Stream" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {StreamOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="testTakers"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Test Takers Count</FormLabel>
-              <FormControl>
-                <Input type="number" min={0} placeholder="Test Takers Count" {...field} />
-              </FormControl>
-              <FormDescription>Enter the no. of students expected to take the test</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex gap-4 flex-col-reverse md:flex-row justify-between mt-4">
-          <Button
-            className="min-w-32"
-            variant="outline"
-            type="reset"
-            onClick={() => router.push('/')}
-          >
-            Back
-          </Button>
-          <Button className="min-w-32" type="submit">
-            Next
-          </Button>
-        </div>
-      </form>
-    </Form>
+    <FormBuilder
+      formSchema={fieldsSchema}
+      zodSchema={basicSchema}
+      defaultValues={defaultValues}
+      handleSubmit={onSubmit}
+    />
   );
 };
 

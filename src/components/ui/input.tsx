@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { MyInputProps } from '@/types';
+import { FormControl, FormLabel } from './form';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
@@ -21,4 +23,19 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = 'Input';
 
-export { Input };
+const ControlledInput = React.forwardRef<HTMLInputElement, MyInputProps>(({ ...props }, ref) => {
+  const { onChange, value = '', label, ...restProps } = props;
+
+  return (
+    <>
+      <FormLabel>{label}</FormLabel>
+      <FormControl ref={ref}>
+        <Input onChange={onChange} value={value ?? ''} {...restProps} />
+      </FormControl>
+    </>
+  );
+});
+
+ControlledInput.displayName = 'ControlledInput';
+
+export { ControlledInput, Input };

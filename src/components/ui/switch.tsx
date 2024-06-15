@@ -1,9 +1,12 @@
 'use client';
 
-import * as React from 'react';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { MySwitchProps } from '@/types';
+import { ControllerRenderProps } from 'react-hook-form';
+import { FormControl, FormLabel } from './form';
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
@@ -26,4 +29,22 @@ const Switch = React.forwardRef<
 ));
 Switch.displayName = SwitchPrimitives.Root.displayName;
 
-export { Switch };
+const ControlledSwitchField = React.forwardRef<
+  React.ElementRef<typeof FormControl>,
+  ControllerRenderProps & MySwitchProps
+>(({ ...props }, ref) => {
+  const { onChange, value = false, label, type, ...restProps } = props;
+
+  return (
+    <span className="flex flex-row justify-between items-center gap-4 my-px">
+      <FormLabel>{label}</FormLabel>
+      <FormControl ref={ref}>
+        <Switch checked={value} onCheckedChange={onChange} {...restProps} />
+      </FormControl>
+    </span>
+  );
+});
+
+ControlledSwitchField.displayName = 'ControlledSwitchField';
+
+export { ControlledSwitchField, Switch };

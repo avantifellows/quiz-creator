@@ -1,10 +1,13 @@
 'use client';
 
-import * as React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { MySelectProps } from '@/types';
+import { ControllerRenderProps } from 'react-hook-form';
+import { FormControl, FormLabel } from './form';
 
 const Select = SelectPrimitive.Root;
 
@@ -139,15 +142,50 @@ const SelectSeparator = React.forwardRef<
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
+const ControlledSelectField = React.forwardRef<
+  React.ElementRef<typeof FormControl>,
+  ControllerRenderProps & MySelectProps
+>(({ ...props }, ref) => {
+  const { label, onChange, disabled, value = '', options = [], type, ...restProps } = props;
+
+  return (
+    <>
+      <FormLabel>{label}</FormLabel>
+      <Select
+        disabled={disabled}
+        onValueChange={onChange}
+        value={value?.toString()}
+        defaultValue={value?.toString()}
+      >
+        <FormControl ref={ref}>
+          <SelectTrigger>
+            <SelectValue {...restProps} />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent>
+          {options?.map((option) => (
+            <SelectItem key={option.value.toString()} value={option.value.toString()}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </>
+  );
+});
+
+ControlledSelectField.displayName = 'ControlledSelectField';
+
 export {
+  ControlledSelectField,
   Select,
-  SelectGroup,
-  SelectValue,
-  SelectTrigger,
   SelectContent,
-  SelectLabel,
+  SelectGroup,
   SelectItem,
-  SelectSeparator,
-  SelectScrollUpButton,
+  SelectLabel,
   SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
 };

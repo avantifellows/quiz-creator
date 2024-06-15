@@ -3,11 +3,7 @@ import { type FC } from 'react';
 export * from './api.types';
 export * from './enums';
 export * from './form.types';
-
-export interface Option {
-  value: string;
-  label: string;
-}
+export * from './formbuilder.types';
 
 export type TablePrams = {
   page?: string;
