@@ -115,7 +115,8 @@ const BasicForm: FC = () => {
       isRedirection: formData?.redirection,
       isIdGeneration: formData?.id_generation,
       platform: formData?.platform,
-      // TODO: signupFormName and sessionType key should be added
+      sessionType: formData?.type,
+      // TODO: signupFormName and  key should be added
     }),
     [formData]
   );
@@ -135,7 +136,8 @@ const BasicForm: FC = () => {
       redirection: data.isRedirection,
       id_generation: data.isIdGeneration,
       platform: data.platform,
-      // TODO: signupFormName and sessionType key should be added
+      type: data.sessionType,
+      // TODO: signupFormName should be added
     };
     updateFormData(addedData, Steps.PLATFORM);
   }, []);

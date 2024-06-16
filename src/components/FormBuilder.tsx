@@ -99,7 +99,12 @@ export const FormBuilder = <T extends FieldValues>({
         {Object.entries(formSchema).map(([name, fieldSchema]) =>
           RenderFields(name, fieldSchema, form)
         )}
-        <div className="flex gap-4 flex-col-reverse md:flex-row justify-between mt-4">
+        <div className="flex gap-4 flex-col md:flex-row-reverse justify-between mt-4">
+          {buttons?.submit?.hidden ? null : (
+            <Button className="min-w-32" type="submit">
+              {buttons?.submit?.text || 'Next'}
+            </Button>
+          )}
           {buttons?.reset?.hidden ? null : (
             <Button
               className="min-w-32"
@@ -108,11 +113,6 @@ export const FormBuilder = <T extends FieldValues>({
               onClick={buttons?.reset?.onClick ?? router.back}
             >
               {buttons?.reset?.text || 'Back'}
-            </Button>
-          )}
-          {buttons?.submit?.hidden ? null : (
-            <Button className="min-w-32" type="submit">
-              {buttons?.submit?.text || 'Next'}
             </Button>
           )}
         </div>

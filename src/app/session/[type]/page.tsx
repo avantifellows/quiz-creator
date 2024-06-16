@@ -1,5 +1,6 @@
 import { KeysToDeleteBeforeDuplicate } from '@/Constants';
 import StepsController from '@/app/session/[type]/Steps';
+import { deleteByPath } from '@/lib/utils';
 import { getASession } from '@/services/services';
 import { Session, SessionParams, SessionSearchParams, SessionType, Steps } from '@/types';
 import { notFound } from 'next/navigation';
@@ -28,14 +29,10 @@ export default async function SessionCreator({
 
   if (id) {
     if (params.type === SessionType.EDIT) {
-      sessionData === (await getASession(Number(id)));
+      sessionData = await getASession(Number(id));
     } else if (params.type === SessionType.DUPPLICATE) {
       sessionData = await getASession(Number(id));
-      KeysToDeleteBeforeDuplicate.forEach((key) => {
-        if (key) {
-          delete sessionData[key as keyof Session];
-        }
-      });
+      KeysToDeleteBeforeDuplicate.forEach((key) => deleteByPath(sessionData, key));
     }
   } else {
     sessionData = {};

@@ -57,6 +57,8 @@ export const sessionSchema = z.object({
   signup_form_id: z.string().nullish(),
   start_time: z.date(),
   type: z.string(),
+  inserted_at: z.date(),
+  updated_at: z.date(),
 });
 
 export type Session = Partial<z.infer<typeof sessionSchema>>;

@@ -11,10 +11,15 @@ export function createQueryString(params: { [key: string]: string | number }) {
     .join('&');
 }
 
-export function toTitleCase(text: string) {
-  return text
-    .toLowerCase()
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
+export const deleteByPath = (object: object, path: string) => {
+  let currentObject = object;
+  const parts = path.split('.');
+  const last = parts.pop();
+  for (const part of parts) {
+    currentObject = currentObject[part as keyof object];
+    if (!currentObject) {
+      return;
+    }
+  }
+  delete currentObject[last as keyof object];
+};
