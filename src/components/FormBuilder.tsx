@@ -12,6 +12,12 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { FieldValues, Path, UseFormReturn, useForm } from 'react-hook-form';
 
+/**
+ * Function to render a form field based on the field type.
+ * @param {string} name  - The name of the field.
+ * @param {Field} fieldSchema - The schema of the field.
+ * @param {UseFormReturn} form - The form instance from react-hook-form.
+ */
 const RenderFields = <T extends FieldValues>(
   name: string,
   fieldSchema: Field,
@@ -55,6 +61,15 @@ const RenderFields = <T extends FieldValues>(
   );
 };
 
+/**
+ * Higher order component to create a form using a JSON schema.
+ * @param {Field} formSchema - The schema/layout of the form.
+ * @param {zod.Schema} zodSchema - The zod schema for validations of the form.
+ * @param {FieldValues} defaultValues - The default values of the form.
+ * @param {FormButton} buttons - the config to display buttons.
+ * @param {Function} handleSubmit - The function handle the form submission.
+ * @returns {JSX.Element} - The generated form.
+ */
 export const FormBuilder = <T extends FieldValues>({
   formSchema,
   defaultValues,

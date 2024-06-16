@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  AuthOptions,
   BatchOptions,
   GradeOptions,
   GroupOptions,
@@ -11,8 +12,9 @@ import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
 import {
   FieldSchema,
-  PartialSession,
+  Session,
   SessionParams,
+  SessionType,
   Steps,
   basicFields,
   basicSchema,
@@ -31,12 +33,14 @@ const BasicForm: FC = () => {
         options: GroupOptions,
         placeholder: 'Select a group',
         label: 'Group',
+        disabled: type === SessionType.EDIT,
       },
       batch: {
         type: 'select',
         options: BatchOptions,
         placeholder: 'Select a batch',
         label: 'Batch',
+        disabled: type === SessionType.EDIT,
       },
       grade: {
         type: 'select',
@@ -51,17 +55,20 @@ const BasicForm: FC = () => {
         label: 'Session type',
       },
       authType: {
-        type: 'text',
+        type: 'select',
+        options: AuthOptions,
         label: 'Auth type',
-        placeholder: 'Enter auth type',
+        placeholder: 'Select a auth type',
       },
       activateSignUp: {
         type: 'switch',
         label: 'Activate sign up',
+        helperText: 'Do you want to display sign up form?',
       },
       isPopupForm: {
         type: 'switch',
         label: 'Is pop up form allowed',
+        helperText: 'Do you want to display popup form?',
       },
       noOfFieldsInPopup: {
         type: 'number',
@@ -73,10 +80,12 @@ const BasicForm: FC = () => {
       isRedirection: {
         type: 'switch',
         label: 'Is redirection allowed',
+        helperText: 'Do you want to allow redirection?',
       },
       isIdGeneration: {
         type: 'switch',
         label: 'Is id generation allowed',
+        helperText: 'Do you want to generate IDs?',
       },
       signupFormName: {
         type: 'text',
@@ -88,12 +97,13 @@ const BasicForm: FC = () => {
         options: TestPlatformOptions,
         placeholder: 'Select a platform',
         label: 'Platform',
+        disabled: type === SessionType.EDIT,
       },
     }),
     []
   );
 
-  const defaultValues = useMemo(
+  const defaultValues: Partial<basicFields> = useMemo(
     () => ({
       group: formData?.meta_data?.group,
       batch: formData?.meta_data?.batch,
@@ -111,8 +121,9 @@ const BasicForm: FC = () => {
   );
 
   const onSubmit = useCallback((data: basicFields) => {
-    const addedData: PartialSession = {
+    const addedData: Session = {
       meta_data: {
+        ...(formData.meta_data ?? {}),
         group: data.group,
         batch: data.batch,
         grade: data.grade,
@@ -126,8 +137,6 @@ const BasicForm: FC = () => {
       platform: data.platform,
       // TODO: signupFormName and sessionType key should be added
     };
-    console.log('Sumbitted data Successfully', data);
-
     updateFormData(addedData, Steps.PLATFORM);
   }, []);
 

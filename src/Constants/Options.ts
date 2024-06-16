@@ -1,6 +1,54 @@
 import { Option } from '@/types';
 
-const GroupOptions: Option[] = [
+export const TestTypeOptions: Option[] = [
+  { value: 'assessment', label: 'Assessment' },
+  { value: 'homework', label: 'Homework' },
+  { value: 'omr-assessment', label: 'Omr-Assessment' },
+];
+
+export const SessionTypeOptions: Option[] = [
+  { value: 'sign-in', label: 'SignIn' },
+  { value: 'sign-up', label: 'SignUp' },
+  { value: 'sign-in with forgot id', label: 'SignIn with forgot id' },
+];
+
+export const TestFormatOptions: Option[] = [
+  { value: 'part_test', label: 'Part Test' },
+  { value: 'major_test', label: 'Major Test' },
+  { value: 'full_syllabus_test', label: 'Full Syllabus Test' },
+  { value: 'evaluation_test', label: 'Evaluation Test' },
+  { value: 'hiring_test', label: 'Hiring Test' },
+  { value: 'homework', label: 'Homework' },
+];
+
+export const TestPurposeOptions: Option[] = [
+  { value: 'baseline', label: 'Baseline' },
+  { value: 'endline', label: 'Endline' },
+  { value: 'weekly_test', label: 'Weekly Test' },
+  { value: 'monthly_test', label: 'Monthly Test' },
+  { value: 'reshuffling_test', label: 'Reshuffling Test' },
+  { value: 'selection_test', label: 'Selection Test' },
+  { value: 'one_time_test', label: 'One Time Test' },
+];
+
+export const TestPlatformOptions = [
+  { value: 'quiz', label: 'Quiz' },
+  { value: 'meet', label: 'Live Class' },
+];
+
+export const MarkingSchemeOptions: Option[] = [
+  { value: '4,-1', label: '4 , -1' },
+  { value: '1,0', label: '1, 0' },
+];
+
+export const OptionalLimitOptions: Option[] = [
+  { value: 'NA', label: 'NA' },
+  { value: 'neet', label: 'NEET' },
+  { value: 'jee', label: 'JEE' },
+  { value: 'cuet', label: 'CUET' },
+];
+
+export const GroupOptions: Option[] = [
   { value: 'HaryanaStudents', label: 'Haryana Students' },
   { value: 'HimachalStudents', label: 'Himachal Students' },
   { value: 'DelhiStudents', label: 'Delhi Students' },
@@ -11,7 +59,7 @@ const GroupOptions: Option[] = [
   { value: 'AFTesting', label: 'AF Testing' },
 ];
 
-const BatchOptions: Option[] = [
+export const BatchOptions: Option[] = [
   { value: 'DL-12-Alpha-Eng-23', label: 'DL-12-Alpha-Eng-23' },
   { value: 'DL-12-Photon-Eng-23', label: 'DL-12-Photon-Eng-23' },
   { value: 'DL-12-Catalyst-Eng-23', label: 'DL-12-Catalyst-Eng-23' },
@@ -137,14 +185,15 @@ const BatchOptions: Option[] = [
   { value: 'AF-10-Foundation-sci-22', label: 'AF-10-Foundation-sci-22' },
   { value: 'NEEV SCERT', label: 'NEEV SCERT' },
 ];
-const GradeOptions = [
+
+export const GradeOptions = [
   { value: 9, label: '9' },
   { value: 10, label: '10' },
   { value: 11, label: '11' },
   { value: 12, label: '12' },
 ];
 
-const CourseOptions: Option[] = [
+export const CourseOptions: Option[] = [
   { value: 'NEET', label: 'NEET' },
   { value: 'Catalyst', label: 'Catalyst' },
   { value: 'Alpha', label: 'Alpha' },
@@ -154,7 +203,7 @@ const CourseOptions: Option[] = [
   { value: 'Photon', label: 'Photon' },
 ];
 
-const StreamOptions: Option[] = [
+export const StreamOptions: Option[] = [
   { value: 'Medical', label: 'Medical' },
   { value: 'Maths', label: 'Maths' },
   { value: 'Science', label: 'Science' },
@@ -166,4 +215,21 @@ const StreamOptions: Option[] = [
   { value: 'Zoology', label: 'Zoology' },
 ];
 
-export { BatchOptions, CourseOptions, GradeOptions, GroupOptions, StreamOptions };
+export const AuthOptions: Option[] = [
+  {
+    label: 'ID',
+    value: 'ID',
+  },
+  {
+    label: 'ID,PH',
+    value: 'ID,PH',
+  },
+  {
+    label: 'ID,DOB',
+    value: 'ID,DOB',
+  },
+  {
+    label: 'ID,PH,DOB',
+    value: 'ID,PH,DOB',
+  },
+];

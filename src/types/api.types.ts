@@ -1,60 +1,62 @@
-export interface Session {
-  auth_type?: string;
-  created_by_id?: null;
-  end_time?: Date;
-  id: number;
-  id_generation?: boolean;
-  is_active?: boolean;
-  meta_data?: MetaData;
-  name?: string;
-  owner_id?: null;
-  platform?: string;
-  platform_id?: string;
-  platform_link?: string;
-  popup_form?: boolean;
-  popup_form_id?: null;
-  portal_link?: string;
-  purpose?: Purpose;
-  redirection?: boolean;
-  repeat_schedule?: RepeatSchedule;
-  session_id?: string;
-  signup_form?: boolean;
-  signup_form_id?: null;
-  start_time?: Date;
-  type?: string;
-}
+import { z } from 'zod';
 
-interface MetaData {
-  admin_testing_link?: string;
-  batch?: string;
-  cms_test_id?: string;
-  course?: string;
-  date_created?: Date;
-  enabled?: number;
-  grade?: number;
-  group?: string;
-  has_synced_to_bq?: string;
-  infinite_session?: boolean;
-  marking_scheme?: string;
-  number_of_fields_in_popup_form?: number;
-  optional_limits?: string;
-  report_link?: string;
-  shortened_link?: string;
-  stream?: string;
-  test_format?: string;
-  test_purpose?: string;
-  test_takers_count?: string;
-  test_type?: string;
-}
+const metaDataSchema = z.object({
+  admin_testing_link: z.string().url().optional(),
+  batch: z.string().optional(),
+  cms_test_id: z.string().url().optional(),
+  course: z.string().optional(),
+  date_created: z.date().optional(),
+  enabled: z.number().int().optional(),
+  grade: z.number().int().optional(),
+  group: z.string().optional(),
+  has_synced_to_bq: z.boolean().optional(),
+  infinite_session: z.boolean().optional(),
+  marking_scheme: z.string().optional(),
+  number_of_fields_in_popup_form: z.number().int().optional(),
+  optional_limits: z.string().optional(),
+  report_link: z.string().url().optional(),
+  shortened_link: z.string().url().optional(),
+  stream: z.string().optional(),
+  test_format: z.string().optional(),
+  test_purpose: z.string().optional(),
+  test_takers_count: z.number().int().optional(),
+  test_type: z.string().optional(),
+});
 
-interface Purpose {
-  params?: string;
-  type?: string;
-}
+const purposeSchema = z.object({
+  params: z.string(),
+  type: z.string(),
+});
 
-interface RepeatSchedule {
-  params?: number[];
-  type?: string;
-}
+const repeatScheduleSchema = z.object({
+  params: z.array(z.number()),
+  type: z.string(),
+});
 
-export type PartialSession = Partial<Session>;
+export const sessionSchema = z.object({
+  auth_type: z.string(),
+  created_by_id: z.date(),
+  end_time: z.date(),
+  id: z.number().int(),
+  id_generation: z.boolean(),
+  is_active: z.boolean(),
+  meta_data: metaDataSchema,
+  name: z.string(),
+  owner_id: z.string(),
+  platform: z.string(),
+  platform_id: z.string(),
+  platform_link: z.string().url(),
+  popup_form: z.boolean(),
+  popup_form_id: z.string().nullish(),
+  portal_link: z.string().url(),
+  purpose: purposeSchema,
+  redirection: z.boolean(),
+  repeat_schedule: repeatScheduleSchema,
+  session_id: z.string(),
+  signup_form: z.boolean(),
+  signup_form_id: z.string().nullish(),
+  start_time: z.date(),
+  type: z.string(),
+});
+
+export type Session = Partial<z.infer<typeof sessionSchema>>;

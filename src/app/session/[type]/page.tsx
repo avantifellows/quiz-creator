@@ -1,6 +1,7 @@
+import { KeysToDeleteBeforeDuplicate } from '@/Constants';
 import StepsController from '@/app/session/[type]/Steps';
 import { getASession } from '@/services/services';
-import { SessionParams, SessionSearchParams, SessionType, Steps } from '@/types';
+import { Session, SessionParams, SessionSearchParams, SessionType, Steps } from '@/types';
 import { notFound } from 'next/navigation';
 
 interface Props {
@@ -23,7 +24,22 @@ export default async function SessionCreator({
     notFound();
   }
 
-  const sessionData = await getASession(Number(id) || null);
+  let sessionData: Session = {};
+
+  if (id) {
+    if (params.type === SessionType.EDIT) {
+      sessionData === (await getASession(Number(id)));
+    } else if (params.type === SessionType.DUPPLICATE) {
+      sessionData = await getASession(Number(id));
+      KeysToDeleteBeforeDuplicate.forEach((key) => {
+        if (key) {
+          delete sessionData[key as keyof Session];
+        }
+      });
+    }
+  } else {
+    sessionData = {};
+  }
 
   return <StepsController activeStep={step as Steps} sessionData={sessionData} />;
 }

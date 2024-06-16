@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { FormDataProvider } from '@/hooks/useFormContext';
-import { PartialSession, StepperSteps, Steps } from '@/types';
+import { Session, StepperSteps, Steps } from '@/types';
 import { memo } from 'react';
 import Stepper from '../../../../components/ui/stepper';
 import Basic from './Basic';
@@ -9,7 +9,7 @@ import Timeline from './Timeline';
 
 interface StepsControllerProps {
   activeStep: Steps;
-  sessionData: PartialSession;
+  sessionData: Session;
 }
 
 const StepForms: StepperSteps = {

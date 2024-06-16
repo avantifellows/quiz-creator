@@ -14,7 +14,8 @@ const DateTimePicker = forwardRef<
   ElementRef<typeof FormControl>,
   MyDateTimeProps & ControllerRenderProps
 >(({ ...props }, ref) => {
-  const { onChange, value, label, type, ...restProps } = props;
+  const { onChange, value, label, type, disableRange, disabled, ...restProps } = props;
+
   return (
     <div className="flex flex-col gap-4">
       <FormLabel className="text-left">{label}</FormLabel>
@@ -27,19 +28,21 @@ const DateTimePicker = forwardRef<
                 'justify-start text-left font-normal',
                 !value && 'text-muted-foreground'
               )}
+              disabled={disabled}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {value ? format(value, 'PPP HH:mm:ss') : <span>Pick a date and time</span>}
+              {value ? format(value, 'PPp') : <span>Pick a date and time</span>}
             </Button>
           </PopoverTrigger>
         </FormControl>
         <PopoverContent className="w-auto p-0">
           <Calendar
+            {...restProps}
             mode="single"
             selected={value}
             onSelect={onChange}
             initialFocus
-            {...restProps}
+            disabled={disableRange}
           />
           <div className="p-3 border-t border-border">
             <TimePicker setDate={onChange} date={value} />

@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Platform, Session, Status } from '@/types';
+import { DataSection, Session } from '@/types';
 import { LinkIcon, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 
@@ -105,10 +105,10 @@ export const columns: ColumnDef<Session>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>
-              <Link href={`/session/edit?step=student&id=${row.original.id}`}>Edit</Link>
+              <Link href={`/session/edit?id=${row.original.id}`}>Edit</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={`/session/duplicate?step=student&id=${row.original.id}`}>Dulplicate</Link>
+              <Link href={`/session/duplicate?id=${row.original.id}`}>Dulplicate</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link href={`/session?id=${row.original.id}`}>View Details</Link>
@@ -120,42 +120,7 @@ export const columns: ColumnDef<Session>[] = [
   },
 ];
 
-export const filterFields = [
-  {
-    label: 'Name',
-    value: 'name',
-    placeholder: '',
-  },
-  {
-    label: 'Status',
-    value: 'status',
-    options: Object.values(Status).map((item) => ({
-      label: item.toUpperCase(),
-      value: item,
-    })),
-  },
-  {
-    label: 'Platform',
-    value: 'platform',
-    options: Object.values(Platform).map((item) => ({
-      label: item.toUpperCase(),
-      value: item,
-    })),
-  },
-];
-
 export const displayData = (data: Session) => {
-  interface DataItem {
-    label: string;
-    value: any;
-    isLink?: boolean;
-  }
-
-  interface DataSection {
-    title: string;
-    data: DataItem[];
-  }
-
   const basicDetails: DataSection = {
     title: 'Basic Details',
     data: [

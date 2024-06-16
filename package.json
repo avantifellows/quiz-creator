@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "eslint --fix . --ignore-path .gitignore",
     "format": "prettier --write . --ignore-path .gitignore",
     "test:jest": "jest --ci",
     "test:jest-watch": "jest --watchAll",

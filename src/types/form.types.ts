@@ -3,7 +3,6 @@ import {
   CourseOptions,
   GradeOptions,
   GroupOptions,
-  IsEnabledOptions,
   MarkingSchemeOptions,
   OptionalLimitOptions,
   SessionTypeOptions,
@@ -41,8 +40,8 @@ export const basicSchema = z.object({
       'Invalid option selected'
     ),
   authType: z.string({ required_error: 'This field is required' }),
-  activateSignUp: z.boolean().default(false),
-  isPopupForm: z.boolean().default(false),
+  activateSignUp: z.coerce.boolean(),
+  isPopupForm: z.coerce.boolean(),
   noOfFieldsInPopup: z.coerce
     .number({
       required_error: 'This field is required',
@@ -50,8 +49,8 @@ export const basicSchema = z.object({
     })
     .int()
     .min(0),
-  isRedirection: z.boolean().default(false),
-  isIdGeneration: z.boolean().default(false),
+  isRedirection: z.coerce.boolean(),
+  isIdGeneration: z.coerce.boolean(),
   signupFormName: z.string({ required_error: 'This field is required' }),
   platform: z
     .string({ required_error: 'This field is required' })
@@ -109,24 +108,19 @@ export const quizSchema = z.object({
 });
 
 export const timelineSchema = z.object({
-  startDate: z
+  startDate: z.coerce
     .date({
       required_error: 'This field is required',
       message: 'This is not a valid date and time',
     })
     .min(new Date(), 'Start date cannot be in the past'),
-  endDate: z
+  endDate: z.coerce
     .date({
       required_error: 'This field is required',
       message: 'This is not a valid date and time',
     })
     .min(new Date(), 'End date cannot be in the past'),
-  isEnabled: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => IsEnabledOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
+  isEnabled: z.coerce.boolean(),
   // repeatSchedule: z.string().optional(),
   testTakers: z.coerce
     .number({

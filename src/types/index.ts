@@ -26,3 +26,14 @@ export interface StepperSteps {
     hide?: boolean;
   };
 }
+
+interface DataItem {
+  label: string;
+  value: any;
+  isLink?: boolean;
+}
+
+export interface DataSection {
+  title: string;
+  data: DataItem[];
+}

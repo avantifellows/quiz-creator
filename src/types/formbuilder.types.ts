@@ -51,6 +51,7 @@ export interface MySwitchProps extends Omit<SwitchProps, 'type' | 'ref'>, Common
 
 export interface MyDateTimeProps extends CommonFieldProps, Omit<DayPickerDefaultProps, 'disabled'> {
   type: 'datetime';
+  disableRange: (date: Date) => boolean;
 }
 
 export interface CommonFieldProps {

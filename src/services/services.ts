@@ -1,8 +1,7 @@
 'use server';
 
 import { DATA_PER_PAGE } from '@/Constants';
-import { publishMessage } from '@/services/Aws';
-import { PartialSession, Session } from '@/types/api.types';
+import { Session } from '@/types/api.types';
 import { instance } from '../lib/axios';
 
 /**
@@ -27,7 +26,7 @@ export async function getTableData(currentPage: number, limit: number) {
     });
     const hasMore = data.length > DATA_PER_PAGE;
     const items = hasMore ? data.slice(0, -1) : data;
-    console.info('[API SUCCESS] fetching sessions : ', { items, hasMore });
+    console.info('[API SUCCESS] fetching sessions : ', { length: items.length, currentPage });
     return { data: items, hasMore };
   } catch (error) {
     console.error(`[API ERROR]  fetching sessions : ${error}`);
@@ -59,12 +58,16 @@ export async function getASession(id: number | null): Promise<Session | {}> {
  * - isSuccess : boolean indicating if the session was created successfully
  * - id : Id of the created session
  */
-export async function createSession(formData: PartialSession) {
+export async function createSession(formData: Session) {
   try {
-    const { data } = await instance.post<PartialSession>(`/session`, formData);
-    publishMessage({ action: 'db_id', id: data?.id });
-    console.info(`[API SUCCESS] created session ${data?.id} : ${data}`);
-    return { isSuccess: true, id: data?.id };
+    await setTimeout(() => {
+      console.info('[API] creating session : ', formData);
+    }, 4000);
+
+    // const { data } = await instance.post<Session>(`/session`, formData);
+    // publishMessage({ action: 'db_id', id: data?.id });
+    // console.info(`[API SUCCESS] created session ${data?.id} : ${data}`);
+    // return { isSuccess: true, id: data?.id };
   } catch (error) {
     console.error('Error posting form data', error);
     throw error;
@@ -73,17 +76,20 @@ export async function createSession(formData: PartialSession) {
 
 /**
  * Patches a session on the server.
- * @param {PartialSession} formData - The session data to be patched.
+ * @param {Session} formData - The session data to be patched.
  * @param {number} id - The id of the session to be patched.
  * @return {Promise<{isSuccess: boolean; id: number}>}
  * - isSuccess : boolean indicating if the session was patched
  * - id : Id of the patched session
  */
-export async function updateSession(formData: PartialSession, id: number) {
+export async function patchSession(formData: Session, id: number) {
   try {
-    publishMessage({ action: 'patch', id, patch_session: formData });
-    console.info(`[API SUCCESS] updated session for ${id} : ${formData}`);
-    return { isSuccess: true, id };
+    await setTimeout(() => {
+      console.info('[API] patching session : ', id, formData);
+    }, 4000);
+    // publishMessage({ action: 'patch', id, patch_session: formData });
+    // console.info(`[API SUCCESS] updated session for ${id} : ${formData}`);
+    // return { isSuccess: true, id };
   } catch (error) {
     console.error('Error posting form data', error);
     throw error;

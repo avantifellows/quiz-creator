@@ -12,7 +12,6 @@ export default async function ViewSession({ searchParams: { id } }: Props) {
   }
 
   const sessionData = await getASession(Number(id) || null);
-  console.log({ sessionData });
 
   return (
     <main className="container text-center">
