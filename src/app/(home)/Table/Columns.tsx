@@ -104,13 +104,13 @@ export const columns: ColumnDef<Session>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer">
               <Link href={`/session/edit?id=${row.original.id}`}>Edit</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href={`/session/duplicate?id=${row.original.id}`}>Dulplicate</Link>
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link href={`/session/duplicate?id=${row.original.id}`}>Duplicate</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer">
               <Link href={`/session?id=${row.original.id}`}>View Details</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>

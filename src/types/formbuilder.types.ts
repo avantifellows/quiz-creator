@@ -1,4 +1,5 @@
 // import type { CalendarProps } from '@/components/ui/calendar';
+import { CheckboxProps } from '@radix-ui/react-checkbox';
 import { SelectProps } from '@radix-ui/react-select';
 import { SwitchProps } from '@radix-ui/react-switch';
 import type { FormEvent, InputHTMLAttributes } from 'react';
@@ -36,10 +37,20 @@ interface FormButton {
 export type FieldSchema<T extends Record<string, unknown>> = Record<keyof T, Field>;
 
 // Form field types and props
-export type Field = MyInputProps | MySelectProps | MySwitchProps | MyDateTimeProps;
+export type Field =
+  | MyInputProps
+  | MySelectProps
+  | MySwitchProps
+  | MyDateTimeProps
+  | MyCheckboxProps;
 
 export interface MySelectProps extends SelectProps, CommonFieldProps {
   type: 'select';
+  options: Option[];
+}
+
+export interface MyCheckboxProps extends Omit<CheckboxProps, 'type'>, CommonFieldProps {
+  type: 'checkbox';
   options: Option[];
 }
 

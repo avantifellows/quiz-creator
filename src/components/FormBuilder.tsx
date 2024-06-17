@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { FieldValues, Path, UseFormReturn, useForm } from 'react-hook-form';
+import { ControlledCheckbox } from './ui/checkbox';
 
 /**
  * Function to render a form field based on the field type.
@@ -36,6 +37,9 @@ const RenderFields = <T extends FieldValues>(
     case 'switch':
       Component = ControlledSwitchField;
       break;
+    case 'checkbox':
+      Component = ControlledCheckbox;
+      break;
     default:
       Component = ControlledInput;
       break;
@@ -52,7 +56,7 @@ const RenderFields = <T extends FieldValues>(
       name={name as Path<T>}
       render={({ field }) => (
         <FormItem className="relative">
-          <Component {...restProps} {...field} />
+          <Component form={form} {...restProps} {...field} />
           {helperText ? <FormDescription>{helperText}</FormDescription> : null}
           <FormMessage />
         </FormItem>

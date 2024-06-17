@@ -121,7 +121,12 @@ export const timelineSchema = z.object({
     })
     .min(new Date(), 'End date cannot be in the past'),
   isEnabled: z.coerce.boolean(),
-  // repeatSchedule: z.string().optional(),
+  // activeDays: z
+  //   .string({ required_error: 'This field is required' })
+  //   .refine(
+  //     (value) => ActiveDaysOptions.some((option) => option.value === value),
+  //     'Invalid option selected'
+  //   ),
   testTakers: z.coerce
     .number({
       required_error: 'This field is required',

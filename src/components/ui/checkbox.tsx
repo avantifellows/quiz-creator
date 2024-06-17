@@ -1,10 +1,13 @@
 'use client';
 
-import * as React from 'react';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { Check } from 'lucide-react';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { MyCheckboxProps } from '@/types';
+import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
+import { FormControl, FormField, FormItem, FormLabel } from './form';
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
@@ -25,4 +28,53 @@ const Checkbox = React.forwardRef<
 ));
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
-export { Checkbox };
+const ControlledCheckbox = React.forwardRef<
+  React.ElementRef<typeof FormControl>,
+  ControllerRenderProps & MyCheckboxProps & { form: UseFormReturn }
+>(({ ...props }, ref) => {
+  const { label, options = [], type, name, form, ...restProps } = props;
+
+  return (
+    <>
+      <FormLabel>{label}</FormLabel>
+      {options.map((option) => (
+        <FormField
+          key={option.value as React.Key}
+          control={form.control}
+          name={name}
+          render={({ field }) => {
+            console.log(field);
+
+            return (
+              <FormItem
+                key={option.value as React.Key}
+                className="flex flex-row items-start space-x-3 space-y-0"
+              >
+                <FormControl>
+                  <Checkbox
+                    checked={(field.value ?? [])?.includes(option.value)}
+                    onCheckedChange={(checked) => {
+                      return checked
+                        ? field.onChange([...(field.value ?? []), option.value])
+                        : field.onChange(
+                            (field.value ?? [])?.filter(
+                              (value: string | number | boolean) => value !== option.value
+                            )
+                          );
+                    }}
+                    {...restProps}
+                  />
+                </FormControl>
+                <FormLabel className="text-sm font-normal">{option.label}</FormLabel>
+              </FormItem>
+            );
+          }}
+        />
+      ))}
+    </>
+  );
+});
+
+ControlledCheckbox.displayName = 'ControlledCheckbox';
+
+export { Checkbox, ControlledCheckbox };

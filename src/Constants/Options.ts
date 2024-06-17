@@ -216,20 +216,18 @@ export const StreamOptions: Option[] = [
 ];
 
 export const AuthOptions: Option[] = [
-  {
-    label: 'ID',
-    value: 'ID',
-  },
-  {
-    label: 'ID,PH',
-    value: 'ID,PH',
-  },
-  {
-    label: 'ID,DOB',
-    value: 'ID,DOB',
-  },
-  {
-    label: 'ID,PH,DOB',
-    value: 'ID,PH,DOB',
-  },
+  { label: 'ID', value: 'ID' },
+  { label: 'ID,PH', value: 'ID,PH' },
+  { label: 'ID,DOB', value: 'ID,DOB' },
+  { label: 'ID,PH,DOB', value: 'ID,PH,DOB' },
+];
+
+export const ActiveDaysOptions: Option[] = [
+  { label: 'Monday', value: 1 },
+  { label: 'Tuesday', value: 2 },
+  { label: 'Wednesday', value: 3 },
+  { label: 'Thursday', value: 4 },
+  { label: 'Friday', value: 5 },
+  { label: 'Saturday', value: 6 },
+  { label: 'Sunday', value: 7 },
 ];

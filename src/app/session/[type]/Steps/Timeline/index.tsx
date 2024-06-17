@@ -31,6 +31,11 @@ const TimelineForm: FC = () => {
         min: 0,
         step: 1,
       },
+      // activeDays: {
+      //   type: 'checkbox',
+      //   label: 'Days Active',
+      //   options: ActiveDaysOptions,
+      // },
       isEnabled: {
         type: 'switch',
         label: 'Is Enabled?',
@@ -43,6 +48,7 @@ const TimelineForm: FC = () => {
       startDate: formData?.start_time && new Date(formData?.start_time),
       endDate: formData?.end_time && new Date(formData?.end_time),
       isEnabled: formData?.meta_data?.enabled ? true : false,
+      // activeDays: formData?.meta_data.acti ? 'all' : 'none',
       testTakers: formData?.meta_data?.test_takers_count,
     }),
     [formData]
