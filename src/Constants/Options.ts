@@ -33,7 +33,7 @@ export const TestPurposeOptions: Option[] = [
 
 export const TestPlatformOptions = [
   { value: 'quiz', label: 'Quiz' },
-  { value: 'meet', label: 'Live Class' },
+  { value: 'live', label: 'Live Class' },
 ];
 
 export const MarkingSchemeOptions: Option[] = [
