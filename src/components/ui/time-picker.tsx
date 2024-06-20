@@ -1,11 +1,18 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { Clock } from 'lucide-react';
 import React from 'react';
 import {
   Period,
   TimePickerType,
+  display12HourValue,
   getArrowByType,
   getDateByType,
   setDateByType,
@@ -124,23 +131,82 @@ const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>
 
 TimePickerInput.displayName = 'TimePickerInput';
 
+interface PeriodSelectorProps {
+  period: Period;
+  setPeriod: (m: Period) => void;
+  date: Date | undefined;
+  setDate: (date: Date | undefined) => void;
+  onRightFocus?: () => void;
+  onLeftFocus?: () => void;
+}
+
+const TimePeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectorProps>(
+  ({ period, setPeriod, date, setDate, onLeftFocus, onRightFocus }, ref) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (e.key === 'ArrowRight') onRightFocus?.();
+      if (e.key === 'ArrowLeft') onLeftFocus?.();
+    };
+
+    const handleValueChange = (value: Period) => {
+      setPeriod(value);
+
+      /**
+       * trigger an update whenever the user switches between AM and PM;
+       * otherwise user must manually change the hour each time
+       */
+      if (date) {
+        const tempDate = new Date(date);
+        const hours = display12HourValue(date.getHours());
+        setDate(
+          setDateByType(tempDate, hours.toString(), '12hours', period === 'AM' ? 'PM' : 'AM')
+        );
+      }
+    };
+
+    return (
+      <div className="flex h-10 items-center">
+        <Select defaultValue={period} onValueChange={(value: Period) => handleValueChange(value)}>
+          <SelectTrigger
+            ref={ref}
+            className="w-[65px] focus:bg-accent focus:text-accent-foreground"
+            onKeyDown={handleKeyDown}
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="AM">AM</SelectItem>
+            <SelectItem value="PM">PM</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  }
+);
+
+TimePeriodSelect.displayName = 'TimePeriodSelect';
+
 interface TimePickerProps {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
 }
 
 function TimePicker({ date, setDate }: TimePickerProps) {
+  const [period, setPeriod] = React.useState<Period>('PM');
+
   const minuteRef = React.useRef<HTMLInputElement>(null);
   const hourRef = React.useRef<HTMLInputElement>(null);
+  const periodRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="flex items-end gap-2">
+    <div className="flex items-end gap-2 justify-center">
       <div className="grid gap-1 text-center">
         <Label htmlFor="hours" className="text-xs">
           Hours
         </Label>
         <TimePickerInput
-          picker="hours"
+          id="hours"
+          picker="12hours"
+          period={period}
           date={date}
           setDate={setDate}
           ref={hourRef}
@@ -152,15 +218,27 @@ function TimePicker({ date, setDate }: TimePickerProps) {
           Minutes
         </Label>
         <TimePickerInput
+          id="minutes"
           picker="minutes"
           date={date}
           setDate={setDate}
           ref={minuteRef}
           onLeftFocus={() => hourRef.current?.focus()}
+          onRightFocus={() => periodRef.current?.focus()}
         />
       </div>
-      <div className="flex h-10 items-center">
-        <Clock className="ml-2 h-4 w-4" />
+      <div className="grid gap-1 text-center">
+        <Label htmlFor="period" className="text-xs">
+          Period
+        </Label>
+        <TimePeriodSelect
+          period={period}
+          setPeriod={setPeriod}
+          date={date}
+          setDate={setDate}
+          ref={periodRef}
+          onLeftFocus={() => periodRef.current?.focus()}
+        />
       </div>
     </div>
   );

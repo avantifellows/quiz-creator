@@ -12,6 +12,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { toast } from 'sonner';
 
 interface IFormContext {
   formData: Session;
@@ -63,15 +64,33 @@ export const FormDataProvider = ({ children, sessionData = {} }: IFormProviderPr
   useEffect(() => {
     if (isSubmiting) {
       (async () => {
+        let toastId: string | number | null = null;
+        let success: boolean | undefined = false;
         if (params.type === SessionType.EDIT) {
-          await patchSession(formData, Number(id));
+          toastId = toast.loading('Updating session...');
+          const { isSuccess } = await patchSession(formData, Number(id));
+          success = isSuccess;
         } else {
-          await createSession(formData);
+          toastId = toast.loading('Creating session...');
+          const { isSuccess } = await createSession(formData);
+          success = isSuccess;
         }
-
-        sessionStorage.removeItem(sessionKey);
         setIsSubmiting(false);
-        router.push('/');
+        toast.dismiss(toastId);
+        if (success) {
+          sessionStorage.removeItem(sessionKey);
+          toast.success('Session created successfully', {
+            description:
+              'The links will be available/updated shortly. Please refresh the page after a while.',
+            duration: 5000,
+          });
+          router.push('/');
+        } else {
+          toast.error('Failed to create session', {
+            description: 'Please try again later.',
+            duration: 5000,
+          });
+        }
       })();
     }
   }, [isSubmiting]);
@@ -101,7 +120,7 @@ export const FormDataProvider = ({ children, sessionData = {} }: IFormProviderPr
 
   const submitForm = useCallback(() => setIsSubmiting(true), []);
 
-  console.info('formData', { isSubmiting }, formData);
+  console.info('Form Data : ', { isSubmiting, formData });
 
   return (
     <FormContext.Provider value={{ formData, isSubmiting, updateFormData, submitForm }}>

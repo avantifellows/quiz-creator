@@ -65,9 +65,20 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'portal_link',
     header: 'Portal Link',
     cell: ({ row }) => (
-      <Link href={row.getValue('portalLink')} target="_blank" rel="noopener noreferrer">
-        <LinkIcon className="size-4 mx-auto cursor-pointer" />
-      </Link>
+      <>
+        {row.getValue('portalLink') ? (
+          <Link
+            href={row.getValue('portalLink')}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex p-1"
+          >
+            <LinkIcon className="size-4 mx-auto cursor-pointer" />
+          </Link>
+        ) : (
+          '-'
+        )}
+      </>
     ),
   },
   {
@@ -75,9 +86,20 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'meta_data.report_link',
     header: 'Report Link',
     cell: ({ row }) => (
-      <Link href={row.getValue('reportLink')} target="_blank" rel="noopener noreferrer">
-        <LinkIcon className="size-4 mx-auto cursor-pointer" />
-      </Link>
+      <>
+        {row.getValue('reportLink') ? (
+          <Link
+            href={row.getValue('reportLink')}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex p-1"
+          >
+            <LinkIcon className="size-4 mx-auto cursor-pointer" />
+          </Link>
+        ) : (
+          '-'
+        )}
+      </>
     ),
   },
   {
@@ -85,9 +107,20 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'meta_data.admin_testing_link',
     header: 'Admin Link',
     cell: ({ row }) => (
-      <Link href={row.getValue('adminLink')} target="_blank" rel="noopener noreferrer">
-        <LinkIcon className="size-4 mx-auto cursor-pointer" />
-      </Link>
+      <>
+        {row.getValue('adminLink') ? (
+          <Link
+            href={row.getValue('adminLink')}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex p-1"
+          >
+            <LinkIcon className="size-4 mx-auto cursor-pointer" />
+          </Link>
+        ) : (
+          '-'
+        )}
+      </>
     ),
   },
   {
@@ -153,12 +186,24 @@ export const displayData = (data: Session) => {
             { label: 'Test Format', value: data.meta_data?.test_format },
             { label: 'Test Purpose', value: data.meta_data?.test_purpose },
             { label: 'Test Type', value: data.meta_data?.test_type },
-            { label: 'CMS Link', value: data.meta_data?.cms_test_id, isLink: true },
+            {
+              label: 'CMS Link',
+              value: data.meta_data?.cms_test_id ?? 'N/A',
+              isLink: !!data.meta_data?.cms_test_id,
+            },
             { label: 'Marking Scheme', value: data.meta_data?.marking_scheme },
             { label: 'Optional Limits', value: data.meta_data?.optional_limits },
-            { label: 'Portal Link', value: data.portal_link, isLink: true },
-            { label: 'Admin Link', value: data.meta_data?.admin_testing_link, isLink: true },
-            { label: 'Report Link', value: data.meta_data?.report_link, isLink: true },
+            { label: 'Portal Link', value: data.portal_link ?? 'N/A', isLink: !!data.portal_link },
+            {
+              label: 'Admin Link',
+              value: data.meta_data?.admin_testing_link ?? 'N/A',
+              isLink: !!data.meta_data?.admin_testing_link,
+            },
+            {
+              label: 'Report Link',
+              value: data.meta_data?.report_link ?? 'N/A',
+              isLink: !!data.meta_data?.report_link,
+            },
           ],
         }
       : null;

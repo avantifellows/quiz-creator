@@ -87,11 +87,11 @@ const BasicForm: FC = () => {
         label: 'Is id generation allowed',
         helperText: 'Do you want to generate IDs?',
       },
-      signupFormName: {
-        type: 'text',
-        label: 'Signup form name',
-        placeholder: 'Enter form name',
-      },
+    // signupFormName: {
+    //   type: 'text',
+    //   label: 'Signup form name',
+    //   placeholder: 'Enter form name',
+    // },
       platform: {
         type: 'select',
         options: TestPlatformOptions,

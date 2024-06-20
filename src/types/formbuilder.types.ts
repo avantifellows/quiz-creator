@@ -28,6 +28,7 @@ interface FormButton {
   submit?: {
     text?: string;
     hidden?: boolean;
+    disabled?: boolean;
   };
 }
 

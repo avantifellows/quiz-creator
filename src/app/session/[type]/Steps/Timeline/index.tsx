@@ -1,5 +1,6 @@
 'use client';
 
+import { ActiveDaysOptions } from '@/Constants';
 import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
 import { FieldSchema, Session, timelineFields, timelineSchema } from '@/types';
@@ -31,11 +32,11 @@ const TimelineForm: FC = () => {
         min: 0,
         step: 1,
       },
-      // activeDays: {
-      //   type: 'checkbox',
-      //   label: 'Days Active',
-      //   options: ActiveDaysOptions,
-      // },
+      activeDays: {
+        type: 'checkbox',
+        label: 'Days Active',
+        options: ActiveDaysOptions,
+      },
       isEnabled: {
         type: 'switch',
         label: 'Is Enabled?',
@@ -48,7 +49,7 @@ const TimelineForm: FC = () => {
       startDate: formData?.start_time && new Date(formData?.start_time),
       endDate: formData?.end_time && new Date(formData?.end_time),
       isEnabled: formData?.meta_data?.enabled ? true : false,
-      // activeDays: formData?.meta_data.acti ? 'all' : 'none',
+      activeDays: formData?.repeat_schedule?.params,
       testTakers: formData?.meta_data?.test_takers_count,
     }),
     [formData]
@@ -60,6 +61,10 @@ const TimelineForm: FC = () => {
         ...(formData.meta_data ?? {}),
         test_takers_count: data.testTakers,
         enabled: data.isEnabled ? 1 : 0,
+      },
+      repeat_schedule: {
+        type: 'weekly',
+        params: data.activeDays.sort((a, b) => a - b),
       },
       start_time: data.startDate,
       end_time: data.endDate,
@@ -75,6 +80,7 @@ const TimelineForm: FC = () => {
       zodSchema={timelineSchema}
       defaultValues={defaultValues}
       handleSubmit={onSubmit}
+      buttons={{ submit: { disabled: isSubmiting } }}
     />
   );
 };

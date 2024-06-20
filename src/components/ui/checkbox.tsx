@@ -42,33 +42,29 @@ const ControlledCheckbox = React.forwardRef<
           key={option.value as React.Key}
           control={form.control}
           name={name}
-          render={({ field }) => {
-            console.log(field);
-
-            return (
-              <FormItem
-                key={option.value as React.Key}
-                className="flex flex-row items-start space-x-3 space-y-0"
-              >
-                <FormControl>
-                  <Checkbox
-                    checked={(field.value ?? [])?.includes(option.value)}
-                    onCheckedChange={(checked) => {
-                      return checked
-                        ? field.onChange([...(field.value ?? []), option.value])
-                        : field.onChange(
-                            (field.value ?? [])?.filter(
-                              (value: string | number | boolean) => value !== option.value
-                            )
-                          );
-                    }}
-                    {...restProps}
-                  />
-                </FormControl>
-                <FormLabel className="text-sm font-normal">{option.label}</FormLabel>
-              </FormItem>
-            );
-          }}
+          render={({ field }) => (
+            <FormItem
+              key={option.value as React.Key}
+              className="flex flex-row items-start space-x-3 space-y-0"
+            >
+              <FormControl>
+                <Checkbox
+                  checked={(field.value ?? [])?.includes(option.value)}
+                  onCheckedChange={(checked) => {
+                    return checked
+                      ? field.onChange([...(field.value ?? []), option.value])
+                      : field.onChange(
+                          (field.value ?? [])?.filter(
+                            (value: string | number | boolean) => value !== option.value
+                          )
+                        );
+                  }}
+                  {...restProps}
+                />
+              </FormControl>
+              <FormLabel className="text-sm font-normal">{option.label}</FormLabel>
+            </FormItem>
+          )}
         />
       ))}
     </>

@@ -3,6 +3,7 @@
 import { DATA_PER_PAGE } from '@/Constants';
 import { Session } from '@/types/api.types';
 import { instance } from '../lib/axios';
+import { publishMessage } from './Aws';
 
 /**
  * Retrieves sessions data from the server.
@@ -60,17 +61,25 @@ export async function getASession(id: number | null): Promise<Session | {}> {
  */
 export async function createSession(formData: Session) {
   try {
-    await setTimeout(() => {
-      console.info('[API] creating session : ', formData);
-    }, 4000);
-
-    // const { data } = await instance.post<Session>(`/session`, formData);
-    // publishMessage({ action: 'db_id', id: data?.id });
-    // console.info(`[API SUCCESS] created session ${data?.id} : ${data}`);
-    // return { isSuccess: true, id: data?.id };
+    const payload: Session = {
+      ...formData,
+      session_id: '',
+      meta_data: {
+        ...formData.meta_data,
+        date_created: new Date(),
+      },
+      purpose: {
+        type: 'attendance',
+        params: 'quiz',
+      },
+    };
+    const { data } = await instance.post<Session>(`/session`, payload);
+    publishMessage({ action: 'db_id', id: data?.id });
+    console.info(`[API SUCCESS] created session ${data?.id} : ${data}`);
+    return { isSuccess: true, id: data?.id };
   } catch (error) {
     console.error('Error posting form data', error);
-    throw error;
+    return { isSuccess: false };
   }
 }
 
@@ -84,14 +93,11 @@ export async function createSession(formData: Session) {
  */
 export async function patchSession(formData: Session, id: number) {
   try {
-    await setTimeout(() => {
-      console.info('[API] patching session : ', id, formData);
-    }, 4000);
-    // publishMessage({ action: 'patch', id, patch_session: formData });
-    // console.info(`[API SUCCESS] updated session for ${id} : ${formData}`);
-    // return { isSuccess: true, id };
+    publishMessage({ action: 'patch', id, patch_session: formData });
+    console.info(`[API SUCCESS] updated session for ${id} : ${formData}`);
+    return { isSuccess: true, id };
   } catch (error) {
     console.error('Error posting form data', error);
-    throw error;
+    return { isSuccess: false };
   }
 }

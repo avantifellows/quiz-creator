@@ -1,4 +1,5 @@
 import {
+  ActiveDaysOptions,
   BatchOptions,
   CourseOptions,
   GradeOptions,
@@ -51,7 +52,7 @@ export const basicSchema = z.object({
     .min(0),
   isRedirection: z.coerce.boolean(),
   isIdGeneration: z.coerce.boolean(),
-  signupFormName: z.string({ required_error: 'This field is required' }),
+  // signupFormName: z.string({ required_error: 'This field is required' }),
   platform: z
     .string({ required_error: 'This field is required' })
     .refine(
@@ -121,12 +122,14 @@ export const timelineSchema = z.object({
     })
     .min(new Date(), 'End date cannot be in the past'),
   isEnabled: z.coerce.boolean(),
-  // activeDays: z
-  //   .string({ required_error: 'This field is required' })
-  //   .refine(
-  //     (value) => ActiveDaysOptions.some((option) => option.value === value),
-  //     'Invalid option selected'
-  //   ),
+  activeDays: z.array(
+    z
+      .number({ required_error: 'This field is required' })
+      .refine(
+        (value) => ActiveDaysOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      )
+  ),
   testTakers: z.coerce
     .number({
       required_error: 'This field is required',

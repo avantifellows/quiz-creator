@@ -105,7 +105,7 @@ export const FormBuilder = <T extends FieldValues>({
         )}
         <div className="flex gap-4 flex-col md:flex-row-reverse justify-between mt-4">
           {buttons?.submit?.hidden ? null : (
-            <Button className="min-w-32" type="submit">
+            <Button className="min-w-32" type="submit" disabled={buttons?.submit?.disabled}>
               {buttons?.submit?.text || 'Next'}
             </Button>
           )}
