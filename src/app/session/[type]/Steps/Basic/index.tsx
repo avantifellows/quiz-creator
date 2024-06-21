@@ -4,7 +4,6 @@ import {
   AuthOptions,
   BatchOptions,
   GradeOptions,
-  GroupOptions,
   SessionTypeOptions,
   TestPlatformOptions,
 } from '@/Constants';
@@ -25,23 +24,37 @@ import { useCallback, useMemo, type FC } from 'react';
 
 const BasicForm: FC = () => {
   const { type } = useParams<SessionParams>();
-  const { formData, updateFormData } = useFormContext();
+  const { formData, apiOptions, updateFormData } = useFormContext();
 
   const fieldsSchema: FieldSchema<basicFields> = useMemo(
     () => ({
       group: {
         type: 'select',
-        options: GroupOptions,
+        options: apiOptions?.group,
         placeholder: 'Select a group',
         label: 'Group',
         disabled: type === SessionType.EDIT,
         setValueOnChange: (form) => setGroupDefaults(form, formData, updateFormData),
       },
-      batch: {
+      quizBatch: {
         type: 'select',
         options: BatchOptions,
         placeholder: 'Select a batch',
-        label: 'Batch',
+        label: 'Quiz Batch',
+        disabled: type === SessionType.EDIT,
+        setValueOnChange: (form) => {
+          const { watch } = form;
+          const groupValue = watch('quizBatch');
+          console.log(groupValue);
+          // TODO : show or hide the class batch
+          // fieldsSchema.classBatch.hide = true;
+        },
+      },
+      classBatch: {
+        type: 'select',
+        options: BatchOptions,
+        placeholder: 'Select a batch',
+        label: 'Class Batch',
         disabled: type === SessionType.EDIT,
       },
       grade: {
@@ -67,10 +80,20 @@ const BasicForm: FC = () => {
         label: 'Activate sign up',
         helperText: 'Do you want to display sign up form?',
       },
+      signupFormName: {
+        type: 'text',
+        label: 'Signup form name',
+        placeholder: 'Enter form name',
+      },
       isPopupForm: {
         type: 'switch',
         label: 'Is pop up form allowed',
         helperText: 'Do you want to display popup form?',
+      },
+      popupFormName: {
+        type: 'text',
+        label: 'Popup form name',
+        placeholder: 'Enter form name',
       },
       noOfFieldsInPopup: {
         type: 'number',
@@ -89,11 +112,6 @@ const BasicForm: FC = () => {
         label: 'Is id generation allowed',
         helperText: 'Do you want to generate IDs?',
       },
-      signupFormName: {
-        type: 'text',
-        label: 'Signup form name',
-        placeholder: 'Enter form name',
-      },
       platform: {
         type: 'select',
         options: TestPlatformOptions,
@@ -108,7 +126,8 @@ const BasicForm: FC = () => {
   const defaultValues: Partial<basicFields> = useMemo(
     () => ({
       group: formData?.meta_data?.group,
-      batch: formData?.meta_data?.batch,
+      quizBatch: formData?.meta_data?.quiz_batch,
+      classBatch: formData?.meta_data?.class_batch,
       grade: formData?.meta_data?.grade,
       authType: formData?.auth_type,
       activateSignUp: formData?.signup_form,
@@ -121,6 +140,7 @@ const BasicForm: FC = () => {
       platform: formData?.platform,
       sessionType: formData?.type,
       signupFormName: formData?.meta_data?.signup_form_name,
+      popupFormName: formData?.meta_data?.popup_form_name,
     }),
     [formData]
   );
@@ -130,10 +150,12 @@ const BasicForm: FC = () => {
       meta_data: {
         ...(formData.meta_data ?? {}),
         group: data.group,
-        batch: data.batch,
+        quiz_batch: data.quizBatch,
+        class_batch: data.classBatch,
         grade: data.grade,
         number_of_fields_in_popup_form: data.noOfFieldsInPopup ?? '',
-        signup_form_name: data.signupFormName ?? '',
+        signup_form_name: data.signupFormName,
+        popup_form_name: data.popupFormName,
       },
       auth_type: data.authType,
       signup_form: data.activateSignUp,

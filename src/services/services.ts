@@ -1,6 +1,7 @@
 'use server';
 
 import { DATA_PER_PAGE } from '@/Constants';
+import { ApiFormOptions } from '@/types';
 import { Session } from '@/types/api.types';
 import { instance } from '../lib/axios';
 import { publishMessage } from './Aws';
@@ -48,6 +49,21 @@ export async function getASession(id: number | null): Promise<Session | {}> {
     return data;
   } catch (error) {
     console.error(`[API ERROR] fetching session for ${id} : ${error}`);
+    return {};
+  }
+}
+
+/**
+ * Fetch dropdown data from the server
+ */
+export async function getOptions(): Promise<ApiFormOptions> {
+  try {
+    const { data: groupRes } = await instance.get(`/auth-group`, { params: { format: 'options' } });
+    const { data: batchRes } = await instance.get(`/batch`, { params: { format: 'options' } });
+    console.info(`[API SUCCESS] fetching options`);
+    return { group: groupRes.data, quizbatch: batchRes.data };
+  } catch (error) {
+    console.error(`[API ERROR] fetching options : ${error}`);
     return {};
   }
 }

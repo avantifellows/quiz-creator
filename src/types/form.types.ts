@@ -1,9 +1,7 @@
 import {
   ActiveDaysOptions,
-  BatchOptions,
   CourseOptions,
   GradeOptions,
-  GroupOptions,
   MarkingSchemeOptions,
   OptionalLimitOptions,
   SessionTypeOptions,
@@ -16,18 +14,9 @@ import {
 import { z } from 'zod';
 
 export const basicSchema = z.object({
-  group: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => GroupOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  batch: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => BatchOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
+  group: z.string({ required_error: 'This field is required' }),
+  quizBatch: z.string({ required_error: 'This field is required' }),
+  classBatch: z.string({ required_error: 'This field is required' }),
   grade: z.coerce
     .number({ required_error: 'This field is required' })
     .refine(
@@ -53,7 +42,8 @@ export const basicSchema = z.object({
     .or(z.string().nullable()),
   isRedirection: z.coerce.boolean(),
   isIdGeneration: z.coerce.boolean(),
-  signupFormName: z.string({ required_error: 'This field is required' }).optional(),
+  signupFormName: z.string().optional(),
+  popupFormName: z.string().optional(),
   platform: z
     .string({ required_error: 'This field is required' })
     .refine(

@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { Option } from './formbuilder.types';
 
 export * from './api.types';
 export * from './enums';
@@ -22,7 +23,7 @@ export type SessionSearchParams = {
 export interface StepperSteps {
   [key: string]: {
     label: string;
-    component: FC;
+    component: FC<any>;
     hide?: boolean;
   };
 }
@@ -36,4 +37,12 @@ interface DataItem {
 export interface DataSection {
   title: string;
   data: DataItem[];
+}
+
+export interface ApiFormOptions {
+  group?: Option[];
+  quizbatch?: Option[];
+  classBatch?: Option[];
+  popupFormName?: Option[];
+  signupFormName?: Option[];
 }

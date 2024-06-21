@@ -1,7 +1,7 @@
 'use client';
 
 import { createSession, patchSession } from '@/services/services';
-import { Session, SessionParams, SessionType, Steps } from '@/types';
+import { ApiFormOptions, Session, SessionParams, SessionType, Steps } from '@/types';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
   ReactNode,
@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 interface IFormContext {
   formData: Session;
   isSubmiting: boolean;
+  apiOptions?: ApiFormOptions;
   updateFormData: (formData: Session, nextStep?: Steps) => void;
   submitForm: () => void;
 }
@@ -24,6 +25,7 @@ interface IFormContext {
 interface IFormProviderProps {
   children: ReactNode;
   sessionData: Session;
+  options?: ApiFormOptions;
 }
 
 /**
@@ -36,6 +38,7 @@ interface IFormProviderProps {
 const FormContext = createContext<IFormContext>({
   formData: {},
   isSubmiting: false,
+  apiOptions: {},
   updateFormData: () => {},
   submitForm: () => {},
 });
@@ -45,12 +48,17 @@ const FormContext = createContext<IFormContext>({
  * @param children - The children components
  * @param sessionData - The initial session data
  */
-export const FormDataProvider = ({ children, sessionData = {} }: IFormProviderProps) => {
+export const FormDataProvider = ({
+  children,
+  sessionData = {},
+  options = {},
+}: IFormProviderProps) => {
   const params = useParams<SessionParams>();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [formData, setFormData] = useState<Session>(sessionData);
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
+  const apiOptions = useMemo<ApiFormOptions>(() => options, [options]);
   const id = useMemo(() => searchParams.get('id'), [searchParams]);
   const sessionKey = useMemo(() => `formData_${params.type}${id ? '_' + id : ''}`, [params, id]);
 
@@ -123,7 +131,7 @@ export const FormDataProvider = ({ children, sessionData = {} }: IFormProviderPr
   console.info('Form Data : ', { isSubmiting, formData });
 
   return (
-    <FormContext.Provider value={{ formData, isSubmiting, updateFormData, submitForm }}>
+    <FormContext.Provider value={{ formData, isSubmiting, apiOptions, updateFormData, submitForm }}>
       {children}
     </FormContext.Provider>
   );
