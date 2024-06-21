@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { DataSection, Session } from '@/types';
-import { LinkIcon, MoreHorizontal } from 'lucide-react';
+import { Check, LinkIcon, MoreHorizontal, X } from 'lucide-react';
 import Link from 'next/link';
 
 export const columns: ColumnDef<Session>[] = [
@@ -24,12 +24,6 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'name',
     header: 'Name',
     enableColumnFilter: true,
-    enableHiding: false,
-  },
-  {
-    id: 'batch',
-    accessorKey: 'meta_data.batch',
-    header: 'Batch',
     enableHiding: false,
   },
   {
@@ -124,6 +118,17 @@ export const columns: ColumnDef<Session>[] = [
     ),
   },
   {
+    id: 'isEnabled',
+    accessorKey: 'meta_data.enabled',
+    header: 'Enabled',
+    cell: ({ row }) =>
+      row.getValue('isEnabled') ? (
+        <Check className="mx-auto" color="darkgreen" />
+      ) : (
+        <X className="mx-auto" color="darkred" />
+      ),
+  },
+  {
     id: 'actions',
     header: 'Actions',
     enableHiding: false,
@@ -171,7 +176,7 @@ export const displayData = (data: Session) => {
       },
       { label: 'Is redirection allowed', value: data.redirection ? 'Yes' : 'No' },
       { label: 'Is Id generation allowed', value: data.id_generation ? 'Yes' : 'No' },
-      // { label: 'Signup form name', value: data.signup_form },
+      { label: 'Signup form name', value: data.meta_data?.signup_form_name ?? 'N/A' },
     ],
   };
 
@@ -193,6 +198,7 @@ export const displayData = (data: Session) => {
             },
             { label: 'Marking Scheme', value: data.meta_data?.marking_scheme },
             { label: 'Optional Limits', value: data.meta_data?.optional_limits },
+            { label: 'Show Answers', value: data.meta_data?.show_answers ? 'Yes' : 'No' },
             { label: 'Portal Link', value: data.portal_link ?? 'N/A', isLink: !!data.portal_link },
             {
               label: 'Admin Link',

@@ -15,6 +15,7 @@ export const KeysToDeleteBeforeDuplicate: DeepKeys<Session>[] = [
   'signup_form_id',
   'owner_id',
   'session_id',
+  'platform_link',
   'platform_id',
   'created_by_id',
   'inserted_at',

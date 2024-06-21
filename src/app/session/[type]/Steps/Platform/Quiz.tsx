@@ -85,6 +85,11 @@ const QuizForm: FC = () => {
         label: 'Optional limit',
         disabled: type === SessionType.EDIT,
       },
+      showAnswers: {
+        type: 'switch',
+        label: 'Show answers?',
+        helperText: 'Do you want to show answers?',
+      },
     }),
     []
   );
@@ -100,6 +105,7 @@ const QuizForm: FC = () => {
       cmsUrl: formData.meta_data?.cms_test_id,
       markingScheme: formData.meta_data?.marking_scheme,
       optionalLimit: formData.meta_data?.optional_limits,
+      showAnswers: formData.meta_data?.show_answers,
     }),
     [formData]
   );
@@ -117,6 +123,7 @@ const QuizForm: FC = () => {
         marking_scheme: data.markingScheme,
         optional_limits: data.optionalLimit,
         cms_test_id: data.cmsUrl,
+        show_answers: data.showAnswers,
       },
     };
     updateFormData(addedData, Steps.TIMELINE);

@@ -49,10 +49,11 @@ export const basicSchema = z.object({
       message: 'This is not a valid number',
     })
     .int()
-    .min(0),
+    .min(0)
+    .or(z.string().nullable()),
   isRedirection: z.coerce.boolean(),
   isIdGeneration: z.coerce.boolean(),
-  // signupFormName: z.string({ required_error: 'This field is required' }),
+  signupFormName: z.string({ required_error: 'This field is required' }).optional(),
   platform: z
     .string({ required_error: 'This field is required' })
     .refine(
@@ -106,6 +107,7 @@ export const quizSchema = z.object({
       (value) => OptionalLimitOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
+  showAnswers: z.coerce.boolean(),
 });
 
 export const timelineSchema = z.object({

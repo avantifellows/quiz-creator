@@ -1,4 +1,4 @@
-import { Option } from '@/types';
+import { AuthType, Grades, Option } from '@/types';
 
 export const TestTypeOptions: Option[] = [
   { value: 'assessment', label: 'Assessment' },
@@ -37,8 +37,8 @@ export const TestPlatformOptions = [
 ];
 
 export const MarkingSchemeOptions: Option[] = [
-  { value: '4,-1', label: '4 , -1' },
-  { value: '1,0', label: '1, 0' },
+  { value: '4,-1', label: '4,-1' },
+  { value: '1,0', label: '1,0' },
 ];
 
 export const OptionalLimitOptions: Option[] = [
@@ -186,13 +186,6 @@ export const BatchOptions: Option[] = [
   { value: 'NEEV SCERT', label: 'NEEV SCERT' },
 ];
 
-export const GradeOptions = [
-  { value: 9, label: '9' },
-  { value: 10, label: '10' },
-  { value: 11, label: '11' },
-  { value: 12, label: '12' },
-];
-
 export const CourseOptions: Option[] = [
   { value: 'NEET', label: 'NEET' },
   { value: 'Catalyst', label: 'Catalyst' },
@@ -215,12 +208,12 @@ export const StreamOptions: Option[] = [
   { value: 'Zoology', label: 'Zoology' },
 ];
 
-export const AuthOptions: Option[] = [
-  { label: 'ID', value: 'ID' },
-  { label: 'ID,PH', value: 'ID,PH' },
-  { label: 'ID,DOB', value: 'ID,DOB' },
-  { label: 'ID,PH,DOB', value: 'ID,PH,DOB' },
-];
+export const GradeOptions = Grades.map((g) => ({ value: g, label: g }));
+
+export const AuthOptions: Option[] = Object.values(AuthType).map((item) => ({
+  value: item,
+  label: item,
+}));
 
 export const ActiveDaysOptions: Option[] = [
   { label: 'Monday', value: 1 },

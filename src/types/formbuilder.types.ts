@@ -4,7 +4,7 @@ import { SelectProps } from '@radix-ui/react-select';
 import { SwitchProps } from '@radix-ui/react-switch';
 import type { FormEvent, InputHTMLAttributes } from 'react';
 import { DayPickerDefaultProps } from 'react-day-picker';
-import type { DefaultValues, FieldValues, SubmitHandler } from 'react-hook-form';
+import type { DefaultValues, FieldValues, SubmitHandler, UseFormReturn } from 'react-hook-form';
 import type { ZodType } from 'zod';
 
 /**
@@ -48,6 +48,7 @@ export type Field =
 export interface MySelectProps extends SelectProps, CommonFieldProps {
   type: 'select';
   options: Option[];
+  setValueOnChange: (form: UseFormReturn) => void;
 }
 
 export interface MyCheckboxProps extends Omit<CheckboxProps, 'type'>, CommonFieldProps {

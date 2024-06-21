@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { MySelectProps } from '@/types';
-import { ControllerRenderProps } from 'react-hook-form';
+import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 import { FormControl, FormLabel } from './form';
 
 const Select = SelectPrimitive.Root;
@@ -144,16 +144,34 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 const ControlledSelectField = React.forwardRef<
   React.ElementRef<typeof FormControl>,
-  ControllerRenderProps & MySelectProps
+  ControllerRenderProps & MySelectProps & { form: UseFormReturn }
 >(({ ...props }, ref) => {
-  const { label, onChange, disabled, value = '', options = [], type, ...restProps } = props;
+  const {
+    form,
+    label,
+    onChange,
+    setValueOnChange,
+    disabled,
+    value = '',
+    options = [],
+    type,
+    ...restProps
+  } = props;
+
+  const handleChange = (...event: any[]) => {
+    onChange(...event);
+
+    if (setValueOnChange) {
+      setValueOnChange(form);
+    }
+  };
 
   return (
     <>
       <FormLabel>{label}</FormLabel>
       <Select
         disabled={disabled}
-        onValueChange={onChange}
+        onValueChange={handleChange}
         value={value?.toString()}
         defaultValue={value?.toString()}
       >
@@ -187,6 +205,5 @@ export {
   SelectScrollUpButton,
   SelectSeparator,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 };
-

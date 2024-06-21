@@ -20,3 +20,25 @@ export enum Platform {
   Quiz = 'quiz',
   Live = 'live',
 }
+
+export enum Group {
+  Haryana = 'HaryanaStudents',
+  Himachal = 'HimachalStudents',
+  Delhi = 'DelhiStudents',
+  Uttarakhand = 'UttarakhandStudents',
+  Gujarat = 'GujaratStudents',
+  FeedingIndia = 'FeedingIndiaStudents',
+  Candidates = 'Candidates',
+  Enable = 'EnableStudents',
+  AFTesting = 'AFTesting',
+  AFTeachers = 'AFTeachers',
+}
+
+export enum AuthType {
+  ID = 'ID',
+  IDPH = 'ID,PH',
+  IDDOB = 'ID,DOB',
+  IDPHDOB = 'ID,PH,DOB',
+}
+
+export const Grades = [9, 10, 11, 12, 13] as const;

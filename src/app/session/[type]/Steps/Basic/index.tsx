@@ -10,6 +10,7 @@ import {
 } from '@/Constants';
 import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
+import { setGroupDefaults } from '@/lib/utils';
 import {
   FieldSchema,
   Session,
@@ -34,6 +35,7 @@ const BasicForm: FC = () => {
         placeholder: 'Select a group',
         label: 'Group',
         disabled: type === SessionType.EDIT,
+        setValueOnChange: (form) => setGroupDefaults(form, formData, updateFormData),
       },
       batch: {
         type: 'select',
@@ -87,11 +89,11 @@ const BasicForm: FC = () => {
         label: 'Is id generation allowed',
         helperText: 'Do you want to generate IDs?',
       },
-    // signupFormName: {
-    //   type: 'text',
-    //   label: 'Signup form name',
-    //   placeholder: 'Enter form name',
-    // },
+      signupFormName: {
+        type: 'text',
+        label: 'Signup form name',
+        placeholder: 'Enter form name',
+      },
       platform: {
         type: 'select',
         options: TestPlatformOptions,
@@ -111,12 +113,14 @@ const BasicForm: FC = () => {
       authType: formData?.auth_type,
       activateSignUp: formData?.signup_form,
       isPopupForm: formData?.popup_form,
-      noOfFieldsInPopup: formData?.meta_data?.number_of_fields_in_popup_form,
+      noOfFieldsInPopup: formData?.meta_data?.number_of_fields_in_popup_form
+        ? Number(formData?.meta_data?.number_of_fields_in_popup_form)
+        : '',
       isRedirection: formData?.redirection,
       isIdGeneration: formData?.id_generation,
       platform: formData?.platform,
       sessionType: formData?.type,
-      // TODO: signupFormName and  key should be added
+      signupFormName: formData?.meta_data?.signup_form_name,
     }),
     [formData]
   );
@@ -128,7 +132,8 @@ const BasicForm: FC = () => {
         group: data.group,
         batch: data.batch,
         grade: data.grade,
-        number_of_fields_in_popup_form: data.noOfFieldsInPopup,
+        number_of_fields_in_popup_form: data.noOfFieldsInPopup ?? '',
+        signup_form_name: data.signupFormName ?? '',
       },
       auth_type: data.authType,
       signup_form: data.activateSignUp,
@@ -137,7 +142,6 @@ const BasicForm: FC = () => {
       id_generation: data.isIdGeneration,
       platform: data.platform,
       type: data.sessionType,
-      // TODO: signupFormName should be added
     };
     updateFormData(addedData, Steps.PLATFORM);
   }, []);
