@@ -1,15 +1,8 @@
 'use client';
 
-import {
-  AuthOptions,
-  BatchOptions,
-  GradeOptions,
-  SessionTypeOptions,
-  TestPlatformOptions,
-} from '@/Constants';
+import { AuthOptions, GradeOptions, SessionTypeOptions, TestPlatformOptions } from '@/Constants';
 import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
-import { setGroupDefaults } from '@/lib/utils';
 import {
   FieldSchema,
   Session,
@@ -21,107 +14,103 @@ import {
 } from '@/types';
 import { useParams } from 'next/navigation';
 import { useCallback, useMemo, type FC } from 'react';
+import { setBatchOptions, setGroupDefaults } from '../helper';
 
 const BasicForm: FC = () => {
   const { type } = useParams<SessionParams>();
-  const { formData, apiOptions, updateFormData } = useFormContext();
+  const { formData, apiOptions = {}, updateFormData } = useFormContext();
 
-  const fieldsSchema: FieldSchema<basicFields> = useMemo(
-    () => ({
-      group: {
-        type: 'select',
-        options: apiOptions?.group,
-        placeholder: 'Select a group',
-        label: 'Group',
-        disabled: type === SessionType.EDIT,
-        setValueOnChange: (form) => setGroupDefaults(form, formData, updateFormData),
+  let fieldsSchema: FieldSchema<basicFields> = {
+    group: {
+      type: 'select',
+      options: apiOptions?.group,
+      placeholder: 'Select a group',
+      label: 'Group',
+      disabled: type === SessionType.EDIT,
+      onValueChange: (value, form) =>
+        setGroupDefaults(value, apiOptions, fieldsSchema, updateFormData, form),
+    },
+    quizBatch: {
+      required: true,
+      type: 'select',
+      placeholder: 'Select a batch',
+      label: 'Quiz Batch',
+      disabled: type === SessionType.EDIT,
+      onValueChange: (value, form) => {
+        setBatchOptions(value, apiOptions, fieldsSchema, updateFormData, form);
       },
-      quizBatch: {
-        type: 'select',
-        options: BatchOptions,
-        placeholder: 'Select a batch',
-        label: 'Quiz Batch',
-        disabled: type === SessionType.EDIT,
-        setValueOnChange: (form) => {
-          const { watch } = form;
-          const groupValue = watch('quizBatch');
-          console.log(groupValue);
-          // TODO : show or hide the class batch
-          // fieldsSchema.classBatch.hide = true;
-        },
-      },
-      classBatch: {
-        type: 'select',
-        options: BatchOptions,
-        placeholder: 'Select a batch',
-        label: 'Class Batch',
-        disabled: type === SessionType.EDIT,
-      },
-      grade: {
-        type: 'select',
-        options: GradeOptions,
-        placeholder: 'Select a grade',
-        label: 'Grade',
-      },
-      sessionType: {
-        type: 'select',
-        options: SessionTypeOptions,
-        placeholder: 'Select a session type',
-        label: 'Session type',
-      },
-      authType: {
-        type: 'select',
-        options: AuthOptions,
-        label: 'Auth type',
-        placeholder: 'Select a auth type',
-      },
-      activateSignUp: {
-        type: 'switch',
-        label: 'Activate sign up',
-        helperText: 'Do you want to display sign up form?',
-      },
-      signupFormName: {
-        type: 'text',
-        label: 'Signup form name',
-        placeholder: 'Enter form name',
-      },
-      isPopupForm: {
-        type: 'switch',
-        label: 'Is pop up form allowed',
-        helperText: 'Do you want to display popup form?',
-      },
-      popupFormName: {
-        type: 'text',
-        label: 'Popup form name',
-        placeholder: 'Enter form name',
-      },
-      noOfFieldsInPopup: {
-        type: 'number',
-        label: 'No of fields in popup',
-        placeholder: 'Enter no of fields in popup',
-        min: 0,
-        step: 1,
-      },
-      isRedirection: {
-        type: 'switch',
-        label: 'Is redirection allowed',
-        helperText: 'Do you want to allow redirection?',
-      },
-      isIdGeneration: {
-        type: 'switch',
-        label: 'Is id generation allowed',
-        helperText: 'Do you want to generate IDs?',
-      },
-      platform: {
-        type: 'select',
-        options: TestPlatformOptions,
-        placeholder: 'Select a platform',
-        label: 'Platform',
-        disabled: type === SessionType.EDIT,
-      },
-    }),
-    []
-  );
+    },
+    classBatch: {
+      type: 'select',
+      placeholder: 'Select a batch',
+      label: 'Class Batch',
+      disabled: type === SessionType.EDIT,
+    },
+    grade: {
+      type: 'select',
+      options: GradeOptions,
+      placeholder: 'Select a grade',
+      label: 'Grade',
+    },
+    sessionType: {
+      type: 'select',
+      options: SessionTypeOptions,
+      placeholder: 'Select a session type',
+      label: 'Session type',
+    },
+    authType: {
+      type: 'select',
+      options: AuthOptions,
+      label: 'Auth type',
+      placeholder: 'Select a auth type',
+    },
+    activateSignUp: {
+      type: 'switch',
+      label: 'Activate sign up',
+      helperText: 'Do you want to display sign up form?',
+    },
+    signupFormId: {
+      type: 'select',
+      label: 'Signup form name',
+      placeholder: 'Enter form name',
+      options: apiOptions.signupForm,
+    },
+    isPopupForm: {
+      type: 'switch',
+      label: 'Is pop up form allowed',
+      helperText: 'Do you want to display popup form?',
+    },
+    popupFormId: {
+      type: 'select',
+      label: 'Popup form name',
+      placeholder: 'Enter form name',
+      options: apiOptions.popupForm,
+    },
+    noOfFieldsInPopup: {
+      type: 'number',
+      label: 'No of fields in popup',
+      placeholder: 'Enter no of fields in popup',
+      min: 0,
+      step: 1,
+    },
+    isRedirection: {
+      type: 'switch',
+      label: 'Is redirection allowed',
+      helperText: 'Do you want to allow redirection?',
+    },
+    isIdGeneration: {
+      type: 'switch',
+      label: 'Is id generation allowed',
+      helperText: 'Do you want to generate IDs?',
+    },
+    platform: {
+      type: 'select',
+      options: TestPlatformOptions,
+      placeholder: 'Select a platform',
+      label: 'Platform',
+      disabled: type === SessionType.EDIT,
+    },
+  };
 
   const defaultValues: Partial<basicFields> = useMemo(
     () => ({
@@ -139,8 +128,8 @@ const BasicForm: FC = () => {
       isIdGeneration: formData?.id_generation,
       platform: formData?.platform,
       sessionType: formData?.type,
-      signupFormName: formData?.meta_data?.signup_form_name,
-      popupFormName: formData?.meta_data?.popup_form_name,
+      signupFormName: formData?.signup_form_id,
+      popupFormName: formData?.popup_form_id,
     }),
     [formData]
   );
@@ -154,9 +143,9 @@ const BasicForm: FC = () => {
         class_batch: data.classBatch,
         grade: data.grade,
         number_of_fields_in_popup_form: data.noOfFieldsInPopup ?? '',
-        signup_form_name: data.signupFormName,
-        popup_form_name: data.popupFormName,
       },
+      signup_form_id: data.signupFormId,
+      popup_form_id: data.popupFormId,
       auth_type: data.authType,
       signup_form: data.activateSignUp,
       popup_form: data.isPopupForm,

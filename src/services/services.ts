@@ -54,21 +54,6 @@ export async function getASession(id: number | null): Promise<Session | {}> {
 }
 
 /**
- * Fetch dropdown data from the server
- */
-export async function getOptions(): Promise<ApiFormOptions> {
-  try {
-    const { data: groupRes } = await instance.get(`/auth-group`, { params: { format: 'options' } });
-    const { data: batchRes } = await instance.get(`/batch`, { params: { format: 'options' } });
-    console.info(`[API SUCCESS] fetching options`);
-    return { group: groupRes.data, quizbatch: batchRes.data };
-  } catch (error) {
-    console.error(`[API ERROR] fetching options : ${error}`);
-    return {};
-  }
-}
-
-/**
  * Creates a new session on the server.
  * @param {Session} formData - The session data to be created.
  * @return {Promise<{isSuccess: boolean; id: number}>}
@@ -93,8 +78,9 @@ export async function createSession(formData: Session) {
         params: 'quiz',
       },
     };
+    console.log(payload);
     const { data } = await instance.post<Session>(`/session`, payload);
-    publishMessage({ action: 'db_id', id: data?.id });
+    // publishMessage({ action: 'db_id', id: data?.id });
     console.info(`[API SUCCESS] created session ${data?.id} : ${data}`);
     return { isSuccess: true, id: data?.id };
   } catch (error) {
@@ -121,3 +107,83 @@ export async function patchSession(formData: Session, id: number) {
     return { isSuccess: false };
   }
 }
+
+/**
+ * Fetch dropdown data from the server
+ */
+export async function getOptions(): Promise<ApiFormOptions> {
+  try {
+    // TODO: Fetch these Data from real API
+    const { data: groupRes } = await instance.get<Record<string, string>[]>(
+      `/auth-group/select-columns`,
+      {
+        params: { columns: 'id,name' },
+      }
+    );
+    const { data: batchRes } = await instance.get<Record<string, string>[]>(
+      `/batch/select-columns`,
+      {
+        params: { columns: 'name,id,parent_id,batch_id,auth_group_id' },
+      }
+    );
+    const { data: formschema } = await instance.get<Record<string, string>[]>(
+      `/form-schema/select-columns`,
+      {
+        params: { columns: 'id,name' },
+      }
+    );
+
+    const groupOptions = groupRes?.map((item) => ({
+      label: item.name,
+      value: item.name,
+      id: item.id,
+    }));
+
+    const batchOptions = batchRes?.map((item) => ({
+      label: item.name,
+      value: item.batch_id,
+      id: item.id,
+      parentId: item.parent_id,
+      groupId: item.auth_group_id,
+    }));
+
+    const formSchemaOptions = formschema?.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }));
+    const popupForm = formSchemaOptions?.filter((item) => item.label.includes('Profile'));
+    const signupForm = formSchemaOptions?.filter((item) => item.label.includes('Registration'));
+    console.info(`[API SUCCESS] fetching options`);
+
+    return {
+      group: groupOptions ?? [],
+      batch: batchOptions ?? [],
+      popupForm: popupForm ?? [],
+      signupForm: signupForm ?? [],
+    };
+  } catch (error) {
+    console.error(`[API ERROR] fetching options : ${error}`);
+    return {
+      group: [],
+      batch: [],
+      popupForm: [],
+      signupForm: [],
+    };
+  }
+}
+
+// export async function getFormId(name: string) {
+//   const { data } = await instance.get(`/form-schema`, {
+//     params: { name },
+//   });
+//   console.info('[API SUCCESS] fetching form id : ', data[0]?.id);
+//   return data[0]?.id;
+// }
+
+// export async function getFormName(id: number) {
+//   const { data } = await instance.get(`/form-schema`, {
+//     params: { id },
+//   });
+//   console.info('[API SUCCESS] fetching form name : ', data[0]?.name);
+//   return data[0]?.name;
+// }

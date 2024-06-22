@@ -18,7 +18,12 @@ export enum Status {
 
 export enum Platform {
   Quiz = 'quiz',
-  Live = 'live',
+  Live = 'liveclass',
+  Meet = 'meet',
+  Zoom = 'zoom',
+  Others = 'others',
+  Plio = 'plio',
+  SPlio = 'SCERT-plio',
 }
 
 export enum Group {

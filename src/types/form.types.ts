@@ -42,8 +42,8 @@ export const basicSchema = z.object({
     .or(z.string().nullable()),
   isRedirection: z.coerce.boolean(),
   isIdGeneration: z.coerce.boolean(),
-  signupFormName: z.string().optional(),
-  popupFormName: z.string().optional(),
+  signupFormId: z.coerce.number().optional(),
+  popupFormId: z.coerce.number().optional(),
   platform: z
     .string({ required_error: 'This field is required' })
     .refine(

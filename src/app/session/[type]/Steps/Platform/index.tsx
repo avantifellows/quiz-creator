@@ -9,6 +9,11 @@ import QuizForm from './Quiz';
 const PlatformComponents = {
   [Platform.Quiz]: QuizForm,
   [Platform.Live]: LiveForm,
+  [Platform.Meet]: LiveForm,
+  [Platform.Zoom]: LiveForm,
+  [Platform.Plio]: LiveForm,
+  [Platform.SPlio]: LiveForm,
+  [Platform.Others]: LiveForm,
 };
 
 const PlatformForm: FC = () => {

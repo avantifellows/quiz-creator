@@ -18,7 +18,10 @@ interface IFormContext {
   formData: Session;
   isSubmiting: boolean;
   apiOptions?: ApiFormOptions;
-  updateFormData: (formData: Session, nextStep?: Steps) => void;
+  updateFormData: (
+    formData: Session | ((prevSession: Session) => Session),
+    nextStep?: Steps
+  ) => void;
   submitForm: () => void;
 }
 
@@ -104,9 +107,10 @@ export const FormDataProvider = ({
   }, [isSubmiting]);
 
   const updateFormData = useCallback(
-    (data: Session, nextStep?: Steps) => {
+    (data: Session | ((prevState: Session) => Session), nextStep?: Steps) => {
       setFormData((prevFormData) => {
-        const updatedData = { ...prevFormData, ...data };
+        const newData = typeof data === 'function' ? data(prevFormData) : data;
+        const updatedData = { ...prevFormData, ...newData };
         sessionStorage.setItem(sessionKey, JSON.stringify(updatedData));
         return updatedData;
       });
@@ -115,7 +119,7 @@ export const FormDataProvider = ({
         pushStep(nextStep);
       }
     },
-    [params, searchParams]
+    [params, searchParams, formData]
   );
 
   const pushStep = useCallback(
@@ -129,7 +133,6 @@ export const FormDataProvider = ({
   const submitForm = useCallback(() => setIsSubmiting(true), []);
 
   console.info('Form Data : ', { isSubmiting, formData });
-
   return (
     <FormContext.Provider value={{ formData, isSubmiting, apiOptions, updateFormData, submitForm }}>
       {children}

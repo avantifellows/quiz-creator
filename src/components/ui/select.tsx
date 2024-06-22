@@ -144,25 +144,23 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 const ControlledSelectField = React.forwardRef<
   React.ElementRef<typeof FormControl>,
-  ControllerRenderProps & MySelectProps & { form: UseFormReturn }
->(({ ...props }, ref) => {
-  const {
-    form,
-    label,
-    onChange,
-    setValueOnChange,
-    disabled,
-    value = '',
-    options = [],
-    type,
-    ...restProps
-  } = props;
+  { field: ControllerRenderProps } & { schema: MySelectProps } & { form: UseFormReturn }
+>(({ field, form, schema }, ref) => {
+  const { value, onChange, ...restFieldProps } = field;
+  const { label, disabled, options = [], onValueChange, helperText, ...restSchemaProps } = schema;
+
+  React.useEffect(() => {
+    if (value && onValueChange) {
+      const value = form.watch(field.name);
+      onValueChange(value, form);
+    }
+  }, [value, onValueChange]);
 
   const handleChange = (...event: any[]) => {
     onChange(...event);
-
-    if (setValueOnChange) {
-      setValueOnChange(form);
+    if (onValueChange) {
+      const value = form.watch(field.name);
+      onValueChange(value, form);
     }
   };
 
@@ -177,15 +175,21 @@ const ControlledSelectField = React.forwardRef<
       >
         <FormControl ref={ref}>
           <SelectTrigger>
-            <SelectValue {...restProps} />
+            <SelectValue {...restSchemaProps} {...restFieldProps} />
           </SelectTrigger>
         </FormControl>
         <SelectContent>
-          {options?.map((option) => (
-            <SelectItem key={option.value.toString()} value={option.value.toString()}>
-              {option.label}
+          {options.length ? (
+            options.map((option) => (
+              <SelectItem key={option.value.toString()} value={option.value.toString()}>
+                {option.label}
+              </SelectItem>
+            ))
+          ) : (
+            <SelectItem key="no-options" value="no-options" disabled>
+              No options
             </SelectItem>
-          ))}
+          )}
         </SelectContent>
       </Select>
     </>
@@ -205,5 +209,6 @@ export {
   SelectScrollUpButton,
   SelectSeparator,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 };
+

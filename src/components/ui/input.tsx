@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { MyInputProps } from '@/types';
+import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 import { FormControl, FormLabel } from './form';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
@@ -23,14 +24,33 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = 'Input';
 
-const ControlledInput = React.forwardRef<HTMLInputElement, MyInputProps>(({ ...props }, ref) => {
-  const { onChange, value = '', label, ...restProps } = props;
+const ControlledInput = React.forwardRef<
+  HTMLInputElement,
+  { field: ControllerRenderProps } & { schema: MyInputProps } & { form: UseFormReturn }
+>(({ field, form, schema }, ref) => {
+  const { value = '', onChange, ...restFieldProps } = field;
+  const { label, onChange: onValueChange, ...restSchemaProps } = schema;
+
+  React.useEffect(() => {
+    if (onValueChange) {
+      const value = form.watch(field.name);
+      onValueChange(value);
+    }
+  }, [value, onValueChange]);
+
+  const handleChange = (...event: any[]) => {
+    onChange(...event);
+    if (onValueChange) {
+      const value = form.watch(field.name);
+      onValueChange(value);
+    }
+  };
 
   return (
     <>
       <FormLabel>{label}</FormLabel>
       <FormControl ref={ref}>
-        <Input onChange={onChange} value={value ?? ''} {...restProps} />
+        <Input {...restSchemaProps} {...restFieldProps} onChange={handleChange} value={value} />
       </FormControl>
     </>
   );

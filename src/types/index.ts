@@ -39,10 +39,14 @@ export interface DataSection {
   data: DataItem[];
 }
 
-export interface ApiFormOptions {
-  group?: Option[];
-  quizbatch?: Option[];
-  classBatch?: Option[];
-  popupFormName?: Option[];
-  signupFormName?: Option[];
+interface ExtenedOptions extends Option {
+  [key: string]: any;
 }
+
+export interface ApiFormOptions {
+  group?: ExtenedOptions[];
+  batch?: ExtenedOptions[];
+  popupForm?: ExtenedOptions[];
+  signupForm?: ExtenedOptions[];
+}
+
