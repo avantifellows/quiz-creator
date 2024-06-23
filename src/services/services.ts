@@ -164,9 +164,7 @@ export async function getAllOptions(): Promise<ApiFormOptions> {
 
 export async function getAuthGroups() {
   try {
-    const { data } = await instance.get<Record<string, string>[]>(`/auth-group/select-columns`, {
-      params: { columns: 'id,name' },
-    });
+    const { data } = await instance.get<Record<string, string>[]>(`/auth-group`);
 
     const authGroups = data?.map((item) => ({
       label: item.name,
@@ -183,9 +181,7 @@ export async function getAuthGroups() {
 
 export async function getBatches() {
   try {
-    const { data } = await instance.get<Record<string, string>[]>(`/batch/select-columns`, {
-      params: { columns: 'name,id,parent_id,batch_id,auth_group_id' },
-    });
+    const { data } = await instance.get<Record<string, string>[]>(`/batch`);
 
     const batches = data?.map((item) => ({
       label: item.name,
@@ -204,9 +200,7 @@ export async function getBatches() {
 
 export async function getFormSchemas() {
   try {
-    const { data } = await instance.get<Record<string, string>[]>(`/form-schema/select-columns`, {
-      params: { columns: 'id,name' },
-    });
+    const { data } = await instance.get<Record<string, string>[]>(`/form-schema`);
 
     const formSchemas = data?.map((item) => ({
       label: item.name,
