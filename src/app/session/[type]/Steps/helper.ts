@@ -31,7 +31,13 @@ export const setGroupDefaults = (
           id_generation: false,
           redirection: false,
           signup_form: true,
+          signup_form_id:
+            Number(apiOptions.signupForm?.find((item) => item.label.includes('Haryana'))?.value) ??
+            null,
           popup_form: true,
+          popup_form_id:
+            Number(apiOptions.popupForm?.find((item) => item.label.includes('Haryana'))?.value) ??
+            null,
           meta_data: {
             number_of_fields_in_popup_form: 3,
           },
@@ -47,9 +53,15 @@ export const setGroupDefaults = (
           type: 'sign-in',
           auth_type: AuthType.IDDOB,
           signup_form: true,
+          signup_form_id:
+            Number(apiOptions.signupForm?.find((item) => item.label.includes('Enable'))?.value) ??
+            null,
           id_generation: true,
           redirection: true,
           popup_form: true,
+          popup_form_id:
+            Number(apiOptions.popupForm?.find((item) => item.label.includes('Enable'))?.value) ??
+            null,
           meta_data: {
             number_of_fields_in_popup_form: 3,
           },
@@ -68,8 +80,10 @@ export const setGroupDefaults = (
           type: 'sign-in',
           auth_type: AuthType.ID,
           signup_form: false,
+          signup_form_id: null,
           id_generation: false,
           redirection: true,
+          popup_form_id: null,
           popup_form: false,
           meta_data: {
             number_of_fields_in_popup_form: '',
@@ -86,8 +100,10 @@ export const setGroupDefaults = (
           type: 'sign-in',
           auth_type: AuthType.IDDOB,
           signup_form: false,
+          signup_form_id: null,
           id_generation: false,
           redirection: true,
+          popup_form_id: null,
           popup_form: false,
           meta_data: {
             number_of_fields_in_popup_form: '',
@@ -105,8 +121,8 @@ export const setGroupDefaults = (
       (item) => item.groupId === authGroupId && !item.parentId
     );
 
-    (fieldsSchema.quizBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
-    (fieldsSchema.classBatch as MySelectProps).options = [];
+    (fieldsSchema.batch as MySelectProps).options = filteredQuizBatchOptions ?? [];
+    (fieldsSchema.subBatch as MySelectProps).options = [];
 
     updateFormData((prev) => {
       return {
@@ -134,6 +150,6 @@ export const setBatchOptions = (
   const filteredClassBatchOptions = apiOptions?.batch?.filter(
     (item) => item.parentId === quizBatchId
   );
-  form?.setValue('classBatch', '');
-  (fieldsSchema.classBatch as MySelectProps).options = filteredClassBatchOptions ?? [];
+  form?.setValue('subBatch', '');
+  (fieldsSchema.subBatch as MySelectProps).options = filteredClassBatchOptions ?? [];
 };

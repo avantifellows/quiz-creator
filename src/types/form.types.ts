@@ -15,8 +15,8 @@ import { z } from 'zod';
 
 export const basicSchema = z.object({
   group: z.string({ required_error: 'This field is required' }),
-  quizBatch: z.string({ required_error: 'This field is required' }),
-  classBatch: z.string({ required_error: 'This field is required' }),
+  batch: z.string({ required_error: 'This field is required' }),
+  subBatch: z.string({ required_error: 'This field is required' }),
   grade: z.coerce
     .number({ required_error: 'This field is required' })
     .refine(
@@ -42,8 +42,8 @@ export const basicSchema = z.object({
     .or(z.string().nullable()),
   isRedirection: z.coerce.boolean(),
   isIdGeneration: z.coerce.boolean(),
-  signupFormId: z.coerce.number().optional(),
-  popupFormId: z.coerce.number().optional(),
+  signupFormId: z.coerce.number().optional().nullable(),
+  popupFormId: z.coerce.number().optional().nullable(),
   platform: z
     .string({ required_error: 'This field is required' })
     .refine(

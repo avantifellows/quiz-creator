@@ -1,7 +1,7 @@
 import { KeysToDeleteBeforeDuplicate } from '@/Constants';
 import StepsController from '@/app/session/[type]/Steps';
 import { deleteByPath } from '@/lib/utils';
-import { getASession, getOptions } from '@/services/services';
+import { getASession, getAllOptions } from '@/services/services';
 import { Session, SessionParams, SessionSearchParams, SessionType, Steps } from '@/types';
 import { notFound } from 'next/navigation';
 
@@ -38,7 +38,7 @@ export default async function SessionCreator({
     sessionData = {};
   }
 
-  const options = await getOptions();
+  const options = await getAllOptions();
 
   return <StepsController activeStep={step as Steps} sessionData={sessionData} options={options} />;
 }

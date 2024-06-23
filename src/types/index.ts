@@ -49,4 +49,3 @@ export interface ApiFormOptions {
   popupForm?: ExtenedOptions[];
   signupForm?: ExtenedOptions[];
 }
-

@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DataSection, Session } from '@/types';
+import { DataSection, Option, Session } from '@/types';
 import { Check, LinkIcon, MoreHorizontal, X } from 'lucide-react';
 import Link from 'next/link';
 
@@ -158,25 +158,33 @@ export const columns: ColumnDef<Session>[] = [
   },
 ];
 
-export const displayData = (data: Session) => {
+export const displayData = (data: Session, formSchema: Option[]) => {
   const basicDetails: DataSection = {
     title: 'Basic Details',
     data: [
-      { label: 'Platform', value: data.platform },
       { label: 'Program', value: data.meta_data?.group },
       { label: 'Batch', value: data.meta_data?.batch },
+      { label: 'Sub Batch', value: data.meta_data?.sub_batch },
       { label: 'Grade', value: data.meta_data?.grade },
-      { label: 'Session Type', value: data.type },
       { label: 'Auth Type', value: data.auth_type },
-      { label: 'Activate Sign-Up', value: data.is_active ? 'Yes' : 'No' },
-      { label: 'Is pop up form allowed', value: data.popup_form ? 'Yes' : 'No' },
+      { label: 'Platform', value: data.platform },
+      { label: 'Session Type', value: data.type },
+      { label: 'Is signup form', value: data.signup_form ? 'Yes' : 'No' },
+      {
+        label: 'Signup Form Name',
+        value: formSchema.find((i) => i.value === data.signup_form_id)?.label ?? 'N/A',
+      },
+      { label: 'Is pop up form allowed?', value: data.popup_form ? 'Yes' : 'No' },
+      {
+        label: 'Popup Form Name',
+        value: formSchema.find((i) => i.value === data.popup_form_id)?.label ?? 'N/A',
+      },
       {
         label: 'Number fields in pop up form',
         value: data.meta_data?.number_of_fields_in_popup_form,
       },
       { label: 'Is redirection allowed', value: data.redirection ? 'Yes' : 'No' },
       { label: 'Is Id generation allowed', value: data.id_generation ? 'Yes' : 'No' },
-      { label: 'Signup form name', value: data.meta_data?.signup_form_name ?? 'N/A' },
     ],
   };
 

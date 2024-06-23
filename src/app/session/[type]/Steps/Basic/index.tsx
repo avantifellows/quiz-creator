@@ -30,20 +30,20 @@ const BasicForm: FC = () => {
       onValueChange: (value, form) =>
         setGroupDefaults(value, apiOptions, fieldsSchema, updateFormData, form),
     },
-    quizBatch: {
+    batch: {
       required: true,
       type: 'select',
       placeholder: 'Select a batch',
-      label: 'Quiz Batch',
+      label: 'Batch',
       disabled: type === SessionType.EDIT,
       onValueChange: (value, form) => {
         setBatchOptions(value, apiOptions, fieldsSchema, updateFormData, form);
       },
     },
-    classBatch: {
+    subBatch: {
       type: 'select',
-      placeholder: 'Select a batch',
-      label: 'Class Batch',
+      placeholder: 'Select a sub batch',
+      label: 'Sub Batch',
       disabled: type === SessionType.EDIT,
     },
     grade: {
@@ -115,8 +115,8 @@ const BasicForm: FC = () => {
   const defaultValues: Partial<basicFields> = useMemo(
     () => ({
       group: formData?.meta_data?.group,
-      quizBatch: formData?.meta_data?.quiz_batch,
-      classBatch: formData?.meta_data?.class_batch,
+      batch: formData?.meta_data?.batch,
+      subBatch: formData?.meta_data?.sub_batch,
       grade: formData?.meta_data?.grade,
       authType: formData?.auth_type,
       activateSignUp: formData?.signup_form,
@@ -128,8 +128,8 @@ const BasicForm: FC = () => {
       isIdGeneration: formData?.id_generation,
       platform: formData?.platform,
       sessionType: formData?.type,
-      signupFormName: formData?.signup_form_id,
-      popupFormName: formData?.popup_form_id,
+      signupFormId: formData?.signup_form_id,
+      popupFormId: formData?.popup_form_id,
     }),
     [formData]
   );
@@ -139,8 +139,8 @@ const BasicForm: FC = () => {
       meta_data: {
         ...(formData.meta_data ?? {}),
         group: data.group,
-        quiz_batch: data.quizBatch,
-        class_batch: data.classBatch,
+        batch: data.batch,
+        sub_batch: data.subBatch,
         grade: data.grade,
         number_of_fields_in_popup_form: data.noOfFieldsInPopup ?? '',
       },

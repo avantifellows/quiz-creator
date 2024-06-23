@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { createQueryString } from '@/lib/utils';
-import { Session } from '@/types';
+import { Option, Session } from '@/types';
 import {
   flexRender,
   getCoreRowModel,
@@ -28,7 +28,15 @@ import Filters from './Filters';
 import Pagination from './Pagination';
 import { SheetTableRow } from './Row';
 
-export default function DataTable({ data, hasMore }: { data: Session[]; hasMore: boolean }) {
+export default function DataTable({
+  data,
+  hasMore,
+  formSchema,
+}: {
+  data: Session[];
+  hasMore: boolean;
+  formSchema: Option[];
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -67,8 +75,6 @@ export default function DataTable({ data, hasMore }: { data: Session[]; hasMore:
     getPaginationRowModel: getPaginationRowModel(),
     pageCount: hasMore ? -1 : 0,
     manualPagination: true,
-    // manualSorting: true,
-    // manualFiltering: true,
   });
 
   useEffect(() => {
@@ -105,7 +111,7 @@ export default function DataTable({ data, hasMore }: { data: Session[]; hasMore:
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              <SheetTableRow table={table} />
+              <SheetTableRow table={table} formSchema={formSchema} />
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
