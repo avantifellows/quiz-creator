@@ -51,7 +51,7 @@ export const sessionSchema = z.object({
   popup_form: z.boolean(),
   popup_form_id: z.number().nullish(),
   portal_link: z.string().url(),
-  purpose: purposeSchema,
+  purpose: purposeSchema.or(z.string()),
   redirection: z.boolean(),
   repeat_schedule: repeatScheduleSchema,
   session_id: z.string(),

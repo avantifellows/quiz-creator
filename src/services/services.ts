@@ -1,7 +1,7 @@
 'use server';
 
 import { DATA_PER_PAGE } from '@/Constants';
-import { ApiFormOptions } from '@/types';
+import { ApiFormOptions, Platform } from '@/types';
 import { Session } from '@/types/api.types';
 import { instance } from '../lib/axios';
 import { publishMessage } from './Aws';
@@ -62,25 +62,46 @@ export async function getASession(id: number | null): Promise<Session | {}> {
  */
 export async function createSession(formData: Session) {
   try {
-    const payload: Session = {
-      ...formData,
-      session_id: '',
-      meta_data: {
-        ...formData.meta_data,
-        report_link: '',
-        shortened_link: '',
-        has_synced_to_bq: false,
-        infinite_session: false,
-        date_created: new Date(),
-      },
-      purpose: {
-        type: 'attendance',
-        params: 'quiz',
-      },
-    };
-    console.log(payload);
+    const platform = formData?.platform;
+
+    let payload: Session = {};
+
+    // Handle Payload according to Platform
+    if (platform === Platform.Quiz) {
+      payload = {
+        ...formData,
+        session_id: '',
+        meta_data: {
+          ...formData.meta_data,
+          report_link: '',
+          shortened_link: '',
+          has_synced_to_bq: false,
+          infinite_session: false,
+          date_created: new Date(),
+        },
+        purpose: {
+          type: 'attendance',
+          params: 'quiz',
+        },
+      };
+    } else {
+      payload = {
+        ...formData,
+        session_id: '',
+        meta_data: {
+          ...formData.meta_data,
+          report_link: '',
+          shortened_link: '',
+          has_synced_to_bq: false,
+          infinite_session: false,
+          date_created: new Date(),
+        },
+        purpose: '',
+      };
+    }
+    console.info('Payload generated : ', platform, payload);
     const { data } = await instance.post<Session>(`/session`, payload);
-    // publishMessage({ action: 'db_id', id: data?.id });
+    publishMessage({ action: 'db_id', id: data?.id });
     console.info(`[API SUCCESS] created session ${data?.id} : ${data}`);
     return { isSuccess: true, id: data?.id };
   } catch (error) {
