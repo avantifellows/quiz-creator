@@ -15,7 +15,7 @@ import { z } from 'zod';
 
 export const basicSchema = z.object({
   group: z.string({ required_error: 'This field is required' }),
-  batch: z.string({ required_error: 'This field is required' }),
+  parentBatch: z.string({ required_error: 'This field is required' }),
   subBatch: z.string({ required_error: 'This field is required' }),
   grade: z.coerce
     .number({ required_error: 'This field is required' })

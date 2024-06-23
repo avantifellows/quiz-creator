@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 const metaDataSchema = z.object({
   admin_testing_link: z.string().url().optional(),
-  batch: z.string().optional(),
-  sub_batch: z.string().optional(),
+  parent_id: z.string().optional(),
+  batch_id: z.string().optional(),
   cms_test_id: z.string().url().optional(),
   course: z.string().optional(),
   date_created: z.date().optional(),

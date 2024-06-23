@@ -121,7 +121,7 @@ export const setGroupDefaults = (
       (item) => item.groupId === authGroupId && !item.parentId
     );
 
-    (fieldsSchema.batch as MySelectProps).options = filteredQuizBatchOptions ?? [];
+    (fieldsSchema.parentBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
     (fieldsSchema.subBatch as MySelectProps).options = [];
 
     updateFormData((prev) => {

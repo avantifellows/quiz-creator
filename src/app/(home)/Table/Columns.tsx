@@ -163,8 +163,8 @@ export const displayData = (data: Session, formSchema: Option[]) => {
     title: 'Basic Details',
     data: [
       { label: 'Program', value: data.meta_data?.group },
-      { label: 'Batch', value: data.meta_data?.batch },
-      { label: 'Sub Batch', value: data.meta_data?.sub_batch },
+      { label: 'Quiz Batch', value: data.meta_data?.parent_id },
+      { label: 'Class Batch', value: data.meta_data?.batch_id },
       { label: 'Grade', value: data.meta_data?.grade },
       { label: 'Auth Type', value: data.auth_type },
       { label: 'Platform', value: data.platform },
