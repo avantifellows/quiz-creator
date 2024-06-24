@@ -42,7 +42,8 @@ export const columns: ColumnDef<Session>[] = [
     id: 'createdAt',
     accessorKey: 'meta_data.date_created',
     header: 'Created At',
-    cell: ({ row }) => format(new Date(row.getValue('createdAt')), 'dd/MM/yyyy'),
+    cell: ({ row }) =>
+      row.getValue('createdAt') ? format(new Date(row.getValue('createdAt')), 'dd/MM/yyyy') : 'N/A',
   },
   {
     accessorKey: 'platform',
@@ -220,7 +221,17 @@ export const displayData = (data: Session, formSchema: Option[]) => {
             },
           ],
         }
-      : null;
+      : {
+          title: 'Session Details',
+          data: [
+            { label: 'Session Name', value: data.name },
+            {
+              label: 'Platform Link',
+              value: data.platform_link ?? 'N/A',
+              isLink: !!data.platform_link,
+            },
+          ],
+        };
 
   const timeDetails: DataSection = {
     title: 'Time Details',
@@ -230,7 +241,12 @@ export const displayData = (data: Session, formSchema: Option[]) => {
       { label: 'Test Takers', value: data.meta_data?.test_takers_count },
       { label: 'Is Enabled', value: data.meta_data?.enabled ? 'Yes' : 'No' },
       { label: 'Has Synced', value: data.meta_data?.has_synced_to_bq },
-      { label: 'Created At', value: format(new Date(data.meta_data?.date_created ?? ''), 'PPp') },
+      {
+        label: 'Created At',
+        value: data.meta_data?.date_created
+          ? format(new Date(data.meta_data?.date_created), 'PPp')
+          : 'N/A',
+      },
     ],
   };
 

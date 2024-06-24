@@ -23,7 +23,7 @@ export async function getTableData(currentPage: number, limit: number) {
         offset,
         limit,
         sort_order: 'desc',
-        platform: 'quiz',
+        // platform: '',
       },
     });
     const hasMore = data.length > DATA_PER_PAGE;
