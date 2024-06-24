@@ -135,6 +135,8 @@ export const liveSchema = z.object({
   platformLink: z
     .string({ required_error: 'This field is required' })
     .url('This is not a valid url'),
+  platformId: z.string({ required_error: 'This field is required' }),
+  subject: z.string({ required_error: 'This field is required' }),
   name: z.string({ required_error: 'This field is required' }),
 });
 

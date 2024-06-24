@@ -10,14 +10,15 @@ const sns = new AWS.SNS();
 
 function publishMessage(message) {
   const TopicArn = process.env.AF_TOPIC_ARN;
-  const Message = { environment: 'production', ...message };
+  const environment = process.env.APP_ENV ?? 'production';
+  const Message = JSON.stringify({ environment, ...message });
   const params = { Message, TopicArn };
 
   sns.publish(params, (error, data) => {
     if (error) {
-      console.error('[SNS ERROR] publishing message : ', error);
+      console.error('[SNS ERROR] publishing message : ', Message, error);
     } else {
-      console.info('[SNS SUCCESS] publishing message : ', data.MessageId);
+      console.info('[SNS SUCCESS] publishing message : ', Message, data.MessageId);
     }
   });
 }

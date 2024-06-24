@@ -184,7 +184,7 @@ export async function getBatches() {
     const { data } = await instance.get<Record<string, string>[]>(`/batch`);
 
     const batches = data?.map((item) => ({
-      label: item.name,
+      label: item.batch_id,
       value: item.batch_id,
       id: item.id,
       parentId: item.parent_id,

@@ -56,7 +56,9 @@ export interface MyCheckboxProps extends Omit<CheckboxProps, 'type'>, CommonFiel
   options: Option[];
 }
 
-export interface MyInputProps extends InputHTMLAttributes<HTMLInputElement>, CommonFieldProps {}
+export interface MyInputProps extends InputHTMLAttributes<HTMLInputElement>, CommonFieldProps {
+  onValueChange?: (value: string, form: UseFormReturn) => void;
+}
 
 export interface MySwitchProps extends Omit<SwitchProps, 'type' | 'ref'>, CommonFieldProps {
   type: 'switch';

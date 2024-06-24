@@ -4,8 +4,10 @@ import {
   FieldSchema,
   Group,
   MySelectProps,
+  Platform,
   Session,
   basicFields,
+  liveFields,
 } from '@/types';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -152,4 +154,36 @@ export const setBatchOptions = (
   );
   form?.setValue('subBatch', '');
   (fieldsSchema.subBatch as MySelectProps).options = filteredClassBatchOptions ?? [];
+};
+
+export const setPlatformId = (
+  value: string,
+  formData: Session,
+  updateFormData: (data: Session | ((prevState: Session) => Session)) => void
+) => {
+  const platform = formData?.platform ?? '';
+
+  let platformId = '';
+
+  switch (platform) {
+    case Platform.Meet:
+      platformId = '';
+      break;
+    case Platform.Youtube:
+      platformId = '';
+      break;
+    case Platform.Plio:
+      platformId = '';
+      break;
+    default:
+      platformId = '';
+      break;
+  }
+
+  updateFormData((prev) => {
+    return {
+      ...prev,
+      platform_id: platformId,
+    };
+  });
 };

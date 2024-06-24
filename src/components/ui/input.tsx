@@ -29,12 +29,12 @@ const ControlledInput = React.forwardRef<
   { field: ControllerRenderProps } & { schema: MyInputProps } & { form: UseFormReturn }
 >(({ field, form, schema }, ref) => {
   const { value = '', onChange, ...restFieldProps } = field;
-  const { label, onChange: onValueChange, ...restSchemaProps } = schema;
+  const { label, onValueChange, ...restSchemaProps } = schema;
 
   React.useEffect(() => {
     if (onValueChange) {
       const value = form.watch(field.name);
-      onValueChange(value);
+      onValueChange(value, form);
     }
   }, [value, onValueChange]);
 
@@ -42,7 +42,7 @@ const ControlledInput = React.forwardRef<
     onChange(...event);
     if (onValueChange) {
       const value = form.watch(field.name);
-      onValueChange(value);
+      onValueChange(value, form);
     }
   };
 

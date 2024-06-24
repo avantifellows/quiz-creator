@@ -8,7 +8,7 @@ import QuizForm from './Quiz';
 
 const PlatformComponents = {
   [Platform.Quiz]: QuizForm,
-  [Platform.Live]: LiveForm,
+  [Platform.Youtube]: LiveForm,
   [Platform.Meet]: LiveForm,
   [Platform.Zoom]: LiveForm,
   [Platform.Plio]: LiveForm,

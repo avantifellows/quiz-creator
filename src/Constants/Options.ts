@@ -1,4 +1,4 @@
-import { AuthType, Grades, Option, Platform } from '@/types';
+import { AuthType, Grades, Option, Platform, Subjects } from '@/types';
 
 export const TestTypeOptions: Option[] = [
   { value: 'assessment', label: 'Assessment' },
@@ -76,6 +76,8 @@ export const AuthOptions: Option[] = Object.values(AuthType).map((item) => ({
   value: item,
   label: item,
 }));
+
+export const SubjectOptions = Object.values(Subjects).map((s) => ({ value: s, label: s }));
 
 export const ActiveDaysOptions: Option[] = [
   { label: 'Monday', value: 1 },
