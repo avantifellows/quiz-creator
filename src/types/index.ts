@@ -6,9 +6,10 @@ export * from './enums';
 export * from './form.types';
 export * from './formbuilder.types';
 
-export type TablePrams = {
+export type TableParams = {
   page?: string;
   per_page?: string;
+  group?: string;
 };
 
 export type SessionParams = {

@@ -7,7 +7,6 @@ import {
   Platform,
   Session,
   basicFields,
-  liveFields,
 } from '@/types';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -167,13 +166,13 @@ export const setPlatformId = (
 
   switch (platform) {
     case Platform.Meet:
-      platformId = '';
+      platformId = value.split('meet.google.com/').pop() ?? '';
       break;
     case Platform.Youtube:
-      platformId = '';
+      platformId = value.split('/watch?v=').pop() ?? '';
       break;
     case Platform.Plio:
-      platformId = '';
+      platformId = value.split('play/').pop() ?? '';
       break;
     default:
       platformId = '';
@@ -183,6 +182,7 @@ export const setPlatformId = (
   updateFormData((prev) => {
     return {
       ...prev,
+      platform_link: value,
       platform_id: platformId,
     };
   });

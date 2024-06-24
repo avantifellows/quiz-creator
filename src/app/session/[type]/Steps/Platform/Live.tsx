@@ -1,12 +1,12 @@
 'use client';
 
+import { SubjectOptions } from '@/Constants';
 import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
 import { FieldSchema, Session, SessionParams, Steps, liveFields, liveSchema } from '@/types';
 import { useParams } from 'next/navigation';
 import { useCallback, useMemo, type FC } from 'react';
 import { setPlatformId } from '../helper';
-import { SubjectOptions } from '@/Constants';
 
 const QuizForm: FC = () => {
   const { type } = useParams<SessionParams>();

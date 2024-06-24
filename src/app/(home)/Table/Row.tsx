@@ -3,14 +3,14 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { Option, Session } from '@/types';
 import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
 import Link from 'next/link';
-import { displayData } from './Columns';
+import { displayData } from '../ModalData';
 
 export const SheetTableRow = ({
   table,
-  formSchema,
+  formOptions,
 }: {
   table: TanStackTable<Session>;
-  formSchema: Option[];
+  formOptions: Option[];
 }) => {
   return table.getRowModel().rows.map((row) => (
     <Sheet key={row.id}>
@@ -28,7 +28,7 @@ export const SheetTableRow = ({
           <SheetHeader className="border-b text-center sm:text-center">
             <SheetTitle>Session Details</SheetTitle>
           </SheetHeader>
-          {displayData(row.original, formSchema).map((section, index) => (
+          {displayData(row.original, formOptions).map((section, index) => (
             <div key={section.title + index} className="flex flex-col gap-2 py-4">
               <h4 className="font-bold text-lg underline">{section.title}</h4>
               <ul className="flex justify-between flex-wrap gap-y-2">

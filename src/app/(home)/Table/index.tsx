@@ -18,12 +18,12 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  type ColumnDef,
   type ColumnFiltersState,
   type SortingState,
 } from '@tanstack/react-table';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { columns } from './Columns';
 import Filters from './Filters';
 import Pagination from './Pagination';
 import { SheetTableRow } from './Row';
@@ -31,11 +31,13 @@ import { SheetTableRow } from './Row';
 export default function DataTable({
   data,
   hasMore,
-  formSchema,
+  formOptions,
+  columns,
 }: {
+  columns: ColumnDef<Session>[];
   data: Session[];
   hasMore: boolean;
-  formSchema: Option[];
+  formOptions: Option[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -64,6 +66,7 @@ export default function DataTable({
         endDate: false,
         createdAt: false,
         testTakersCount: false,
+        group: false,
       },
     },
     onSortingChange: setSorting,
@@ -111,7 +114,7 @@ export default function DataTable({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              <SheetTableRow table={table} formSchema={formSchema} />
+              <SheetTableRow table={table} formOptions={formOptions} />
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">

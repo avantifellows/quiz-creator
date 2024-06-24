@@ -5,7 +5,7 @@ const NAV_LINKS = [
   { label: 'Quizzing Engine', path: '/' },
   {
     label: 'Live Sessions',
-    path: '/',
+    path: '/live',
   },
 ];
 
