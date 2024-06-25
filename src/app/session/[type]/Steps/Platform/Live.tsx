@@ -23,7 +23,7 @@ const QuizForm: FC = () => {
         type: 'text',
         label: 'Platform link',
         placeholder: 'Enter platform link',
-        onValueChange: (value, form) => setPlatformId(value, formData, updateFormData),
+        onValueChange: (value, form) => setPlatformId(value, formData, updateFormData, form),
       },
       platformId: {
         type: 'text',
