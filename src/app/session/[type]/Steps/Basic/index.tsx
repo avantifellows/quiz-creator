@@ -37,7 +37,7 @@ const BasicForm: FC = () => {
       label: 'Quiz Batch',
       disabled: type === SessionType.EDIT,
       onValueChange: (value, form) => {
-        setBatchOptions(value, apiOptions, fieldsSchema, updateFormData, form);
+        setBatchOptions(value, form, apiOptions, fieldsSchema);
       },
     },
     subBatch: {
@@ -137,7 +137,6 @@ const BasicForm: FC = () => {
   const onSubmit = useCallback((data: basicFields) => {
     const addedData: Session = {
       meta_data: {
-        ...(formData.meta_data ?? {}),
         group: data.group,
         parent_id: data.parentBatch,
         batch_id: data.subBatch,

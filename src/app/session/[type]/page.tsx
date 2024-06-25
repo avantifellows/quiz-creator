@@ -40,5 +40,5 @@ export default async function SessionCreator({
 
   const options = await getAllOptions();
 
-  return <StepsController activeStep={step as Steps} sessionData={sessionData} options={options} />;
+  return <StepsController sessionData={sessionData} options={options} />;
 }

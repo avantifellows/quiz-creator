@@ -3,7 +3,15 @@
 import { SubjectOptions } from '@/Constants';
 import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
-import { FieldSchema, Session, SessionParams, SessionType, Steps, liveFields, liveSchema } from '@/types';
+import {
+  FieldSchema,
+  Session,
+  SessionParams,
+  SessionType,
+  Steps,
+  liveFields,
+  liveSchema,
+} from '@/types';
 import { useParams } from 'next/navigation';
 import { useCallback, useMemo, type FC } from 'react';
 import { setPlatformId } from '../helper';
@@ -24,7 +32,7 @@ const QuizForm: FC = () => {
         label: 'Platform link',
         placeholder: 'Enter platform link',
         disabled: type === SessionType.EDIT,
-        onValueChange: (value, form) => setPlatformId(value, formData, updateFormData, form),
+        onValueChange: (value, form) => setPlatformId(value, form),
       },
       platformId: {
         type: 'text',
@@ -38,12 +46,14 @@ const QuizForm: FC = () => {
         options: SubjectOptions,
         placeholder: 'Select a subject',
       },
+      platform: { hide: true },
     }),
     []
   );
 
   const defaultValues: Partial<liveFields> = useMemo(
     () => ({
+      platform: formData.platform,
       name: formData.name,
       platformLink: formData.platform_link,
       platformId: formData.platform_id,
@@ -57,10 +67,7 @@ const QuizForm: FC = () => {
       name: data.name,
       platform_link: data.platformLink,
       platform_id: data.platformId,
-      meta_data: {
-        ...(formData.meta_data ?? {}),
-        subject: data.subject,
-      },
+      meta_data: { subject: data.subject },
     };
     updateFormData(addedData, Steps.TIMELINE);
   }, []);

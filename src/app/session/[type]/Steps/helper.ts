@@ -124,55 +124,47 @@ export const setGroupDefaults = (
     (fieldsSchema.parentBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
     (fieldsSchema.subBatch as MySelectProps).options = [];
 
-    updateFormData((prev) => {
-      return {
-        ...prev,
-        ...newDefaultData,
-        meta_data: {
-          ...prev.meta_data,
-          ...newDefaultData.meta_data,
-          group: value,
-        },
-      };
+    updateFormData({
+      ...newDefaultData,
+      meta_data: { ...newDefaultData.meta_data, group: value },
     });
   }
 };
 
 export const setBatchOptions = (
   value: string,
+  form: UseFormReturn,
   apiOptions: ApiFormOptions,
-  fieldsSchema: FieldSchema<basicFields>,
-  updateFormData: (data: Session | ((prevState: Session) => Session)) => void,
-  form?: UseFormReturn
+  fieldsSchema: FieldSchema<basicFields>
 ) => {
   const quizBatchId = apiOptions.batch?.find((item) => item.value === value)?.id;
 
   const filteredClassBatchOptions = apiOptions?.batch?.filter(
     (item) => item.parentId === quizBatchId
   );
-  form?.setValue('subBatch', '');
+  form.setValue('subBatch', '');
   (fieldsSchema.subBatch as MySelectProps).options = filteredClassBatchOptions ?? [];
 };
 
-export const setPlatformId = (
-  value: string,
-  formData: Session,
-  updateFormData: (data: Session | ((prevState: Session) => Session)) => void,
-  form?: UseFormReturn
-) => {
-  let platformId = '';
-
+export const setPlatformId = (value: string, form?: UseFormReturn) => {
+  let seperator = null;
   if (value?.includes('meet.google.com')) {
-    platformId = value.split('meet.google.com/').pop() ?? '';
+    seperator = 'meet.google.com/';
   } else if (value?.includes('youtube.com')) {
-    platformId = value.split('/watch?v=').pop() ?? '';
-  } else if (value?.includes('plio')) {
-    platformId = value.split('play/').pop() ?? '';
+    seperator = 'youtube.com/watch?v=';
+  } else if (value?.includes('plio.in')) {
+    seperator = 'play/';
   } else if (value?.includes('zoom')) {
-    platformId = value.split('j/').pop() ?? '';
+    seperator = 'zoom.us/j/';
   } else {
-    platformId = '';
+    seperator = null;
   }
 
-  form?.setValue('platformId', platformId);
+  if (seperator) {
+    const urlArr = value.split(seperator);
+    if (urlArr.length > 1) {
+      const platformId = urlArr[urlArr.length - 1];
+      form?.setValue('platformId', platformId);
+    }
+  }
 };

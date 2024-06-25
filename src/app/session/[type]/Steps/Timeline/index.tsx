@@ -58,7 +58,6 @@ const TimelineForm: FC = () => {
   const onSubmit = useCallback(async (data: timelineFields) => {
     const addedData: Session = {
       meta_data: {
-        ...(formData.meta_data ?? {}),
         test_takers_count: data.testTakers,
         enabled: data.isEnabled ? 1 : 0,
       },

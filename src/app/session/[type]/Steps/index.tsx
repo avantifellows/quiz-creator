@@ -1,14 +1,16 @@
+'use client';
+
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import Stepper from '@/components/ui/stepper';
 import { FormDataProvider } from '@/hooks/useFormContext';
 import { ApiFormOptions, Session, StepperSteps, Steps } from '@/types';
-import { memo } from 'react';
-import Stepper from '../../../../components/ui/stepper';
+import { useSearchParams } from 'next/navigation';
+import { memo, useMemo } from 'react';
 import Basic from './Basic';
 import Platform from './Platform';
 import Timeline from './Timeline';
 
 interface StepsControllerProps {
-  activeStep: Steps;
   sessionData: Session;
   options: ApiFormOptions;
 }
@@ -19,8 +21,11 @@ const StepForms: StepperSteps = {
   [Steps.TIMELINE]: { component: Timeline, label: 'Timeline Details' },
 };
 
-const StepsController = ({ activeStep, sessionData, options }: StepsControllerProps) => {
-  const DynamicForm = StepForms[activeStep].component ?? null;
+const StepsController = ({ sessionData, options }: StepsControllerProps) => {
+  const searchParams = useSearchParams();
+  const activeStep = (searchParams.get('step') as Steps) ?? Steps.BASIC;
+
+  const DynamicForm = useMemo(() => StepForms[activeStep].component ?? null, [activeStep]);
 
   return (
     <main className="md:container mx-auto">
