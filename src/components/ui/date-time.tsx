@@ -14,7 +14,7 @@ const DateTimePicker = forwardRef<
   ElementRef<typeof FormControl>,
   { schema: MyDateTimeProps } & { field: ControllerRenderProps } & { form: UseFormReturn }
 >(({ field, form, schema }, ref) => {
-  const { value, onChange, ...restFieldProps } = field;
+  const { value, onChange, ref: refField, ...restFieldProps } = field;
   const { label, disabled, disableRange, ...restSchemaProps } = schema;
 
   return (
@@ -29,6 +29,7 @@ const DateTimePicker = forwardRef<
                 'justify-start text-left font-normal',
                 !value && 'text-muted-foreground'
               )}
+              ref={refField}
               disabled={disabled}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
