@@ -3,7 +3,7 @@
 import { SubjectOptions } from '@/Constants';
 import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
-import { FieldSchema, Session, SessionParams, Steps, liveFields, liveSchema } from '@/types';
+import { FieldSchema, Session, SessionParams, SessionType, Steps, liveFields, liveSchema } from '@/types';
 import { useParams } from 'next/navigation';
 import { useCallback, useMemo, type FC } from 'react';
 import { setPlatformId } from '../helper';
@@ -23,12 +23,14 @@ const QuizForm: FC = () => {
         type: 'text',
         label: 'Platform link',
         placeholder: 'Enter platform link',
+        disabled: type === SessionType.EDIT,
         onValueChange: (value, form) => setPlatformId(value, formData, updateFormData, form),
       },
       platformId: {
         type: 'text',
         label: 'Platform ID',
         placeholder: 'Enter platform Id',
+        disabled: type === SessionType.EDIT,
       },
       subject: {
         type: 'select',

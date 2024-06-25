@@ -73,6 +73,29 @@ export const columns: ColumnDef<Session>[] = [
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex p-1"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <LinkIcon className="size-4 mx-auto cursor-pointer" />
+          </Link>
+        ) : (
+          '-'
+        )}
+      </>
+    ),
+  },
+  {
+    id: 'portalLink',
+    accessorKey: 'portal_link',
+    header: 'Portal Link',
+    cell: ({ row }) => (
+      <>
+        {row.getValue('portalLink') ? (
+          <Link
+            href={row.getValue('portalLink')}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex p-1"
+            onClick={(event) => event.stopPropagation()}
           >
             <LinkIcon className="size-4 mx-auto cursor-pointer" />
           </Link>

@@ -31,7 +31,7 @@ export const SheetTableRow = ({
           {displayData(row.original, formOptions).map((section, index) => (
             <div key={section.title + index} className="flex flex-col gap-2 py-4">
               <h4 className="font-bold text-lg underline">{section.title}</h4>
-              <ul className="flex justify-between flex-wrap gap-y-2">
+              <ul className="flex justify-between flex-wrap gap-y-4">
                 {section.data.map((item) => (
                   <li key={item.label + index} className="w-1/2 lg:w-1/3 pr-4 break-words">
                     <h4 className="font-semibold capitalize">{item.label}</h4>

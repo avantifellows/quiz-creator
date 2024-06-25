@@ -21,7 +21,7 @@ const DateTimePicker = forwardRef<
     <div className="flex flex-col gap-4">
       <FormLabel className="self-start">{label}</FormLabel>
       <Popover>
-        <FormControl ref={ref}>
+        <FormControl>
           <PopoverTrigger asChild>
             <Button
               variant="outline"

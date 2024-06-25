@@ -1,7 +1,7 @@
 import { DataSection, Option, Session } from '@/types';
 import { format } from 'date-fns';
 
-export const displayData = (data: Session, formSchema: Option[]) => {
+export const displayData = (data: Session, formOptions: Option[]) => {
   const basicDetails: DataSection = {
     title: 'Basic Details',
     data: [
@@ -15,12 +15,12 @@ export const displayData = (data: Session, formSchema: Option[]) => {
       { label: 'Is signup form', value: data.signup_form ? 'Yes' : 'No' },
       {
         label: 'Signup Form Name',
-        value: formSchema.find((i) => i.value === data.signup_form_id)?.label ?? 'N/A',
+        value: formOptions.find((i) => i.value === data.signup_form_id)?.label ?? 'N/A',
       },
       { label: 'Is pop up form allowed?', value: data.popup_form ? 'Yes' : 'No' },
       {
         label: 'Popup Form Name',
-        value: formSchema.find((i) => i.value === data.popup_form_id)?.label ?? 'N/A',
+        value: formOptions.find((i) => i.value === data.popup_form_id)?.label ?? 'N/A',
       },
       {
         label: 'Number fields in pop up form',
@@ -67,18 +67,13 @@ export const displayData = (data: Session, formSchema: Option[]) => {
           title: 'Session Details',
           data: [
             { label: 'Session Name', value: data.name },
+            { label: 'Subject', value: data.meta_data?.subject ?? 'N/A' },
+            { label: 'Portal Link', value: data.portal_link ?? 'N/A', isLink: !!data.portal_link },
+            { label: 'Platform ID', value: data.platform_id ?? 'N/A' },
             {
               label: 'Platform Link',
               value: data.platform_link ?? 'N/A',
               isLink: !!data.platform_link,
-            },
-            {
-              label: 'Platform ID',
-              value: data.platform_id ?? 'N/A',
-            },
-            {
-              label: 'Subject',
-              value: data.meta_data?.subject ?? 'N/A',
             },
           ],
         };

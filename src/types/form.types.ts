@@ -101,18 +101,14 @@ export const quizSchema = z.object({
 });
 
 export const timelineSchema = z.object({
-  startDate: z.coerce
-    .date({
-      required_error: 'This field is required',
-      message: 'This is not a valid date and time',
-    })
-    .min(new Date(), 'Start date cannot be in the past'),
-  endDate: z.coerce
-    .date({
-      required_error: 'This field is required',
-      message: 'This is not a valid date and time',
-    })
-    .min(new Date(), 'End date cannot be in the past'),
+  startDate: z.coerce.date({
+    required_error: 'This field is required',
+    message: 'This is not a valid date and time',
+  }),
+  endDate: z.coerce.date({
+    required_error: 'This field is required',
+    message: 'This is not a valid date and time',
+  }),
   isEnabled: z.coerce.boolean(),
   activeDays: z.array(
     z
