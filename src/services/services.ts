@@ -99,10 +99,6 @@ export async function createSession(formData: Session) {
         session_id: '',
         meta_data: {
           ...formData.meta_data,
-          report_link: '',
-          shortened_link: '',
-          has_synced_to_bq: false,
-          infinite_session: false,
           date_created: new Date(),
         },
         purpose: '',

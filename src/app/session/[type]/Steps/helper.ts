@@ -4,7 +4,6 @@ import {
   FieldSchema,
   Group,
   MySelectProps,
-  Platform,
   Session,
   basicFields,
 } from '@/types';
@@ -160,25 +159,35 @@ export const setPlatformId = (
   formData: Session,
   updateFormData: (data: Session | ((prevState: Session) => Session)) => void
 ) => {
-  const platform = formData?.platform ?? '';
-
   let platformId = '';
 
-  switch (platform) {
-    case Platform.Meet:
-      platformId = value.split('meet.google.com/').pop() ?? '';
-      break;
-    case Platform.Youtube:
-      platformId = value.split('/watch?v=').pop() ?? '';
-      break;
-    case Platform.Plio:
-      platformId = value.split('play/').pop() ?? '';
-      break;
-    default:
-      platformId = '';
-      break;
+  if (value?.includes('meet.google.com')) {
+    platformId = value.split('meet.google.com/').pop() ?? '';
+  } else if (value?.includes('youtube.com')) {
+    platformId = value.split('/watch?v=').pop() ?? '';
+  } else if (value?.includes('plio')) {
+    platformId = value.split('play/').pop() ?? '';
+  } else if (value.includes('zoom')) {
+    platformId = value.split('j/').pop() ?? '';
+  } else {
+    platformId = '';
   }
 
+  // const platform = formData?.platform ?? '';
+  // switch (platform) {
+  //   case Platform.Meet:
+  //     platformId = value.split('meet.google.com/').pop() ?? '';
+  //     break;
+  //   case Platform.Youtube:
+  //     platformId = value.split('/watch?v=').pop() ?? '';
+  //     break;
+  //   case Platform.Plio:
+  //     platformId = value.split('play/').pop() ?? '';
+  //     break;
+  //   default:
+  //     platformId = '';
+  //     break;
+  // }
   updateFormData((prev) => {
     return {
       ...prev,
