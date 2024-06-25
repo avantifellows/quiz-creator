@@ -1,7 +1,7 @@
 'use client';
 
 import { createSession, patchSession } from '@/services/services';
-import { ApiFormOptions, Session, SessionParams, SessionType, Steps } from '@/types';
+import { ApiFormOptions, Platform, Session, SessionParams, SessionType, Steps } from '@/types';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
   ReactNode,
@@ -77,27 +77,30 @@ export const FormDataProvider = ({
       (async () => {
         let toastId: string | number | null = null;
         let success: boolean | undefined = false;
+        let message = '';
         if (params.type === SessionType.EDIT) {
           toastId = toast.loading('Updating session...');
           const { isSuccess } = await patchSession(formData, Number(id));
           success = isSuccess;
+          message = 'Session updated successfully';
         } else {
           toastId = toast.loading('Creating session...');
           const { isSuccess } = await createSession(formData);
           success = isSuccess;
+          message = 'Session created successfully';
         }
         setIsSubmiting(false);
         toast.dismiss(toastId);
         if (success) {
           sessionStorage.removeItem(sessionKey);
-          toast.success('Session created successfully', {
+          toast.success(message, {
             description:
               'The links will be available/updated shortly. Please refresh the page after a while.',
             duration: 5000,
           });
-          router.push('/');
+          router.push(formData.platform === Platform.Quiz ? '/' : '/live');
         } else {
-          toast.error('Failed to create session', {
+          toast.error('Something went wrong', {
             description: 'Please try again later.',
             duration: 5000,
           });
@@ -110,7 +113,11 @@ export const FormDataProvider = ({
     (data: Session | ((prevState: Session) => Session), nextStep?: Steps) => {
       setFormData((prevFormData) => {
         const newData = typeof data === 'function' ? data(prevFormData) : data;
-        const updatedData = { ...prevFormData, ...newData };
+        const updatedData: Session = {
+          ...prevFormData,
+          ...newData,
+          meta_data: { ...(prevFormData.meta_data ?? {}), ...(newData.meta_data ?? {}) },
+        };
         sessionStorage.setItem(sessionKey, JSON.stringify(updatedData));
         return updatedData;
       });
@@ -124,10 +131,9 @@ export const FormDataProvider = ({
 
   const pushStep = useCallback(
     (step: Steps | string) => {
-      const route = `/session/${params.type}?step=${step}${id ? `&id=${id}` : ''}`;
-      router.push(route);
+      window.history.pushState(null, '', `?step=${step}${id ? `&id=${id}` : ''}`);
     },
-    [router, params, searchParams]
+    [id]
   );
 
   const submitForm = useCallback(() => setIsSubmiting(true), []);

@@ -107,7 +107,12 @@ export const quizSchema = z.object({
       (value) => TestPurposeOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
-  cmsUrl: z.string({ required_error: 'This field is required' }).url('This is not a valid url'),
+  cmsUrl: z
+    .string({ required_error: 'This field is required' })
+    .url('This is not a valid url')
+    .includes('cms.peerlearning.com', {
+      message: 'This is not a valid cms url, please use https://cms.peerlearning.com',
+    }),
   name: z.string({ required_error: 'This field is required' }),
   testType: z
     .string({ required_error: 'This field is required' })
