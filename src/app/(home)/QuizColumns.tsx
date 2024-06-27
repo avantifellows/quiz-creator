@@ -10,9 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { patchSession, sendCreateSns } from '@/services/services';
 import { Session } from '@/types';
 import { Check, LinkIcon, MoreHorizontal, X } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export const columns: ColumnDef<Session>[] = [
   {
@@ -129,7 +131,7 @@ export const columns: ColumnDef<Session>[] = [
   },
   {
     id: 'isEnabled',
-    accessorKey: 'meta_data.enabled',
+    accessorKey: 'is_active',
     header: 'Enabled',
     cell: ({ row }) =>
       row.getValue('isEnabled') ? (
@@ -157,6 +159,43 @@ export const columns: ColumnDef<Session>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="cursor-pointer">
               <Link href={`/session/duplicate?id=${row.original.id}`}>Duplicate</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Button
+                variant="ghost"
+                className="w-full focus-visible:ring-0 justify-start"
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  await patchSession(
+                    {
+                      is_active: !row.original.is_active,
+                    },
+                    row.original.id ?? 0
+                  );
+                  toast.success(
+                    row.original.is_active ? 'Disabled the session' : 'Enabled the session',
+                    { description: 'Please refresh the page after a while.' }
+                  );
+                }}
+              >
+                {row.original.is_active ? 'Disable' : 'Enable'} Session
+              </Button>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Button
+                variant="ghost"
+                className="w-full focus-visible:ring-0 justify-start"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  sendCreateSns(row.original.id);
+                  toast.success('Request send successfully', {
+                    description:
+                      'The links will be available/updated shortly. Please refresh the page after a while.',
+                  });
+                }}
+              >
+                Regenerate Links
+              </Button>
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="cursor-pointer">
               <Link href={`/session?id=${row.original.id}`}>View Details</Link>

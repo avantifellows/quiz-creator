@@ -88,7 +88,6 @@ const QuizForm: FC = () => {
       showAnswers: {
         type: 'switch',
         label: 'Show answers?',
-        helperText: 'Do you want to show answers?',
       },
     }),
     []

@@ -1,7 +1,9 @@
+import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Option, Session } from '@/types';
 import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
+import { Copy } from 'lucide-react';
 import Link from 'next/link';
 import { displayData } from '../ModalData';
 
@@ -34,7 +36,10 @@ export const SheetTableRow = ({
               <ul className="flex justify-between flex-wrap gap-y-4">
                 {section.data.map((item) => (
                   <li key={item.label + index} className="w-1/2 lg:w-1/3 pr-4 break-words">
-                    <h4 className="font-semibold capitalize">{item.label}</h4>
+                    <h4 className="font-semibold capitalize inline-flex items-center flex-nowrap gap-1">
+                      {item.label}
+                      {item.isLink ? <CopyBtn value={item.value} /> : null}
+                    </h4>
                     {item.isLink ? (
                       <Link
                         href={item.value}
@@ -56,4 +61,16 @@ export const SheetTableRow = ({
       </>
     </Sheet>
   ));
+};
+
+const CopyBtn = ({ value }: { value: string }) => {
+  return (
+    <Button
+      variant="ghost"
+      className="p-1 h-auto"
+      onClick={() => navigator.clipboard.writeText(value)}
+    >
+      <Copy className="size-4" />
+    </Button>
+  );
 };

@@ -104,9 +104,9 @@ export async function createSession(formData: Session) {
         purpose: '',
       };
     }
-    console.info('Payload generated : ', platform, payload);
+    console.info(`[PAYLOAD] generated for ${platform} : ${payload}`);
     const { data } = await instance.post<Session>(`/session`, payload);
-    publishMessage({ action: 'db_id', id: data?.id });
+    sendCreateSns(data.id);
     console.info(`[API SUCCESS] created session ${data?.id} : ${data}`);
     return { isSuccess: true, id: data?.id };
   } catch (error) {
@@ -114,6 +114,8 @@ export async function createSession(formData: Session) {
     return { isSuccess: false };
   }
 }
+
+export const sendCreateSns = (id?: number) => publishMessage({ action: 'db_id', id });
 
 /**
  * Patches a session on the server.

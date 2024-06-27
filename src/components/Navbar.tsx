@@ -4,7 +4,7 @@ import Link from 'next/link';
 const NAV_LINKS = [
   { label: 'Quizzing Engine', path: '/' },
   {
-    label: 'Live Sessions',
+    label: 'Live Classes',
     path: '/live',
   },
 ];
@@ -21,7 +21,7 @@ const Navbar = () => {
           <span className="text-2xl md:text-3xl text-bold">M</span>ANAGER
         </h1>
       </nav>
-      <nav className="flex flex-row items-center gap-4 bg-primary text-primary-foreground w-full h-16 px-4 md:px-8">
+      <nav className="flex flex-row items-center gap-6 bg-primary text-primary-foreground w-full h-16 px-4 md:px-8">
         {NAV_LINKS.map((link) => (
           <Link href={link.path} key={link.label} className="font-medium hover:font-semibold">
             {link.label}
