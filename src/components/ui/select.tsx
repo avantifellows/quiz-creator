@@ -7,6 +7,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { MySelectProps } from '@/types';
 import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
+import { Button } from './button';
 import { FormControl, FormLabel } from './form';
 
 const Select = SelectPrimitive.Root;
@@ -146,6 +147,8 @@ const ControlledSelectField = React.forwardRef<
   React.ElementRef<typeof FormControl>,
   { field: ControllerRenderProps } & { schema: MySelectProps } & { form: UseFormReturn }
 >(({ field, form, schema }, ref) => {
+  const [key, setKey] = React.useState<number>(+new Date());
+
   const { value, onChange, ...restFieldProps } = field;
   const { label, disabled, options = [], onValueChange, helperText, ...restSchemaProps } = schema;
 
@@ -168,6 +171,7 @@ const ControlledSelectField = React.forwardRef<
     <>
       <FormLabel>{label}</FormLabel>
       <Select
+        key={key}
         disabled={disabled}
         onValueChange={handleChange}
         value={value?.toString()}
@@ -180,11 +184,28 @@ const ControlledSelectField = React.forwardRef<
         </FormControl>
         <SelectContent>
           {options.length ? (
-            options.map((option) => (
-              <SelectItem key={option.value.toString()} value={option.value.toString()}>
-                {option.label}
-              </SelectItem>
-            ))
+            <>
+              <SelectGroup>
+                {options.map((option) => (
+                  <SelectItem key={option.value.toString()} value={option.value.toString()}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+              <SelectSeparator />
+              <SelectGroup>
+                <Button
+                  className="w-full"
+                  variant="secondary"
+                  onClick={() => {
+                    form.setValue(field.name, '');
+                    setKey(+new Date());
+                  }}
+                >
+                  Clear
+                </Button>
+              </SelectGroup>
+            </>
           ) : (
             <SelectItem key="no-options" value="no-options" disabled>
               No options
@@ -209,5 +230,6 @@ export {
   SelectScrollUpButton,
   SelectSeparator,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 };
+
