@@ -1,3 +1,5 @@
+import { fromZonedTime, toZonedTime } from 'date-fns-tz';
+
 /**
  * regular expression to check for valid hour format (01-23)
  */
@@ -189,4 +191,16 @@ export function display12HourValue(hours: number) {
   if (hours >= 22) return `${hours - 12}`;
   if (hours % 12 > 9) return `${hours}`;
   return `0${hours % 12}`;
+}
+
+export function utcToISTDate(utcDate: Date) {
+  const parsedDate = new Date(utcDate);
+  const istDate = toZonedTime(parsedDate, 'Asia/Kolkata');
+  return istDate;
+}
+
+export function istToUTCDate(istDate: Date) {
+  const parsedDate = istDate.toString().slice(0, -1);
+  const utcDate = fromZonedTime(parsedDate, 'Asia/Kolkata');
+  return utcDate;
 }

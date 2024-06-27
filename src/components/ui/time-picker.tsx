@@ -7,8 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
-import React from 'react';
 import {
   Period,
   TimePickerType,
@@ -16,7 +14,9 @@ import {
   getArrowByType,
   getDateByType,
   setDateByType,
-} from './time-picker-utils';
+} from '@/lib/time-picker-utils';
+import { cn } from '@/lib/utils';
+import React from 'react';
 
 export interface TimePickerInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   picker: TimePickerType;

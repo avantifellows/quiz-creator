@@ -1,6 +1,8 @@
 'use server';
 
-import { DATA_PER_PAGE } from '@/Constants';
+import { DATA_PER_PAGE, KeysToDeleteBeforeUpdate } from '@/Constants';
+import { istToUTCDate, utcToISTDate } from '@/lib/time-picker-utils';
+import { deleteByPath } from '@/lib/utils';
 import { ApiFormOptions, Platform } from '@/types';
 import { Session } from '@/types/api.types';
 import { instance } from '../lib/axios';
@@ -31,8 +33,19 @@ export async function getTableData(currentPage: number, limit: number, filterPar
         ...filteredParams,
       },
     });
+
+    const parsedData = data.map((i) => ({
+      ...i,
+      start_time: i.start_time ? istToUTCDate(i.start_time) : null,
+      end_time: i.end_time ? istToUTCDate(i.end_time) : null,
+      meta_data: {
+        ...i.meta_data,
+        date_created: i.meta_data?.date_created ? istToUTCDate(i.meta_data?.date_created) : null,
+      },
+    }));
+
     const hasMore = data.length > DATA_PER_PAGE;
-    const items = hasMore ? data.slice(0, -1) : data;
+    const items = hasMore ? parsedData.slice(0, -1) : parsedData;
     console.info('[API SUCCESS] fetching sessions : ', {
       length: items.length,
       currentPage,
@@ -54,8 +67,20 @@ export async function getASession(id: number | null): Promise<Session | {}> {
   if (!id) return {};
   try {
     const { data } = await instance.get<Session>(`/session/${id}`);
+
+    const parsedData = {
+      ...data,
+      start_time: data.start_time ? istToUTCDate(data.start_time) : null,
+      end_time: data.end_time ? istToUTCDate(data.end_time) : null,
+      meta_data: {
+        ...data.meta_data,
+        date_created: data.meta_data?.date_created
+          ? istToUTCDate(data.meta_data?.date_created)
+          : null,
+      },
+    };
     console.info(`[API SUCCESS] fetching session ${id} : ${data}`);
-    return data;
+    return parsedData;
   } catch (error) {
     console.error(`[API ERROR] fetching session for ${id} : ${error}`);
     return {};
@@ -86,12 +111,14 @@ export async function createSession(formData: Session) {
           shortened_link: '',
           has_synced_to_bq: false,
           infinite_session: false,
-          date_created: new Date(),
+          date_created: utcToISTDate(new Date()),
         },
         purpose: {
           type: 'attendance',
           params: 'quiz',
         },
+        start_time: utcToISTDate(formData.start_time ?? new Date()),
+        end_time: utcToISTDate(formData.end_time ?? new Date()),
       };
     } else {
       payload = {
@@ -99,9 +126,11 @@ export async function createSession(formData: Session) {
         session_id: '',
         meta_data: {
           ...formData.meta_data,
-          date_created: new Date(),
+          date_created: utcToISTDate(new Date()),
         },
         purpose: '',
+        start_time: utcToISTDate(formData.start_time ?? new Date()),
+        end_time: utcToISTDate(formData.end_time ?? new Date()),
       };
     }
     console.info(`[PAYLOAD] generated for ${platform} : ${payload}`);
@@ -127,8 +156,15 @@ export const sendCreateSns = (id?: number) => publishMessage({ action: 'db_id', 
  */
 export async function patchSession(formData: Session, id: number) {
   try {
-    publishMessage({ action: 'patch', id, patch_session: formData });
-    console.info(`[API SUCCESS] updated session for ${id} : ${formData}`);
+    KeysToDeleteBeforeUpdate.forEach((key) => deleteByPath(formData, key));
+    const payload = {
+      ...formData,
+      start_time: utcToISTDate(formData.start_time ?? new Date()),
+      end_time: utcToISTDate(formData.end_time ?? new Date()),
+    };
+    publishMessage({ action: 'patch', id, patch_session: payload });
+
+    console.info(`[SUCCESS] updated session for ${id} : ${payload}`);
     return { isSuccess: true, id };
   } catch (error) {
     console.error('Error posting form data', error);
