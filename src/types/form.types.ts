@@ -16,8 +16,10 @@ import { Platform } from './enums';
 
 export const basicSchema = z
   .object({
-    group: z.string({ required_error: 'This field is required' }),
-    parentBatch: z.string({ required_error: 'This field is required' }),
+    group: z.string({ required_error: 'This field is required' }).min(1, 'This field is required'),
+    parentBatch: z
+      .string({ required_error: 'This field is required' })
+      .min(1, 'This field is required'),
     subBatch: z.string({ required_error: 'This field is required' }),
     grade: z.coerce
       .number({ required_error: 'This field is required' })
@@ -137,14 +139,18 @@ export const quizSchema = z.object({
 
 export const timelineSchema = z
   .object({
-    startDate: z.coerce.date({
-      required_error: 'This field is required',
-      message: 'This is not a valid date and time',
-    }),
-    endDate: z.coerce.date({
-      required_error: 'This field is required',
-      message: 'This is not a valid date and time',
-    }),
+    startDate: z.coerce
+      .date({
+        required_error: 'This field is required',
+        message: 'This is not a valid date and time',
+      })
+      .or(z.string()),
+    endDate: z.coerce
+      .date({
+        required_error: 'This field is required',
+        message: 'This is not a valid date and time',
+      })
+      .or(z.string()),
     isEnabled: z.coerce.boolean(),
     activeDays: z.array(
       z

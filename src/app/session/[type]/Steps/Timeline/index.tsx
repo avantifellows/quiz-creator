@@ -65,8 +65,8 @@ const TimelineForm: FC = () => {
         params: data.activeDays.sort((a, b) => a - b),
       },
       is_active: data.isEnabled,
-      start_time: data.startDate,
-      end_time: data.endDate,
+      start_time: new Date(data.startDate).toISOString(),
+      end_time: new Date(data.endDate).toISOString(),
     };
 
     updateFormData(addedData);

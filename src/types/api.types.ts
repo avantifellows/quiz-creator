@@ -6,7 +6,7 @@ const metaDataSchema = z.object({
   batch_id: z.string().optional(),
   cms_test_id: z.string().url().optional(),
   course: z.string().optional(),
-  date_created: z.date().optional(),
+  date_created: z.string().datetime().optional(),
   enabled: z.number().int().optional(),
   grade: z.number().int().optional(),
   group: z.string().optional(),
@@ -38,8 +38,8 @@ const repeatScheduleSchema = z.object({
 
 export const sessionSchema = z.object({
   auth_type: z.string(),
-  created_by_id: z.date(),
-  end_time: z.date(),
+  created_by_id: z.string().datetime(),
+  end_time: z.string().datetime(),
   id: z.number().int(),
   id_generation: z.boolean(),
   is_active: z.boolean(),
@@ -58,10 +58,10 @@ export const sessionSchema = z.object({
   session_id: z.string(),
   signup_form: z.boolean(),
   signup_form_id: z.number().nullish(),
-  start_time: z.date(),
+  start_time: z.string().datetime(),
   type: z.string(),
-  inserted_at: z.date(),
-  updated_at: z.date(),
+  inserted_at: z.string().datetime(),
+  updated_at: z.string().datetime(),
 });
 
 export type Session = Partial<z.infer<typeof sessionSchema>>;

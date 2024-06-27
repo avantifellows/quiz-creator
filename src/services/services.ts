@@ -79,7 +79,7 @@ export async function getASession(id: number | null): Promise<Session | {}> {
           : null,
       },
     };
-    console.info(`[API SUCCESS] fetching session ${id} : ${data}`);
+    console.info(`[API SUCCESS] fetching session ${id} : ${JSON.stringify(parsedData)}`);
     return parsedData;
   } catch (error) {
     console.error(`[API ERROR] fetching session for ${id} : ${error}`);
@@ -111,14 +111,14 @@ export async function createSession(formData: Session) {
           shortened_link: '',
           has_synced_to_bq: false,
           infinite_session: false,
-          date_created: utcToISTDate(new Date()),
+          date_created: utcToISTDate(new Date().toISOString()),
         },
         purpose: {
           type: 'attendance',
           params: 'quiz',
         },
-        start_time: utcToISTDate(formData.start_time ?? new Date()),
-        end_time: utcToISTDate(formData.end_time ?? new Date()),
+        start_time: utcToISTDate(formData.start_time ?? ''),
+        end_time: utcToISTDate(formData.end_time ?? ''),
       };
     } else {
       payload = {
@@ -126,14 +126,14 @@ export async function createSession(formData: Session) {
         session_id: '',
         meta_data: {
           ...formData.meta_data,
-          date_created: utcToISTDate(new Date()),
+          date_created: utcToISTDate(new Date().toISOString()),
         },
         purpose: '',
-        start_time: utcToISTDate(formData.start_time ?? new Date()),
-        end_time: utcToISTDate(formData.end_time ?? new Date()),
+        start_time: utcToISTDate(formData.start_time ?? ''),
+        end_time: utcToISTDate(formData.end_time ?? ''),
       };
     }
-    console.info(`[PAYLOAD] generated for ${platform} : ${payload}`);
+    console.info(`[PAYLOAD] generated for ${platform} : ${JSON.stringify(payload)}`);
     const { data } = await instance.post<Session>(`/session`, payload);
     sendCreateSns(data.id);
     console.info(`[API SUCCESS] created session ${data?.id} : ${data}`);
@@ -159,12 +159,12 @@ export async function patchSession(formData: Session, id: number) {
     KeysToDeleteBeforeUpdate.forEach((key) => deleteByPath(formData, key));
     const payload = {
       ...formData,
-      start_time: utcToISTDate(formData.start_time ?? new Date()),
-      end_time: utcToISTDate(formData.end_time ?? new Date()),
+      start_time: utcToISTDate(formData.start_time ?? ''),
+      end_time: utcToISTDate(formData.end_time ?? ''),
     };
     publishMessage({ action: 'patch', id, patch_session: payload });
 
-    console.info(`[SUCCESS] updated session for ${id} : ${payload}`);
+    console.info(`[SUCCESS] updated session for ${id}`);
     return { isSuccess: true, id };
   } catch (error) {
     console.error('Error posting form data', error);
