@@ -159,10 +159,10 @@ export const sendCreateSns = (id?: number) => publishMessage({ action: 'db_id', 
 export async function patchSession(formData: Session, id: number) {
   try {
     KeysToDeleteBeforeUpdate.forEach((key) => deleteByPath(formData, key));
-    const payload = {
+    const payload: Session = {
       ...formData,
-      start_time: utcToISTDate(formData.start_time ?? ''),
-      end_time: utcToISTDate(formData.end_time ?? ''),
+      ...(formData.start_time ? { start_time: utcToISTDate(formData.start_time) } : {}),
+      ...(formData.end_time ? { end_time: utcToISTDate(formData.end_time) } : {}),
     };
     publishMessage({ action: 'patch', id, patch_session: payload });
 
