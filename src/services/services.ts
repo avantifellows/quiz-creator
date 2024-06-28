@@ -36,11 +36,13 @@ export async function getTableData(currentPage: number, limit: number, filterPar
 
     const parsedData = data.map((i) => ({
       ...i,
-      start_time: i.start_time ? istToUTCDate(i.start_time) : null,
-      end_time: i.end_time ? istToUTCDate(i.end_time) : null,
+      start_time: i.start_time ? istToUTCDate(i.start_time) : undefined,
+      end_time: i.end_time ? istToUTCDate(i.end_time) : undefined,
       meta_data: {
         ...i.meta_data,
-        date_created: i.meta_data?.date_created ? istToUTCDate(i.meta_data?.date_created) : null,
+        date_created: i.meta_data?.date_created
+          ? istToUTCDate(i.meta_data?.date_created)
+          : undefined,
       },
     }));
 
@@ -70,13 +72,13 @@ export async function getASession(id: number | null): Promise<Session | {}> {
 
     const parsedData = {
       ...data,
-      start_time: data.start_time ? istToUTCDate(data.start_time) : null,
-      end_time: data.end_time ? istToUTCDate(data.end_time) : null,
+      start_time: data.start_time ? istToUTCDate(data.start_time) : undefined,
+      end_time: data.end_time ? istToUTCDate(data.end_time) : undefined,
       meta_data: {
         ...data.meta_data,
         date_created: data.meta_data?.date_created
           ? istToUTCDate(data.meta_data?.date_created)
-          : null,
+          : undefined,
       },
     };
     console.info(`[API SUCCESS] fetching session ${id} : ${JSON.stringify(parsedData)}`);

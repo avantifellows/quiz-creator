@@ -13,12 +13,13 @@ import {
   basicSchema,
 } from '@/types';
 import { useParams } from 'next/navigation';
-import { useCallback, useMemo, type FC } from 'react';
-import { setBatchOptions, setGroupDefaults } from '../helper';
+import { useCallback, useMemo, useRef, type FC } from 'react';
+import { setBatchOptions, setParentBatchOptions, setPreset } from '../helper';
 
 const BasicForm: FC = () => {
   const { type } = useParams<SessionParams>();
   const { formData, apiOptions = {}, updateFormData } = useFormContext();
+  const isMounted = useRef(false);
 
   let fieldsSchema: FieldSchema<basicFields> = {
     group: {
@@ -27,8 +28,17 @@ const BasicForm: FC = () => {
       placeholder: 'Select a group',
       label: 'Group',
       disabled: type === SessionType.EDIT,
-      onValueChange: (value, form) =>
-        setGroupDefaults(value, apiOptions, fieldsSchema, updateFormData, form),
+      onValueChange: (value, form) => {
+        setParentBatchOptions(value, apiOptions, fieldsSchema);
+        if (type === SessionType.CREATE) {
+          setPreset(value, apiOptions, updateFormData);
+        } else {
+          if (isMounted.current) {
+            setPreset(value, apiOptions, updateFormData);
+          }
+          isMounted.current = true;
+        }
+      },
     },
     parentBatch: {
       required: true,

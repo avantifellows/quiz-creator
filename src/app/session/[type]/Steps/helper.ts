@@ -9,12 +9,10 @@ import {
 } from '@/types';
 import { UseFormReturn } from 'react-hook-form';
 
-export const setGroupDefaults = (
+export const setPreset = (
   value: string,
   apiOptions: ApiFormOptions,
-  fieldsSchema: FieldSchema<basicFields>,
-  updateFormData: (data: Session | ((prevState: Session) => Session)) => void,
-  form?: UseFormReturn
+  updateFormData: (data: Session | ((prevState: Session) => Session)) => void
 ) => {
   if (value) {
     let newDefaultData: Session = {};
@@ -115,20 +113,26 @@ export const setGroupDefaults = (
         break;
     }
 
-    const authGroupId = apiOptions.group?.find((item) => item.value === value)?.id;
-
-    const filteredQuizBatchOptions = apiOptions?.batch?.filter(
-      (item) => item.groupId === authGroupId && !item.parentId
-    );
-
-    (fieldsSchema.parentBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
-    (fieldsSchema.subBatch as MySelectProps).options = [];
-
     updateFormData({
       ...newDefaultData,
       meta_data: { ...newDefaultData.meta_data, group: value },
     });
   }
+};
+
+export const setParentBatchOptions = (
+  value: string,
+  apiOptions: ApiFormOptions,
+  fieldsSchema: FieldSchema<basicFields>
+) => {
+  const authGroupId = apiOptions.group?.find((item) => item.value === value)?.id;
+
+  const filteredQuizBatchOptions = apiOptions?.batch?.filter(
+    (item) => item.groupId === authGroupId && !item.parentId
+  );
+
+  (fieldsSchema.parentBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
+  (fieldsSchema.subBatch as MySelectProps).options = [];
 };
 
 export const setBatchOptions = (
