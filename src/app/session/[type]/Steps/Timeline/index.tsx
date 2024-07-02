@@ -14,14 +14,14 @@ const TimelineForm: FC = () => {
     return {
       startDate: {
         type: 'datetime',
-        label: 'Start Date and Time',
+        label: 'Start Date And Time',
         placeholder: 'Select start date and time',
         pagedNavigation: true,
         disableRange: (date: Date) => date < startOfToday() || date > addYears(startOfToday(), 1),
       },
       endDate: {
         type: 'datetime',
-        label: 'End Date and Time',
+        label: 'End Date And Time',
         placeholder: 'Select end date and time',
         disableRange: (date: Date) => date < startOfToday() || date > addYears(startOfToday(), 1),
       },

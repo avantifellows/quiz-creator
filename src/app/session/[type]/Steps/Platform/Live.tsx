@@ -19,7 +19,7 @@ const QuizForm: FC = () => {
       },
       platformLink: {
         type: 'text',
-        label: 'Platform link',
+        label: 'Platform Link',
         placeholder: 'Enter platform link',
       },
     }),
