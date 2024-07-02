@@ -29,7 +29,7 @@ const QuizForm: FC = () => {
       },
       platformLink: {
         type: 'text',
-        label: 'Platform link',
+        label: 'Platform Link',
         placeholder: 'Enter platform link',
         disabled: type === SessionType.EDIT,
         onValueChange: (value, form) => setPlatformId(value, form),
@@ -37,7 +37,7 @@ const QuizForm: FC = () => {
       platformId: {
         type: 'text',
         label: 'Platform ID',
-        placeholder: 'Enter platform Id',
+        placeholder: 'Enter Platform ID',
         disabled: type === SessionType.EDIT,
       },
       subject: {
