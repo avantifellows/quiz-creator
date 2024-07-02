@@ -13,22 +13,22 @@ export const displayData = (data: Session, formOptions: Option[]) => {
       { label: 'Auth Type', value: data.auth_type },
       { label: 'Platform', value: data.platform },
       { label: 'Session Type', value: data.type },
-      { label: 'Is signup form', value: data.signup_form ? 'Yes' : 'No' },
+      { label: 'Is Sign Up Form?', value: data.signup_form ? 'Yes' : 'No' },
       {
-        label: 'Signup Form Name',
+        label: 'Sign Up Form Name',
         value: formOptions.find((i) => i.value === data.signup_form_id)?.label ?? 'N/A',
       },
-      { label: 'Is pop up form allowed?', value: data.popup_form ? 'Yes' : 'No' },
+      { label: 'Is Popup Form Allowed?', value: data.popup_form ? 'Yes' : 'No' },
       {
         label: 'Popup Form Name',
         value: formOptions.find((i) => i.value === data.popup_form_id)?.label ?? 'N/A',
       },
       {
-        label: 'Number fields in pop up form',
+        label: 'No Of Fields In Popup',
         value: data.meta_data?.number_of_fields_in_popup_form,
       },
-      { label: 'Is redirection allowed', value: data.redirection ? 'Yes' : 'No' },
-      { label: 'Is Id generation allowed', value: data.id_generation ? 'Yes' : 'No' },
+      { label: 'Is Redirection Allowed?', value: data.redirection ? 'Yes' : 'No' },
+      { label: 'Is ID Generation Allowed?', value: data.id_generation ? 'Yes' : 'No' },
     ],
   };
 
@@ -84,8 +84,8 @@ export const displayData = (data: Session, formOptions: Option[]) => {
       { label: 'Start Date & Time', value: format(new Date(data.start_time!), 'PPp') },
       { label: 'End Date & Time', value: format(new Date(data.end_time!), 'PPp') },
       { label: 'Expected Attendance', value: data.meta_data?.test_takers_count },
-      { label: 'Is Enabled', value: data.is_active ? 'Yes' : 'No' },
-      { label: 'Has Synced', value: data.meta_data?.has_synced_to_bq },
+      { label: 'Is Enabled?', value: data.is_active ? 'Yes' : 'No' },
+      { label: 'Has Synced?', value: data.meta_data?.has_synced_to_bq },
       {
         label: 'Created At',
         value: data.meta_data?.date_created
@@ -93,7 +93,7 @@ export const displayData = (data: Session, formOptions: Option[]) => {
           : 'N/A',
       },
       {
-        label: 'Active days',
+        label: 'Active Days',
         value:
           data.repeat_schedule?.params
             ?.map((value) => ActiveDaysOptions.find((option) => option.value === value)?.label)
