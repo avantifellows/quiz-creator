@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { createQueryString } from '@/lib/utils';
-import { Session } from '@/types';
+import { Option, Session } from '@/types';
 import {
   flexRender,
   getCoreRowModel,
@@ -18,17 +18,27 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  type ColumnDef,
   type ColumnFiltersState,
   type SortingState,
 } from '@tanstack/react-table';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { columns } from './Columns';
 import Filters from './Filters';
 import Pagination from './Pagination';
 import { SheetTableRow } from './Row';
 
-export default function DataTable({ data, hasMore }: { data: Session[]; hasMore: boolean }) {
+export default function DataTable({
+  data,
+  hasMore,
+  formOptions,
+  columns,
+}: {
+  columns: ColumnDef<Session>[];
+  data: Session[];
+  hasMore: boolean;
+  formOptions: Option[];
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -56,6 +66,8 @@ export default function DataTable({ data, hasMore }: { data: Session[]; hasMore:
         endDate: false,
         createdAt: false,
         testTakersCount: false,
+        platform: false,
+        reportLink: false,
       },
     },
     onSortingChange: setSorting,
@@ -67,8 +79,6 @@ export default function DataTable({ data, hasMore }: { data: Session[]; hasMore:
     getPaginationRowModel: getPaginationRowModel(),
     pageCount: hasMore ? -1 : 0,
     manualPagination: true,
-    // manualSorting: true,
-    // manualFiltering: true,
   });
 
   useEffect(() => {
@@ -105,7 +115,7 @@ export default function DataTable({ data, hasMore }: { data: Session[]; hasMore:
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              <SheetTableRow table={table} />
+              <SheetTableRow table={table} formOptions={formOptions} />
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">

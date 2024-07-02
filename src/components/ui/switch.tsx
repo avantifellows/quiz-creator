@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { MySwitchProps } from '@/types';
-import { ControllerRenderProps } from 'react-hook-form';
+import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 import { FormControl, FormLabel } from './form';
 
 const Switch = React.forwardRef<
@@ -31,15 +31,36 @@ Switch.displayName = SwitchPrimitives.Root.displayName;
 
 const ControlledSwitchField = React.forwardRef<
   React.ElementRef<typeof FormControl>,
-  ControllerRenderProps & MySwitchProps
->(({ ...props }, ref) => {
-  const { onChange, value = false, label, type, ...restProps } = props;
+  { field: ControllerRenderProps } & { schema: MySwitchProps } & { form: UseFormReturn }
+>(({ field, form, schema }, ref) => {
+  const { value, onChange, ...restFieldProps } = field;
+  const { label, onCheckedChange, type, ...restSchemaProps } = schema;
+
+  React.useEffect(() => {
+    if (onCheckedChange) {
+      const value = form.watch(field.name);
+      onCheckedChange(value);
+    }
+  }, [value, onCheckedChange]);
+
+  const handleChange = (...event: any[]) => {
+    onChange(...event);
+    if (onCheckedChange) {
+      const value = form.watch(field.name);
+      onCheckedChange(value);
+    }
+  };
 
   return (
     <span className="flex flex-row justify-between items-center gap-4 my-px">
       <FormLabel>{label}</FormLabel>
       <FormControl ref={ref}>
-        <Switch checked={value} onCheckedChange={onChange} {...restProps} />
+        <Switch
+          {...restSchemaProps}
+          {...restFieldProps}
+          checked={value}
+          onCheckedChange={handleChange}
+        />
       </FormControl>
     </span>
   );

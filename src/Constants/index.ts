@@ -6,6 +6,10 @@ export * from './Options';
 export const DATA_PER_PAGE = 10;
 export const PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50];
 
+/**
+ * Keys to be deleted before duplicating a session
+ * from preventing the fields from being duplicated
+ */
 export const KeysToDeleteBeforeDuplicate: DeepKeys<Session>[] = [
   'end_time',
   'start_time',
@@ -29,4 +33,21 @@ export const KeysToDeleteBeforeDuplicate: DeepKeys<Session>[] = [
   'meta_data.shortened_link',
   'meta_data.admin_testing_link',
   'meta_data.has_synced_to_bq',
+];
+
+/**
+ * Keys to be deleted before updating a session
+ * from preventing the fields from being updated which are not allowed
+ **/
+export const KeysToDeleteBeforeUpdate: DeepKeys<Session>[] = [
+  'created_by_id',
+  'inserted_at',
+  'updated_at',
+  'id',
+  'owner_id',
+  'portal_link',
+  'purpose',
+  'platform',
+  'platform_link',
+  'platform_id',
 ];

@@ -18,7 +18,12 @@ export enum Status {
 
 export enum Platform {
   Quiz = 'quiz',
-  Live = 'live',
+  Youtube = 'youtube',
+  Meet = 'meet',
+  Zoom = 'zoom',
+  Others = 'others',
+  Plio = 'AF-plio',
+  SPlio = 'SCERT-plio',
 }
 
 export enum Group {
@@ -39,6 +44,14 @@ export enum AuthType {
   IDPH = 'ID,PH',
   IDDOB = 'ID,DOB',
   IDPHDOB = 'ID,PH,DOB',
+}
+
+export enum Subjects {
+  Maths = 'Maths',
+  Science = 'Science',
+  Physics = 'Physics',
+  Chemistry = 'Chemistry',
+  Biology = 'Biology',
 }
 
 export const Grades = [9, 10, 11, 12, 13] as const;

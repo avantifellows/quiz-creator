@@ -9,6 +9,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       closeButton
       richColors
+      duration={6000}
       toastOptions={{ classNames: { title: 'font-bold' } }}
       {...props}
     />

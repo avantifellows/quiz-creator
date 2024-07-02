@@ -45,10 +45,10 @@ export type Field =
   | MyDateTimeProps
   | MyCheckboxProps;
 
-export interface MySelectProps extends SelectProps, CommonFieldProps {
+export interface MySelectProps extends Omit<SelectProps, 'onValueChange'>, CommonFieldProps {
   type: 'select';
   options: Option[];
-  setValueOnChange: (form: UseFormReturn) => void;
+  onValueChange?: (value: string, form: UseFormReturn) => void;
 }
 
 export interface MyCheckboxProps extends Omit<CheckboxProps, 'type'>, CommonFieldProps {
@@ -56,7 +56,9 @@ export interface MyCheckboxProps extends Omit<CheckboxProps, 'type'>, CommonFiel
   options: Option[];
 }
 
-export interface MyInputProps extends InputHTMLAttributes<HTMLInputElement>, CommonFieldProps {}
+export interface MyInputProps extends InputHTMLAttributes<HTMLInputElement>, CommonFieldProps {
+  onValueChange?: (value: string, form: UseFormReturn) => void;
+}
 
 export interface MySwitchProps extends Omit<SwitchProps, 'type' | 'ref'>, CommonFieldProps {
   type: 'switch';

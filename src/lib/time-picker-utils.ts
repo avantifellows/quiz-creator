@@ -1,3 +1,5 @@
+import { addMinutes, subMinutes } from 'date-fns';
+
 /**
  * regular expression to check for valid hour format (01-23)
  */
@@ -189,4 +191,16 @@ export function display12HourValue(hours: number) {
   if (hours >= 22) return `${hours - 12}`;
   if (hours % 12 > 9) return `${hours}`;
   return `0${hours % 12}`;
+}
+
+export function utcToISTDate(utcDate: string) {
+  const parsedDate = new Date(utcDate);
+  const istDate = addMinutes(parsedDate, 5.5 * 60).toISOString();
+  return istDate;
+}
+
+export function istToUTCDate(istDate: string) {
+  const parsedDate = new Date(istDate);
+  const utcDate = subMinutes(parsedDate, 5.5 * 60).toISOString();
+  return utcDate;
 }

@@ -2,18 +2,17 @@ import { z } from 'zod';
 
 const metaDataSchema = z.object({
   admin_testing_link: z.string().url().optional(),
-  batch: z.string().optional(),
+  parent_id: z.string().optional(),
+  batch_id: z.string().optional(),
   cms_test_id: z.string().url().optional(),
   course: z.string().optional(),
-  date_created: z.date().optional(),
+  date_created: z.string().datetime().optional(),
   enabled: z.number().int().optional(),
   grade: z.number().int().optional(),
   group: z.string().optional(),
   has_synced_to_bq: z.boolean().optional(),
   infinite_session: z.boolean().optional(),
   marking_scheme: z.string().optional(),
-  signup_form_name: z.string().optional(),
-  popup_form_name: z.string().optional(),
   show_answers: z.boolean().optional(),
   number_of_fields_in_popup_form: z.number().int().optional().or(z.string().optional()),
   optional_limits: z.string().optional(),
@@ -24,6 +23,7 @@ const metaDataSchema = z.object({
   test_purpose: z.string().optional(),
   test_takers_count: z.number().int().optional(),
   test_type: z.string().optional(),
+  subject: z.string().optional(),
 });
 
 const purposeSchema = z.object({
@@ -38,8 +38,8 @@ const repeatScheduleSchema = z.object({
 
 export const sessionSchema = z.object({
   auth_type: z.string(),
-  created_by_id: z.date(),
-  end_time: z.date(),
+  created_by_id: z.string().datetime(),
+  end_time: z.string().datetime(),
   id: z.number().int(),
   id_generation: z.boolean(),
   is_active: z.boolean(),
@@ -50,18 +50,18 @@ export const sessionSchema = z.object({
   platform_id: z.string(),
   platform_link: z.string().url(),
   popup_form: z.boolean(),
-  popup_form_id: z.string().nullish(),
+  popup_form_id: z.number().nullish(),
   portal_link: z.string().url(),
-  purpose: purposeSchema,
+  purpose: purposeSchema.or(z.string()),
   redirection: z.boolean(),
   repeat_schedule: repeatScheduleSchema,
   session_id: z.string(),
   signup_form: z.boolean(),
-  signup_form_id: z.string().nullish(),
-  start_time: z.date(),
+  signup_form_id: z.number().nullish(),
+  start_time: z.string().datetime(),
   type: z.string(),
-  inserted_at: z.date(),
-  updated_at: z.date(),
+  inserted_at: z.string().datetime(),
+  updated_at: z.string().datetime(),
 });
 
 export type Session = Partial<z.infer<typeof sessionSchema>>;

@@ -19,9 +19,9 @@ const Filters = ({ table }: { table: Table<Session> }) => {
     <div className="flex mb-4 gap-4 flex-col md:flex-row justify-between">
       <div className="flex items-center justify-between gap-2 md:gap-4 flex-1">
         <Input
-          placeholder="Filter Name..."
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
+          placeholder="Filter Using Group..."
+          value={(table.getColumn('group')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('group')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
         {isFiltered && (

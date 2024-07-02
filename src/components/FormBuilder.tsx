@@ -45,7 +45,7 @@ const RenderFields = <T extends FieldValues>(
       break;
   }
 
-  const { hide = false, helperText, ...restProps } = memoSchema;
+  const { hide = false, helperText, ...restSchema } = memoSchema;
 
   if (hide) return null;
 
@@ -56,7 +56,7 @@ const RenderFields = <T extends FieldValues>(
       name={name as Path<T>}
       render={({ field }) => (
         <FormItem className="relative">
-          <Component form={form} {...restProps} {...field} />
+          <Component field={field} schema={restSchema} form={form} />
           {helperText ? <FormDescription>{helperText}</FormDescription> : null}
           <FormMessage />
         </FormItem>

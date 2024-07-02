@@ -7,6 +7,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { MySelectProps } from '@/types';
 import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
+import { Button } from './button';
 import { FormControl, FormLabel } from './form';
 
 const Select = SelectPrimitive.Root;
@@ -22,7 +23,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+      'flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm font-medium ring-offset-background data-[placeholder]:text-muted-foreground/80 data-[placeholder]:italic focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
       className
     )}
     {...props}
@@ -144,25 +145,25 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 const ControlledSelectField = React.forwardRef<
   React.ElementRef<typeof FormControl>,
-  ControllerRenderProps & MySelectProps & { form: UseFormReturn }
->(({ ...props }, ref) => {
-  const {
-    form,
-    label,
-    onChange,
-    setValueOnChange,
-    disabled,
-    value = '',
-    options = [],
-    type,
-    ...restProps
-  } = props;
+  { field: ControllerRenderProps } & { schema: MySelectProps } & { form: UseFormReturn }
+>(({ field, form, schema }, ref) => {
+  const [key, setKey] = React.useState<number>(+new Date());
+
+  const { value, onChange, ...restFieldProps } = field;
+  const { label, disabled, options = [], onValueChange, helperText, ...restSchemaProps } = schema;
+
+  React.useEffect(() => {
+    if (value && onValueChange) {
+      const value = form.watch(field.name);
+      onValueChange(value, form);
+    }
+  }, [value, onValueChange]);
 
   const handleChange = (...event: any[]) => {
     onChange(...event);
-
-    if (setValueOnChange) {
-      setValueOnChange(form);
+    if (onValueChange) {
+      const value = form.watch(field.name);
+      onValueChange(value, form);
     }
   };
 
@@ -170,6 +171,7 @@ const ControlledSelectField = React.forwardRef<
     <>
       <FormLabel>{label}</FormLabel>
       <Select
+        key={key}
         disabled={disabled}
         onValueChange={handleChange}
         value={value?.toString()}
@@ -177,15 +179,38 @@ const ControlledSelectField = React.forwardRef<
       >
         <FormControl ref={ref}>
           <SelectTrigger>
-            <SelectValue {...restProps} />
+            <SelectValue {...restSchemaProps} {...restFieldProps} />
           </SelectTrigger>
         </FormControl>
         <SelectContent>
-          {options?.map((option) => (
-            <SelectItem key={option.value.toString()} value={option.value.toString()}>
-              {option.label}
+          {options.length ? (
+            <>
+              <SelectGroup>
+                {options.map((option) => (
+                  <SelectItem key={option.value.toString()} value={option.value.toString()}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+              <SelectSeparator />
+              <SelectGroup>
+                <Button
+                  className="w-full"
+                  variant="secondary"
+                  onClick={() => {
+                    form.setValue(field.name, '');
+                    setKey(+new Date());
+                  }}
+                >
+                  Clear
+                </Button>
+              </SelectGroup>
+            </>
+          ) : (
+            <SelectItem key="no-options" value="no-options" disabled>
+              No options
             </SelectItem>
-          ))}
+          )}
         </SelectContent>
       </Select>
     </>

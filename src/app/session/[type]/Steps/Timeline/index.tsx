@@ -27,8 +27,8 @@ const TimelineForm: FC = () => {
       },
       testTakers: {
         type: 'number',
-        label: 'Test Takers',
-        placeholder: 'Enter number of test takers',
+        label: 'Expected Session Attendance',
+        placeholder: 'Enter expected session attendance',
         min: 0,
         step: 1,
       },
@@ -48,7 +48,7 @@ const TimelineForm: FC = () => {
     () => ({
       startDate: formData?.start_time && new Date(formData?.start_time),
       endDate: formData?.end_time && new Date(formData?.end_time),
-      isEnabled: formData?.meta_data?.enabled ? true : false,
+      isEnabled: formData?.is_active ?? true,
       activeDays: formData?.repeat_schedule?.params,
       testTakers: formData?.meta_data?.test_takers_count,
     }),
@@ -58,16 +58,15 @@ const TimelineForm: FC = () => {
   const onSubmit = useCallback(async (data: timelineFields) => {
     const addedData: Session = {
       meta_data: {
-        ...(formData.meta_data ?? {}),
         test_takers_count: data.testTakers,
-        enabled: data.isEnabled ? 1 : 0,
       },
       repeat_schedule: {
         type: 'weekly',
         params: data.activeDays.sort((a, b) => a - b),
       },
-      start_time: data.startDate,
-      end_time: data.endDate,
+      is_active: data.isEnabled,
+      start_time: new Date(data.startDate).toISOString(),
+      end_time: new Date(data.endDate).toISOString(),
     };
 
     updateFormData(addedData);

@@ -6,21 +6,22 @@ import { MyDateTimeProps } from '@/types';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { ElementRef, forwardRef } from 'react';
-import { ControllerRenderProps } from 'react-hook-form';
+import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 import { Calendar } from './calendar';
 import { TimePicker } from './time-picker';
 
 const DateTimePicker = forwardRef<
   ElementRef<typeof FormControl>,
-  MyDateTimeProps & ControllerRenderProps
->(({ ...props }, ref) => {
-  const { onChange, value, label, type, disableRange, disabled, ...restProps } = props;
+  { schema: MyDateTimeProps } & { field: ControllerRenderProps } & { form: UseFormReturn }
+>(({ field, form, schema }, ref) => {
+  const { value, onChange, ref: refField, ...restFieldProps } = field;
+  const { label, disabled, disableRange, ...restSchemaProps } = schema;
 
   return (
     <div className="flex flex-col gap-4">
       <FormLabel className="self-start">{label}</FormLabel>
       <Popover>
-        <FormControl ref={ref}>
+        <FormControl>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
@@ -28,6 +29,7 @@ const DateTimePicker = forwardRef<
                 'justify-start text-left font-normal',
                 !value && 'text-muted-foreground'
               )}
+              ref={refField}
               disabled={disabled}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -37,7 +39,8 @@ const DateTimePicker = forwardRef<
         </FormControl>
         <PopoverContent className="w-auto p-0">
           <Calendar
-            {...restProps}
+            {...restSchemaProps}
+            {...restFieldProps}
             mode="single"
             selected={value}
             onSelect={onChange}

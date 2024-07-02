@@ -1,13 +1,15 @@
 import { type FC } from 'react';
+import { Option } from './formbuilder.types';
 
 export * from './api.types';
 export * from './enums';
 export * from './form.types';
 export * from './formbuilder.types';
 
-export type TablePrams = {
+export type TableParams = {
   page?: string;
   per_page?: string;
+  group?: string;
 };
 
 export type SessionParams = {
@@ -22,7 +24,7 @@ export type SessionSearchParams = {
 export interface StepperSteps {
   [key: string]: {
     label: string;
-    component: FC;
+    component: FC<any>;
     hide?: boolean;
   };
 }
@@ -36,4 +38,15 @@ interface DataItem {
 export interface DataSection {
   title: string;
   data: DataItem[];
+}
+
+interface ExtenedOptions extends Option {
+  [key: string]: any;
+}
+
+export interface ApiFormOptions {
+  group?: ExtenedOptions[];
+  batch?: ExtenedOptions[];
+  popupForm?: ExtenedOptions[];
+  signupForm?: ExtenedOptions[];
 }

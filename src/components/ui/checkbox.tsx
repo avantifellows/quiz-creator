@@ -30,9 +30,10 @@ Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
 const ControlledCheckbox = React.forwardRef<
   React.ElementRef<typeof FormControl>,
-  ControllerRenderProps & MyCheckboxProps & { form: UseFormReturn }
->(({ ...props }, ref) => {
-  const { label, options = [], type, name, form, ...restProps } = props;
+  { field: ControllerRenderProps } & { schema: MyCheckboxProps } & { form: UseFormReturn }
+>(({ field, form, schema }, ref) => {
+  const { value, onChange, ...restFieldProps } = field;
+  const { label, options = [], type, ...restSchemaProps } = schema;
 
   return (
     <>
@@ -41,14 +42,16 @@ const ControlledCheckbox = React.forwardRef<
         <FormField
           key={option.value as React.Key}
           control={form.control}
-          name={name}
+          name={field.name}
           render={({ field }) => (
             <FormItem
               key={option.value as React.Key}
               className="flex flex-row items-start space-x-3 space-y-0"
             >
-              <FormControl>
+              <FormControl ref={ref}>
                 <Checkbox
+                  {...restSchemaProps}
+                  {...restFieldProps}
                   checked={(field.value ?? [])?.includes(option.value)}
                   onCheckedChange={(checked) => {
                     return checked
@@ -59,7 +62,6 @@ const ControlledCheckbox = React.forwardRef<
                           )
                         );
                   }}
-                  {...restProps}
                 />
               </FormControl>
               <FormLabel className="text-sm font-normal">{option.label}</FormLabel>

@@ -88,7 +88,6 @@ const QuizForm: FC = () => {
       showAnswers: {
         type: 'switch',
         label: 'Show Answers?',
-        helperText: 'Do you want to show answers?',
       },
     }),
     []
@@ -114,7 +113,6 @@ const QuizForm: FC = () => {
     const addedData: Session = {
       name: data.name,
       meta_data: {
-        ...(formData.meta_data ?? {}),
         course: data.course,
         stream: data.stream,
         test_format: data.testFormat,

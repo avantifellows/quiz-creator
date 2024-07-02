@@ -10,9 +10,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DataSection, Session } from '@/types';
+import { patchSession, sendCreateSns } from '@/services/services';
+import { Session } from '@/types';
 import { Check, LinkIcon, MoreHorizontal, X } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export const columns: ColumnDef<Session>[] = [
   {
@@ -42,12 +44,19 @@ export const columns: ColumnDef<Session>[] = [
     id: 'createdAt',
     accessorKey: 'meta_data.date_created',
     header: 'Created At',
-    cell: ({ row }) => format(new Date(row.getValue('createdAt')), 'dd/MM/yyyy'),
+    cell: ({ row }) =>
+      row.getValue('createdAt') ? format(new Date(row.getValue('createdAt')), 'dd/MM/yyyy') : 'N/A',
   },
   {
     accessorKey: 'platform',
     header: 'Platform',
     cell: ({ row }) => <div className="capitalize">{row.getValue('platform')}</div>,
+  },
+  {
+    id: 'group',
+    accessorKey: 'meta_data.group',
+    header: 'Group',
+    cell: ({ row }) => (row.getValue('group') ? row.getValue('group') : 'N/A'),
   },
   {
     id: 'testTakersCount',
@@ -66,6 +75,7 @@ export const columns: ColumnDef<Session>[] = [
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex p-1"
+            onClick={(event) => event.stopPropagation()}
           >
             <LinkIcon className="size-4 mx-auto cursor-pointer" />
           </Link>
@@ -87,6 +97,7 @@ export const columns: ColumnDef<Session>[] = [
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex p-1"
+            onClick={(event) => event.stopPropagation()}
           >
             <LinkIcon className="size-4 mx-auto cursor-pointer" />
           </Link>
@@ -108,6 +119,7 @@ export const columns: ColumnDef<Session>[] = [
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex p-1"
+            onClick={(event) => event.stopPropagation()}
           >
             <LinkIcon className="size-4 mx-auto cursor-pointer" />
           </Link>
@@ -119,7 +131,7 @@ export const columns: ColumnDef<Session>[] = [
   },
   {
     id: 'isEnabled',
-    accessorKey: 'meta_data.enabled',
+    accessorKey: 'is_active',
     header: 'Enabled',
     cell: ({ row }) =>
       row.getValue('isEnabled') ? (
@@ -149,6 +161,43 @@ export const columns: ColumnDef<Session>[] = [
               <Link href={`/session/duplicate?id=${row.original.id}`}>Duplicate</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="cursor-pointer">
+              <Button
+                variant="ghost"
+                className="w-full focus-visible:ring-0 justify-start"
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  await patchSession(
+                    {
+                      is_active: !row.original.is_active,
+                    },
+                    row.original.id ?? 0
+                  );
+                  toast.success(
+                    row.original.is_active ? 'Disabled the session' : 'Enabled the session',
+                    { description: 'Please refresh the page after a while.' }
+                  );
+                }}
+              >
+                {row.original.is_active ? 'Disable' : 'Enable'} Session
+              </Button>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Button
+                variant="ghost"
+                className="w-full focus-visible:ring-0 justify-start"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  sendCreateSns(row.original.id);
+                  toast.success('Request send successfully', {
+                    description:
+                      'The links will be available/updated shortly. Please refresh the page after a while.',
+                  });
+                }}
+              >
+                Regenerate Links
+              </Button>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer">
               <Link href={`/session?id=${row.original.id}`}>View Details</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -157,79 +206,3 @@ export const columns: ColumnDef<Session>[] = [
     },
   },
 ];
-
-export const displayData = (data: Session) => {
-  const basicDetails: DataSection = {
-    title: 'Basic Details',
-    data: [
-      { label: 'Platform', value: data.platform },
-      { label: 'Program', value: data.meta_data?.group },
-      { label: 'Batch', value: data.meta_data?.batch },
-      { label: 'Grade', value: data.meta_data?.grade },
-      { label: 'Session Type', value: data.type },
-      { label: 'Auth Type', value: data.auth_type },
-      { label: 'Activate Sign-Up', value: data.is_active ? 'Yes' : 'No' },
-      { label: 'Is pop up form allowed', value: data.popup_form ? 'Yes' : 'No' },
-      {
-        label: 'Number fields in pop up form',
-        value: data.meta_data?.number_of_fields_in_popup_form,
-      },
-      { label: 'Is redirection allowed', value: data.redirection ? 'Yes' : 'No' },
-      { label: 'Is Id generation allowed', value: data.id_generation ? 'Yes' : 'No' },
-      { label: 'Signup form name', value: data.meta_data?.signup_form_name ?? 'N/A' },
-    ],
-  };
-
-  const quizDetails: DataSection | null =
-    data.platform === 'quiz'
-      ? {
-          title: 'Quiz Details',
-          data: [
-            { label: 'Course', value: data.meta_data?.course },
-            { label: 'Stream', value: data.meta_data?.stream },
-            { label: 'Test Name', value: data.name },
-            { label: 'Test Format', value: data.meta_data?.test_format },
-            { label: 'Test Purpose', value: data.meta_data?.test_purpose },
-            { label: 'Test Type', value: data.meta_data?.test_type },
-            {
-              label: 'CMS Link',
-              value: data.meta_data?.cms_test_id ?? 'N/A',
-              isLink: !!data.meta_data?.cms_test_id,
-            },
-            { label: 'Marking Scheme', value: data.meta_data?.marking_scheme },
-            { label: 'Optional Limits', value: data.meta_data?.optional_limits },
-            { label: 'Show Answers', value: data.meta_data?.show_answers ? 'Yes' : 'No' },
-            { label: 'Portal Link', value: data.portal_link ?? 'N/A', isLink: !!data.portal_link },
-            {
-              label: 'Admin Link',
-              value: data.meta_data?.admin_testing_link ?? 'N/A',
-              isLink: !!data.meta_data?.admin_testing_link,
-            },
-            {
-              label: 'Report Link',
-              value: data.meta_data?.report_link ?? 'N/A',
-              isLink: !!data.meta_data?.report_link,
-            },
-          ],
-        }
-      : null;
-
-  const timeDetails: DataSection = {
-    title: 'Time Details',
-    data: [
-      { label: 'Start Date & Time', value: format(new Date(data.start_time!), 'PPp') },
-      { label: 'End Date & Time', value: format(new Date(data.end_time!), 'PPp') },
-      { label: 'Test Takers', value: data.meta_data?.test_takers_count },
-      { label: 'Is Enabled', value: data.meta_data?.enabled ? 'Yes' : 'No' },
-      { label: 'Has Synced', value: data.meta_data?.has_synced_to_bq },
-      { label: 'Created At', value: format(new Date(data.meta_data?.date_created ?? ''), 'PPp') },
-    ],
-  };
-
-  // Filter out any null sections
-  const showingData: DataSection[] = [basicDetails, quizDetails, timeDetails].filter(
-    Boolean
-  ) as DataSection[];
-
-  return showingData;
-};
