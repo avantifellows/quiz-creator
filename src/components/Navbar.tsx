@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
 
 const NAV_LINKS = [
   { label: 'Quizzing Engine', path: '/' },
