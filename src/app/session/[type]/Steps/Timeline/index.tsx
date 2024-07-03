@@ -49,7 +49,7 @@ const TimelineForm: FC = () => {
       startDate: formData?.start_time && new Date(formData?.start_time),
       endDate: formData?.end_time && new Date(formData?.end_time),
       isEnabled: formData?.is_active ?? true,
-      activeDays: formData?.repeat_schedule?.params,
+      activeDays: formData?.repeat_schedule?.params ?? [1, 2, 3, 4, 5, 6, 7],
       testTakers: formData?.meta_data?.test_takers_count,
     }),
     [formData]

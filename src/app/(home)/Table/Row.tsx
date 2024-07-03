@@ -6,6 +6,7 @@ import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
 import { Copy } from 'lucide-react';
 import Link from 'next/link';
 import { displayData } from '../ModalData';
+import { toast } from 'sonner';
 
 export const SheetTableRow = ({
   table,
@@ -68,7 +69,10 @@ const CopyBtn = ({ value }: { value: string }) => {
     <Button
       variant="ghost"
       className="p-1 h-auto"
-      onClick={() => navigator.clipboard.writeText(value)}
+      onClick={() => {
+        navigator.clipboard.writeText(value);
+        toast.success('Copied Link to clipboard');
+      }}
     >
       <Copy className="size-4" />
     </Button>

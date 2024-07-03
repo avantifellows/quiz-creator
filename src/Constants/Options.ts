@@ -15,9 +15,11 @@ export const SessionTypeOptions: Option[] = [
 export const TestFormatOptions: Option[] = [
   { value: 'part_test', label: 'Part Test' },
   { value: 'major_test', label: 'Major Test' },
+  { value: 'chapter_test', label: 'Chapter Test' },
   { value: 'full_syllabus_test', label: 'Full Syllabus Test' },
   { value: 'evaluation_test', label: 'Evaluation Test' },
   { value: 'hiring_test', label: 'Hiring Test' },
+  { value: 'mock_test', label: 'Mock Test' },
   { value: 'homework', label: 'Homework' },
 ];
 
@@ -28,7 +30,9 @@ export const TestPurposeOptions: Option[] = [
   { value: 'monthly_test', label: 'Monthly Test' },
   { value: 'reshuffling_test', label: 'Reshuffling Test' },
   { value: 'selection_test', label: 'Selection Test' },
-  { value: 'one_time_test', label: 'One Time Test' },
+  { value: 'one_time', label: 'One Time Test' },
+  { value: 'class_hw', label: 'Class Homework' },
+  { value: 'assignment', label: 'Assignment' },
 ];
 
 export const TestPlatformOptions = Object.values(Platform).map((value) => ({
@@ -56,18 +60,25 @@ export const CourseOptions: Option[] = [
   { value: 'Certification', label: 'Certification' },
   { value: 'Foundation', label: 'Foundation' },
   { value: 'Photon', label: 'Photon' },
+  { value: 'JEE', label: 'JEE' },
+  { value: 'CUET', label: 'CUET' },
 ];
 
 export const StreamOptions: Option[] = [
-  { value: 'Medical', label: 'Medical' },
-  { value: 'Maths', label: 'Maths' },
-  { value: 'Science', label: 'Science' },
-  { value: 'Physics', label: 'Physics' },
-  { value: 'Chemistry', label: 'Chemistry' },
-  { value: 'PCMB', label: 'PCMB' },
-  { value: 'Botany', label: 'Botany' },
-  { value: 'PCMBA', label: 'PCMBA' },
-  { value: 'Zoology', label: 'Zoology' },
+  { value: 'engineering', label: 'Engineering' },
+  { value: 'medical', label: 'Medical' },
+  { value: 'maths', label: 'Maths' },
+  { value: 'science', label: 'Science' },
+  { value: 'physics', label: 'Physics' },
+  { value: 'chemistry', label: 'Chemistry' },
+  { value: 'biology', label: 'Biology' },
+  { value: 'pcmb', label: 'PCMB' },
+  { value: 'botany', label: 'Botany' },
+  { value: 'zoology', label: 'Zoology' },
+  { value: 'pcmba', label: 'PCMBA' },
+  { value: 'tbd', label: 'TBD' },
+  { value: 'business_studies', label: 'Business Studies' },
+  { value: 'economics', label: 'Economics' },
 ];
 
 export const GradeOptions = Grades.map((g) => ({ value: Number(g), label: g.toString() }));

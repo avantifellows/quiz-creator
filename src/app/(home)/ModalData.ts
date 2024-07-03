@@ -1,4 +1,10 @@
-import { ActiveDaysOptions } from '@/Constants';
+import {
+  ActiveDaysOptions,
+  StreamOptions,
+  TestFormatOptions,
+  TestPurposeOptions,
+  TestTypeOptions,
+} from '@/Constants';
 import { DataSection, Option, Session } from '@/types';
 import { format } from 'date-fns';
 
@@ -36,11 +42,31 @@ export const displayData = (data: Session, formOptions: Option[]) => {
     title: 'Quiz Details',
     data: [
       { label: 'Course', value: data.meta_data?.course },
-      { label: 'Stream', value: data.meta_data?.stream },
+      {
+        label: 'Stream',
+        value:
+          StreamOptions.find((i) => i.value === data.meta_data?.stream)?.label ??
+          data.meta_data?.stream,
+      },
       { label: 'Test Name', value: data.name },
-      { label: 'Test Format', value: data.meta_data?.test_format },
-      { label: 'Test Purpose', value: data.meta_data?.test_purpose },
-      { label: 'Test Type', value: data.meta_data?.test_type },
+      {
+        label: 'Test Format',
+        value:
+          TestFormatOptions.find((i) => i.value === data.meta_data?.test_format)?.label ??
+          data.meta_data?.test_format,
+      },
+      {
+        label: 'Test Purpose',
+        value:
+          TestPurposeOptions.find((i) => i.value === data.meta_data?.test_purpose)?.label ??
+          data.meta_data?.test_purpose,
+      },
+      {
+        label: 'Test Type',
+        value:
+          TestTypeOptions.find((i) => i.value === data.meta_data?.test_type)?.label ??
+          data.meta_data?.test_type,
+      },
       {
         label: 'CMS Link',
         value: data.meta_data?.cms_test_id ?? 'N/A',

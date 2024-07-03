@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const NAV_LINKS = [
   { label: 'Quizzing Engine', path: '/' },
@@ -10,6 +13,8 @@ const NAV_LINKS = [
 ];
 
 const Navbar = () => {
+  const currentPath = usePathname();
+
   return (
     <header>
       <nav className="flex flex-row justify-between items-center px-4 md:px-8">
@@ -23,7 +28,11 @@ const Navbar = () => {
       </nav>
       <nav className="flex flex-row items-center gap-6 bg-primary text-primary-foreground w-full h-16 px-4 md:px-8">
         {NAV_LINKS.map((link) => (
-          <Link href={link.path} key={link.label} className="font-medium hover:font-semibold">
+          <Link
+            href={link.path}
+            key={link.label}
+            className={`rounded-3xl px-4 py-2 text-sm font-medium transition-colors hover:bg-accent/80 hover:text-accent-foreground ${currentPath === link.path ? 'bg-accent text-accent-foreground' : ''}`}
+          >
             {link.label}
           </Link>
         ))}
