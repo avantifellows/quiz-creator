@@ -175,9 +175,6 @@ export const columns: ColumnDef<Session>[] = [
                 Regenerate Links
               </Button>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href={`/session?id=${row.original.id}`}>View Details</Link>
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
