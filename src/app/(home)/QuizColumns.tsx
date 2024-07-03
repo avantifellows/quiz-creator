@@ -163,7 +163,7 @@ export const columns: ColumnDef<Session>[] = [
             <DropdownMenuItem asChild className="cursor-pointer">
               <Button
                 variant="ghost"
-                className="w-full focus-visible:ring-0 justify-start"
+                className="w-full focus-visible:ring-0 justify-start font-normal"
                 onClick={async (e) => {
                   e.stopPropagation();
                   await patchSession(
@@ -184,7 +184,7 @@ export const columns: ColumnDef<Session>[] = [
             <DropdownMenuItem asChild className="cursor-pointer">
               <Button
                 variant="ghost"
-                className="w-full focus-visible:ring-0 justify-start"
+                className="w-full focus-visible:ring-0 justify-start font-normal"
                 onClick={(e) => {
                   e.stopPropagation();
                   sendCreateSns(row.original.id);
