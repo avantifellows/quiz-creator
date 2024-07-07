@@ -39,17 +39,10 @@ const ControlledSwitchField = React.forwardRef<
   React.useEffect(() => {
     if (onCheckedChange) {
       const value = form.watch(field.name);
-      onCheckedChange(value);
+      form.setValue(field.name, value, { shouldDirty: true });
+      onCheckedChange(value, form);
     }
   }, [value, onCheckedChange]);
-
-  const handleChange = (...event: any[]) => {
-    onChange(...event);
-    if (onCheckedChange) {
-      const value = form.watch(field.name);
-      onCheckedChange(value);
-    }
-  };
 
   return (
     <span className="flex flex-row justify-between items-center gap-4 my-px">
@@ -59,7 +52,7 @@ const ControlledSwitchField = React.forwardRef<
           {...restSchemaProps}
           {...restFieldProps}
           checked={value}
-          onCheckedChange={handleChange}
+          onCheckedChange={onChange}
         />
       </FormControl>
     </span>

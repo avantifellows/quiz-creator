@@ -13,114 +13,127 @@ import {
   basicSchema,
 } from '@/types';
 import { useParams } from 'next/navigation';
-import { useCallback, useMemo, useRef, type FC } from 'react';
-import { setBatchOptions, setParentBatchOptions, setPreset } from '../helper';
+import { useCallback, useEffect, useMemo, useRef, type FC } from 'react';
+import {
+  handlePopupFields,
+  handleSignUpFields,
+  setBatchOptions,
+  setParentBatchOptions,
+  setPreset,
+} from '../helper';
 
 const BasicForm: FC = () => {
   const { type } = useParams<SessionParams>();
   const { formData, apiOptions = {}, updateFormData } = useFormContext();
   const isMounted = useRef(false);
 
-  let fieldsSchema: FieldSchema<basicFields> = {
-    group: {
-      type: 'select',
-      options: apiOptions?.group,
-      placeholder: 'Select a group',
-      label: 'Group',
-      disabled: type === SessionType.EDIT,
-      onValueChange: (value, form) => {
-        setParentBatchOptions(value, apiOptions, fieldsSchema);
-        if (type === SessionType.CREATE) {
-          setPreset(value, apiOptions, updateFormData);
-        } else {
+  let fieldsSchema: FieldSchema<basicFields> = useMemo(
+    () => ({
+      group: {
+        type: 'select',
+        options: apiOptions?.group,
+        placeholder: 'Select a group',
+        label: 'Group',
+        disabled: type === SessionType.EDIT,
+        onValueChange: (value, form) => {
+          setParentBatchOptions(value, apiOptions, fieldsSchema);
           if (isMounted.current) {
             setPreset(value, apiOptions, updateFormData);
           }
-          isMounted.current = true;
-        }
+        },
       },
-    },
-    parentBatch: {
-      required: true,
-      type: 'select',
-      placeholder: 'Select a quiz batch',
-      label: 'Quiz Batch',
-      disabled: type === SessionType.EDIT,
-      onValueChange: (value, form) => {
-        setBatchOptions(value, form, apiOptions, fieldsSchema);
+      parentBatch: {
+        required: true,
+        type: 'select',
+        placeholder: 'Select a quiz batch',
+        label: 'Quiz Batch',
+        disabled: type === SessionType.EDIT,
+        onValueChange: (value, form) => {
+          setBatchOptions(value, form, apiOptions, fieldsSchema);
+        },
       },
-    },
-    subBatch: {
-      type: 'select',
-      placeholder: 'Select a class batch',
-      label: 'Class Batch',
-      disabled: type === SessionType.EDIT,
-    },
-    grade: {
-      type: 'select',
-      options: GradeOptions,
-      placeholder: 'Select a grade',
-      label: 'Grade',
-    },
-    sessionType: {
-      type: 'select',
-      options: SessionTypeOptions,
-      placeholder: 'Select a session type',
-      label: 'Session Type',
-    },
-    authType: {
-      type: 'select',
-      options: AuthOptions,
-      label: 'Auth Type',
-      placeholder: 'Select a auth type',
-    },
-    activateSignUp: {
-      type: 'switch',
-      label: 'Activate Sign Up',
-      helperText: 'Do you want to display sign up form?',
-    },
-    signupFormId: {
-      type: 'select',
-      label: 'Signup Form Name',
-      placeholder: 'Enter form name',
-      options: apiOptions.signupForm,
-    },
-    isPopupForm: {
-      type: 'switch',
-      label: 'Is Popup Form Allowed?',
-      helperText: 'Do you want to display popup form?',
-    },
-    popupFormId: {
-      type: 'select',
-      label: 'Popup Form Name',
-      placeholder: 'Enter form name',
-      options: apiOptions.popupForm,
-    },
-    noOfFieldsInPopup: {
-      type: 'number',
-      label: 'No Of Fields In Popup',
-      placeholder: 'Enter no of fields in popup',
-      min: 0,
-      step: 1,
-    },
-    isRedirection: {
-      type: 'switch',
-      label: 'Is Redirection Allowed?',
-      helperText: 'Do you want to allow redirection?',
-    },
-    isIdGeneration: {
-      type: 'switch',
-      label: 'Is ID Generation Allowed?',
-      helperText: 'Do you want to generate IDs?',
-    },
-    platform: {
-      type: 'select',
-      options: TestPlatformOptions,
-      placeholder: 'Select a platform',
-      label: 'Platform',
-      disabled: type === SessionType.EDIT,
-    },
-  };
+      subBatch: {
+        type: 'select',
+        placeholder: 'Select a class batch',
+        label: 'Class Batch',
+        disabled: type === SessionType.EDIT,
+      },
+      grade: {
+        type: 'select',
+        options: GradeOptions,
+        placeholder: 'Select a grade',
+        label: 'Grade',
+      },
+      sessionType: {
+        type: 'select',
+        options: SessionTypeOptions,
+        placeholder: 'Select a session type',
+        label: 'Session Type',
+      },
+      authType: {
+        type: 'select',
+        options: AuthOptions,
+        label: 'Auth Type',
+        placeholder: 'Select a auth type',
+      },
+      activateSignUp: {
+        type: 'switch',
+        label: 'Activate Sign Up',
+        helperText: 'Do you want to display sign up form?',
+        onCheckedChange: (value, form) => handleSignUpFields(value, fieldsSchema, form),
+      },
+      signupFormId: {
+        type: 'select',
+        label: 'Signup Form Name',
+        placeholder: 'Enter form name',
+        options: apiOptions.signupForm,
+      },
+      isPopupForm: {
+        type: 'switch',
+        label: 'Is Popup Form Allowed?',
+        helperText: 'Do you want to display popup form?',
+        onCheckedChange: (value, form) => handlePopupFields(value, fieldsSchema, form),
+      },
+      popupFormId: {
+        type: 'select',
+        label: 'Popup Form Name',
+        placeholder: 'Enter form name',
+        options: apiOptions.popupForm,
+      },
+      noOfFieldsInPopup: {
+        type: 'number',
+        label: 'No Of Fields In Popup',
+        placeholder: 'Enter no of fields in popup',
+        min: 0,
+        step: 1,
+      },
+      isRedirection: {
+        type: 'switch',
+        label: 'Is Redirection Allowed?',
+        helperText: 'Do you want to allow redirection?',
+      },
+      isIdGeneration: {
+        type: 'switch',
+        label: 'Is ID Generation Allowed?',
+        helperText: 'Do you want to generate IDs?',
+      },
+      platform: {
+        type: 'select',
+        options: TestPlatformOptions,
+        placeholder: 'Select a platform',
+        label: 'Platform',
+        disabled: type === SessionType.EDIT,
+      },
+    }),
+    []
+  );
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const defaultValues: Partial<basicFields> = useMemo(
     () => ({

@@ -1,14 +1,25 @@
 'use client';
 
+import Loading from '@/app/loading';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import Stepper from '@/components/ui/stepper';
 import { FormDataProvider } from '@/hooks/useFormContext';
 import { ApiFormOptions, Session, StepperSteps, Steps } from '@/types';
+import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import { memo, useMemo } from 'react';
-import Basic from './Basic';
-import Platform from './Platform';
-import Timeline from './Timeline';
+const Basic = dynamic(() => import('./Basic'), {
+  ssr: false,
+  loading: Loading,
+});
+const Platform = dynamic(() => import('./Platform'), {
+  ssr: false,
+  loading: Loading,
+});
+const Timeline = dynamic(() => import('./Timeline'), {
+  ssr: false,
+  loading: Loading,
+});
 
 interface StepsControllerProps {
   sessionData: Session;
@@ -33,7 +44,7 @@ const StepsController = ({ sessionData, options }: StepsControllerProps) => {
       <Card className="my-5">
         <CardHeader />
         <CardContent>
-          <FormDataProvider sessionData={sessionData} options={options}>
+          <FormDataProvider sessionData={sessionData} apiOptions={options}>
             <DynamicForm />
           </FormDataProvider>
         </CardContent>

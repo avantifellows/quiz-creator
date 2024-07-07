@@ -155,17 +155,10 @@ const ControlledSelectField = React.forwardRef<
   React.useEffect(() => {
     if (value && onValueChange) {
       const value = form.watch(field.name);
+      form.setValue(field.name, value, { shouldDirty: true });
       onValueChange(value, form);
     }
   }, [value, onValueChange]);
-
-  const handleChange = (...event: any[]) => {
-    onChange(...event);
-    if (onValueChange) {
-      const value = form.watch(field.name);
-      onValueChange(value, form);
-    }
-  };
 
   return (
     <>
@@ -173,7 +166,7 @@ const ControlledSelectField = React.forwardRef<
       <Select
         key={key}
         disabled={disabled}
-        onValueChange={handleChange}
+        onValueChange={onChange}
         value={value?.toString()}
         defaultValue={value?.toString()}
       >
