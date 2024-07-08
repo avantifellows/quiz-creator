@@ -22,7 +22,7 @@ const Switch = React.forwardRef<
   >
     <SwitchPrimitives.Thumb
       className={cn(
-        'pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0'
+        'pointer-events-none block h-5 w-5 rounded-full bg-background shadow-2xl ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0'
       )}
     />
   </SwitchPrimitives.Root>
@@ -45,7 +45,7 @@ const ControlledSwitchField = React.forwardRef<
   }, [value, onCheckedChange]);
 
   return (
-    <span className="flex flex-row justify-between items-center gap-4 my-px">
+    <span className="flex flex-row justify-between items-center gap-4 mt-2">
       <FormLabel>{label}</FormLabel>
       <FormControl ref={ref}>
         <Switch

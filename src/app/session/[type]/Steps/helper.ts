@@ -9,7 +9,7 @@ import {
 } from '@/types';
 import { UseFormReturn } from 'react-hook-form';
 
-export const setPreset = (
+export const setGroupPreset = (
   value: string,
   apiOptions: ApiFormOptions,
   updateFormData: (data: Session | ((prevState: Session) => Session)) => void
@@ -121,11 +121,13 @@ export const setPreset = (
       break;
   }
 
+  if (Object.keys(newDefaultData).length === 0) return;
+
   updateFormData({
     ...newDefaultData,
     meta_data: { ...newDefaultData.meta_data, group: value },
   });
-  console.log('[PRESET] Applying : ', value);
+  console.log('[PRESET] Applying GROUP : ', value);
 };
 
 export const setParentBatchOptions = (
@@ -162,7 +164,7 @@ export const setBatchOptions = (
   console.log('[OPTIONS] SUB BATCH APPLIED : ', value);
 };
 
-export const setPlatformId = (value: string, form?: UseFormReturn) => {
+export const setPlatformId = (value: string, form: UseFormReturn) => {
   if (!value) return;
 
   let seperator = null;
@@ -182,7 +184,7 @@ export const setPlatformId = (value: string, form?: UseFormReturn) => {
     const urlArr = value.split(seperator);
     if (urlArr.length > 1) {
       const platformId = urlArr[urlArr.length - 1];
-      form?.setValue('platformId', platformId, { shouldDirty: true });
+      form.setValue('platformId', platformId, { shouldDirty: true });
       console.log('[PLATFORM ID] Applied : ', value);
     }
   }

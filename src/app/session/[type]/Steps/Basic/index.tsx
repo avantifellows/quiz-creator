@@ -18,8 +18,8 @@ import {
   handlePopupFields,
   handleSignUpFields,
   setBatchOptions,
+  setGroupPreset,
   setParentBatchOptions,
-  setPreset,
 } from '../helper';
 
 const BasicForm: FC = () => {
@@ -38,7 +38,7 @@ const BasicForm: FC = () => {
         onValueChange: (value, form) => {
           setParentBatchOptions(value, apiOptions, fieldsSchema);
           if (isMounted.current) {
-            setPreset(value, apiOptions, updateFormData);
+            setGroupPreset(value, apiOptions, updateFormData);
           }
         },
       },
@@ -78,8 +78,7 @@ const BasicForm: FC = () => {
       },
       activateSignUp: {
         type: 'switch',
-        label: 'Activate Sign Up',
-        helperText: 'Do you want to display sign up form?',
+        label: 'Do you want to display sign up form?',
         onCheckedChange: (value, form) => handleSignUpFields(value, fieldsSchema, form),
       },
       signupFormId: {
@@ -90,8 +89,7 @@ const BasicForm: FC = () => {
       },
       isPopupForm: {
         type: 'switch',
-        label: 'Is Popup Form Allowed?',
-        helperText: 'Do you want to display popup form?',
+        label: 'Do you want to display popup form?',
         onCheckedChange: (value, form) => handlePopupFields(value, fieldsSchema, form),
       },
       popupFormId: {
@@ -109,13 +107,11 @@ const BasicForm: FC = () => {
       },
       isRedirection: {
         type: 'switch',
-        label: 'Is Redirection Allowed?',
-        helperText: 'Do you want to allow redirection?',
+        label: 'Do you want to allow redirection?',
       },
       isIdGeneration: {
         type: 'switch',
-        label: 'Is ID Generation Allowed?',
-        helperText: 'Do you want to generate IDs?',
+        label: 'Do you want to generate IDs?',
       },
       platform: {
         type: 'select',
