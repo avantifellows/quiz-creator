@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { ComponentType } from 'react';
 import { Option } from './formbuilder.types';
 
 export * from './api.types';
@@ -24,7 +24,7 @@ export type SessionSearchParams = {
 export interface StepperSteps {
   [key: string]: {
     label: string;
-    component: FC<any>;
+    component: ComponentType<any>;
     hide?: boolean;
   };
 }
@@ -40,7 +40,7 @@ export interface DataSection {
   data: DataItem[];
 }
 
-interface ExtenedOptions extends Option {
+export interface ExtenedOptions extends Option {
   [key: string]: any;
 }
 

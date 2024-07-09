@@ -60,8 +60,11 @@ export interface MyInputProps extends InputHTMLAttributes<HTMLInputElement>, Com
   onValueChange?: (value: string, form: UseFormReturn) => void;
 }
 
-export interface MySwitchProps extends Omit<SwitchProps, 'type' | 'ref'>, CommonFieldProps {
+export interface MySwitchProps
+  extends Omit<SwitchProps, 'type' | 'ref' | 'onCheckedChange'>,
+    CommonFieldProps {
   type: 'switch';
+  onCheckedChange?(checked: boolean, form: UseFormReturn): void;
 }
 
 export interface MyDateTimeProps extends CommonFieldProps, Omit<DayPickerDefaultProps, 'disabled'> {

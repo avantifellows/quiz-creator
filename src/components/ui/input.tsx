@@ -28,29 +28,22 @@ const ControlledInput = React.forwardRef<
   HTMLInputElement,
   { field: ControllerRenderProps } & { schema: MyInputProps } & { form: UseFormReturn }
 >(({ field, form, schema }, ref) => {
-  const { value = '', onChange, ...restFieldProps } = field;
+  const { value = '', ...restFieldProps } = field;
   const { label, onValueChange, ...restSchemaProps } = schema;
 
   React.useEffect(() => {
     if (onValueChange) {
       const value = form.watch(field.name);
+      form.setValue(field.name, value, { shouldDirty: true });
       onValueChange(value, form);
     }
   }, [value, onValueChange]);
-
-  const handleChange = (...event: any[]) => {
-    onChange(...event);
-    if (onValueChange) {
-      const value = form.watch(field.name);
-      onValueChange(value, form);
-    }
-  };
 
   return (
     <>
       <FormLabel>{label}</FormLabel>
       <FormControl ref={ref}>
-        <Input {...restSchemaProps} {...restFieldProps} onChange={handleChange} value={value} />
+        <Input {...restSchemaProps} {...restFieldProps} value={value} />
       </FormControl>
     </>
   );

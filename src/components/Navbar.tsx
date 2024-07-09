@@ -19,7 +19,14 @@ const Navbar = () => {
     <header>
       <nav className="flex flex-row justify-between items-center px-4 md:px-8">
         <Link href="/" className="relative w-32 aspect-video" title="Avanti Fellows">
-          <Image src="/AvantiFellowsLogo_1.svg" alt="Avanti fellows logo" fill priority />
+          <Image
+            src="https://cdn.avantifellows.org/af_logos/avanti_logo_black_text.webp"
+            alt="Avanti fellows logo"
+            className="object-contain"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
+            fill
+          />
         </Link>
         <h1 className="text-lg md:text-2xl">
           <span className="text-2xl md:text-3xl text-bold">S</span>ESSION{' '}

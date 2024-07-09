@@ -28,7 +28,7 @@ interface IFormContext {
 interface IFormProviderProps {
   children: ReactNode;
   sessionData: Session;
-  options?: ApiFormOptions;
+  apiOptions?: ApiFormOptions;
 }
 
 /**
@@ -50,27 +50,30 @@ const FormContext = createContext<IFormContext>({
  * Form Context Provider
  * @param children - The children components
  * @param sessionData - The initial session data
+ * @param apiOptions - The dropdown options fetched from the API
  */
 export const FormDataProvider = ({
   children,
   sessionData = {},
-  options = {},
+  apiOptions = {},
 }: IFormProviderProps) => {
   const params = useParams<SessionParams>();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [formData, setFormData] = useState<Session>(sessionData);
-  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
-  const apiOptions = useMemo<ApiFormOptions>(() => options, [options]);
   const id = useMemo(() => searchParams.get('id'), [searchParams]);
   const sessionKey = useMemo(() => `formData_${params.type}${id ? '_' + id : ''}`, [params, id]);
-
-  useEffect(() => {
-    const sessionFormData = sessionStorage.getItem(sessionKey);
-    if (sessionFormData) {
-      updateFormData(JSON.parse(sessionFormData));
+  const [isSubmiting, setIsSubmiting] = useState<boolean>(false);
+  const getSessionData = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      const sessionStorageData = sessionStorage.getItem(sessionKey);
+      if (sessionStorageData) {
+        return JSON.parse(sessionStorageData);
+      }
+      return sessionData;
     }
+    return {};
   }, []);
+  const [formData, setFormData] = useState<Session>(getSessionData);
 
   useEffect(() => {
     if (isSubmiting) {
@@ -138,7 +141,6 @@ export const FormDataProvider = ({
 
   const submitForm = useCallback(() => setIsSubmiting(true), []);
 
-  console.info('Form Data : ', { isSubmiting, formData });
   return (
     <FormContext.Provider value={{ formData, isSubmiting, apiOptions, updateFormData, submitForm }}>
       {children}

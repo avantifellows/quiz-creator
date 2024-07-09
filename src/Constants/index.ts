@@ -3,8 +3,8 @@ import { DeepKeys } from '@tanstack/react-table';
 
 export * from './Options';
 
-export const DATA_PER_PAGE = 10;
-export const PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50];
+export const DATA_PER_PAGE = 50;
+export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100, 200];
 
 /**
  * Keys to be deleted before duplicating a session

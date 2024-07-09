@@ -83,7 +83,7 @@ export const FormBuilder = <T extends FieldValues>({
 }: FormBuilderProps<T>) => {
   const router = useRouter();
 
-  const form = useForm({
+  const form = useForm<T>({
     resolver: zodResolver(zodSchema),
     defaultValues,
   });
