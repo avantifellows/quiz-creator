@@ -127,7 +127,6 @@ export const setGroupPreset = (
     ...newDefaultData,
     meta_data: { ...newDefaultData.meta_data, group: value },
   });
-  console.log('[PRESET] Applying GROUP : ', value);
 };
 
 export const setParentBatchOptions = (
@@ -144,7 +143,6 @@ export const setParentBatchOptions = (
 
   (fieldsSchema.parentBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
   (fieldsSchema.subBatch as MySelectProps).options = [];
-  console.log('[OPTIONS] PARENT BATCH APPLIED : ', value);
 };
 
 export const setBatchOptions = (
@@ -161,7 +159,6 @@ export const setBatchOptions = (
   );
   form.setValue('subBatch', '');
   (fieldsSchema.subBatch as MySelectProps).options = filteredClassBatchOptions ?? [];
-  console.log('[OPTIONS] SUB BATCH APPLIED : ', value);
 };
 
 export const setPlatformId = (value: string, form: UseFormReturn) => {
@@ -185,7 +182,6 @@ export const setPlatformId = (value: string, form: UseFormReturn) => {
     if (urlArr.length > 1) {
       const platformId = urlArr[urlArr.length - 1];
       form.setValue('platformId', platformId, { shouldDirty: true });
-      console.log('[PLATFORM ID] Applied : ', value);
     }
   }
 };
@@ -195,7 +191,6 @@ export const handleSignUpFields = (
   formSchema: FieldSchema<basicFields>,
   form: UseFormReturn
 ) => {
-  console.log('[SIGNUP] Applied : ', checked);
   if (checked) {
     formSchema.signupFormId.hide = false;
     form.setValue('activateSignUp', true, { shouldDirty: true });
@@ -210,7 +205,6 @@ export const handlePopupFields = (
   formSchema: FieldSchema<basicFields>,
   form: UseFormReturn
 ) => {
-  console.log('[POPUP] Applied : ', checked);
   if (checked) {
     formSchema.popupFormId.hide = false;
     formSchema.noOfFieldsInPopup.hide = false;

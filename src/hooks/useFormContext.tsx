@@ -141,7 +141,6 @@ export const FormDataProvider = ({
 
   const submitForm = useCallback(() => setIsSubmiting(true), []);
 
-  console.info('Form Data : ', { isSubmiting, formData });
   return (
     <FormContext.Provider value={{ formData, isSubmiting, apiOptions, updateFormData, submitForm }}>
       {children}
