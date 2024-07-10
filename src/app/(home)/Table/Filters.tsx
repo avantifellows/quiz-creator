@@ -24,7 +24,7 @@ const Filters = ({
   groupOptions: ExtendedOptions[];
 }) => {
   const isFiltered = useMemo(() => table.getState().columnFilters.length > 0, [table]);
-  console.log(table.getColumn('group'));
+
   return (
     <div className="flex mb-4 gap-4 flex-col md:flex-row justify-between">
       <div className="flex items-center justify-normal gap-2 md:gap-4 flex-1">

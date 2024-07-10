@@ -10,6 +10,8 @@ export type TableParams = {
   page?: string;
   per_page?: string;
   group?: string;
+  parentId?: string;
+  batchId?: string;
 };
 
 export type SessionParams = {
@@ -19,6 +21,16 @@ export type SessionParams = {
 export type SessionSearchParams = {
   step: string;
   id?: string;
+};
+
+export type FilterParams = {
+  sort_order: string;
+  limit: number;
+  offset: number;
+  is_quiz: boolean;
+  group?: string;
+  parent_id?: string;
+  batch_id?: string;
 };
 
 export interface StepperSteps {

@@ -2,8 +2,8 @@
 
 import { DATA_PER_PAGE, KeysToDeleteBeforeUpdate } from '@/Constants';
 import { istToUTCDate, utcToISTDate } from '@/lib/time-picker-utils';
-import { deleteByPath } from '@/lib/utils';
-import { ApiFormOptions, Platform, TableParams } from '@/types';
+import { deleteByPath, filterObject } from '@/lib/utils';
+import { ApiFormOptions, FilterParams, Platform, TableParams } from '@/types';
 import { Session } from '@/types/api.types';
 import { instance } from '../lib/axios';
 import { publishMessage } from './Aws';
@@ -11,28 +11,16 @@ import { publishMessage } from './Aws';
 /**
  * Retrieves sessions data from the server.
  *
- * @param {number} currentPage - The current page number.
- * @param {number} limit - The maximum number of items per page.
+ * @param {number} filterParams - The filter params.
  * @return {Promise<{data: Session[]; hasMore: boolean}>}
  * - data : array of Session
  * - hasMore : boolean indicating if there are more items
  */
-export async function getSessions(currentPage: number, limit: number, filterParams: Object) {
+export async function getSessions(filterParams: FilterParams) {
   try {
-    const offset = currentPage * DATA_PER_PAGE;
+    const filteredParams = filterObject(filterParams);
 
-    const filteredParams = Object.entries(filterParams)
-      .filter(([key, value]) => value !== undefined && value !== '')
-      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-
-    const { data } = await instance.get<Session[]>(`/session`, {
-      params: {
-        offset,
-        limit,
-        sort_order: 'desc',
-        ...filteredParams,
-      },
-    });
+    const { data } = await instance.get<Session[]>(`/session`, { params: filteredParams });
 
     const parsedData = data.map((i) => ({
       ...i,
@@ -46,11 +34,11 @@ export async function getSessions(currentPage: number, limit: number, filterPara
       },
     }));
 
-    const hasMore = data.length > DATA_PER_PAGE;
+    const hasMore = data.length === filterParams.limit;
     const items = hasMore ? parsedData.slice(0, -1) : parsedData;
     console.info('[API SUCCESS] fetching sessions : ', {
       length: items.length,
-      currentPage,
+      hasMore,
       filteredParams,
     });
     return { data: items, hasMore };
@@ -62,14 +50,21 @@ export async function getSessions(currentPage: number, limit: number, filterPara
 
 export async function getTableData(searchParams: TableParams, isQuiz: boolean) {
   const currentPage = parseInt(searchParams?.page || '0');
-  const limit = parseInt(searchParams?.per_page || '10');
-  const groupSelected = searchParams?.group || null;
-
-  const { data, hasMore } = await getSessions(currentPage, limit, {
+  const limit = parseInt(searchParams?.per_page || DATA_PER_PAGE.toString());
+  const filteredParams = {
+    sort_order: 'desc',
+    limit: limit + 1,
+    offset: currentPage * limit,
     is_quiz: isQuiz,
-    group_id: groupSelected,
-  });
-  return { data, hasMore };
+    group: searchParams?.group,
+    parent_id: searchParams?.parentId,
+    batch_id: searchParams?.batchId,
+  };
+  const [sessionRes, apiOptions] = await Promise.all([
+    getSessions(filteredParams),
+    getHomeOptions(),
+  ]);
+  return { ...sessionRes, apiOptions };
 }
 
 /**
@@ -204,8 +199,6 @@ export async function getAllOptions(): Promise<ApiFormOptions> {
       formSchemaOptions.filter((item) => item.label.includes(keyword));
     const popupForm = createFormOptionFilter('Profile');
     const signupForm = createFormOptionFilter('Registration');
-
-    console.info(`[API SUCCESS] fetching options`);
     return {
       group: groupOptions,
       batch: batchOptions,
@@ -232,7 +225,7 @@ export async function getAuthGroups() {
       value: item.name,
       id: item.id,
     }));
-
+    console.info('[API SUCCESS] fetching auth groups : ', authGroups.length);
     return authGroups ?? [];
   } catch (error) {
     console.error(`[API ERROR] fetching options : ${error}`);
@@ -252,6 +245,7 @@ export async function getBatches() {
       groupId: item.auth_group_id,
     }));
 
+    console.info('[API SUCCESS] fetching batches : ', batches.length);
     return batches ?? [];
   } catch (error) {
     console.error(`[API ERROR] fetching options : ${error}`);
@@ -268,6 +262,7 @@ export async function getFormSchemas() {
       value: item.id,
     }));
 
+    console.info('[API SUCCESS] fetching form schemas : ', formSchemas.length);
     return formSchemas ?? [];
   } catch (error) {
     console.error(`[API ERROR] fetching options : ${error}`);
