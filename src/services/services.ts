@@ -62,7 +62,7 @@ export async function getTableData(searchParams: TableParams, isQuiz: boolean) {
   };
   const [sessionRes, apiOptions] = await Promise.all([
     getSessions(filteredParams),
-    getHomeOptions(),
+    getAllOptions(),
   ]);
   return { ...sessionRes, apiOptions };
 }
@@ -267,15 +267,5 @@ export async function getFormSchemas() {
   } catch (error) {
     console.error(`[API ERROR] fetching options : ${error}`);
     return [];
-  }
-}
-
-export async function getHomeOptions(): Promise<ApiFormOptions> {
-  try {
-    const [group, formSchemas] = await Promise.all([getAuthGroups(), getFormSchemas()]);
-    return { group, formSchemas };
-  } catch (error) {
-    console.error(`[API ERROR] fetching home options : ${error}`);
-    return { group: [], formSchemas: [] };
   }
 }

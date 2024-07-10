@@ -7,7 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export function createQueryString(params: { [key: string]: string | number }) {
   return Object.keys(params)
-    .map((key) => `${key}=${params[key]}`)
+    .map((key) => (params[key] ? `${key}=${params[key]}` : ''))
+    .filter(Boolean)
     .join('&');
 }
 

@@ -63,3 +63,15 @@ export interface ApiFormOptions {
   signupForm?: ExtendedOptions[];
   formSchemas?: Option[];
 }
+
+export interface FilterColumnSchema {
+  name: string;
+  label: string;
+  options: ExtendedOptions[];
+  show: boolean;
+  onChange: (value: string) => void;
+}
+
+export interface FilterSchema {
+  [key: string]: FilterColumnSchema;
+}
