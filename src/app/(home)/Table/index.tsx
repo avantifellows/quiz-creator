@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { createQueryString } from '@/lib/utils';
-import { Option, Session } from '@/types';
+import { ApiFormOptions, Session } from '@/types';
 import {
   flexRender,
   getCoreRowModel,
@@ -31,13 +31,13 @@ import { SheetTableRow } from './Row';
 export default function DataTable({
   data,
   hasMore,
-  formOptions,
+  apiOptions,
   columns,
 }: {
   columns: ColumnDef<Session>[];
   data: Session[];
   hasMore: boolean;
-  formOptions: Option[];
+  apiOptions: ApiFormOptions;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -95,7 +95,7 @@ export default function DataTable({
 
   return (
     <>
-      <Filters table={table} />
+      <Filters table={table} groupOptions={apiOptions?.group ?? []} />
       <div className="rounded-md text-center border">
         <Table>
           <TableHeader>
@@ -115,7 +115,7 @@ export default function DataTable({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              <SheetTableRow table={table} formOptions={formOptions} />
+              <SheetTableRow table={table} formOptions={apiOptions?.formSchemas ?? []} />
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">

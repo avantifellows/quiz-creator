@@ -1,4 +1,4 @@
-import { getFormSchemas, getTableData } from '@/services/services';
+import { getHomeOptions, getTableData } from '@/services/services';
 import { TableParams } from '@/types';
 import dynamic from 'next/dynamic';
 import { columns } from './LiveColumns';
@@ -13,7 +13,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const limit = parseInt(searchParams?.per_page || '10');
 
   const { data, hasMore } = await getTableData(currentPage, limit + 1, { is_quiz: false });
-  const formOptions = await getFormSchemas();
+  const apiOptions = await getHomeOptions();
 
-  return <DataTable data={data} hasMore={hasMore} formOptions={formOptions} columns={columns} />;
+  return <DataTable data={data} hasMore={hasMore} apiOptions={apiOptions} columns={columns} />;
 }

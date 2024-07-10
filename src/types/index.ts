@@ -40,13 +40,14 @@ export interface DataSection {
   data: DataItem[];
 }
 
-export interface ExtenedOptions extends Option {
+export interface ExtendedOptions extends Option {
   [key: string]: any;
 }
 
 export interface ApiFormOptions {
-  group?: ExtenedOptions[];
-  batch?: ExtenedOptions[];
-  popupForm?: ExtenedOptions[];
-  signupForm?: ExtenedOptions[];
+  group?: ExtendedOptions[];
+  batch?: ExtendedOptions[];
+  popupForm?: ExtendedOptions[];
+  signupForm?: ExtendedOptions[];
+  formSchemas?: Option[];
 }

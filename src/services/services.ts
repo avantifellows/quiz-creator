@@ -3,7 +3,7 @@
 import { DATA_PER_PAGE, KeysToDeleteBeforeUpdate } from '@/Constants';
 import { istToUTCDate, utcToISTDate } from '@/lib/time-picker-utils';
 import { deleteByPath } from '@/lib/utils';
-import { ApiFormOptions, Platform } from '@/types';
+import { ApiFormOptions, Platform, TableParams } from '@/types';
 import { Session } from '@/types/api.types';
 import { instance } from '../lib/axios';
 import { publishMessage } from './Aws';
@@ -17,7 +17,7 @@ import { publishMessage } from './Aws';
  * - data : array of Session
  * - hasMore : boolean indicating if there are more items
  */
-export async function getTableData(currentPage: number, limit: number, filterParams: Object) {
+export async function getSessions(currentPage: number, limit: number, filterParams: Object) {
   try {
     const offset = currentPage * DATA_PER_PAGE;
 
@@ -58,6 +58,18 @@ export async function getTableData(currentPage: number, limit: number, filterPar
     console.error(`[API ERROR]  fetching sessions : ${error}`);
     return { data: [], hasMore: false };
   }
+}
+
+export async function getTableData(searchParams: TableParams, isQuiz: boolean) {
+  const currentPage = parseInt(searchParams?.page || '0');
+  const limit = parseInt(searchParams?.per_page || '10');
+  const groupSelected = searchParams?.group || null;
+
+  const { data, hasMore } = await getSessions(currentPage, limit, {
+    is_quiz: isQuiz,
+    group_id: groupSelected,
+  });
+  return { data, hasMore };
 }
 
 /**
@@ -182,19 +194,23 @@ export async function patchSession(formData: Session, id: number) {
  */
 export async function getAllOptions(): Promise<ApiFormOptions> {
   try {
-    const groupOptions = await getAuthGroups();
-    const batchOptions = await getBatches();
-    const formSchemaOptions = await getFormSchemas();
+    const [groupOptions, batchOptions, formSchemaOptions] = await Promise.all([
+      getAuthGroups(),
+      getBatches(),
+      getFormSchemas(),
+    ]);
 
-    const popupForm = formSchemaOptions?.filter((item) => item.label.includes('Profile'));
-    const signupForm = formSchemaOptions?.filter((item) => item.label.includes('Registration'));
+    const createFormOptionFilter = (keyword: string) =>
+      formSchemaOptions.filter((item) => item.label.includes(keyword));
+    const popupForm = createFormOptionFilter('Profile');
+    const signupForm = createFormOptionFilter('Registration');
+
     console.info(`[API SUCCESS] fetching options`);
-
     return {
-      group: groupOptions ?? [],
-      batch: batchOptions ?? [],
-      popupForm: popupForm ?? [],
-      signupForm: signupForm ?? [],
+      group: groupOptions,
+      batch: batchOptions,
+      popupForm: popupForm,
+      signupForm: signupForm,
     };
   } catch (error) {
     console.error(`[API ERROR] fetching options : ${error}`);
@@ -256,5 +272,15 @@ export async function getFormSchemas() {
   } catch (error) {
     console.error(`[API ERROR] fetching options : ${error}`);
     return [];
+  }
+}
+
+export async function getHomeOptions(): Promise<ApiFormOptions> {
+  try {
+    const [group, formSchemas] = await Promise.all([getAuthGroups(), getFormSchemas()]);
+    return { group, formSchemas };
+  } catch (error) {
+    console.error(`[API ERROR] fetching home options : ${error}`);
+    return { group: [], formSchemas: [] };
   }
 }
