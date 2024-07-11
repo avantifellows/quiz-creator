@@ -54,6 +54,7 @@ export const basicSchema = z
         (value) => TestPlatformOptions.some((option) => option.value === value),
         'Invalid option selected'
       ),
+    name: z.string({ required_error: 'This field is required' }),
   })
   .superRefine((data, context) => {
     if (data.isPopupForm) {
@@ -115,7 +116,6 @@ export const quizSchema = z.object({
     .includes('cms.peerlearning.com', {
       message: 'This is not a valid cms url, please use https://cms.peerlearning.com',
     }),
-  name: z.string({ required_error: 'This field is required' }),
   testType: z
     .string({ required_error: 'This field is required' })
     .refine(
@@ -180,7 +180,6 @@ export const liveSchema = z
       .url('This is not a valid url'),
     platformId: z.string({ required_error: 'This field is required' }),
     subject: z.string({ required_error: 'This field is required' }),
-    name: z.string({ required_error: 'This field is required' }),
     platform: z.string().optional(),
   })
   .refine(

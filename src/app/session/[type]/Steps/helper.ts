@@ -4,6 +4,7 @@ import {
   FieldSchema,
   Group,
   MySelectProps,
+  Platform,
   Session,
   basicFields,
 } from '@/types';
@@ -215,4 +216,39 @@ export const handlePopupFields = (
     form.setValue('popupFormId', null);
     form.setValue('noOfFieldsInPopup', '', { shouldDirty: true });
   }
+};
+
+export const handleRedirectionData = (formData: Session) => {
+  const { platform, meta_data } = formData;
+  let newFormData: Session = {};
+
+  if (platform === Platform.Quiz) {
+    newFormData = {
+      ...formData,
+      meta_data: {
+        ...meta_data,
+        course: '',
+        stream: '',
+        test_format: '',
+        test_purpose: '',
+        test_type: '',
+        marking_scheme: '',
+        optional_limits: '',
+        cms_test_id: '',
+        show_answers: false,
+      },
+    };
+  } else {
+    newFormData = {
+      ...formData,
+      platform_link: '',
+      platform_id: '',
+      meta_data: {
+        ...meta_data,
+        subject: '',
+      },
+    };
+  }
+
+  return newFormData;
 };
