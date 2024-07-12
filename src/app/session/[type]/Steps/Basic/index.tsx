@@ -149,7 +149,7 @@ const BasicForm: FC = () => {
       noOfFieldsInPopup: formData?.meta_data?.number_of_fields_in_popup_form
         ? Number(formData?.meta_data?.number_of_fields_in_popup_form)
         : '',
-      isRedirection: formData?.redirection,
+      isRedirection: formData?.redirection ?? true,
       isIdGeneration: formData?.id_generation,
       platform: formData?.platform,
       sessionType: formData?.type,
