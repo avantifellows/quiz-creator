@@ -7,7 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export function createQueryString(params: { [key: string]: string | number }) {
   return Object.keys(params)
-    .map((key) => `${key}=${params[key]}`)
+    .map((key) => (params[key] ? `${key}=${params[key]}` : ''))
+    .filter(Boolean)
     .join('&');
 }
 
@@ -23,3 +24,11 @@ export const deleteByPath = (object: object, path: string) => {
   }
   delete currentObject[last as keyof object];
 };
+
+export function filterObject<T extends Record<string, unknown>>(obj: T) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([key, value]) => value !== undefined && value !== null && value !== ''
+    )
+  );
+}

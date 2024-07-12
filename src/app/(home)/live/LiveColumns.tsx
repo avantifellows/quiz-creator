@@ -56,7 +56,19 @@ export const columns: ColumnDef<Session>[] = [
     id: 'group',
     accessorKey: 'meta_data.group',
     header: 'Group',
-    cell: ({ row }) => (row.getValue('group') ? row.getValue('group') : 'N/A'),
+    cell: ({ row }) => row.getValue('group') || 'N/A',
+  },
+  {
+    id: 'parentId',
+    accessorKey: 'meta_data.parent_id',
+    header: 'Parent Batch',
+    cell: ({ row }) => row.getValue('parentId') || 'N/A',
+  },
+  {
+    id: 'batchId',
+    accessorKey: 'meta_data.batch_id',
+    header: 'Sub Batch',
+    cell: ({ row }) => row.getValue('batchId') || 'N/A',
   },
   {
     id: 'testTakersCount',

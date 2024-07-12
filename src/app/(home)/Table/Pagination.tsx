@@ -17,7 +17,7 @@ const Pagination = ({ table }: { table: Table<Session> }) => {
       <div className="flex items-center space-x-2">
         <p className="whitespace-nowrap text-sm font-medium">Rows per page</p>
         <Select
-          value={`${table.getState().pagination.pageSize}`}
+          value={table.getState().pagination.pageSize.toString()}
           onValueChange={(value) => table.setPageSize(Number(value))}
         >
           <SelectTrigger className="h-8 w-16">
@@ -25,7 +25,7 @@ const Pagination = ({ table }: { table: Table<Session> }) => {
           </SelectTrigger>
           <SelectContent side="top">
             {PAGE_SIZE_OPTIONS.map((pageSize) => (
-              <SelectItem key={pageSize} value={`${pageSize}`}>
+              <SelectItem key={pageSize} value={pageSize.toString()}>
                 {pageSize}
               </SelectItem>
             ))}
@@ -33,10 +33,10 @@ const Pagination = ({ table }: { table: Table<Session> }) => {
         </Select>
       </div>
       <div className="flex flex-row gap-4">
-        <Button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+        <Button onClick={table.previousPage} disabled={!table.getCanPreviousPage()}>
           Previous
         </Button>
-        <Button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+        <Button onClick={table.nextPage} disabled={!table.getCanNextPage()}>
           Next
         </Button>
       </div>

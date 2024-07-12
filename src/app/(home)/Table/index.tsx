@@ -10,20 +10,16 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { createQueryString } from '@/lib/utils';
-import { Option, Session } from '@/types';
+import type { ApiFormOptions, Session } from '@/types';
 import {
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
   type ColumnDef,
-  type ColumnFiltersState,
-  type SortingState,
 } from '@tanstack/react-table';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import Filters from './Filters';
 import Pagination from './Pagination';
 import { SheetTableRow } from './Row';
@@ -31,13 +27,13 @@ import { SheetTableRow } from './Row';
 export default function DataTable({
   data,
   hasMore,
-  formOptions,
+  apiOptions,
   columns,
 }: {
   columns: ColumnDef<Session>[];
   data: Session[];
   hasMore: boolean;
-  formOptions: Option[];
+  apiOptions: ApiFormOptions;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -45,22 +41,24 @@ export default function DataTable({
   const page = Number(searchParams.get('page') || 0);
   const perPage = Number(searchParams.get('per_page') || DATA_PER_PAGE);
 
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [pagination, setPagination] = useState({
-    pageIndex: page,
-    pageSize: PAGE_SIZE_OPTIONS.includes(perPage) ? perPage : DATA_PER_PAGE,
-  });
+  const initColumnsFilters = useMemo(() => {
+    const filters = ['group', 'batchId', 'parentId'].reduce<ColumnFiltersState>((acc, key) => {
+      const value = searchParams.get(key);
+      if (value) acc.push({ id: key, value });
+      return acc;
+    }, []);
+    return filters;
+  }, [searchParams]);
 
   const table = useReactTable({
     data,
     columns,
-    state: {
-      pagination,
-      sorting,
-      columnFilters,
-    },
     initialState: {
+      columnFilters: initColumnsFilters,
+      pagination: {
+        pageIndex: page,
+        pageSize: PAGE_SIZE_OPTIONS.includes(perPage) ? perPage : DATA_PER_PAGE,
+      },
       columnVisibility: {
         startDate: false,
         endDate: false,
@@ -68,34 +66,44 @@ export default function DataTable({
         testTakersCount: false,
         platform: false,
         reportLink: false,
+        parentId: false,
+        batchId: false,
       },
     },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     pageCount: hasMore ? -1 : 0,
     manualPagination: true,
+    manualFiltering: true,
   });
+
+  const { pageIndex, pageSize, group, batchId, parentId } = useMemo(() => {
+    const { columnFilters, pagination } = table.getState();
+    const group = (columnFilters.find((item) => item.id === 'group')?.value as string) || '';
+    const parentId = (columnFilters.find((item) => item.id === 'parentId')?.value as string) || '';
+    const batchId = (columnFilters.find((item) => item.id === 'batchId')?.value as string) || '';
+    return { ...pagination, group, parentId, batchId };
+  }, [
+    table.getState().columnFilters,
+    table.getState().pagination.pageIndex,
+    table.getState().pagination.pageSize,
+  ]);
 
   useEffect(() => {
     router.push(
       `${pathname}?${createQueryString({
-        page: pagination.pageIndex,
-        per_page: pagination.pageSize,
+        page: pageIndex.toString(),
+        per_page: pageSize.toString(),
+        group,
+        batchId,
+        parentId,
       })}`,
-      {
-        scroll: false,
-      }
+      { scroll: false }
     );
-  }, [pagination.pageIndex, pagination.pageSize]);
+  }, [pageIndex, pageSize, group, batchId, parentId]);
 
   return (
     <>
-      <Filters table={table} />
+      <Filters table={table} apiOptions={apiOptions} />
       <div className="rounded-md text-center border">
         <Table>
           <TableHeader>
@@ -115,7 +123,7 @@ export default function DataTable({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              <SheetTableRow table={table} formOptions={formOptions} />
+              <SheetTableRow table={table} formOptions={apiOptions?.formSchemas ?? []} />
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">

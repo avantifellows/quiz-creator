@@ -10,6 +10,8 @@ export type TableParams = {
   page?: string;
   per_page?: string;
   group?: string;
+  parentId?: string;
+  batchId?: string;
 };
 
 export type SessionParams = {
@@ -19,6 +21,16 @@ export type SessionParams = {
 export type SessionSearchParams = {
   step: string;
   id?: string;
+};
+
+export type FilterParams = {
+  sort_order: string;
+  limit: number;
+  offset: number;
+  is_quiz: boolean;
+  group?: string;
+  parent_id?: string;
+  batch_id?: string;
 };
 
 export interface StepperSteps {
@@ -40,13 +52,26 @@ export interface DataSection {
   data: DataItem[];
 }
 
-export interface ExtenedOptions extends Option {
+export interface ExtendedOptions extends Option {
   [key: string]: any;
 }
 
 export interface ApiFormOptions {
-  group?: ExtenedOptions[];
-  batch?: ExtenedOptions[];
-  popupForm?: ExtenedOptions[];
-  signupForm?: ExtenedOptions[];
+  group?: ExtendedOptions[];
+  batch?: ExtendedOptions[];
+  popupForm?: ExtendedOptions[];
+  signupForm?: ExtendedOptions[];
+  formSchemas?: Option[];
+}
+
+export interface FilterColumnSchema {
+  name: string;
+  label: string;
+  options: ExtendedOptions[];
+  show: boolean;
+  onChange: (value: string) => void;
+}
+
+export interface FilterSchema {
+  [key: string]: FilterColumnSchema;
 }
