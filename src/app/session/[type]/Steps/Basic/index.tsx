@@ -30,6 +30,18 @@ const BasicForm: FC = () => {
 
   let fieldsSchema: FieldSchema<basicFields> = useMemo(
     () => ({
+      name: {
+        type: 'text',
+        label: 'Session Name',
+        placeholder: 'Enter session name',
+      },
+      platform: {
+        type: 'select',
+        options: TestPlatformOptions,
+        placeholder: 'Select a platform',
+        label: 'Platform',
+        disabled: type === SessionType.EDIT,
+      },
       group: {
         type: 'select',
         options: apiOptions?.group,
@@ -76,18 +88,6 @@ const BasicForm: FC = () => {
         options: AuthOptions,
         label: 'Auth Type',
         placeholder: 'Select a auth type',
-      },
-      platform: {
-        type: 'select',
-        options: TestPlatformOptions,
-        placeholder: 'Select a platform',
-        label: 'Platform',
-        disabled: type === SessionType.EDIT,
-      },
-      name: {
-        type: 'text',
-        label: 'Session Name',
-        placeholder: 'Enter session name',
       },
       activateSignUp: {
         type: 'switch',

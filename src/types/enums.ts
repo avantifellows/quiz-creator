@@ -44,6 +44,7 @@ export enum AuthType {
   IDPH = 'ID,PH',
   IDDOB = 'ID,DOB',
   IDPHDOB = 'ID,PH,DOB',
+  CODE = 'CODE',
 }
 
 export enum Subjects {

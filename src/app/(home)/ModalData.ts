@@ -12,12 +12,13 @@ export const displayData = (data: Session, formOptions: Option[]) => {
   const basicDetails: DataSection = {
     title: 'Basic Details',
     data: [
+      { label: 'Name', value: data.name },
+      { label: 'Platform', value: data.platform },
+      { label: 'Grade', value: data.meta_data?.grade },
       { label: 'Program', value: data.meta_data?.group },
       { label: 'Quiz Batch', value: data.meta_data?.parent_id },
       { label: 'Class Batch', value: data.meta_data?.batch_id },
-      { label: 'Grade', value: data.meta_data?.grade },
       { label: 'Auth Type', value: data.auth_type },
-      { label: 'Platform', value: data.platform },
       { label: 'Session Type', value: data.type },
       { label: 'Is Sign Up Form?', value: data.signup_form ? 'Yes' : 'No' },
       {
@@ -48,7 +49,6 @@ export const displayData = (data: Session, formOptions: Option[]) => {
           StreamOptions.find((i) => i.value === data.meta_data?.stream)?.label ??
           data.meta_data?.stream,
       },
-      { label: 'Test Name', value: data.name },
       {
         label: 'Test Format',
         value:
@@ -67,15 +67,20 @@ export const displayData = (data: Session, formOptions: Option[]) => {
           TestTypeOptions.find((i) => i.value === data.meta_data?.test_type)?.label ??
           data.meta_data?.test_type,
       },
+      { label: 'Marking Scheme', value: data.meta_data?.marking_scheme },
+      { label: 'Optional Limits', value: data.meta_data?.optional_limits },
+      { label: 'Show Answers', value: data.meta_data?.show_answers ? 'Yes' : 'No' },
       {
         label: 'CMS Link',
         value: data.meta_data?.cms_test_id ?? 'N/A',
         isLink: !!data.meta_data?.cms_test_id,
       },
-      { label: 'Marking Scheme', value: data.meta_data?.marking_scheme },
-      { label: 'Optional Limits', value: data.meta_data?.optional_limits },
-      { label: 'Show Answers', value: data.meta_data?.show_answers ? 'Yes' : 'No' },
       { label: 'Portal Link', value: data.portal_link ?? 'N/A', isLink: !!data.portal_link },
+      {
+        label: 'Shortened Link',
+        value: data.meta_data?.shortened_link ?? 'N/A',
+        isLink: !!data.portal_link,
+      },
       {
         label: 'Admin Link',
         value: data.meta_data?.admin_testing_link ?? 'N/A',
@@ -97,6 +102,11 @@ export const displayData = (data: Session, formOptions: Option[]) => {
       { label: 'Portal Link', value: data.portal_link ?? 'N/A', isLink: !!data.portal_link },
       { label: 'Platform ID', value: data.platform_id ?? 'N/A' },
       {
+        label: 'Shortened Link',
+        value: data.meta_data?.shortened_link ?? 'N/A',
+        isLink: !!data.portal_link,
+      },
+      {
         label: 'Platform Link',
         value: data.platform_link ?? 'N/A',
         isLink: !!data.platform_link,
@@ -107,8 +117,10 @@ export const displayData = (data: Session, formOptions: Option[]) => {
   const timeDetails: DataSection = {
     title: 'Time Details',
     data: [
-      { label: 'Start Date & Time', value: format(new Date(data.start_time!), 'PPp') },
-      { label: 'End Date & Time', value: format(new Date(data.end_time!), 'PPp') },
+      { label: 'Start Date', value: format(new Date(data.start_time!), 'PP') },
+      { label: 'End Date', value: format(new Date(data.end_time!), 'PP') },
+      { label: 'Start Time', value: format(new Date(data.start_time!), 'p') },
+      { label: 'End Time', value: format(new Date(data.end_time!), 'p') },
       { label: 'Expected Attendance', value: data.meta_data?.test_takers_count },
       { label: 'Is Enabled?', value: data.is_active ? 'Yes' : 'No' },
       { label: 'Has Synced?', value: data.meta_data?.has_synced_to_bq },

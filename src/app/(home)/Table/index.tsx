@@ -63,7 +63,7 @@ export default function DataTable({
         startDate: false,
         endDate: false,
         createdAt: false,
-        testTakersCount: false,
+        subject: false,
         platform: false,
         reportLink: false,
         parentId: false,
