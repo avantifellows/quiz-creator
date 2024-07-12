@@ -137,14 +137,19 @@ export const setParentBatchOptions = (
   fieldsSchema: FieldSchema<basicFields>
 ) => {
   if (!value) return;
-  const authGroupId = apiOptions.group?.find((item) => item.value === value)?.id;
+  const authGroupSelected = apiOptions.group?.find((item) => item.value === value);
   let filteredQuizBatchOptions: ExtendedOptions[] = [];
-  if (authGroupId === 14) {
+
+  if (authGroupSelected?.value === Group.TNSchools) {
+    const TNStudentsId = apiOptions.group?.find((item) => item.value === Group.TNStudents)?.id;
+
     filteredQuizBatchOptions =
-      apiOptions?.batch?.filter((item) => item.groupId === 11 && !item.parentId) ?? [];
+      apiOptions?.batch?.filter((item) => item.groupId === TNStudentsId && !item.parentId) ?? [];
   } else {
     filteredQuizBatchOptions =
-      apiOptions?.batch?.filter((item) => item.groupId === authGroupId && !item.parentId) ?? [];
+      apiOptions?.batch?.filter(
+        (item) => item.groupId === authGroupSelected?.id && !item.parentId
+      ) ?? [];
   }
 
   (fieldsSchema.parentBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];

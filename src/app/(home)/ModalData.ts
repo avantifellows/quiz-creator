@@ -12,7 +12,7 @@ export const displayData = (data: Session, formOptions: Option[]) => {
   const basicDetails: DataSection = {
     title: 'Basic Details',
     data: [
-      { label: 'Name', value: data.name },
+      { label: 'Session Name', value: data.name },
       { label: 'Platform', value: data.platform },
       { label: 'Grade', value: data.meta_data?.grade },
       { label: 'Program', value: data.meta_data?.group },

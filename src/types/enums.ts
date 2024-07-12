@@ -37,6 +37,8 @@ export enum Group {
   Enable = 'EnableStudents',
   AFTesting = 'AFTesting',
   AFTeachers = 'AFTeachers',
+  TNSchools = 'TNSchools',
+  TNStudents = 'TNStudents',
 }
 
 export enum AuthType {
