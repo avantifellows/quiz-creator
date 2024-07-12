@@ -29,25 +29,6 @@ export const columns: ColumnDef<Session>[] = [
     enableHiding: false,
   },
   {
-    id: 'startDate',
-    accessorKey: 'start_time',
-    header: 'Start Date',
-    cell: ({ row }) => format(new Date(row.getValue('startDate')), 'dd/MM/yyyy'),
-  },
-  {
-    id: 'endDate',
-    accessorKey: 'end_time',
-    header: 'End Date',
-    cell: ({ row }) => format(new Date(row.getValue('endDate')), 'dd/MM/yyyy'),
-  },
-  {
-    id: 'createdAt',
-    accessorKey: 'meta_data.date_created',
-    header: 'Created At',
-    cell: ({ row }) =>
-      row.getValue('createdAt') ? format(new Date(row.getValue('createdAt')), 'dd/MM/yyyy') : 'N/A',
-  },
-  {
     accessorKey: 'platform',
     header: 'Platform',
     cell: ({ row }) => <div className="capitalize">{row.getValue('platform')}</div>,
@@ -69,6 +50,25 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'meta_data.batch_id',
     header: 'Sub Batch',
     cell: ({ row }) => row.getValue('batchId') || 'N/A',
+  },
+  {
+    id: 'startDate',
+    accessorKey: 'start_time',
+    header: 'Start Time',
+    cell: ({ row }) => format(new Date(row.getValue('startDate')), 'p'),
+  },
+  {
+    id: 'endDate',
+    accessorKey: 'end_time',
+    header: 'End Time',
+    cell: ({ row }) => format(new Date(row.getValue('endDate')), 'p'),
+  },
+  {
+    id: 'createdAt',
+    accessorKey: 'meta_data.date_created',
+    header: 'Created At',
+    cell: ({ row }) =>
+      row.getValue('createdAt') ? format(new Date(row.getValue('createdAt')), 'P') : 'N/A',
   },
   {
     id: 'portalLink',

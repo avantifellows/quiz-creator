@@ -10,6 +10,7 @@ export const SessionTypeOptions: Option[] = [
   { value: 'sign-in', label: 'SignIn' },
   { value: 'sign-up', label: 'SignUp' },
   { value: 'sign-in with forgot id', label: 'SignIn with Forgot ID' },
+  { value: 'broadcast', label: 'Broadcast' },
 ];
 
 export const TestFormatOptions: Option[] = [

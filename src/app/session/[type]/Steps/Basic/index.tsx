@@ -16,6 +16,7 @@ import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, type FC } from 'react';
 import {
   handlePopupFields,
+  handleRedirectionData,
   handleSignUpFields,
   setBatchOptions,
   setGroupPreset,
@@ -29,6 +30,18 @@ const BasicForm: FC = () => {
 
   let fieldsSchema: FieldSchema<basicFields> = useMemo(
     () => ({
+      name: {
+        type: 'text',
+        label: 'Session Name',
+        placeholder: 'Enter session name',
+      },
+      platform: {
+        type: 'select',
+        options: TestPlatformOptions,
+        placeholder: 'Select a platform',
+        label: 'Platform',
+        disabled: type === SessionType.EDIT,
+      },
       group: {
         type: 'select',
         options: apiOptions?.group,
@@ -113,13 +126,6 @@ const BasicForm: FC = () => {
         type: 'switch',
         label: 'Do you want to generate IDs?',
       },
-      platform: {
-        type: 'select',
-        options: TestPlatformOptions,
-        placeholder: 'Select a platform',
-        label: 'Platform',
-        disabled: type === SessionType.EDIT,
-      },
     }),
     []
   );
@@ -143,12 +149,13 @@ const BasicForm: FC = () => {
       noOfFieldsInPopup: formData?.meta_data?.number_of_fields_in_popup_form
         ? Number(formData?.meta_data?.number_of_fields_in_popup_form)
         : '',
-      isRedirection: formData?.redirection,
+      isRedirection: formData?.redirection ?? true,
       isIdGeneration: formData?.id_generation,
       platform: formData?.platform,
       sessionType: formData?.type,
       signupFormId: formData?.signup_form_id,
       popupFormId: formData?.popup_form_id,
+      name: formData.name,
     }),
     [formData]
   );
@@ -171,8 +178,15 @@ const BasicForm: FC = () => {
       id_generation: data.isIdGeneration,
       platform: data.platform,
       type: data.sessionType,
+      name: data.name,
     };
-    updateFormData(addedData, Steps.PLATFORM);
+
+    if (!addedData.redirection) {
+      const finalData = handleRedirectionData(addedData);
+      updateFormData(finalData, Steps.TIMELINE);
+    } else {
+      updateFormData(addedData, Steps.PLATFORM);
+    }
   }, []);
 
   return (

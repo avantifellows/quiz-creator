@@ -22,11 +22,6 @@ const QuizForm: FC = () => {
 
   const fieldsSchema: FieldSchema<liveFields> = useMemo(
     () => ({
-      name: {
-        type: 'text',
-        label: 'Name',
-        placeholder: 'Enter session name',
-      },
       platformLink: {
         type: 'text',
         label: 'Platform Link',
@@ -54,7 +49,6 @@ const QuizForm: FC = () => {
   const defaultValues: Partial<liveFields> = useMemo(
     () => ({
       platform: formData.platform,
-      name: formData.name,
       platformLink: formData.platform_link,
       platformId: formData.platform_id,
       subject: formData.meta_data?.subject,
@@ -64,7 +58,6 @@ const QuizForm: FC = () => {
 
   const onSubmit = useCallback((data: liveFields) => {
     const addedData: Session = {
-      name: data.name,
       platform_link: data.platformLink,
       platform_id: data.platformId,
       meta_data: { subject: data.subject },

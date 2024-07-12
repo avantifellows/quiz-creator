@@ -53,11 +53,6 @@ const QuizForm: FC = () => {
         placeholder: 'Select a test purpose',
         label: 'Test Purpose',
       },
-      name: {
-        type: 'text',
-        label: 'Quiz Name',
-        placeholder: 'Enter quiz name',
-      },
       testType: {
         type: 'select',
         options: TestTypeOptions,
@@ -95,7 +90,6 @@ const QuizForm: FC = () => {
 
   const defaultValues: Partial<quizFields> = useMemo(
     () => ({
-      name: formData.name,
       course: formData.meta_data?.course,
       stream: formData.meta_data?.stream,
       testFormat: formData.meta_data?.test_format,
@@ -111,7 +105,6 @@ const QuizForm: FC = () => {
 
   const onSubmit = useCallback((data: quizFields) => {
     const addedData: Session = {
-      name: data.name,
       meta_data: {
         course: data.course,
         stream: data.stream,

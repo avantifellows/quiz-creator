@@ -37,6 +37,8 @@ export enum Group {
   Enable = 'EnableStudents',
   AFTesting = 'AFTesting',
   AFTeachers = 'AFTeachers',
+  TNSchools = 'TNSchools',
+  TNStudents = 'TNStudents',
 }
 
 export enum AuthType {
@@ -44,6 +46,7 @@ export enum AuthType {
   IDPH = 'ID,PH',
   IDDOB = 'ID,DOB',
   IDPHDOB = 'ID,PH,DOB',
+  CODE = 'CODE',
 }
 
 export enum Subjects {
