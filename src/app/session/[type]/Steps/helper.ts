@@ -18,13 +18,13 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
   switch (value) {
     case Group.Haryana:
       newDefaultData = {
+        activateSignUp: false,
+        signupFormId: null,
+        isPopupForm: false,
+        popupFormId: null,
+        noOfFieldsInPopup: '',
+        isRedirection: true,
         isIdGeneration: false,
-        isRedirection: false,
-        isPopupForm: true,
-        popupFormId:
-          Number(apiOptions.popupForm?.find((item) => item.label.includes('Haryana'))?.value) ??
-          null,
-        noOfFieldsInPopup: 3,
         parentBatch: '',
         subBatch: '',
       };
@@ -38,13 +38,11 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         signupFormId:
           Number(apiOptions.signupForm?.find((item) => item.label.includes('Enable'))?.value) ??
           null,
-        isIdGeneration: true,
+        isPopupForm: false,
+        popupFormId: null,
+        noOfFieldsInPopup: '',
         isRedirection: true,
-        isPopupForm: true,
-        popupFormId:
-          Number(apiOptions.popupForm?.find((item) => item.label.includes('Enable'))?.value) ??
-          null,
-        noOfFieldsInPopup: 3,
+        isIdGeneration: true,
         parentBatch: '',
         subBatch: '',
       };
@@ -59,11 +57,11 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         authType: AuthType.ID,
         activateSignUp: false,
         signupFormId: null,
-        isIdGeneration: false,
-        isRedirection: true,
-        popupFormId: null,
         isPopupForm: false,
+        popupFormId: null,
         noOfFieldsInPopup: '',
+        isRedirection: true,
+        isIdGeneration: false,
         parentBatch: '',
         subBatch: '',
       };
@@ -75,17 +73,28 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         authType: AuthType.IDDOB,
         activateSignUp: false,
         signupFormId: null,
-        isIdGeneration: false,
-        isRedirection: true,
-        popupFormId: null,
         isPopupForm: false,
+        popupFormId: null,
         noOfFieldsInPopup: '',
+        isRedirection: true,
+        isIdGeneration: false,
         parentBatch: '',
         subBatch: '',
       };
       break;
 
     default:
+      newDefaultData = {
+        activateSignUp: false,
+        signupFormId: null,
+        isPopupForm: false,
+        popupFormId: null,
+        noOfFieldsInPopup: '',
+        isRedirection: true,
+        isIdGeneration: false,
+        parentBatch: '',
+        subBatch: '',
+      };
       break;
   }
 
