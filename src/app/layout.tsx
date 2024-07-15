@@ -17,6 +17,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 }
 
 export const metadata: Metadata = {
-  title: 'Quiz creator',
-  description: 'Quiz creator',
+  title: 'Session Manager',
+  description: 'Session Manager - Avanti Fellows',
 };
