@@ -11,64 +11,40 @@ import {
 } from '@/types';
 import { UseFormReturn } from 'react-hook-form';
 
-export const setGroupPreset = (
-  value: string,
-  apiOptions: ApiFormOptions,
-  updateFormData: (data: Session | ((prevState: Session) => Session)) => void
-) => {
+export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: ApiFormOptions) => {
   if (!value) return;
 
-  let newDefaultData: Session = {};
+  let newDefaultData: Partial<basicFields> = {};
   switch (value) {
     case Group.Haryana:
       newDefaultData = {
-        repeat_schedule: {
-          type: 'weekly',
-          params: [1, 2, 3, 4, 5, 6, 7],
-        },
-        // type: 'sign-in',
-        // auth_type: AuthType.ID,
-        // signup_form: true,
-        // signup_form_id:
-        //   Number(apiOptions.signupForm?.find((item) => item.label.includes('Haryana'))?.value) ??
-        //   null,
-        id_generation: false,
-        redirection: false,
-        popup_form: true,
-        popup_form_id:
-          Number(apiOptions.popupForm?.find((item) => item.label.includes('Haryana'))?.value) ??
-          null,
-        meta_data: {
-          number_of_fields_in_popup_form: 3,
-          parent_id: '',
-          batch_id: '',
-        },
+        activateSignUp: false,
+        signupFormId: null,
+        isPopupForm: false,
+        popupFormId: null,
+        noOfFieldsInPopup: '',
+        isRedirection: true,
+        isIdGeneration: false,
+        parentBatch: '',
+        subBatch: '',
       };
       break;
 
     case Group.Enable:
       newDefaultData = {
-        repeat_schedule: {
-          type: 'weekly',
-          params: [1, 2, 3, 4, 5, 6, 7],
-        },
-        type: 'sign-in',
-        auth_type: AuthType.IDDOB,
-        signup_form: true,
-        signup_form_id:
+        sessionType: 'sign-in',
+        authType: AuthType.IDDOB,
+        activateSignUp: true,
+        signupFormId:
           Number(apiOptions.signupForm?.find((item) => item.label.includes('Enable'))?.value) ??
           null,
-        id_generation: true,
-        redirection: true,
-        popup_form: true,
-        popup_form_id:
-          Number(apiOptions.popupForm?.find((item) => item.label.includes('Enable'))?.value) ??
-          null,
-        meta_data: {
-          number_of_fields_in_popup_form: 3,
-          parent_id: '',
-          batch_id: '',
-        },
+        isPopupForm: false,
+        popupFormId: null,
+        noOfFieldsInPopup: '',
+        isRedirection: true,
+        isIdGeneration: true,
+        parentBatch: '',
+        subBatch: '',
       };
       break;
 
@@ -77,58 +53,54 @@ export const setGroupPreset = (
     case Group.Himachal:
     case Group.FeedingIndia:
       newDefaultData = {
-        repeat_schedule: {
-          type: 'weekly',
-          params: [1, 2, 3, 4, 5, 6, 7],
-        },
-        type: 'sign-in',
-        auth_type: AuthType.ID,
-        signup_form: false,
-        signup_form_id: null,
-        id_generation: false,
-        redirection: true,
-        popup_form_id: null,
-        popup_form: false,
-        meta_data: {
-          number_of_fields_in_popup_form: '',
-          parent_id: '',
-          batch_id: '',
-        },
+        sessionType: 'sign-in',
+        authType: AuthType.ID,
+        activateSignUp: false,
+        signupFormId: null,
+        isPopupForm: false,
+        popupFormId: null,
+        noOfFieldsInPopup: '',
+        isRedirection: true,
+        isIdGeneration: false,
+        parentBatch: '',
+        subBatch: '',
       };
       break;
 
     case Group.Uttarakhand:
       newDefaultData = {
-        repeat_schedule: {
-          type: 'weekly',
-          params: [1, 2, 3, 4, 5, 6, 7],
-        },
-        type: 'sign-in',
-        auth_type: AuthType.IDDOB,
-        signup_form: false,
-        signup_form_id: null,
-        id_generation: false,
-        redirection: true,
-        popup_form_id: null,
-        popup_form: false,
-        meta_data: {
-          number_of_fields_in_popup_form: '',
-          parent_id: '',
-          batch_id: '',
-        },
+        sessionType: 'sign-in',
+        authType: AuthType.IDDOB,
+        activateSignUp: false,
+        signupFormId: null,
+        isPopupForm: false,
+        popupFormId: null,
+        noOfFieldsInPopup: '',
+        isRedirection: true,
+        isIdGeneration: false,
+        parentBatch: '',
+        subBatch: '',
       };
       break;
 
     default:
+      newDefaultData = {
+        activateSignUp: false,
+        signupFormId: null,
+        isPopupForm: false,
+        popupFormId: null,
+        noOfFieldsInPopup: '',
+        isRedirection: true,
+        isIdGeneration: false,
+        parentBatch: '',
+        subBatch: '',
+      };
       break;
   }
 
   if (Object.keys(newDefaultData).length === 0) return;
 
-  updateFormData({
-    ...newDefaultData,
-    meta_data: { ...newDefaultData.meta_data, group: value },
-  });
+  form.reset({ ...form.getValues(), ...newDefaultData });
 };
 
 export const setParentBatchOptions = (

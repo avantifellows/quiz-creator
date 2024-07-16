@@ -51,7 +51,7 @@ const BasicForm: FC = () => {
         onValueChange: (value, form) => {
           setParentBatchOptions(value, apiOptions, fieldsSchema);
           if (isMounted.current) {
-            setGroupPreset(value, apiOptions, updateFormData);
+            setGroupPreset(value, form, apiOptions);
           }
         },
       },
