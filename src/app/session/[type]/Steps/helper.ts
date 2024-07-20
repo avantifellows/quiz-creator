@@ -105,10 +105,14 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
 
 export const setParentBatchOptions = (
   value: string,
+  form: UseFormReturn,
   apiOptions: ApiFormOptions,
   fieldsSchema: FieldSchema<basicFields>
 ) => {
   if (!value) return;
+  const selectedPlatform = form.getValues('platform');
+  form.trigger('platform');
+  const isQuizSession = selectedPlatform === Platform.Quiz;
   const authGroupSelected = apiOptions.group?.find((item) => item.value === value);
   let filteredQuizBatchOptions: ExtendedOptions[] = [];
 
@@ -116,16 +120,22 @@ export const setParentBatchOptions = (
     const TNStudentsId = apiOptions.group?.find((item) => item.value === Group.TNStudents)?.id;
 
     filteredQuizBatchOptions =
-      apiOptions?.batch?.filter((item) => item.groupId === TNStudentsId && !item.parentId) ?? [];
+      apiOptions?.batch?.filter(
+        (item) => item.groupId === TNStudentsId && !item.parentId === isQuizSession
+      ) ?? [];
   } else {
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
-        (item) => item.groupId === authGroupSelected?.id && !item.parentId
+        (item) => item.groupId === authGroupSelected?.id && !item.parentId === isQuizSession
       ) ?? [];
   }
 
-  (fieldsSchema.parentBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
-  (fieldsSchema.subBatch as MySelectProps).options = [];
+  if (isQuizSession) {
+    (fieldsSchema.parentBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
+    (fieldsSchema.subBatch as MySelectProps).options = [];
+  } else {
+    (fieldsSchema.subBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
+  }
 };
 
 export const setBatchOptions = (
@@ -238,6 +248,7 @@ export const handleRedirectionData = (formData: Session) => {
 export const handleBatchFields = (
   value: string,
   form: UseFormReturn,
+  apiOptions: ApiFormOptions,
   fieldsSchema: FieldSchema<basicFields>
 ) => {
   if (value !== Platform.Quiz) {
@@ -245,5 +256,10 @@ export const handleBatchFields = (
     form.setValue('parentBatch', '');
   } else {
     fieldsSchema.parentBatch.hide = false;
+  }
+
+  const selectedGroup = form.watch('group');
+  if (selectedGroup) {
+    setParentBatchOptions(selectedGroup, form, apiOptions, fieldsSchema);
   }
 };

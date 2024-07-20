@@ -5,7 +5,7 @@ import { Command, CommandEmpty, CommandItem, CommandList } from '@/components/ui
 import { cn } from '@/lib/utils';
 import { type MyMultiSelectProps } from '@/types';
 import { Command as CommandPrimitive } from 'cmdk';
-import { Check, X as RemoveIcon } from 'lucide-react';
+import { Check, ChevronDown, X as RemoveIcon } from 'lucide-react';
 import React, {
   KeyboardEvent,
   createContext,
@@ -181,6 +181,7 @@ const MultiSelectorTrigger = forwardRef<HTMLDivElement, React.HTMLAttributes<HTM
           </Badge>
         ))}
         {children}
+        <ChevronDown className="h-4 w-4 text-muted-foreground opacity-50" />
       </div>
     );
   }
@@ -239,9 +240,7 @@ const MultiSelectorList = forwardRef<
       )}
     >
       {children}
-      <CommandEmpty>
-        <span className="text-muted-foreground">No results found</span>
-      </CommandEmpty>
+      <CommandEmpty className="py-1.5 pl-8 text-sm opacity-50">No options</CommandEmpty>
     </CommandList>
   );
 });
@@ -259,8 +258,6 @@ const MultiSelectorItem = forwardRef<
     e.stopPropagation();
   }, []);
   const isIncluded = Options.includes(value);
-
-  console.log({ props, value, Options, isIncluded });
 
   return (
     <CommandItem
@@ -320,19 +317,11 @@ const ControlledMultiSelectField = React.forwardRef<
         </FormControl>
         <MultiSelectorContent>
           <MultiSelectorList>
-            {options.length ? (
-              <>
-                {options.map((option) => (
-                  <MultiSelectorItem key={option.value.toString()} value={option.value.toString()}>
-                    {option.label}
-                  </MultiSelectorItem>
-                ))}
-              </>
-            ) : (
-              <MultiSelectorItem key="no-options" value="no-options">
-                No options
+            {options.map((option) => (
+              <MultiSelectorItem key={option.value.toString()} value={option.value.toString()}>
+                {option.label}
               </MultiSelectorItem>
-            )}
+            ))}
           </MultiSelectorList>
         </MultiSelectorContent>
       </MultiSelector>
@@ -349,5 +338,6 @@ export {
   MultiSelectorInput,
   MultiSelectorItem,
   MultiSelectorList,
-  MultiSelectorTrigger,
+  MultiSelectorTrigger
 };
+

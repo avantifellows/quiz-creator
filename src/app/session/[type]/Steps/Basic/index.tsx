@@ -42,7 +42,7 @@ const BasicForm: FC = () => {
         placeholder: 'Select a platform',
         label: 'Platform',
         disabled: type === SessionType.EDIT,
-        onValueChange: (value, form) => handleBatchFields(value, form, fieldsSchema),
+        onValueChange: (value, form) => handleBatchFields(value, form, apiOptions, fieldsSchema),
       },
       group: {
         type: 'select',
@@ -51,7 +51,7 @@ const BasicForm: FC = () => {
         label: 'Group',
         disabled: type === SessionType.EDIT,
         onValueChange: (value, form) => {
-          setParentBatchOptions(value, apiOptions, fieldsSchema);
+          setParentBatchOptions(value, form, apiOptions, fieldsSchema);
           if (isMounted.current) {
             setGroupPreset(value, form, apiOptions);
           }
