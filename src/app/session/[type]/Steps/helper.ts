@@ -26,7 +26,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
-        subBatch: '',
+        subBatch: [],
       };
       break;
 
@@ -44,7 +44,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isRedirection: true,
         isIdGeneration: true,
         parentBatch: '',
-        subBatch: '',
+        subBatch: [],
       };
       break;
 
@@ -63,7 +63,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
-        subBatch: '',
+        subBatch: [],
       };
       break;
 
@@ -79,7 +79,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
-        subBatch: '',
+        subBatch: [],
       };
       break;
 
@@ -93,7 +93,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
-        subBatch: '',
+        subBatch: [],
       };
       break;
   }
@@ -140,7 +140,7 @@ export const setBatchOptions = (
   const filteredClassBatchOptions = apiOptions?.batch?.filter(
     (item) => item.parentId === quizBatchId
   );
-  form.setValue('subBatch', '');
+  form.setValue('subBatch', []);
   (fieldsSchema.subBatch as MySelectProps).options = filteredClassBatchOptions ?? [];
 };
 
@@ -233,4 +233,17 @@ export const handleRedirectionData = (formData: Session) => {
   }
 
   return newFormData;
+};
+
+export const handleBatchFields = (
+  value: string,
+  form: UseFormReturn,
+  fieldsSchema: FieldSchema<basicFields>
+) => {
+  if (value !== Platform.Quiz) {
+    fieldsSchema.parentBatch.hide = true;
+    form.setValue('parentBatch', '');
+  } else {
+    fieldsSchema.parentBatch.hide = false;
+  }
 };

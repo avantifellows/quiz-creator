@@ -15,6 +15,7 @@ import {
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, type FC } from 'react';
 import {
+  handleBatchFields,
   handlePopupFields,
   handleRedirectionData,
   handleSignUpFields,
@@ -41,6 +42,7 @@ const BasicForm: FC = () => {
         placeholder: 'Select a platform',
         label: 'Platform',
         disabled: type === SessionType.EDIT,
+        onValueChange: (value, form) => handleBatchFields(value, form, fieldsSchema),
       },
       group: {
         type: 'select',

@@ -1,10 +1,11 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import { Command, CommandItem, CommandEmpty, CommandList } from '@/components/ui/command';
+import { Command, CommandEmpty, CommandItem, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
+import { type MyMultiSelectProps } from '@/types';
 import { Command as CommandPrimitive } from 'cmdk';
-import { X as RemoveIcon, Check } from 'lucide-react';
+import { Check, X as RemoveIcon } from 'lucide-react';
 import React, {
   KeyboardEvent,
   createContext,
@@ -13,10 +14,8 @@ import React, {
   useContext,
   useState,
 } from 'react';
-import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
+import { type ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 import { FormControl, FormLabel } from './form';
-import { Button } from './button';
-import { MyMultiSelectProps } from '@/types';
 
 export type MultiSelectorProps = {
   values: string[];
@@ -131,7 +130,7 @@ const MultiSelector = ({
     >
       <Command
         onKeyDown={handleKeyDown}
-        className={cn('overflow-visible bg-transparent flex flex-col space-y-2', className)}
+        className={cn('overflow-visible bg-transparent flex flex-col', className)}
         dir={dir}
         {...props}
       >
@@ -154,7 +153,7 @@ const MultiSelectorTrigger = forwardRef<HTMLDivElement, React.HTMLAttributes<HTM
       <div
         ref={ref}
         className={cn(
-          'flex flex-wrap gap-1 p-1 py-2 border border-muted rounded-lg bg-background',
+          'flex flex-wrap gap-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           className
         )}
         {...props}
@@ -204,7 +203,7 @@ const MultiSelectorInput = forwardRef<
       onFocus={() => setOpen(true)}
       onClick={() => setActiveIndex(-1)}
       className={cn(
-        'ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1',
+        'outline-none placeholder:text-muted-foreground/80 placeholder:italic flex-1 disabled:cursor-not-allowed disabled:opacity-50',
         className,
         activeIndex !== -1 && 'caret-transparent'
       )}
@@ -235,7 +234,7 @@ const MultiSelectorList = forwardRef<
     <CommandList
       ref={ref}
       className={cn(
-        'p-2 flex flex-col gap-2 rounded-md scrollbar-thin scrollbar-track-transparent transition-colors scrollbar-thumb-muted-foreground dark:scrollbar-thumb-muted scrollbar-thumb-rounded-lg w-full absolute bg-background shadow-md z-10 border border-muted top-0',
+        'p-2 flex flex-col gap-2 rounded-md transition-colors w-full absolute bg-background shadow-md z-10 border border-muted top-0',
         className
       )}
     >
@@ -259,8 +258,10 @@ const MultiSelectorItem = forwardRef<
     e.preventDefault();
     e.stopPropagation();
   }, []);
-
   const isIncluded = Options.includes(value);
+
+  console.log({ props, value, Options, isIncluded });
+
   return (
     <CommandItem
       ref={ref}
@@ -270,10 +271,10 @@ const MultiSelectorItem = forwardRef<
         setInputValue('');
       }}
       className={cn(
-        'rounded-md cursor-pointer px-2 py-1 transition-colors flex justify-between ',
-        className,
+        'w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground flex justify-between',
         isIncluded && 'opacity-50 cursor-default',
-        props.disabled && 'opacity-50 cursor-not-allowed'
+        props.disabled && 'opacity-50 cursor-not-allowed',
+        className
       )}
       onMouseDown={mousePreventDefault}
     >
@@ -308,38 +309,31 @@ const ControlledMultiSelectField = React.forwardRef<
     }
   }, [value, onValueChange]);
 
-  console.log({ restFieldProps, restSchemaProps });
-
   return (
     <>
       <FormLabel>{label}</FormLabel>
-      <MultiSelector values={value} onValuesChange={onChange}>
+      <MultiSelector values={value} onValuesChange={onChange} loop={false}>
         <FormControl ref={ref}>
-          <MultiSelectorTrigger onClick={() => console.log('HELLLLLLLLLO')}>
+          <MultiSelectorTrigger>
             <MultiSelectorInput {...restSchemaProps} {...restFieldProps} />
           </MultiSelectorTrigger>
         </FormControl>
         <MultiSelectorContent>
-          {options.length ? (
-            <>
-              {options.map((option) => (
-                <MultiSelectorItem key={option.value.toString()} value={option.value.toString()}>
-                  {option.label}
-                </MultiSelectorItem>
-              ))}
-              <Button
-                className="w-full"
-                variant="secondary"
-                onClick={() => form.setValue(field.name, '')}
-              >
-                Clear
-              </Button>
-            </>
-          ) : (
-            <MultiSelectorItem key="no-options" value="no-options" disabled>
-              No options
-            </MultiSelectorItem>
-          )}
+          <MultiSelectorList>
+            {options.length ? (
+              <>
+                {options.map((option) => (
+                  <MultiSelectorItem key={option.value.toString()} value={option.value.toString()}>
+                    {option.label}
+                  </MultiSelectorItem>
+                ))}
+              </>
+            ) : (
+              <MultiSelectorItem key="no-options" value="no-options">
+                No options
+              </MultiSelectorItem>
+            )}
+          </MultiSelectorList>
         </MultiSelectorContent>
       </MultiSelector>
     </>
@@ -349,11 +343,11 @@ const ControlledMultiSelectField = React.forwardRef<
 ControlledMultiSelectField.displayName = 'ControlledSelectField';
 
 export {
-  MultiSelector,
-  MultiSelectorTrigger,
-  MultiSelectorInput,
-  MultiSelectorContent,
-  MultiSelectorList,
-  MultiSelectorItem,
   ControlledMultiSelectField,
+  MultiSelector,
+  MultiSelectorContent,
+  MultiSelectorInput,
+  MultiSelectorItem,
+  MultiSelectorList,
+  MultiSelectorTrigger,
 };
