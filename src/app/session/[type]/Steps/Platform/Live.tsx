@@ -36,7 +36,7 @@ const QuizForm: FC = () => {
         disabled: type === SessionType.EDIT,
       },
       subject: {
-        type: 'select',
+        type: 'multi-select',
         label: 'Subject',
         options: SubjectOptions,
         placeholder: 'Select a subject',
@@ -51,7 +51,7 @@ const QuizForm: FC = () => {
       platform: formData.platform,
       platformLink: formData.platform_link,
       platformId: formData.platform_id,
-      subject: formData.meta_data?.subject,
+      subject: formData.meta_data?.subject?.split(',') ?? [],
     }),
     [formData]
   );
@@ -60,7 +60,7 @@ const QuizForm: FC = () => {
     const addedData: Session = {
       platform_link: data.platformLink,
       platform_id: data.platformId,
-      meta_data: { subject: data.subject },
+      meta_data: { subject: data.subject?.join(',') ?? '' },
     };
     updateFormData(addedData, Steps.TIMELINE);
   }, []);

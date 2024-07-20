@@ -55,6 +55,9 @@ export enum Subjects {
   Physics = 'Physics',
   Chemistry = 'Chemistry',
   Biology = 'Biology',
+  CareerGuidance = 'Career Guidance',
+  Others = 'Others',
+  AllSubjects = 'AllSubjects',
 }
 
 export const Grades = [9, 10, 11, 12, 13] as const;

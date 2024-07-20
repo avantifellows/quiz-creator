@@ -82,11 +82,11 @@ export const basicSchema = z
       }
     }
 
-    if (data.platform !== Platform.Quiz) {
+    if (data.platform === Platform.Quiz && !data.parentBatch) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'This field is required',
-        path: ['platform'],
+        path: ['parentBatch'],
       });
     }
   });
@@ -185,7 +185,7 @@ export const liveSchema = z
       .string({ required_error: 'This field is required' })
       .url('This is not a valid url'),
     platformId: z.string({ required_error: 'This field is required' }),
-    subject: z.string({ required_error: 'This field is required' }),
+    subject: z.array(z.string()).min(1, 'This field is required'),
     platform: z.string().optional(),
   })
   .refine(
