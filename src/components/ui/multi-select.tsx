@@ -338,6 +338,5 @@ export {
   MultiSelectorInput,
   MultiSelectorItem,
   MultiSelectorList,
-  MultiSelectorTrigger
+  MultiSelectorTrigger,
 };
-
