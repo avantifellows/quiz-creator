@@ -47,7 +47,7 @@ export const MarkingSchemeOptions: Option[] = [
 ];
 
 export const OptionalLimitOptions: Option[] = [
-  { value: 'NA', label: 'NA' },
+  { value: 'N/A', label: 'N/A' },
   { value: 'neet', label: 'NEET' },
   { value: 'jee', label: 'JEE' },
   { value: 'cuet', label: 'CUET' },

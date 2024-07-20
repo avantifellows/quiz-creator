@@ -1,4 +1,5 @@
 // import type { CalendarProps } from '@/components/ui/calendar';
+import { MultiSelectorProps } from '@/components/ui/multi-select';
 import { CheckboxProps } from '@radix-ui/react-checkbox';
 import { SelectProps } from '@radix-ui/react-select';
 import { SwitchProps } from '@radix-ui/react-switch';
@@ -43,12 +44,21 @@ export type Field =
   | MySelectProps
   | MySwitchProps
   | MyDateTimeProps
-  | MyCheckboxProps;
+  | MyCheckboxProps
+  | MyMultiSelectProps;
 
 export interface MySelectProps extends Omit<SelectProps, 'onValueChange'>, CommonFieldProps {
   type: 'select';
   options: Option[];
   onValueChange?: (value: string, form: UseFormReturn) => void;
+}
+
+export interface MyMultiSelectProps
+  extends Omit<MultiSelectorProps, 'onValueChange'>,
+    CommonFieldProps {
+  type: 'multi-select';
+  options: Option[];
+  onValueChange?: (value: string[], form: UseFormReturn) => void;
 }
 
 export interface MyCheckboxProps extends Omit<CheckboxProps, 'type'>, CommonFieldProps {

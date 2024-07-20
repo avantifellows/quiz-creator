@@ -17,10 +17,8 @@ import { Platform } from './enums';
 export const basicSchema = z
   .object({
     group: z.string({ required_error: 'This field is required' }).min(1, 'This field is required'),
-    parentBatch: z
-      .string({ required_error: 'This field is required' })
-      .min(1, 'This field is required'),
-    subBatch: z.string({ required_error: 'This field is required' }),
+    parentBatch: z.string().optional(),
+    subBatch: z.array(z.string()).min(1, 'This field is required'),
     grade: z.coerce
       .number({ required_error: 'This field is required' })
       .refine(
@@ -82,6 +80,14 @@ export const basicSchema = z
           path: ['signupFormId'],
         });
       }
+    }
+
+    if (data.platform !== Platform.Quiz) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'This field is required',
+        path: ['platform'],
+      });
     }
   });
 
