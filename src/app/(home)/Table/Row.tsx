@@ -5,8 +5,8 @@ import { Option, Session } from '@/types';
 import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
 import { Copy } from 'lucide-react';
 import Link from 'next/link';
-import { displayData } from '../ModalData';
 import { toast } from 'sonner';
+import { displayData } from '../ModalData';
 
 export const SheetTableRow = ({
   table,
@@ -28,8 +28,14 @@ export const SheetTableRow = ({
           </TableRow>
         </SheetTrigger>
         <SheetContent className="w-full md:w-1/2 sm:max-w-none overflow-x-auto">
-          <SheetHeader className="border-b text-center sm:text-center">
+          <SheetHeader className="border-b space-y-0 flex-row justify-between items-center mr-6">
             <SheetTitle>Session Details</SheetTitle>
+            <Link
+              href={`/session/edit?id=${row.original.id}`}
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              Edit
+            </Link>
           </SheetHeader>
           {displayData(row.original, formOptions).map((section, index) => (
             <div key={section.title + index} className="flex flex-col gap-2 py-4">
