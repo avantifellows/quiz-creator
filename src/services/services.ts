@@ -5,6 +5,7 @@ import { istToUTCDate, utcToISTDate } from '@/lib/time-picker-utils';
 import { deleteByPath, filterObject } from '@/lib/utils';
 import { ApiFormOptions, FilterParams, Platform, TableParams } from '@/types';
 import { Session } from '@/types/api.types';
+import { cache } from 'react';
 import { instance } from '../lib/axios';
 import { publishMessage } from './Aws';
 
@@ -187,7 +188,7 @@ export async function patchSession(formData: Session, id: number) {
  * - batch: List of batches
  * - formSchema: List of form schema (popup form and signup form)
  */
-export async function getAllOptions(): Promise<ApiFormOptions> {
+export const getAllOptions = cache(async function (): Promise<ApiFormOptions> {
   try {
     const [groupOptions, batchOptions, formSchemaOptions] = await Promise.all([
       getAuthGroups(),
@@ -214,7 +215,7 @@ export async function getAllOptions(): Promise<ApiFormOptions> {
       signupForm: [],
     };
   }
-}
+});
 
 export async function getAuthGroups() {
   try {

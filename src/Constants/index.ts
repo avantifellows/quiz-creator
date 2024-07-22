@@ -3,8 +3,12 @@ import { DeepKeys } from '@tanstack/react-table';
 
 export * from './Options';
 
+// TABLE PAGINATION CONSTANTS
 export const DATA_PER_PAGE = 50;
 export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100, 200];
+
+// TABLE POLLING CONSTANTS
+export const POLLING_INTERVAL = 60000; // 1 minute
 
 /**
  * Keys to be deleted before duplicating a session
