@@ -17,23 +17,20 @@ const usePolling = (data: Session[]) => {
   const router = useRouter();
 
   const { pendingSessions, stopPolling } = useMemo(() => {
-    const pendingSessions = data
-      .filter((session) => !session.session_id)
-      .map((session) => session.id);
+    const pendingSessions =
+      data?.filter((session) => !session?.session_id)?.map((session) => session?.id as number) ??
+      [];
     const stopPolling = pendingSessions.length === 0;
     return { pendingSessions, stopPolling };
   }, [data]);
 
   useEffect(() => {
     if (stopPolling) return;
-    const intervalId = setInterval(() => {
-      router.refresh();
-      console.log(`[${new Date().toLocaleTimeString()}] Polling every minute`);
-    }, POLLING_INTERVAL);
-
+    const intervalId = setInterval(router.refresh, POLLING_INTERVAL);
     return () => clearInterval(intervalId);
   }, [stopPolling]);
 
+  console.log(`${new Date().toLocaleTimeString()} : `, { isPolling: !stopPolling, pendingSessions });
   return { isPolling: !stopPolling, pendingSessions };
 };
 

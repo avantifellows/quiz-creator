@@ -50,7 +50,7 @@ export default function DataTable({
     return filters;
   }, [searchParams]);
 
-  const table = useReactTable({
+  const table = useReactTable<Session>({
     data,
     columns,
     initialState: {
@@ -100,8 +100,7 @@ export default function DataTable({
     );
   }, [pageIndex, pageSize, group, batchId, parentId]);
 
-  const { pendingSessions, isPolling } = usePolling(data);
-  console.log({ pendingSessions, isPolling });
+  const { pendingSessions } = usePolling(data);
 
   return (
     <>
