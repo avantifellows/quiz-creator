@@ -20,7 +20,10 @@ export const basicSchema = z
     parentBatch: z.string().optional(),
     subBatch: z.array(z.string()).min(1, 'This field is required'),
     grade: z.coerce
-      .number({ required_error: 'This field is required' })
+      .number({
+        required_error: 'This field is required',
+        invalid_type_error: 'This field is required',
+      })
       .refine(
         (value) => GradeOptions.some((option) => option.value === value),
         'Invalid option selected'
@@ -37,7 +40,7 @@ export const basicSchema = z
     noOfFieldsInPopup: z.coerce
       .number({
         required_error: 'This field is required',
-        message: 'This is not a valid number',
+        invalid_type_error: 'This is not a valid number',
       })
       .int()
       .min(0)
