@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { absoluteLink } from '@/lib/utils';
-import { patchSession, sendCreateSns } from '@/services/services';
+import { patchSession } from '@/services/services';
 import type { Session } from '@/types';
 import { Copy, LinkIcon, Loader, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
@@ -24,10 +24,14 @@ const TableActions = ({ session }: { session: Session }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent onClick={(e) => e.stopPropagation()}>
         <DropdownMenuItem asChild className="cursor-pointer">
-          <Link href={`/session/edit?id=${session.id}`}>Edit</Link>
+          <Link href={`/session/edit?id=${session.id}`} prefetch={false}>
+            Edit
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="cursor-pointer">
-          <Link href={`/session/duplicate?id=${session.id}`}>Duplicate</Link>
+          <Link href={`/session/duplicate?id=${session.id}`} prefetch={false}>
+            Duplicate
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="cursor-pointer">
           <Button
@@ -48,7 +52,7 @@ const TableActions = ({ session }: { session: Session }) => {
             {session.is_active ? 'Disable' : 'Enable'} Session
           </Button>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild className="cursor-pointer">
+        {/* <DropdownMenuItem asChild className="cursor-pointer">
           <Button
             variant="ghost"
             className="w-full focus-visible:ring-0 justify-start font-normal"
@@ -62,7 +66,7 @@ const TableActions = ({ session }: { session: Session }) => {
           >
             Regenerate Links
           </Button>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -101,7 +105,7 @@ const CopyBtn = ({ value }: { value: string }) => {
       className="p-1 h-auto"
       onClick={(e) => {
         navigator.clipboard.writeText(value);
-        toast.success('Copied Link to clipboard');
+        toast.success('Copied Link to clipboard', { duration: 2000 });
       }}
     >
       <Copy className="size-4" />
