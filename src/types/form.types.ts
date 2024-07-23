@@ -11,6 +11,8 @@ import {
   TestPurposeOptions,
   TestTypeOptions,
 } from '@/Constants';
+import { absoluteLink } from '@/lib/utils';
+import { isBefore } from 'date-fns';
 import { z } from 'zod';
 import { Platform } from './enums';
 
@@ -177,16 +179,33 @@ export const timelineSchema = z
       .int()
       .min(0, 'Test Takers must be greater than 0'),
   })
-  .refine((data) => data.startDate < data.endDate, {
-    message: 'End date must be greater than start date.',
-    path: ['endDate'],
+  .superRefine((data, context) => {
+    const startDate = new Date(data.startDate).toDateString();
+    const endDate = new Date(data.endDate).toDateString();
+    const startTIme = new Date(data.startDate).toTimeString();
+    const endTIme = new Date(data.endDate).toTimeString();
+    if (isBefore(endDate, startDate)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'End date must be greater than start date.',
+        path: ['endDate'],
+      });
+    }
+    if (endTIme < startTIme) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'End Time must be greater than start Time.',
+        path: ['endDate'],
+      });
+    }
   });
 
 export const liveSchema = z
   .object({
     platformLink: z
-      .string({ required_error: 'This field is required' })
-      .url('This is not a valid url'),
+      .string()
+      .transform((value) => (value.trim() ? absoluteLink(value) : ''))
+      .pipe(z.string().url('This is not a valid url')),
     platformId: z.string({ required_error: 'This field is required' }),
     subject: z.array(z.string()).min(1, 'This field is required'),
     platform: z.string().optional(),

@@ -4,6 +4,7 @@ import {
   ExtendedOptions,
   FieldSchema,
   Group,
+  GroupShortName,
   MySelectProps,
   Platform,
   Session,
@@ -136,6 +137,31 @@ export const setParentBatchOptions = (
   } else {
     (fieldsSchema.subBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
   }
+  setPopupSignUpOptions(apiOptions, fieldsSchema, authGroupSelected);
+};
+
+export const setPopupSignUpOptions = (
+  apiOptions: ApiFormOptions,
+  fieldsSchema: FieldSchema<basicFields>,
+  authGroupSelected?: ExtendedOptions
+) => {
+  let options: Record<'popup' | 'signUp', ExtendedOptions[]> = {
+    popup: [],
+    signUp: [],
+  };
+
+  options.popup =
+    apiOptions.popupForm?.filter((item) =>
+      item.label.includes(GroupShortName[authGroupSelected?.value as Group])
+    ) ?? [];
+
+  options.signUp =
+    apiOptions.signupForm?.filter((item) =>
+      item.label.includes(GroupShortName[authGroupSelected?.value as Group])
+    ) ?? [];
+
+  (fieldsSchema.signupFormId as MySelectProps).options = options.signUp ?? [];
+  (fieldsSchema.popupFormId as MySelectProps).options = options.popup ?? [];
 };
 
 export const setBatchOptions = (

@@ -16,13 +16,16 @@ const TimelineForm: FC = () => {
         type: 'datetime',
         label: 'Start Date And Time',
         placeholder: 'Select start date and time',
-        pagedNavigation: true,
+        helperText:
+          'The start time indicates a specific time of day and is not dependent on the start or end dates.',
         disableRange: (date: Date) => date < startOfToday() || date > addYears(startOfToday(), 1),
       },
       endDate: {
         type: 'datetime',
         label: 'End Date And Time',
         placeholder: 'Select end date and time',
+        helperText:
+          'The end time indicates a specific time of day and is not dependent on the start or end dates.',
         disableRange: (date: Date) => date < startOfToday() || date > addYears(startOfToday(), 1),
       },
       testTakers: {

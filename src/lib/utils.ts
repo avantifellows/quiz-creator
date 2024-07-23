@@ -32,3 +32,8 @@ export function filterObject<T extends Record<string, unknown>>(obj: T) {
     )
   );
 }
+
+export function absoluteLink(link: string) {
+  if (!link) return '';
+  return link.startsWith('http') ? link : `https://${link}`;
+}

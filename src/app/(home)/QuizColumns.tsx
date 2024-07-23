@@ -1,20 +1,10 @@
 'use client';
 
+import { Session } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { patchSession, sendCreateSns } from '@/services/services';
-import { Session } from '@/types';
-import { Check, LinkIcon, MoreHorizontal, X } from 'lucide-react';
-import Link from 'next/link';
-import { toast } from 'sonner';
+import { Check, X } from 'lucide-react';
+import { LinkAction, TableActions } from './Table/Actions';
 
 export const columns: ColumnDef<Session>[] = [
   {
@@ -52,16 +42,10 @@ export const columns: ColumnDef<Session>[] = [
     cell: ({ row }) => row.getValue('batchId') || 'N/A',
   },
   {
-    id: 'startDate',
-    accessorKey: 'start_time',
-    header: 'Start Time',
-    cell: ({ row }) => format(new Date(row.getValue('startDate')), 'p'),
-  },
-  {
-    id: 'endDate',
-    accessorKey: 'end_time',
-    header: 'End Time',
-    cell: ({ row }) => format(new Date(row.getValue('endDate')), 'p'),
+    id: 'timing',
+    accessorFn: ({ start_time, end_time }) =>
+      `${start_time ? format(new Date(start_time), 'p') : 'N/A'} - ${end_time ? format(new Date(end_time), 'p') : 'N/A'}`,
+    header: 'Timing',
   },
   {
     id: 'createdAt',
@@ -75,22 +59,7 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'portal_link',
     header: 'Portal Link',
     cell: ({ row }) => (
-      <>
-        {row.getValue('portalLink') ? (
-          <Link
-            href={row.getValue('portalLink')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex p-1"
-            prefetch={false}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <LinkIcon className="size-4 mx-auto cursor-pointer" />
-          </Link>
-        ) : (
-          '-'
-        )}
-      </>
+      <LinkAction value={row.getValue('portalLink')} pending={!row.original.session_id} />
     ),
   },
   {
@@ -98,22 +67,7 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'meta_data.report_link',
     header: 'Report Link',
     cell: ({ row }) => (
-      <>
-        {row.getValue('reportLink') ? (
-          <Link
-            href={row.getValue('reportLink')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex p-1"
-            prefetch={false}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <LinkIcon className="size-4 mx-auto cursor-pointer" />
-          </Link>
-        ) : (
-          '-'
-        )}
-      </>
+      <LinkAction value={row.getValue('reportLink')} pending={!row.original.session_id} />
     ),
   },
   {
@@ -121,22 +75,7 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'meta_data.admin_testing_link',
     header: 'Admin Link',
     cell: ({ row }) => (
-      <>
-        {row.getValue('adminLink') ? (
-          <Link
-            href={row.getValue('adminLink')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex p-1"
-            prefetch={false}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <LinkIcon className="size-4 mx-auto cursor-pointer" />
-          </Link>
-        ) : (
-          '-'
-        )}
-      </>
+      <LinkAction value={row.getValue('adminLink')} pending={!row.original.session_id} />
     ),
   },
   {
@@ -154,62 +93,6 @@ export const columns: ColumnDef<Session>[] = [
     id: 'actions',
     header: 'Actions',
     enableHiding: false,
-    cell: function Cell({ row }) {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href={`/session/edit?id=${row.original.id}`}>Edit</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href={`/session/duplicate?id=${row.original.id}`}>Duplicate</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Button
-                variant="ghost"
-                className="w-full focus-visible:ring-0 justify-start font-normal"
-                onClick={async (e) => {
-                  e.stopPropagation();
-                  await patchSession(
-                    {
-                      is_active: !row.original.is_active,
-                    },
-                    row.original.id ?? 0
-                  );
-                  toast.success(
-                    row.original.is_active ? 'Disabled the session' : 'Enabled the session',
-                    { description: 'Please refresh the page after a while.' }
-                  );
-                }}
-              >
-                {row.original.is_active ? 'Disable' : 'Enable'} Session
-              </Button>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Button
-                variant="ghost"
-                className="w-full focus-visible:ring-0 justify-start font-normal"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  sendCreateSns(row.original.id);
-                  toast.success('Request send successfully', {
-                    description:
-                      'The links will be available/updated shortly. Please refresh the page after a while.',
-                  });
-                }}
-              >
-                Regenerate Links
-              </Button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <TableActions session={row.original} />,
   },
 ];
