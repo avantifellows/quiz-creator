@@ -51,7 +51,7 @@ export const columns: ColumnDef<Session>[] = [
     id: 'timing',
     accessorFn: ({ start_time, end_time }) =>
       `${start_time ? format(new Date(start_time), 'p') : 'N/A'} - ${end_time ? format(new Date(end_time), 'p') : 'N/A'}`,
-    header: 'Timing',
+    header: 'Timings',
   },
   {
     id: 'createdAt',
