@@ -18,8 +18,9 @@ const usePolling = (data: Session[]) => {
 
   const { pendingSessions, stopPolling } = useMemo(() => {
     const pendingSessions =
-      data?.filter((session) => !session?.session_id)?.map((session) => session?.id as number) ??
-      [];
+      data
+        ?.filter((session) => session?.meta_data?.status === 'pending')
+        ?.map((session) => session?.id as number) ?? [];
     const stopPolling = pendingSessions.length === 0;
     return { pendingSessions, stopPolling };
   }, [data]);
@@ -30,7 +31,11 @@ const usePolling = (data: Session[]) => {
     return () => clearInterval(intervalId);
   }, [stopPolling]);
 
-  console.log(`${new Date().toLocaleTimeString()} : `, { isPolling: !stopPolling, pendingSessions });
+  console.info(`${new Date().toLocaleTimeString()} : `, {
+    isPolling: !stopPolling,
+    pendingSessions,
+  });
+
   return { isPolling: !stopPolling, pendingSessions };
 };
 
