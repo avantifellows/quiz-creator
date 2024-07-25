@@ -15,6 +15,7 @@ import {
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, type FC } from 'react';
 import {
+  handleBatchFields,
   handlePopupFields,
   handleRedirectionData,
   handleSignUpFields,
@@ -41,6 +42,7 @@ const BasicForm: FC = () => {
         placeholder: 'Select a platform',
         label: 'Platform',
         disabled: type === SessionType.EDIT,
+        onValueChange: (value, form) => handleBatchFields(value, form, apiOptions, fieldsSchema),
       },
       group: {
         type: 'select',
@@ -49,14 +51,13 @@ const BasicForm: FC = () => {
         label: 'Group',
         disabled: type === SessionType.EDIT,
         onValueChange: (value, form) => {
-          setParentBatchOptions(value, apiOptions, fieldsSchema);
+          setParentBatchOptions(value, form, apiOptions, fieldsSchema);
           if (isMounted.current) {
             setGroupPreset(value, form, apiOptions);
           }
         },
       },
       parentBatch: {
-        required: true,
         type: 'select',
         placeholder: 'Select a quiz batch',
         label: 'Quiz Batch',
@@ -66,7 +67,7 @@ const BasicForm: FC = () => {
         },
       },
       subBatch: {
-        type: 'select',
+        type: 'multi-select',
         placeholder: 'Select a class batch',
         label: 'Class Batch',
         disabled: type === SessionType.EDIT,
@@ -141,7 +142,7 @@ const BasicForm: FC = () => {
     () => ({
       group: formData?.meta_data?.group,
       parentBatch: formData?.meta_data?.parent_id,
-      subBatch: formData?.meta_data?.batch_id,
+      subBatch: formData?.meta_data?.batch_id?.split(',') ?? [],
       grade: formData?.meta_data?.grade,
       authType: formData?.auth_type,
       activateSignUp: formData?.signup_form,
@@ -164,8 +165,8 @@ const BasicForm: FC = () => {
     const addedData: Session = {
       meta_data: {
         group: data.group,
-        parent_id: data.parentBatch,
-        batch_id: data.subBatch,
+        parent_id: data.parentBatch ?? '',
+        batch_id: data.subBatch ? data.subBatch.join(',') : '',
         grade: data.grade,
         number_of_fields_in_popup_form: data.isPopupForm ? data.noOfFieldsInPopup ?? '' : '',
       },

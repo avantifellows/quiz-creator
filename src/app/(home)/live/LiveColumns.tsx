@@ -31,7 +31,7 @@ export const columns: ColumnDef<Session>[] = [
   {
     accessorKey: 'platform',
     header: 'Platform',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('platform')}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.getValue('platform') || 'N/A'}</div>,
   },
   {
     id: 'group',

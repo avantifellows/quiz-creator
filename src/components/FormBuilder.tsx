@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { FieldValues, Path, UseFormReturn, useForm } from 'react-hook-form';
 import { ControlledCheckbox } from './ui/checkbox';
+import { ControlledMultiSelectField } from './ui/multi-select';
 
 /**
  * Function to render a form field based on the field type.
@@ -39,6 +40,9 @@ const RenderFields = <T extends FieldValues>(
       break;
     case 'checkbox':
       Component = ControlledCheckbox;
+      break;
+    case 'multi-select':
+      Component = ControlledMultiSelectField;
       break;
     default:
       Component = ControlledInput;

@@ -26,7 +26,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
-        subBatch: '',
+        subBatch: [],
       };
       break;
 
@@ -44,7 +44,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isRedirection: true,
         isIdGeneration: true,
         parentBatch: '',
-        subBatch: '',
+        subBatch: [],
       };
       break;
 
@@ -63,7 +63,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
-        subBatch: '',
+        subBatch: [],
       };
       break;
 
@@ -79,7 +79,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
-        subBatch: '',
+        subBatch: [],
       };
       break;
 
@@ -93,7 +93,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
-        subBatch: '',
+        subBatch: [],
       };
       break;
   }
@@ -105,10 +105,14 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
 
 export const setParentBatchOptions = (
   value: string,
+  form: UseFormReturn,
   apiOptions: ApiFormOptions,
   fieldsSchema: FieldSchema<basicFields>
 ) => {
   if (!value) return;
+  const selectedPlatform = form.getValues('platform');
+  form.trigger('platform');
+  const isQuizSession = selectedPlatform === Platform.Quiz;
   const authGroupSelected = apiOptions.group?.find((item) => item.value === value);
   let filteredQuizBatchOptions: ExtendedOptions[] = [];
 
@@ -116,16 +120,22 @@ export const setParentBatchOptions = (
     const TNStudentsId = apiOptions.group?.find((item) => item.value === Group.TNStudents)?.id;
 
     filteredQuizBatchOptions =
-      apiOptions?.batch?.filter((item) => item.groupId === TNStudentsId && !item.parentId) ?? [];
+      apiOptions?.batch?.filter(
+        (item) => item.groupId === TNStudentsId && !item.parentId === isQuizSession
+      ) ?? [];
   } else {
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
-        (item) => item.groupId === authGroupSelected?.id && !item.parentId
+        (item) => item.groupId === authGroupSelected?.id && !item.parentId === isQuizSession
       ) ?? [];
   }
 
-  (fieldsSchema.parentBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
-  (fieldsSchema.subBatch as MySelectProps).options = [];
+  if (isQuizSession) {
+    (fieldsSchema.parentBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
+    (fieldsSchema.subBatch as MySelectProps).options = [];
+  } else {
+    (fieldsSchema.subBatch as MySelectProps).options = filteredQuizBatchOptions ?? [];
+  }
 };
 
 export const setBatchOptions = (
@@ -140,7 +150,7 @@ export const setBatchOptions = (
   const filteredClassBatchOptions = apiOptions?.batch?.filter(
     (item) => item.parentId === quizBatchId
   );
-  form.setValue('subBatch', '');
+  form.setValue('subBatch', []);
   (fieldsSchema.subBatch as MySelectProps).options = filteredClassBatchOptions ?? [];
 };
 
@@ -233,4 +243,23 @@ export const handleRedirectionData = (formData: Session) => {
   }
 
   return newFormData;
+};
+
+export const handleBatchFields = (
+  value: string,
+  form: UseFormReturn,
+  apiOptions: ApiFormOptions,
+  fieldsSchema: FieldSchema<basicFields>
+) => {
+  if (value !== Platform.Quiz) {
+    fieldsSchema.parentBatch.hide = true;
+    form.setValue('parentBatch', '');
+  } else {
+    fieldsSchema.parentBatch.hide = false;
+  }
+
+  const selectedGroup = form.watch('group');
+  if (selectedGroup) {
+    setParentBatchOptions(selectedGroup, form, apiOptions, fieldsSchema);
+  }
 };

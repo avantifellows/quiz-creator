@@ -119,8 +119,10 @@ export const displayData = (data: Session, formOptions: Option[]) => {
     data: [
       { label: 'Start Date', value: format(new Date(data.start_time!), 'PP') },
       { label: 'End Date', value: format(new Date(data.end_time!), 'PP') },
-      { label: 'Start Time', value: format(new Date(data.start_time!), 'p') },
-      { label: 'End Time', value: format(new Date(data.end_time!), 'p') },
+      {
+        label: 'Timings',
+        value: `${format(new Date(data.start_time!), 'p')} - ${format(new Date(data.end_time!), 'p')}`,
+      },
       { label: 'Expected Attendance', value: data.meta_data?.test_takers_count },
       { label: 'Is Enabled?', value: data.is_active ? 'Yes' : 'No' },
       { label: 'Has Synced?', value: data.meta_data?.has_synced_to_bq },
