@@ -114,4 +114,3 @@ const CopyBtn = ({ value }: { value: string }) => {
 };
 
 export { CopyBtn, LinkAction, TableActions };
-
