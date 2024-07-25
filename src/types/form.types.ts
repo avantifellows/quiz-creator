@@ -20,7 +20,7 @@ export const basicSchema = z
   .object({
     group: z.string({ required_error: 'This field is required' }).min(1, 'This field is required'),
     parentBatch: z.string().optional(),
-    subBatch: z.array(z.string()).min(1, 'This field is required'),
+    subBatch: z.array(z.string()).optional(),
     grade: z.coerce
       .number({
         required_error: 'This field is required',
@@ -87,12 +87,24 @@ export const basicSchema = z
       }
     }
 
-    if (data.platform === Platform.Quiz && !data.parentBatch) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'This field is required',
-        path: ['parentBatch'],
-      });
+    if (data.platform === Platform.Quiz) {
+      // Quiz platform validation
+      if (!data.parentBatch) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This field is required',
+          path: ['parentBatch'],
+        });
+      }
+    } else {
+      // Live platform validation
+      if (!data.subBatch?.length) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This field is required',
+          path: ['subBatch'],
+        });
+      }
     }
   });
 
@@ -203,7 +215,7 @@ export const timelineSchema = z
 export const liveSchema = z
   .object({
     platformLink: z
-      .string()
+      .string({ required_error: 'This field is required' })
       .transform((value) => (value.trim() ? absoluteLink(value) : ''))
       .pipe(z.string().url('This is not a valid url')),
     platformId: z.string({ required_error: 'This field is required' }),
