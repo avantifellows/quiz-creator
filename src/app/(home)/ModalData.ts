@@ -120,7 +120,7 @@ export const displayData = (data: Session, formOptions: Option[]) => {
       { label: 'Start Date', value: format(new Date(data.start_time!), 'PP') },
       { label: 'End Date', value: format(new Date(data.end_time!), 'PP') },
       {
-        label: 'Timing',
+        label: 'Timings',
         value: `${format(new Date(data.start_time!), 'p')} - ${format(new Date(data.end_time!), 'p')}`,
       },
       { label: 'Expected Attendance', value: data.meta_data?.test_takers_count },
