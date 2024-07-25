@@ -5,6 +5,7 @@ import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
 import { FieldSchema, Session, timelineFields, timelineSchema } from '@/types';
 import { addYears, startOfToday } from 'date-fns';
+import { Info } from 'lucide-react';
 import { useCallback, useMemo, type FC } from 'react';
 
 const TimelineForm: FC = () => {
@@ -16,16 +17,12 @@ const TimelineForm: FC = () => {
         type: 'datetime',
         label: 'Start Date And Time',
         placeholder: 'Select start date and time',
-        helperText:
-          'The start time indicates a specific time of day and is not dependent on the start or end dates.',
         disableRange: (date: Date) => date < startOfToday() || date > addYears(startOfToday(), 1),
       },
       endDate: {
         type: 'datetime',
         label: 'End Date And Time',
         placeholder: 'Select end date and time',
-        helperText:
-          'The end time indicates a specific time of day and is not dependent on the start or end dates.',
         disableRange: (date: Date) => date < startOfToday() || date > addYears(startOfToday(), 1),
       },
       testTakers: {
@@ -77,13 +74,19 @@ const TimelineForm: FC = () => {
   }, []);
 
   return (
-    <FormBuilder
-      formSchema={fieldsSchema}
-      zodSchema={timelineSchema}
-      defaultValues={defaultValues}
-      handleSubmit={onSubmit}
-      buttons={{ submit: { disabled: isSubmiting } }}
-    />
+    <>
+      <p className="text-sm text-muted-foreground mb-4 text-pretty">
+        <Info className="inline-block size-3.5 md:size-4 mb-1 mr-2" />
+        The start and end times of a session apply to every day from the start date to the end date.
+      </p>
+      <FormBuilder
+        formSchema={fieldsSchema}
+        zodSchema={timelineSchema}
+        defaultValues={defaultValues}
+        handleSubmit={onSubmit}
+        buttons={{ submit: { disabled: isSubmiting } }}
+      />
+    </>
   );
 };
 
