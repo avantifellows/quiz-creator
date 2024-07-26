@@ -51,7 +51,7 @@ const QuizForm: FC = () => {
       platform: formData.platform,
       platformLink: formData.platform_link,
       platformId: formData.platform_id,
-      subject: formData.meta_data?.subject?.split(',') ?? [],
+      subject: formData.meta_data?.subject ? formData.meta_data?.subject?.split(',') : [],
     }),
     [formData]
   );

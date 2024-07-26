@@ -142,7 +142,7 @@ const BasicForm: FC = () => {
     () => ({
       group: formData?.meta_data?.group,
       parentBatch: formData?.meta_data?.parent_id,
-      subBatch: formData?.meta_data?.batch_id?.split(',') ?? [],
+      subBatch: formData?.meta_data?.batch_id ? formData?.meta_data?.batch_id?.split(',') : [],
       grade: formData?.meta_data?.grade,
       authType: formData?.auth_type,
       activateSignUp: formData?.signup_form,
