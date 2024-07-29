@@ -86,7 +86,7 @@ export const displayData = (data: Session, formOptions: Option[]) => {
         value: data.meta_data?.shortened_link
           ? absoluteLink(data.meta_data?.shortened_link)
           : 'N/A',
-        isLink: !!data.portal_link,
+        isLink: !!data.meta_data?.shortened_link,
       },
       {
         label: 'Admin Link',

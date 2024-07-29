@@ -84,3 +84,8 @@ export enum Subjects {
 }
 
 export const Grades = [9, 10, 11, 12, 13] as const;
+
+export const MARKING_SCHEMES = {
+  '4,-1': '4,-1',
+  '1, 0': '1, 0',
+} as const;

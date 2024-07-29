@@ -93,7 +93,6 @@ const LinkAction = ({ value, pending }: { value: string; pending: boolean }) => 
       >
         <LinkIcon className="size-4 mx-auto cursor-pointer" />
       </Link>
-      <CopyBtn value={memoLink} />
     </div>
   );
 };

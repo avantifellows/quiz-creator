@@ -145,12 +145,7 @@ export const quizSchema = z.object({
       (value) => TestTypeOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
-  markingScheme: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => MarkingSchemeOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
+  markingScheme: z.string().optional(),
   optionalLimit: z
     .string({ required_error: 'This field is required' })
     .refine(
