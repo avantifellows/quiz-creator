@@ -166,8 +166,15 @@ export const sendCreateSns = (id?: number) => publishMessage({ action: 'db_id', 
  * - isSuccess : boolean indicating if the session was patched
  * - id : Id of the patched session
  */
-export async function patchSession(formData: Session, id: number) {
+export async function patchSession(formData: Session, id: number, oldSession: Session) {
   try {
+    await instance.patch<Session>(`/session/${id}`, {
+      meta_data: {
+        ...oldSession.meta_data,
+        date_created: utcToISTDate(formData.meta_data?.date_created ?? ''),
+        status: STATUS.PENDING,
+      },
+    });
     KeysToDeleteBeforeUpdate.forEach((key) => deleteByPath(formData, key));
     const payload: Session = {
       ...formData,

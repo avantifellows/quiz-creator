@@ -42,7 +42,8 @@ const TableActions = ({ session }: { session: Session }) => {
                 {
                   is_active: !session.is_active,
                 },
-                session.id ?? 0
+                session.id ?? 0,
+                session
               );
               toast.success(session.is_active ? 'Disabled the session' : 'Enabled the session', {
                 description: 'Please refresh the page after a while.',
