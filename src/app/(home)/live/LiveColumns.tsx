@@ -65,7 +65,7 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'platform_link',
     header: 'Platform Link',
     cell: ({ row }) => (
-      <LinkAction value={row.getValue('platformLink')} pending={!row.original.session_id} />
+      <LinkAction value={row.getValue('platformLink')} status={row.original.meta_data?.status} />
     ),
   },
   {
@@ -73,7 +73,7 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'portal_link',
     header: 'Portal Link',
     cell: ({ row }) => (
-      <LinkAction value={row.getValue('portalLink')} pending={!row.original.session_id} />
+      <LinkAction value={row.getValue('portalLink')} status={row.original.meta_data?.status} />
     ),
   },
   {

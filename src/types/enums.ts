@@ -89,3 +89,9 @@ export const MARKING_SCHEMES = {
   '4,-1': '4,-1',
   '1, 0': '1, 0',
 } as const;
+
+export enum STATUS {
+  SUCCESS = 'success',
+  FAILED = 'failed',
+  PENDING = 'pending',
+}

@@ -3,7 +3,7 @@
 import { DATA_PER_PAGE, KeysToDeleteBeforeUpdate } from '@/Constants';
 import { istToUTCDate, utcToISTDate } from '@/lib/time-picker-utils';
 import { deleteByPath, filterObject } from '@/lib/utils';
-import { ApiFormOptions, FilterParams, Platform, TableParams } from '@/types';
+import { ApiFormOptions, FilterParams, Platform, STATUS, TableParams } from '@/types';
 import { Session } from '@/types/api.types';
 import { cache } from 'react';
 import { instance } from '../lib/axios';
@@ -121,7 +121,7 @@ export async function createSession(formData: Session) {
           shortened_link: '',
           has_synced_to_bq: false,
           infinite_session: false,
-          status: 'pending',
+          status: STATUS.PENDING,
           date_created: utcToISTDate(new Date().toISOString()),
         },
         purpose: {
@@ -137,7 +137,7 @@ export async function createSession(formData: Session) {
         session_id: '',
         meta_data: {
           ...formData.meta_data,
-          status: 'pending',
+          status: STATUS.PENDING,
           date_created: utcToISTDate(new Date().toISOString()),
         },
         purpose: '',
@@ -174,7 +174,7 @@ export async function patchSession(formData: Session, id: number) {
       meta_data: {
         ...formData.meta_data,
         date_created: utcToISTDate(formData.meta_data?.date_created ?? ''),
-        status: 'pending',
+        status: STATUS.PENDING,
       },
       ...(formData.start_time ? { start_time: utcToISTDate(formData.start_time) } : {}),
       ...(formData.end_time ? { end_time: utcToISTDate(formData.end_time) } : {}),

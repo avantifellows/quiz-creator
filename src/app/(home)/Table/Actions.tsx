@@ -7,8 +7,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { absoluteLink } from '@/lib/utils';
 import { patchSession } from '@/services/services';
-import type { Session } from '@/types';
-import { Copy, LinkIcon, Loader, MoreHorizontal } from 'lucide-react';
+import { type Session, STATUS } from '@/types';
+import { AlertTriangle, Copy, LinkIcon, Loader, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { toast } from 'sonner';
@@ -72,13 +72,18 @@ const TableActions = ({ session }: { session: Session }) => {
   );
 };
 
-const LinkAction = ({ value, pending }: { value: string; pending: boolean }) => {
+const LinkAction = ({ value, status = STATUS.SUCCESS }: { value: string; status?: STATUS }) => {
   const memoLink = useMemo(() => absoluteLink(value), [value]);
 
+  if (status === STATUS.PENDING) {
+    return <Loader className="size-4 mx-auto motion-safe:animate-spin-slow" />;
+  }
+
+  if (status === STATUS.FAILED) {
+    return <AlertTriangle className="size-4 mx-auto" />;
+  }
+
   if (!memoLink) {
-    if (pending) {
-      return <Loader className="size-4 mx-auto motion-safe:animate-spin-slow" />;
-    }
     return <>-</>;
   }
 

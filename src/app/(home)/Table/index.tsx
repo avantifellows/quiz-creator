@@ -123,7 +123,11 @@ export default function DataTable({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            <SheetTableRow table={table} formOptions={apiOptions?.formSchemas ?? []} />
+            <SheetTableRow
+              table={table}
+              formOptions={apiOptions?.formSchemas ?? []}
+              pendingSessions={pendingSessions}
+            />
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
