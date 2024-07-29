@@ -11,6 +11,8 @@ import {
   TestPurposeOptions,
   TestTypeOptions,
 } from '@/Constants';
+import { absoluteLink } from '@/lib/utils';
+import { isBefore } from 'date-fns';
 import { z } from 'zod';
 import { Platform } from './enums';
 
@@ -18,7 +20,7 @@ export const basicSchema = z
   .object({
     group: z.string({ required_error: 'This field is required' }).min(1, 'This field is required'),
     parentBatch: z.string().optional(),
-    subBatch: z.array(z.string()).min(1, 'This field is required'),
+    subBatch: z.array(z.string()).optional(),
     grade: z.coerce
       .number({
         required_error: 'This field is required',
@@ -85,12 +87,24 @@ export const basicSchema = z
       }
     }
 
-    if (data.platform === Platform.Quiz && !data.parentBatch) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'This field is required',
-        path: ['parentBatch'],
-      });
+    if (data.platform === Platform.Quiz) {
+      // Quiz platform validation
+      if (!data.parentBatch) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This field is required',
+          path: ['parentBatch'],
+        });
+      }
+    } else {
+      // Live platform validation
+      if (!data.subBatch?.length) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'This field is required',
+          path: ['subBatch'],
+        });
+      }
     }
   });
 
@@ -131,12 +145,7 @@ export const quizSchema = z.object({
       (value) => TestTypeOptions.some((option) => option.value === value),
       'Invalid option selected'
     ),
-  markingScheme: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => MarkingSchemeOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
+  markingScheme: z.string().optional(),
   optionalLimit: z
     .string({ required_error: 'This field is required' })
     .refine(
@@ -177,16 +186,33 @@ export const timelineSchema = z
       .int()
       .min(0, 'Test Takers must be greater than 0'),
   })
-  .refine((data) => data.startDate < data.endDate, {
-    message: 'End date must be greater than start date.',
-    path: ['endDate'],
+  .superRefine((data, context) => {
+    const startDate = new Date(data.startDate).toDateString();
+    const endDate = new Date(data.endDate).toDateString();
+    const startTIme = new Date(data.startDate).toTimeString();
+    const endTIme = new Date(data.endDate).toTimeString();
+    if (isBefore(endDate, startDate)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'End date must be greater than start date.',
+        path: ['endDate'],
+      });
+    }
+    if (endTIme < startTIme) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'End Time must be greater than start Time.',
+        path: ['endDate'],
+      });
+    }
   });
 
 export const liveSchema = z
   .object({
     platformLink: z
       .string({ required_error: 'This field is required' })
-      .url('This is not a valid url'),
+      .transform((value) => (value.trim() ? absoluteLink(value) : ''))
+      .pipe(z.string().url('This is not a valid url')),
     platformId: z.string({ required_error: 'This field is required' }),
     subject: z.array(z.string()).min(1, 'This field is required'),
     platform: z.string().optional(),

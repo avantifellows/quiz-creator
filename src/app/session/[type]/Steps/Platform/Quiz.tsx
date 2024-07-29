@@ -13,6 +13,7 @@ import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
 import {
   FieldSchema,
+  MARKING_SCHEMES,
   Session,
   SessionParams,
   SessionType,
@@ -72,6 +73,7 @@ const QuizForm: FC = () => {
         placeholder: 'Select a marking scheme',
         label: 'Marking Scheme',
         disabled: type === SessionType.EDIT,
+        hide: true,
       },
       optionalLimit: {
         type: 'select',
@@ -104,6 +106,8 @@ const QuizForm: FC = () => {
   );
 
   const onSubmit = useCallback((data: quizFields) => {
+    const isHomework = data.testType === 'homework';
+
     const addedData: Session = {
       meta_data: {
         course: data.course,
@@ -111,7 +115,7 @@ const QuizForm: FC = () => {
         test_format: data.testFormat,
         test_purpose: data.testPurpose,
         test_type: data.testType,
-        marking_scheme: data.markingScheme,
+        marking_scheme: isHomework ? MARKING_SCHEMES['1, 0'] : MARKING_SCHEMES['4,-1'],
         optional_limits: data.optionalLimit,
         cms_test_id: data.cmsUrl,
         show_answers: data.showAnswers,

@@ -1,12 +1,10 @@
-import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Option, Session } from '@/types';
 import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
-import { Copy } from 'lucide-react';
 import Link from 'next/link';
-import { toast } from 'sonner';
 import { displayData } from '../ModalData';
+import { CopyBtn } from './Actions';
 
 export const SheetTableRow = ({
   table,
@@ -31,6 +29,7 @@ export const SheetTableRow = ({
           <SheetHeader className="border-b space-y-0 flex-row justify-between items-center mr-6">
             <SheetTitle>Session Details</SheetTitle>
             <Link
+              prefetch={false}
               href={`/session/edit?id=${row.original.id}`}
               className="text-primary underline-offset-4 hover:underline"
             >
@@ -53,6 +52,7 @@ export const SheetTableRow = ({
                         className="block truncate rounded-full border px-2.5 py-0.5 text-xs"
                         target="_blank"
                         rel="noopener noreferrer"
+                        prefetch={false}
                       >
                         {item.value}
                       </Link>
@@ -68,19 +68,4 @@ export const SheetTableRow = ({
       </>
     </Sheet>
   ));
-};
-
-const CopyBtn = ({ value }: { value: string }) => {
-  return (
-    <Button
-      variant="ghost"
-      className="p-1 h-auto"
-      onClick={() => {
-        navigator.clipboard.writeText(value);
-        toast.success('Copied Link to clipboard');
-      }}
-    >
-      <Copy className="size-4" />
-    </Button>
-  );
 };

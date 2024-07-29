@@ -27,19 +27,42 @@ export enum Platform {
 }
 
 export enum Group {
-  Haryana = 'HaryanaStudents',
-  Himachal = 'HimachalStudents',
-  Delhi = 'DelhiStudents',
-  Uttarakhand = 'UttarakhandStudents',
-  Gujarat = 'GujaratStudents',
-  FeedingIndia = 'FeedingIndiaStudents',
-  Candidates = 'Candidates',
-  Enable = 'EnableStudents',
   AFTesting = 'AFTesting',
   AFTeachers = 'AFTeachers',
+  DelhiSchools = 'DelhiSchools',
+  Delhi = 'DelhiStudents',
+  EnableSchools = 'EnableSchools',
+  Enable = 'EnableStudents',
+  FeedingIndia = 'FeedingIndiaStudents',
+  Gujarat = 'GujaratStudents',
+  Haryana = 'HaryanaStudents',
+  Himachal = 'HimachalStudents',
+  Maharashtra = 'MaharashtraStudents',
+  Punjab = 'PunjabStudents',
+  PunjabTeachers = 'PunjabTeachers',
   TNSchools = 'TNSchools',
   TNStudents = 'TNStudents',
+  Uttarakhand = 'UttarakhandStudents',
 }
+
+export const GroupShortName: Record<Group, string> = {
+  [Group.AFTesting]: 'AF',
+  [Group.AFTeachers]: 'AF',
+  [Group.DelhiSchools]: 'Delhi',
+  [Group.Delhi]: 'Delhi',
+  [Group.EnableSchools]: 'Enable',
+  [Group.Enable]: 'Enable',
+  [Group.FeedingIndia]: 'Feeding',
+  [Group.Gujarat]: 'Gujarat',
+  [Group.Haryana]: 'Haryana',
+  [Group.Himachal]: 'Himachal',
+  [Group.Maharashtra]: 'Maharashtra',
+  [Group.Punjab]: 'Punjab',
+  [Group.PunjabTeachers]: 'Punjab',
+  [Group.TNSchools]: 'TN',
+  [Group.TNStudents]: 'TN',
+  [Group.Uttarakhand]: 'Uttarakhand',
+} as const;
 
 export enum AuthType {
   ID = 'ID',
@@ -61,3 +84,8 @@ export enum Subjects {
 }
 
 export const Grades = [9, 10, 11, 12, 13] as const;
+
+export const MARKING_SCHEMES = {
+  '4,-1': '4,-1',
+  '1, 0': '1, 0',
+} as const;

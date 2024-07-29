@@ -1,4 +1,4 @@
-import { AuthType, Grades, Option, Platform, Subjects } from '@/types';
+import { AuthType, Grades, MARKING_SCHEMES, Option, Platform, Subjects } from '@/types';
 
 export const TestTypeOptions: Option[] = [
   { value: 'assessment', label: 'Assessment' },
@@ -41,10 +41,10 @@ export const TestPlatformOptions = Object.values(Platform).map((value) => ({
   label: value.toString(),
 }));
 
-export const MarkingSchemeOptions: Option[] = [
-  { value: '4,-1', label: '4,-1' },
-  { value: '1,0', label: '1,0' },
-];
+export const MarkingSchemeOptions: Option[] = Object.values(MARKING_SCHEMES).map((value) => ({
+  value: value.toString(),
+  label: value.toString(),
+}));
 
 export const OptionalLimitOptions: Option[] = [
   { value: 'N/A', label: 'N/A' },
