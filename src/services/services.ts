@@ -121,6 +121,7 @@ export async function createSession(formData: Session) {
           shortened_link: '',
           has_synced_to_bq: false,
           infinite_session: false,
+          status: 'pending',
           date_created: utcToISTDate(new Date().toISOString()),
         },
         purpose: {
@@ -136,6 +137,7 @@ export async function createSession(formData: Session) {
         session_id: '',
         meta_data: {
           ...formData.meta_data,
+          status: 'pending',
           date_created: utcToISTDate(new Date().toISOString()),
         },
         purpose: '',
@@ -169,6 +171,11 @@ export async function patchSession(formData: Session, id: number) {
     KeysToDeleteBeforeUpdate.forEach((key) => deleteByPath(formData, key));
     const payload: Session = {
       ...formData,
+      meta_data: {
+        ...formData.meta_data,
+        date_created: utcToISTDate(formData.meta_data?.date_created ?? ''),
+        status: 'pending',
+      },
       ...(formData.start_time ? { start_time: utcToISTDate(formData.start_time) } : {}),
       ...(formData.end_time ? { end_time: utcToISTDate(formData.end_time) } : {}),
     };
