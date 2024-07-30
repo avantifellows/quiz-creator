@@ -48,9 +48,10 @@ export const MarkingSchemeOptions: Option[] = Object.values(MARKING_SCHEMES).map
 
 export const OptionalLimitOptions: Option[] = [
   { value: 'N/A', label: 'N/A' },
-  { value: 'neet', label: 'NEET' },
-  { value: 'jee', label: 'JEE' },
-  { value: 'cuet', label: 'CUET' },
+  { value: 'NEET', label: 'NEET' },
+  { value: 'JEE', label: 'JEE' },
+  { value: 'CUET', label: 'CUET' },
+  { value: 'NA', label: 'NA' },
 ];
 
 export const CourseOptions: Option[] = [
