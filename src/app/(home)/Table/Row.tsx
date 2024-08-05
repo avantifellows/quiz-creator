@@ -1,7 +1,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { Option, Session } from '@/types';
+import { Option, Session, STATUS } from '@/types';
 import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
 import Link from 'next/link';
 import { displayData } from '../ModalData';
@@ -39,7 +39,9 @@ export const SheetTableRow = ({
             <Link
               prefetch={false}
               href={`/session/edit?id=${row.original.id}`}
-              className="text-primary underline-offset-4 hover:underline"
+              className={`text-primary underline-offset-4 hover:underline ${row.original.meta_data?.status === STATUS.PENDING && 'opacity-50 pointer-events-none'}`}
+              aria-disabled={row.original.meta_data?.status === STATUS.PENDING}
+              tabIndex={row.original.meta_data?.status === STATUS.PENDING ? -1 : undefined}
             >
               Edit
             </Link>

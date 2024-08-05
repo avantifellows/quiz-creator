@@ -23,7 +23,11 @@ const TableActions = ({ session }: { session: Session }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent onClick={(e) => e.stopPropagation()}>
-        <DropdownMenuItem asChild className="cursor-pointer">
+        <DropdownMenuItem
+          asChild
+          className="cursor-pointer"
+          disabled={session.meta_data?.status === STATUS.PENDING}
+        >
           <Link href={`/session/edit?id=${session.id}`} prefetch={false}>
             Edit
           </Link>
@@ -33,7 +37,11 @@ const TableActions = ({ session }: { session: Session }) => {
             Duplicate
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild className="cursor-pointer">
+        <DropdownMenuItem
+          asChild
+          className="cursor-pointer"
+          disabled={session.meta_data?.status === STATUS.PENDING}
+        >
           <Button
             variant="ghost"
             className="w-full focus-visible:ring-0 justify-start font-normal"
