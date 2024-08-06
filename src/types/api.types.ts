@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { STATUS } from './enums';
 
 const metaDataSchema = z.object({
   admin_testing_link: z.string().url().optional(),
@@ -24,6 +25,7 @@ const metaDataSchema = z.object({
   test_takers_count: z.number().int().optional(),
   test_type: z.string().optional(),
   subject: z.string().optional(),
+  status: z.nativeEnum(STATUS).optional(),
 });
 
 const purposeSchema = z.object({

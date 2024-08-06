@@ -3,8 +3,9 @@
 import { DATA_PER_PAGE, KeysToDeleteBeforeUpdate } from '@/Constants';
 import { istToUTCDate, utcToISTDate } from '@/lib/time-picker-utils';
 import { deleteByPath, filterObject } from '@/lib/utils';
-import { ApiFormOptions, FilterParams, Platform, TableParams } from '@/types';
+import { ApiFormOptions, FilterParams, Platform, STATUS, TableParams } from '@/types';
 import { Session } from '@/types/api.types';
+import { cache } from 'react';
 import { instance } from '../lib/axios';
 import { publishMessage } from './Aws';
 
@@ -120,6 +121,7 @@ export async function createSession(formData: Session) {
           shortened_link: '',
           has_synced_to_bq: false,
           infinite_session: false,
+          status: STATUS.PENDING,
           date_created: utcToISTDate(new Date().toISOString()),
         },
         purpose: {
@@ -135,6 +137,7 @@ export async function createSession(formData: Session) {
         session_id: '',
         meta_data: {
           ...formData.meta_data,
+          status: STATUS.PENDING,
           date_created: utcToISTDate(new Date().toISOString()),
         },
         purpose: '',
@@ -163,14 +166,27 @@ export const sendCreateSns = (id?: number) => publishMessage({ action: 'db_id', 
  * - isSuccess : boolean indicating if the session was patched
  * - id : Id of the patched session
  */
-export async function patchSession(formData: Session, id: number) {
+export async function patchSession(formData: Session, id: number, oldSession: Session) {
   try {
+    await instance.patch<Session>(`/session/${id}`, {
+      meta_data: {
+        ...oldSession.meta_data,
+        date_created: utcToISTDate(formData.meta_data?.date_created ?? ''),
+        status: STATUS.PENDING,
+      },
+    });
     KeysToDeleteBeforeUpdate.forEach((key) => deleteByPath(formData, key));
     const payload: Session = {
       ...formData,
+      meta_data: {
+        ...formData.meta_data,
+        date_created: utcToISTDate(formData.meta_data?.date_created ?? ''),
+        status: STATUS.PENDING,
+      },
       ...(formData.start_time ? { start_time: utcToISTDate(formData.start_time) } : {}),
       ...(formData.end_time ? { end_time: utcToISTDate(formData.end_time) } : {}),
     };
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     publishMessage({ action: 'patch', id, patch_session: payload });
 
     console.info(`[SUCCESS] updated session for ${id}`);
@@ -187,7 +203,7 @@ export async function patchSession(formData: Session, id: number) {
  * - batch: List of batches
  * - formSchema: List of form schema (popup form and signup form)
  */
-export async function getAllOptions(): Promise<ApiFormOptions> {
+export const getAllOptions = cache(async function (): Promise<ApiFormOptions> {
   try {
     const [groupOptions, batchOptions, formSchemaOptions] = await Promise.all([
       getAuthGroups(),
@@ -214,7 +230,7 @@ export async function getAllOptions(): Promise<ApiFormOptions> {
       signupForm: [],
     };
   }
-}
+});
 
 export async function getAuthGroups() {
   try {

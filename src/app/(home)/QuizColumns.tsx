@@ -59,7 +59,7 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'portal_link',
     header: 'Portal Link',
     cell: ({ row }) => (
-      <LinkAction value={row.getValue('portalLink')} pending={!row.original.session_id} />
+      <LinkAction value={row.getValue('portalLink')} status={row.original.meta_data?.status} />
     ),
   },
   {
@@ -67,7 +67,7 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'meta_data.report_link',
     header: 'Report Link',
     cell: ({ row }) => (
-      <LinkAction value={row.getValue('reportLink')} pending={!row.original.session_id} />
+      <LinkAction value={row.getValue('reportLink')} status={row.original.meta_data?.status} />
     ),
   },
   {
@@ -75,7 +75,7 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'meta_data.admin_testing_link',
     header: 'Admin Link',
     cell: ({ row }) => (
-      <LinkAction value={row.getValue('adminLink')} pending={!row.original.session_id} />
+      <LinkAction value={row.getValue('adminLink')} status={row.original.meta_data?.status} />
     ),
   },
   {

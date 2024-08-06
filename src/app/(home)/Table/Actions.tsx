@@ -7,8 +7,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { absoluteLink } from '@/lib/utils';
 import { patchSession } from '@/services/services';
-import type { Session } from '@/types';
-import { Copy, LinkIcon, Loader, MoreHorizontal } from 'lucide-react';
+import { type Session, STATUS } from '@/types';
+import { AlertTriangle, Copy, LinkIcon, Loader, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { toast } from 'sonner';
@@ -23,7 +23,11 @@ const TableActions = ({ session }: { session: Session }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent onClick={(e) => e.stopPropagation()}>
-        <DropdownMenuItem asChild className="cursor-pointer">
+        <DropdownMenuItem
+          asChild
+          className="cursor-pointer"
+          disabled={session.meta_data?.status === STATUS.PENDING}
+        >
           <Link href={`/session/edit?id=${session.id}`} prefetch={false}>
             Edit
           </Link>
@@ -33,7 +37,11 @@ const TableActions = ({ session }: { session: Session }) => {
             Duplicate
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild className="cursor-pointer">
+        <DropdownMenuItem
+          asChild
+          className="cursor-pointer"
+          disabled={session.meta_data?.status === STATUS.PENDING}
+        >
           <Button
             variant="ghost"
             className="w-full focus-visible:ring-0 justify-start font-normal"
@@ -42,7 +50,8 @@ const TableActions = ({ session }: { session: Session }) => {
                 {
                   is_active: !session.is_active,
                 },
-                session.id ?? 0
+                session.id ?? 0,
+                session
               );
               toast.success(session.is_active ? 'Disabled the session' : 'Enabled the session', {
                 description: 'Please refresh the page after a while.',
@@ -72,13 +81,18 @@ const TableActions = ({ session }: { session: Session }) => {
   );
 };
 
-const LinkAction = ({ value, pending }: { value: string; pending: boolean }) => {
+const LinkAction = ({ value, status = STATUS.SUCCESS }: { value: string; status?: STATUS }) => {
   const memoLink = useMemo(() => absoluteLink(value), [value]);
 
+  if (status === STATUS.PENDING) {
+    return <Loader className="size-4 mx-auto motion-safe:animate-spin-slow" />;
+  }
+
+  if (status === STATUS.FAILED) {
+    return <AlertTriangle className="size-4 mx-auto" />;
+  }
+
   if (!memoLink) {
-    if (pending) {
-      return <Loader className="size-4 mx-auto motion-safe:animate-spin-slow" />;
-    }
     return <>-</>;
   }
 

@@ -58,7 +58,9 @@ const config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       keyframes: {},
-      animation: {},
+      animation: {
+        'spin-slow': 'spin 1.5s linear infinite',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

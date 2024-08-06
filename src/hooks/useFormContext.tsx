@@ -83,7 +83,7 @@ export const FormDataProvider = ({
         let message = '';
         if (params.type === SessionType.EDIT) {
           toastId = toast.loading('Updating session...');
-          const { isSuccess } = await patchSession(formData, Number(id));
+          const { isSuccess } = await patchSession(formData, Number(id), sessionData);
           success = isSuccess;
           message = 'Session updated successfully';
         } else {

@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import usePolling from '@/hooks/usePolling';
 import { createQueryString } from '@/lib/utils';
 import type { ApiFormOptions, Session } from '@/types';
 import {
@@ -40,7 +41,6 @@ export default function DataTable({
   const searchParams = useSearchParams();
   const page = Number(searchParams.get('page') || 0);
   const perPage = Number(searchParams.get('per_page') || DATA_PER_PAGE);
-
   const initColumnsFilters = useMemo(() => {
     const filters = ['group', 'batchId', 'parentId'].reduce<ColumnFiltersState>((acc, key) => {
       const value = searchParams.get(key);
@@ -50,7 +50,7 @@ export default function DataTable({
     return filters;
   }, [searchParams]);
 
-  const table = useReactTable({
+  const table = useReactTable<Session>({
     data,
     columns,
     initialState: {
@@ -100,6 +100,8 @@ export default function DataTable({
     );
   }, [pageIndex, pageSize, group, batchId, parentId]);
 
+  const { pendingSessions } = usePolling(data);
+
   return (
     <>
       <Filters table={table} apiOptions={apiOptions} />
@@ -121,7 +123,11 @@ export default function DataTable({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            <SheetTableRow table={table} formOptions={apiOptions?.formSchemas ?? []} />
+            <SheetTableRow
+              table={table}
+              formOptions={apiOptions?.formSchemas ?? []}
+              pendingSessions={pendingSessions}
+            />
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
