@@ -186,6 +186,7 @@ export async function patchSession(formData: Session, id: number, oldSession: Se
       ...(formData.start_time ? { start_time: utcToISTDate(formData.start_time) } : {}),
       ...(formData.end_time ? { end_time: utcToISTDate(formData.end_time) } : {}),
     };
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     publishMessage({ action: 'patch', id, patch_session: payload });
 
     console.info(`[SUCCESS] updated session for ${id}`);
