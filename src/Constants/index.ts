@@ -55,3 +55,21 @@ export const KeysToDeleteBeforeUpdate: DeepKeys<Session>[] = [
   'platform_link',
   'platform_id',
 ];
+
+/**
+ * Platform Link Patterns
+ **/
+export const PlatformPatterns = [
+  // Meet Link
+  /meet\.google\.com\/([^/?]+)/,
+  // YouTube Video Link
+  /youtube\.com\/watch\?v=([^&]+)/,
+  // YouTube Live Link
+  /youtube\.com\/live\/([^/?]+)/,
+  // Any Plio Link
+  /play\/([^/?]+)/,
+  // Zoom Link
+  /zoom\.us\/j\/([^/?]+)/,
+  // Google Drive Link
+  /drive\.google\.com\/file\/d\/([^/?]+)/,
+];
