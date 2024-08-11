@@ -1,0 +1,46 @@
+name: Code Checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  merge-conflicts:
+    runs-on: ubuntu-latest
+    name: Find merge conflicts
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for merge conflicts
+        uses: olivernybroe/action-conflict-finder@v4.0
+
+  large-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for large files
+        uses: ppremk/lfs-warning@v3.3
+        with:
+          filesizelimit: 5MB
+
+  quality-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check ESLint
+        run: npm run lint:check
