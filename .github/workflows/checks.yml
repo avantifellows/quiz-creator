@@ -1,10 +1,9 @@
 name: Code Checks
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
+  push:
+    branches: [main]
 
 jobs:
   merge-conflicts:
@@ -44,3 +43,7 @@ jobs:
 
       - name: Check ESLint
         run: npm run lint:check
+
+      # TODO: Uncomment when code is formated by Prettier
+      # - name: Check Prettier
+      #   run: npm run format:check
