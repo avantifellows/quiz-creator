@@ -10,6 +10,9 @@ export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100, 200];
 // TABLE POLLING CONSTANTS
 export const POLLING_INTERVAL = 30000; // 30 seconds
 
+// Date Picker Allowed Range
+export const ALLOWED_YEARS = 5;
+
 /**
  * Keys to be deleted before duplicating a session
  * from preventing the fields from being duplicated

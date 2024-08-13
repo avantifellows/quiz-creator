@@ -6,6 +6,7 @@ import { DayPicker } from 'react-day-picker';
 
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -18,7 +19,8 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
         month: 'space-y-4',
         caption: 'flex justify-center pt-1 relative items-center',
-        caption_label: 'text-sm font-medium',
+        caption_label: 'hidden',
+        caption_dropdowns: 'flex items-center justify-center gap-2',
         nav: 'space-x-1 flex items-center',
         nav_button: cn(
           buttonVariants({ variant: 'outline' }),
@@ -49,6 +51,41 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
       components={{
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+        Dropdown: ({ name, value, children, onChange }) => {
+          type OptionElement = React.ReactElement<React.HTMLProps<HTMLOptionElement>>;
+          const options = React.Children.toArray(children) as OptionElement[];
+
+          return (
+            <Select
+              value={value?.toString()}
+              onValueChange={(value) => {
+                const changeEvent = {
+                  target: {
+                    value,
+                  },
+                } as React.ChangeEvent<HTMLSelectElement>;
+                onChange?.(changeEvent);
+              }}
+              name={name}
+            >
+              <SelectTrigger className="h-fit w-fit border-none p-0 focus:bg-none focus:ring-0 focus:ring-offset-0">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent position="popper" side="bottom" align="center" sideOffset={2}>
+                {options.map((option, index) => {
+                  return (
+                    <SelectItem
+                      key={index}
+                      value={option.props.value?.toString() || index.toString()}
+                    >
+                      {option.props.children}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          );
+        },
       }}
       {...props}
     />

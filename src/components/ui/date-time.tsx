@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { FormControl, FormLabel } from '@/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ALLOWED_YEARS } from '@/Constants';
 import { cn } from '@/lib/utils';
 import { MyDateTimeProps } from '@/types';
-import { format } from 'date-fns';
+import { addYears, format, startOfToday } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { ElementRef, forwardRef } from 'react';
 import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
@@ -41,6 +42,9 @@ const DateTimePicker = forwardRef<
           <Calendar
             {...restSchemaProps}
             {...restFieldProps}
+            captionLayout="dropdown-buttons"
+            fromYear={startOfToday().getFullYear()}
+            toYear={addYears(startOfToday(), ALLOWED_YEARS).getFullYear()}
             mode="single"
             selected={value}
             onSelect={onChange}
