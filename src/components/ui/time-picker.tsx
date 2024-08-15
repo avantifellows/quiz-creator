@@ -1,5 +1,4 @@
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -16,6 +15,7 @@ import {
   setDateByType,
 } from '@/lib/time-picker-utils';
 import { cn } from '@/lib/utils';
+import { ClockIcon } from 'lucide-react';
 import React from 'react';
 
 export interface TimePickerInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -198,48 +198,35 @@ function TimePicker({ date, setDate }: TimePickerProps) {
   const periodRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="flex items-end gap-2 justify-center">
-      <div className="grid gap-1 text-center">
-        <Label htmlFor="hours" className="text-xs">
-          Hours
-        </Label>
-        <TimePickerInput
-          id="hours"
-          picker="12hours"
-          period={period}
-          date={date}
-          setDate={setDate}
-          ref={hourRef}
-          onRightFocus={() => minuteRef.current?.focus()}
-        />
-      </div>
-      <div className="grid gap-1 text-center">
-        <Label htmlFor="minutes" className="text-xs">
-          Minutes
-        </Label>
-        <TimePickerInput
-          id="minutes"
-          picker="minutes"
-          date={date}
-          setDate={setDate}
-          ref={minuteRef}
-          onLeftFocus={() => hourRef.current?.focus()}
-          onRightFocus={() => periodRef.current?.focus()}
-        />
-      </div>
-      <div className="grid gap-1 text-center">
-        <Label htmlFor="period" className="text-xs">
-          Period
-        </Label>
-        <TimePeriodSelect
-          period={period}
-          setPeriod={setPeriod}
-          date={date}
-          setDate={setDate}
-          ref={periodRef}
-          onLeftFocus={() => periodRef.current?.focus()}
-        />
-      </div>
+    <div className="flex items-center gap-4">
+      <ClockIcon className="size-5 text-current" />
+      <TimePickerInput
+        id="hours"
+        picker="12hours"
+        period={period}
+        date={date}
+        setDate={setDate}
+        ref={hourRef}
+        onRightFocus={() => minuteRef.current?.focus()}
+      />
+      <span className="-mx-1.5">:</span>
+      <TimePickerInput
+        id="minutes"
+        picker="minutes"
+        date={date}
+        setDate={setDate}
+        ref={minuteRef}
+        onLeftFocus={() => hourRef.current?.focus()}
+        onRightFocus={() => periodRef.current?.focus()}
+      />
+      <TimePeriodSelect
+        period={period}
+        setPeriod={setPeriod}
+        date={date}
+        setDate={setDate}
+        ref={periodRef}
+        onLeftFocus={() => periodRef.current?.focus()}
+      />
     </div>
   );
 }

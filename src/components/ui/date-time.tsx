@@ -19,43 +19,49 @@ const DateTimePicker = forwardRef<
   const { label, disabled, disableRange, ...restSchemaProps } = schema;
 
   return (
-    <div className="flex flex-col gap-4">
-      <FormLabel className="self-start">{label}</FormLabel>
-      <Popover>
-        <FormControl>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                'justify-start text-left font-normal',
-                !value && 'text-muted-foreground'
-              )}
-              ref={refField}
-              disabled={disabled}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {value ? format(value, 'PPp') : <span>Pick a date and time</span>}
-            </Button>
-          </PopoverTrigger>
-        </FormControl>
-        <PopoverContent className="w-auto p-0">
-          <Calendar
-            {...restSchemaProps}
-            {...restFieldProps}
-            captionLayout="dropdown-buttons"
-            fromYear={startOfToday().getFullYear()}
-            toYear={addYears(startOfToday(), ALLOWED_YEARS).getFullYear()}
-            mode="single"
-            selected={value}
-            onSelect={onChange}
-            initialFocus
-            disabled={disableRange}
-          />
-          <div className="p-3 border-t border-border">
-            <TimePicker setDate={onChange} date={value} />
-          </div>
-        </PopoverContent>
-      </Popover>
+    <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 sm:items-center">
+      <div className="flex flex-col gap-4 flex-1">
+        <FormLabel className="self-start">{label?.date}</FormLabel>
+        <Popover>
+          <FormControl>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn('justify-start text-left font-normal')}
+                ref={refField}
+                disabled={disabled}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {value ? (
+                  format(value, 'PP')
+                ) : (
+                  <span className="text-muted-foreground/80 italic font-medium">
+                    Pick a date and time
+                  </span>
+                )}
+              </Button>
+            </PopoverTrigger>
+          </FormControl>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              {...restSchemaProps}
+              {...restFieldProps}
+              captionLayout="dropdown-buttons"
+              fromYear={startOfToday().getFullYear()}
+              toYear={addYears(startOfToday(), ALLOWED_YEARS).getFullYear()}
+              mode="single"
+              selected={value}
+              onSelect={onChange}
+              initialFocus
+              disabled={disableRange}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div className="flex flex-col gap-4 flex-1">
+        <FormLabel className="self-start">{label?.time}</FormLabel>
+        <TimePicker setDate={onChange} date={value} />
+      </div>
     </div>
   );
 });
