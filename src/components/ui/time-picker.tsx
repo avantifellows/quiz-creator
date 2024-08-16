@@ -73,7 +73,7 @@ const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>
        * If picker is '12hours' and the first digit is 0, then the second digit is automatically set to 1.
        * The second entered digit will break the condition and the value will be set to 10-12.
        */
-      if (picker === '12hours') {
+      if (picker === 'hours') {
         if (flag && calculatedValue.slice(1, 2) === '1' && prevIntKey === '0') return '0' + key;
       }
 
@@ -93,7 +93,7 @@ const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>
         setDate(setDateByType(tempDate, newValue, picker, period));
       }
       if (e.key >= '0' && e.key <= '9') {
-        if (picker === '12hours') setPrevIntKey(e.key);
+        if (picker === 'hours') setPrevIntKey(e.key);
 
         const newValue = calculateNewValue(e.key);
         if (flag) onRightFocus?.();
@@ -157,9 +157,7 @@ const TimePeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectorProps
       if (date) {
         const tempDate = new Date(date);
         const hours = display12HourValue(date.getHours());
-        setDate(
-          setDateByType(tempDate, hours.toString(), '12hours', period === 'AM' ? 'PM' : 'AM')
-        );
+        setDate(setDateByType(tempDate, hours.toString(), 'hours', period === 'AM' ? 'PM' : 'AM'));
       }
     };
 
@@ -191,7 +189,7 @@ interface TimePickerProps {
 }
 
 function TimePicker({ date, setDate }: TimePickerProps) {
-  const [period, setPeriod] = React.useState<Period>('PM');
+  const [period, setPeriod] = React.useState<Period>(date && date.getHours() >= 12 ? 'PM' : 'AM');
 
   const minuteRef = React.useRef<HTMLInputElement>(null);
   const hourRef = React.useRef<HTMLInputElement>(null);
@@ -202,7 +200,7 @@ function TimePicker({ date, setDate }: TimePickerProps) {
       <ClockIcon className="size-5 text-current" />
       <TimePickerInput
         id="hours"
-        picker="12hours"
+        picker="hours"
         period={period}
         date={date}
         setDate={setDate}

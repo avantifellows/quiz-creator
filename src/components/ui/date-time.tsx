@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ALLOWED_YEARS } from '@/Constants';
 import { cn } from '@/lib/utils';
 import { MyDateTimeProps } from '@/types';
-import { addYears, format, startOfToday } from 'date-fns';
+import { addDays, addYears, format, startOfToday } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { ElementRef, forwardRef } from 'react';
 import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
@@ -17,6 +17,18 @@ const DateTimePicker = forwardRef<
 >(({ field, form, schema }, ref) => {
   const { value, onChange, ref: refField, ...restFieldProps } = field;
   const { label, disabled, disableRange, ...restSchemaProps } = schema;
+
+  const handleSelect = (newDay: Date | undefined) => {
+    if (!newDay) return;
+    if (!value) {
+      onChange?.(newDay);
+      return;
+    }
+    const diff = newDay.getTime() - value.getTime();
+    const diffInDays = diff / (1000 * 60 * 60 * 24);
+    const newDateFull = addDays(value, Math.ceil(diffInDays));
+    onChange?.(newDateFull);
+  };
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 sm:items-center">
@@ -51,7 +63,8 @@ const DateTimePicker = forwardRef<
               toYear={addYears(startOfToday(), ALLOWED_YEARS).getFullYear()}
               mode="single"
               selected={value}
-              onSelect={onChange}
+              onSelect={(d) => handleSelect(d)}
+              onMonthChange={handleSelect}
               initialFocus
               disabled={disableRange}
             />
