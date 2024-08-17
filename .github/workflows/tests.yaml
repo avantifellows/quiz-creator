@@ -19,7 +19,7 @@ jobs:
           node-version: '20'
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -43,7 +43,7 @@ jobs:
         with:
           test-command: 'npm run test:jest'
 
-  e2e-tests:
+  e2e-tests-chrome:
     needs: [setup, unit-tests]
     runs-on: ubuntu-22.04
     steps:

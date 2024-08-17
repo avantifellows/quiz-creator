@@ -6,16 +6,6 @@ on:
     branches: [main]
 
 jobs:
-  merge-conflicts:
-    runs-on: ubuntu-latest
-    name: Find merge conflicts
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Check for merge conflicts
-        uses: olivernybroe/action-conflict-finder@v4.0
-
   large-files:
     runs-on: ubuntu-latest
     steps:

@@ -12,10 +12,14 @@
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "incremental": true,
-    "plugins": [{ "name": "next" }],
-    "types": ["jest", "@testing-library/jest-dom"],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "types": ["cypress", "node", "jest", "@testing-library/jest-dom"],
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
