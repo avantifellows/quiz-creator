@@ -68,10 +68,10 @@ describe('Quiz Session', () => {
 
     // // Click on submit
     cy.get('button').contains('Next').click();
-    cy.reload();
 
     // Verify if session is created
     cy.url().should('include', '/');
+    cy.reload();
     cy.get('table > tbody > tr')
       .eq(0)
       .children('td')

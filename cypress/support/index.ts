@@ -29,13 +29,14 @@ Cypress.Commands.addAll({
    * Command to select & verify dropdown multi-select
    */
   customMultiSelect: (name: string, options: Option[]) => {
-    return options.forEach((option) => {
+    options.forEach((option) => {
       cy.get(`input[name="${name}"]`).click();
 
       cy.get(`div[data-value="${option.value}"`).click().contains(option.label);
 
       cy.get(`input[name="${name}"]`).siblings('div').contains(option.label);
     });
+    cy.get('body').click(0, 0);
   },
 
   /**

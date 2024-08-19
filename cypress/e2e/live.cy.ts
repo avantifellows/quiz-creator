@@ -62,12 +62,11 @@ describe('Live Session', () => {
     cy.customCheckbox('activeDays', create.activeDays);
 
     // Click on submit
-    // TODO: uncomment this
     cy.get('button').contains('Next').click();
-    cy.reload();
 
     // Verify if session is created
     cy.url().should('include', '/live');
+    cy.reload();
     cy.get('table > tbody > tr')
       .eq(0)
       .children('td')
@@ -100,14 +99,14 @@ describe('Live Session', () => {
       cy.get('@basicDetails')
         .eq(5)
         .children('p')
-        .should('contain.text', create.subBatch.map((subBatch) => subBatch.label).join(', '));
+        .should('contain.text', create.subBatch.map((subBatch) => subBatch.label).join(','));
       cy.get('@basicDetails').eq(6).children('p').should('contain.text', create.authType.label);
       cy.get('@basicDetails').eq(7).children('p').should('contain.text', create.sessionType.value);
 
       // Verify sub-batch details
       cy.wrap($dialog)
         .find('h4')
-        .contains('Live Details')
+        .contains('Session Details')
         .next('ul')
         .children('li')
         .as('LiveDetails');
@@ -115,7 +114,7 @@ describe('Live Session', () => {
       cy.get('@LiveDetails')
         .eq(0)
         .children('p')
-        .should('contain.text', create.subject.map((s) => s.label).join(', '));
+        .should('contain.text', create.subject.map((s) => s.label).join(','));
       cy.get('@LiveDetails').eq(2).children('p').should('contain.text', create.platformId);
       cy.get('@LiveDetails').eq(4).children('a').should('contain.text', create.platformLink);
 
@@ -203,7 +202,6 @@ describe('Live Session', () => {
           cy.customDatePicker('endDate', edit.endDate);
           cy.customCheckbox('activeDays', edit.activeDays);
 
-          // TODO: uncomment this
           cy.get('button').contains('Next').click();
 
           cy.url().should('include', '/live');
