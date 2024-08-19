@@ -1,15 +1,23 @@
+import { ActiveDaysOptions } from '@/Constants';
 import { MockQuizData } from 'cypress/support/mock';
+import { format } from 'date-fns';
 
+/**
+ * Quiz Session Flow
+ */
 describe('Quiz Session', () => {
-  const { create, edit } = MockQuizData;
-
-  it('Should load previous sessions', () => {
+  const { create, edit, duplicate } = MockQuizData;
+  beforeEach(() => {
     cy.visit('/');
     cy.get('table > tbody > tr').should('have.length.at.least', 10);
+    cy.get('table > tbody > tr').eq(0).children('td').eq(0).invoke('text').as('sessionId');
   });
 
-  it("Clicking on 'Create Session' should redirect to the create session page", () => {
-    cy.visit('/');
+  /**
+   * Verify Create Session Flow
+   */
+
+  it('Verify Create Session Flow', () => {
     // Click on 'Create Session'
     cy.get('a').contains('Create Session').click();
 
@@ -49,10 +57,286 @@ describe('Quiz Session', () => {
 
     // Click on next
     cy.get('button').contains('Next').click();
+
     // Goto step 3 i.e. timeline details
     cy.url().should('include', '/session/create?step=timeline');
     cy.get('h3').contains('Timeline Details');
-
+    cy.customDatePicker('startDate', create.startDate);
+    cy.customDatePicker('endDate', create.endDate);
     cy.customInput('testTakers', create.testTakers);
+    cy.customCheckbox('activeDays', create.activeDays);
+
+    // // Click on submit
+    cy.get('button').contains('Next').click();
+    cy.reload();
+
+    // Verify if session is created
+    cy.url().should('include', '/');
+    cy.get('table > tbody > tr')
+      .eq(0)
+      .children('td')
+      .then(($tds) => {
+        const tdsArray = $tds.toArray();
+        const hasName = tdsArray.some((td) => td.innerText.trim() === create.name);
+        const hasGroup = tdsArray.some((td) => td.innerText.trim() === create.group.label);
+        expect(hasName).to.be.true;
+        expect(hasGroup).to.be.true;
+      });
+  });
+
+  it('Verify if session is created has correct details', () => {
+    cy.get('table > tbody > tr').eq(0).click();
+
+    cy.get('div[role="dialog"]').then(($dialog) => {
+      cy.wrap($dialog).should('be.visible').find('h2').should('have.text', 'Session Details');
+
+      // Verify basic details
+      cy.wrap($dialog)
+        .find('h4')
+        .contains('Basic Details')
+        .next('ul')
+        .children('li')
+        .as('basicDetails');
+      cy.get('@basicDetails').eq(0).children('p').should('contain.text', create.name);
+      cy.get('@basicDetails').eq(1).children('p').should('contain.text', create.platform.label);
+      cy.get('@basicDetails').eq(2).children('p').should('contain.text', create.grade.label);
+      cy.get('@basicDetails').eq(3).children('p').should('contain.text', create.group.label);
+      cy.get('@basicDetails').eq(4).children('p').should('contain.text', create.parentBatch.label);
+      cy.get('@basicDetails')
+        .eq(5)
+        .children('p')
+        .should('contain.text', create.subBatch.map((subBatch) => subBatch.label).join(', '));
+      cy.get('@basicDetails').eq(6).children('p').should('contain.text', create.authType.label);
+      cy.get('@basicDetails').eq(7).children('p').should('contain.text', create.sessionType.value);
+
+      // Verify sub-batch details
+      cy.wrap($dialog)
+        .find('h4')
+        .contains('Quiz Details')
+        .next('ul')
+        .children('li')
+        .as('quizDetails');
+
+      cy.get('@quizDetails').eq(0).children('p').should('contain.text', create.course.label);
+      cy.get('@quizDetails').eq(1).children('p').should('contain.text', create.stream.label);
+      cy.get('@quizDetails').eq(2).children('p').should('contain.text', create.testFormat.label);
+      cy.get('@quizDetails').eq(3).children('p').should('contain', create.testPurpose.label);
+      cy.get('@quizDetails').eq(4).children('p').should('contain.text', create.testType.label);
+      cy.get('@quizDetails').eq(6).children('p').should('contain.text', create.optionalLimit.value);
+      cy.get('@quizDetails')
+        .eq(8)
+        .children('a')
+        .should('contain.text', create.cmsUrl)
+        .should('have.attr', 'href', create.cmsUrl);
+
+      // Verify timeline details
+      cy.wrap($dialog)
+        .find('h4:contains("Time Details")')
+        .next('ul')
+        .children('li')
+        .as('timeDetails');
+      cy.get('@timeDetails')
+        .eq(0)
+        .children('p')
+        .should('contain.text', format(create.startDate, 'PP'));
+      cy.get('@timeDetails')
+        .eq(1)
+        .children('p')
+        .should('contain.text', format(create.endDate, 'PP'));
+      cy.get('@timeDetails')
+        .eq(2)
+        .children('p')
+        .should(
+          'contain.text',
+          `${format(create.startDate, 'p')} - ${format(create.endDate, 'p')}`
+        );
+      cy.get('@timeDetails')
+        .last()
+        .children('p')
+        .should(
+          'contain.text',
+          create.activeDays
+            .map((value) => ActiveDaysOptions.find((option) => option.value === value)?.label)
+            .join(', ')
+        );
+    });
+  });
+
+  /**
+   * Verify Edit Session Flow
+   */
+
+  it('Verify Edit Session Flow', () => {
+    cy.get('@sessionId').then((sessionId) => {
+      cy.get('table > tbody > tr').each(($tr) => {
+        // Find the created session using sessionId
+        if ($tr.children('td').eq(0).text().trim() === String(sessionId)) {
+          const tdLength = $tr.children('td').length;
+
+          // Click on edit
+          cy.wrap($tr)
+            .children('td')
+            .eq(tdLength - 1)
+            .find('button')
+            .focus()
+            .type('{enter}');
+
+          cy.get('div[data-radix-menu-content]')
+            .should('be.visible')
+            .find('a[role="menuitem"]')
+            .contains('Edit')
+            .should('exist')
+            .click();
+
+          // Verify the edit session page
+          cy.url().should('include', '/session/edit');
+          cy.url().should('include', `id=${sessionId}`);
+
+          // Fill basic details
+          cy.customInput('name', edit.name);
+
+          cy.checkDisabled([
+            'select[name="platform"]',
+            'select[name="group"]',
+            'select[name="parentBatch"]',
+            'input[name="subBatch"]',
+          ]);
+
+          cy.get('button').contains('Next').click();
+
+          // Fill platform details
+          cy.checkDisabled([
+            'select[name="testType"]',
+            'input[name="cmsUrl"]',
+            'select[name="optionalLimit"]',
+          ]);
+
+          cy.get('button').contains('Next').click();
+
+          // Fill timeline details
+          cy.customDatePicker('startDate', edit.startDate);
+          cy.customDatePicker('endDate', edit.endDate);
+          cy.customCheckbox('activeDays', edit.activeDays);
+
+          cy.get('button').contains('Next').click();
+
+          cy.url().should('include', '/');
+          cy.get('table > tbody > tr').eq(0).should('have.class', 'opacity-50');
+          cy.wait(30000);
+          cy.get('table > tbody > tr').eq(0).should('not.have.class', 'opacity-50');
+        }
+      });
+    });
+  });
+
+  it('Verify if session is edited has correct details', () => {
+    cy.get('table > tbody > tr').eq(0).click();
+
+    cy.get('div[role="dialog"]').then(($dialog) => {
+      cy.wrap($dialog).should('be.visible').find('h2').should('have.text', 'Session Details');
+
+      // Verify basic details
+      cy.wrap($dialog)
+        .find('h4')
+        .contains('Basic Details')
+        .next('ul')
+        .children('li')
+        .as('basicDetails');
+      cy.get('@basicDetails').eq(0).children('p').should('contain.text', edit.name);
+      cy.get('@basicDetails').eq(3).children('p').should('contain.text', create.group.label);
+
+      // Verify timeline details
+      cy.wrap($dialog)
+        .find('h4')
+        .contains('Time Details')
+        .next('ul')
+        .children('li')
+        .as('timeDetails');
+      cy.get('@timeDetails')
+        .eq(0)
+        .children('p')
+        .should('contain.text', format(edit.startDate, 'PP'));
+      cy.get('@timeDetails').eq(1).children('p').should('contain.text', format(edit.endDate, 'PP'));
+      cy.get('@timeDetails')
+        .eq(2)
+        .children('p')
+        .should('contain.text', `${format(edit.startDate, 'p')} - ${format(edit.endDate, 'p')}`);
+      cy.get('@timeDetails')
+        .last()
+        .children('p')
+        .should(
+          'contain.text',
+          edit.activeDays
+            .map((value) => ActiveDaysOptions.find((option) => option.value === value)?.label)
+            .join(', ')
+        );
+    });
+  });
+
+  /**
+   * Verify Duplicate Session Flow
+   */
+
+  it('Verify Duplicate Session Flow', () => {
+    cy.get('@sessionId').then((sessionId) => {
+      cy.get('table > tbody > tr').each(($tr) => {
+        // Find the created session using sessionId
+        if ($tr.children('td').eq(0).text().trim() === String(sessionId)) {
+          const tdLength = $tr.children('td').length;
+
+          // Click on edit
+          cy.wrap($tr)
+            .children('td')
+            .eq(tdLength - 1)
+            .find('button')
+            .focus()
+            .type('{enter}');
+
+          cy.get('div[data-radix-menu-content]')
+            .should('be.visible')
+            .find('a[role="menuitem"]')
+            .contains('Duplicate')
+            .should('exist')
+            .click();
+
+          // Verify the edit session page
+          cy.url().should('include', '/session/duplicate');
+          cy.url().should('include', `id=${sessionId}`);
+
+          // Fill basic details
+          cy.get('input[name="name"]').should('be.empty');
+          cy.customInput('name', duplicate.name);
+          cy.get('button').contains('Next').click();
+
+          // Fill platform details
+          cy.customSelect('cmsUrl', duplicate.testType);
+          cy.customInput('cmsUrl', duplicate.cmsUrl);
+          cy.get('button').contains('Next').click();
+
+          // Fill timeline details
+          cy.customDatePicker('startDate', duplicate.startDate);
+          cy.customDatePicker('endDate', duplicate.endDate);
+
+          // TODO: uncomment this to create duplicate session
+          // cy.get('button').contains('Next').click();
+          // cy.url().should('include', '/');
+          // cy.get('table > tbody > tr')
+          //   .eq(0)
+          //   .children('td')
+          //   .then(($tds) => {
+          //     const tdsArray = $tds.toArray();
+          //     const hasName = tdsArray.some((td) => td.innerText.trim() === duplicate.name);
+          //     expect(hasName).to.be.true;
+          //   });
+        }
+      });
+    });
+  });
+
+  afterEach(function () {
+    if (this.currentTest?.isFailed()) {
+      cy.log(`Test failed: ${this.currentTest?.err}`);
+      (Cypress as any).runner.stop();
+    }
   });
 });
