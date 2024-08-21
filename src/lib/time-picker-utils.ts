@@ -1,11 +1,5 @@
+import { UTC_IST_OFFSET } from '@/Constants';
 import { addMinutes, subMinutes } from 'date-fns';
-
-/**
- * regular expression to check for valid hour format (01-23)
- */
-export function isValidHour(value: string) {
-  return /^(0[0-9]|1[0-9]|2[0-3])$/.test(value);
-}
 
 /**
  * regular expression to check for valid 12 hour format (01-12)
@@ -41,11 +35,6 @@ export function getValidNumber(
   }
 
   return '00';
-}
-
-export function getValidHour(value: string) {
-  if (isValidHour(value)) return value;
-  return getValidNumber(value, { max: 23 });
 }
 
 export function getValid12Hour(value: string) {
@@ -97,12 +86,6 @@ export function setSeconds(date: Date, value: string) {
   return date;
 }
 
-export function setHours(date: Date, value: string) {
-  const hours = getValidHour(value);
-  date.setHours(parseInt(hours, 10));
-  return date;
-}
-
 export function set12Hours(date: Date, value: string, period: Period) {
   const hours = parseInt(getValid12Hour(value), 10);
   const convertedHours = convert12HourTo24Hour(hours, period);
@@ -110,7 +93,7 @@ export function set12Hours(date: Date, value: string, period: Period) {
   return date;
 }
 
-export type TimePickerType = 'minutes' | 'seconds' | 'hours' | '12hours';
+export type TimePickerType = 'minutes' | 'seconds' | 'hours';
 export type Period = 'AM' | 'PM';
 
 export function setDateByType(date: Date, value: string, type: TimePickerType, period?: Period) {
@@ -119,9 +102,7 @@ export function setDateByType(date: Date, value: string, type: TimePickerType, p
       return setMinutes(date, value);
     case 'seconds':
       return setSeconds(date, value);
-    case 'hours':
-      return setHours(date, value);
-    case '12hours': {
+    case 'hours': {
       if (!period) return date;
       return set12Hours(date, value, period);
     }
@@ -136,9 +117,7 @@ export function getDateByType(date: Date, type: TimePickerType) {
       return getValidMinuteOrSecond(String(date.getMinutes()));
     case 'seconds':
       return getValidMinuteOrSecond(String(date.getSeconds()));
-    case 'hours':
-      return getValidHour(String(date.getHours()));
-    case '12hours': {
+    case 'hours': {
       const hours = display12HourValue(date.getHours());
       return getValid12Hour(String(hours));
     }
@@ -154,8 +133,6 @@ export function getArrowByType(value: string, step: number, type: TimePickerType
     case 'seconds':
       return getValidArrowMinuteOrSecond(value, step);
     case 'hours':
-      return getValidArrowHour(value, step);
-    case '12hours':
       return getValidArrow12Hour(value, step);
     default:
       return '00';
@@ -195,12 +172,12 @@ export function display12HourValue(hours: number) {
 
 export function utcToISTDate(utcDate: string) {
   const parsedDate = new Date(utcDate);
-  const istDate = addMinutes(parsedDate, 5.5 * 60).toISOString();
+  const istDate = addMinutes(parsedDate, UTC_IST_OFFSET).toISOString();
   return istDate;
 }
 
 export function istToUTCDate(istDate: string) {
   const parsedDate = new Date(istDate);
-  const utcDate = subMinutes(parsedDate, 5.5 * 60).toISOString();
+  const utcDate = subMinutes(parsedDate, UTC_IST_OFFSET).toISOString();
   return utcDate;
 }

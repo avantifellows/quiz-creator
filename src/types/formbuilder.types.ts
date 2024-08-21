@@ -77,9 +77,15 @@ export interface MySwitchProps
   onCheckedChange?(checked: boolean, form: UseFormReturn): void;
 }
 
-export interface MyDateTimeProps extends CommonFieldProps, Omit<DayPickerDefaultProps, 'disabled'> {
+export interface MyDateTimeProps
+  extends Omit<CommonFieldProps, 'label'>,
+    Omit<DayPickerDefaultProps, 'disabled'> {
   type: 'datetime';
   disableRange: (date: Date) => boolean;
+  label?: {
+    date?: string;
+    time?: string;
+  };
 }
 
 export interface CommonFieldProps {

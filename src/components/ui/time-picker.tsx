@@ -1,5 +1,4 @@
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -16,6 +15,7 @@ import {
   setDateByType,
 } from '@/lib/time-picker-utils';
 import { cn } from '@/lib/utils';
+import { ClockIcon } from 'lucide-react';
 import React from 'react';
 
 export interface TimePickerInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -73,7 +73,7 @@ const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>
        * If picker is '12hours' and the first digit is 0, then the second digit is automatically set to 1.
        * The second entered digit will break the condition and the value will be set to 10-12.
        */
-      if (picker === '12hours') {
+      if (picker === 'hours') {
         if (flag && calculatedValue.slice(1, 2) === '1' && prevIntKey === '0') return '0' + key;
       }
 
@@ -93,7 +93,7 @@ const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>
         setDate(setDateByType(tempDate, newValue, picker, period));
       }
       if (e.key >= '0' && e.key <= '9') {
-        if (picker === '12hours') setPrevIntKey(e.key);
+        if (picker === 'hours') setPrevIntKey(e.key);
 
         const newValue = calculateNewValue(e.key);
         if (flag) onRightFocus?.();
@@ -157,9 +157,7 @@ const TimePeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectorProps
       if (date) {
         const tempDate = new Date(date);
         const hours = display12HourValue(date.getHours());
-        setDate(
-          setDateByType(tempDate, hours.toString(), '12hours', period === 'AM' ? 'PM' : 'AM')
-        );
+        setDate(setDateByType(tempDate, hours.toString(), 'hours', period === 'AM' ? 'PM' : 'AM'));
       }
     };
 
@@ -191,55 +189,42 @@ interface TimePickerProps {
 }
 
 function TimePicker({ date, setDate }: TimePickerProps) {
-  const [period, setPeriod] = React.useState<Period>('PM');
+  const [period, setPeriod] = React.useState<Period>(date && date.getHours() >= 12 ? 'PM' : 'AM');
 
   const minuteRef = React.useRef<HTMLInputElement>(null);
   const hourRef = React.useRef<HTMLInputElement>(null);
   const periodRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="flex items-end gap-2 justify-center">
-      <div className="grid gap-1 text-center">
-        <Label htmlFor="hours" className="text-xs">
-          Hours
-        </Label>
-        <TimePickerInput
-          id="hours"
-          picker="12hours"
-          period={period}
-          date={date}
-          setDate={setDate}
-          ref={hourRef}
-          onRightFocus={() => minuteRef.current?.focus()}
-        />
-      </div>
-      <div className="grid gap-1 text-center">
-        <Label htmlFor="minutes" className="text-xs">
-          Minutes
-        </Label>
-        <TimePickerInput
-          id="minutes"
-          picker="minutes"
-          date={date}
-          setDate={setDate}
-          ref={minuteRef}
-          onLeftFocus={() => hourRef.current?.focus()}
-          onRightFocus={() => periodRef.current?.focus()}
-        />
-      </div>
-      <div className="grid gap-1 text-center">
-        <Label htmlFor="period" className="text-xs">
-          Period
-        </Label>
-        <TimePeriodSelect
-          period={period}
-          setPeriod={setPeriod}
-          date={date}
-          setDate={setDate}
-          ref={periodRef}
-          onLeftFocus={() => periodRef.current?.focus()}
-        />
-      </div>
+    <div className="flex items-center gap-4">
+      <ClockIcon className="size-5 text-current" />
+      <TimePickerInput
+        id="hours"
+        picker="hours"
+        period={period}
+        date={date}
+        setDate={setDate}
+        ref={hourRef}
+        onRightFocus={() => minuteRef.current?.focus()}
+      />
+      <span className="-mx-1.5">:</span>
+      <TimePickerInput
+        id="minutes"
+        picker="minutes"
+        date={date}
+        setDate={setDate}
+        ref={minuteRef}
+        onLeftFocus={() => hourRef.current?.focus()}
+        onRightFocus={() => periodRef.current?.focus()}
+      />
+      <TimePeriodSelect
+        period={period}
+        setPeriod={setPeriod}
+        date={date}
+        setDate={setDate}
+        ref={periodRef}
+        onLeftFocus={() => periodRef.current?.focus()}
+      />
     </div>
   );
 }

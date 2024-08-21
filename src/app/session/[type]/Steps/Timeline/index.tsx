@@ -1,6 +1,6 @@
 'use client';
 
-import { ActiveDaysOptions } from '@/Constants';
+import { ActiveDaysOptions, ALLOWED_YEARS } from '@/Constants';
 import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
 import { FieldSchema, Session, timelineFields, timelineSchema } from '@/types';
@@ -15,15 +15,23 @@ const TimelineForm: FC = () => {
     return {
       startDate: {
         type: 'datetime',
-        label: 'Start Date And Time',
+        label: {
+          date: 'Start Date',
+          time: 'Start Time',
+        },
         placeholder: 'Select start date and time',
-        disableRange: (date: Date) => date < startOfToday() || date > addYears(startOfToday(), 1),
+        disableRange: (date: Date) =>
+          date < startOfToday() || date > addYears(startOfToday(), ALLOWED_YEARS),
       },
       endDate: {
         type: 'datetime',
-        label: 'End Date And Time',
+        label: {
+          date: 'End Date',
+          time: 'End Time',
+        },
         placeholder: 'Select end date and time',
-        disableRange: (date: Date) => date < startOfToday() || date > addYears(startOfToday(), 1),
+        disableRange: (date: Date) =>
+          date < startOfToday() || date > addYears(startOfToday(), ALLOWED_YEARS),
       },
       testTakers: {
         type: 'number',
@@ -65,8 +73,8 @@ const TimelineForm: FC = () => {
         params: data.activeDays.sort((a, b) => a - b),
       },
       is_active: data.isEnabled,
-      start_time: new Date(data.startDate).toISOString(),
-      end_time: new Date(data.endDate).toISOString(),
+      start_time: new Date(data.startDate).toUTCString(),
+      end_time: new Date(data.endDate).toUTCString(),
     };
 
     updateFormData(addedData);
