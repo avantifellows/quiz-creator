@@ -5,6 +5,7 @@ import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
 import {
   FieldSchema,
+  Platform,
   Session,
   SessionParams,
   SessionType,
@@ -43,6 +44,7 @@ const BasicForm: FC = () => {
         label: 'Platform',
         disabled: type === SessionType.EDIT,
         onValueChange: (value, form) => handleBatchFields(value, form, apiOptions, fieldsSchema),
+        helperText: `Sessions where platform is "${Platform.Others}" are listed under "Live Classes" tab.`,
       },
       group: {
         type: 'select',

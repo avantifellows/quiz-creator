@@ -48,3 +48,30 @@
     --radius: 0.5rem;
   }
 }
+
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    @apply size-2;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-accent/80 rounded-full;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent/80;
+  }
+}
+
+[data-radix-select-viewport] {
+  scrollbar-width: auto !important;
+  -ms-overflow-style: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+[data-radix-select-viewport]::-webkit-scrollbar {
+  display: unset !important;
+}
