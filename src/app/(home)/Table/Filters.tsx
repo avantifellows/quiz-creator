@@ -12,7 +12,6 @@ import {
 import { ApiFormOptions, FilterSchema, Session } from '@/types';
 import { type Table } from '@tanstack/react-table';
 import { Filter, Settings2, X } from 'lucide-react';
-import Link from 'next/link';
 import { useMemo } from 'react';
 
 const Filters = ({ table, apiOptions }: { table: Table<Session>; apiOptions: ApiFormOptions }) => {
@@ -129,9 +128,6 @@ const Filters = ({ table, apiOptions }: { table: Table<Session>; apiOptions: Api
       </div>
 
       <div className="flex items-center justify-between gap-2 md:gap-4">
-        <Button asChild>
-          <Link href={'/session/create?step=basic'}>+ Create Session</Link>
-        </Button>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button variant="outline">

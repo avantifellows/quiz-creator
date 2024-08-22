@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Button } from './ui/button';
 
 const NAV_LINKS = [
   { label: 'Quizzing Engine', path: '/' },
@@ -43,6 +44,12 @@ const Navbar = () => {
             {link.label}
           </Link>
         ))}
+        <Button
+          asChild
+          className={`ml-auto rounded-3xl px-4 py-2 text-sm font-medium transition-colors hover:bg-accent/80 hover:text-accent-foreground ${currentPath === '/session/create' ? 'bg-accent text-accent-foreground' : ''}`}
+        >
+          <Link href={'/session/create?step=basic'}>+ Create Session</Link>
+        </Button>
       </nav>
     </header>
   );
