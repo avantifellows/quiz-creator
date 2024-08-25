@@ -48,18 +48,18 @@ const DateTimePicker = forwardRef<
                 ref={refField}
                 disabled={disabled}
               >
-                <CalendarIcon className='mr-2 h-4 w-4' />
+                <CalendarIcon className="mr-2 h-4 w-4" />
                 {value ? (
                   format(value, 'PP')
                 ) : (
-                  <span className='text-muted-foreground/80 italic font-medium'>
+                  <span className="text-muted-foreground/80 italic font-medium">
                     Pick a date and time
                   </span>
                 )}
               </Button>
             </PopoverTrigger>
           </FormControl>
-          <PopoverContent className='w-auto p-0'>
+          <PopoverContent className="w-auto p-0">
             <Calendar
               {...restSchemaProps}
               {...restFieldProps}
@@ -67,7 +67,7 @@ const DateTimePicker = forwardRef<
               captionLayout="dropdown-buttons"
               fromYear={startOfToday().getFullYear()}
               toYear={addYears(startOfToday(), ALLOWED_YEARS).getFullYear()}
-              mode='single'
+              mode="single"
               selected={value}
               onSelect={(d) => handleSelect(d)}
               onMonthChange={handleSelect}
@@ -77,8 +77,8 @@ const DateTimePicker = forwardRef<
           </PopoverContent>
         </Popover>
       </div>
-      <div className='flex flex-col gap-4 flex-1'>
-        <FormLabel className='self-start'>{label?.time}</FormLabel>
+      <div className="flex flex-col gap-4 flex-1">
+        <FormLabel className="self-start">{label?.time}</FormLabel>
         <TimePicker setDate={onChange} date={value} />
       </div>
     </div>

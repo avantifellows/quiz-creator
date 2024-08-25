@@ -22,7 +22,7 @@ const Checkbox = React.forwardRef<
     {...props}
   >
     <CheckboxPrimitive.Indicator className={cn('flex items-center justify-center text-current')}>
-      <Check className='h-4 w-4' />
+      <Check className="h-4 w-4" />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));
@@ -46,7 +46,7 @@ const ControlledCheckbox = React.forwardRef<
           render={({ field }) => (
             <FormItem
               key={option.value as React.Key}
-              className='flex flex-row items-start space-x-3 space-y-0'
+              className="flex flex-row items-start space-x-3 space-y-0"
             >
               <FormControl ref={ref}>
                 <Checkbox
@@ -65,7 +65,7 @@ const ControlledCheckbox = React.forwardRef<
                   }}
                 />
               </FormControl>
-              <FormLabel className='text-sm font-normal'>{option.label}</FormLabel>
+              <FormLabel className="text-sm font-normal">{option.label}</FormLabel>
             </FormItem>
           )}
         />
