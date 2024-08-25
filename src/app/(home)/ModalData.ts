@@ -106,7 +106,6 @@ export const displayData = (data: Session, formOptions: Option[]) => {
   const liveDetails: DataSection = {
     title: 'Session Details',
     data: [
-      { label: 'Session Name', value: data.name },
       { label: 'Subject', value: data.meta_data?.subject ?? 'N/A' },
       {
         label: 'Portal Link',

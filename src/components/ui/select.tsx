@@ -83,7 +83,7 @@ const SelectContent = React.forwardRef<
       <SelectScrollUpButton />
       <SelectPrimitive.Viewport
         className={cn(
-          'p-1',
+          'p-1 scrollbar',
           position === 'popper' &&
             'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
         )}
@@ -149,7 +149,7 @@ const ControlledSelectField = React.forwardRef<
 >(({ field, form, schema }, ref) => {
   const [key, setKey] = React.useState<number>(+new Date());
 
-  const { value, onChange, ...restFieldProps } = field;
+  const { value, onChange, ref: refField, ...restFieldProps } = field;
   const { label, disabled, options = [], onValueChange, helperText, ...restSchemaProps } = schema;
 
   React.useEffect(() => {
@@ -169,10 +169,11 @@ const ControlledSelectField = React.forwardRef<
         onValueChange={onChange}
         value={value?.toString()}
         defaultValue={value?.toString()}
+        {...restFieldProps}
       >
         <FormControl ref={ref}>
-          <SelectTrigger>
-            <SelectValue {...restSchemaProps} {...restFieldProps} />
+          <SelectTrigger ref={refField}>
+            <SelectValue {...restSchemaProps} />
           </SelectTrigger>
         </FormControl>
         <SelectContent>

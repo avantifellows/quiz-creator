@@ -2,7 +2,6 @@ import {
   ActiveDaysOptions,
   CourseOptions,
   GradeOptions,
-  MarkingSchemeOptions,
   OptionalLimitOptions,
   SessionTypeOptions,
   StreamOptions,
@@ -57,7 +56,7 @@ export const basicSchema = z
         (value) => TestPlatformOptions.some((option) => option.value === value),
         'Invalid option selected'
       ),
-    name: z.string({ required_error: 'This field is required' }),
+    name: z.string({ required_error: 'This field is required' }).min(1, 'This field is required'),
   })
   .superRefine((data, context) => {
     if (data.isPopupForm) {

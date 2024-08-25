@@ -74,6 +74,8 @@ export const PlatformPatterns = [
   /play\/([^/?]+)/,
   // Zoom Link
   /zoom\.us\/j\/([^/?]+)/,
-  // Google Drive Link
+  // Google Drive File Link
   /drive\.google\.com\/file\/d\/([^/?]+)/,
+  // Google Drive Folder Link
+  /drive\.google\.com\/drive\/folders\/([^/?]+)/,
 ];
