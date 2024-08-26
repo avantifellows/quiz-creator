@@ -227,7 +227,7 @@ export const liveSchema = z
       .pipe(z.string().url('This is not a valid url')),
     platformId: z.string({ required_error: 'This field is required' }),
     subject: z.array(z.string()).min(1, 'This field is required'),
-    platform: z.string().optional(),
+    platform: z.string().optional().nullable(),
   })
   .refine(
     (data) => {
