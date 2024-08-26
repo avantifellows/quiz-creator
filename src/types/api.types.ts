@@ -39,7 +39,7 @@ const repeatScheduleSchema = z.object({
 });
 
 export const sessionSchema = z.object({
-  auth_type: z.string(),
+  auth_type: z.string().nullable(),
   created_by_id: z.string().datetime(),
   end_time: z.string().datetime(),
   id: z.number().int(),
@@ -48,7 +48,7 @@ export const sessionSchema = z.object({
   meta_data: metaDataSchema,
   name: z.string(),
   owner_id: z.string(),
-  platform: z.string(),
+  platform: z.string().nullable(),
   platform_id: z.string(),
   platform_link: z.string().url(),
   popup_form: z.boolean(),
