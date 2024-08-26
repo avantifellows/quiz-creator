@@ -68,7 +68,10 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
               }}
               name={name}
             >
-              <SelectTrigger className="h-fit w-fit border-none p-0 focus:bg-none focus:ring-0 focus:ring-offset-0">
+              <SelectTrigger
+                id={`${props.id}-${name}-selector`}
+                className="h-fit w-fit border-none p-0 focus:bg-none focus:ring-0 focus:ring-offset-0"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent position="popper" side="bottom" align="center" sideOffset={2}>

@@ -5,6 +5,7 @@ import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
 import {
   FieldSchema,
+  Platform,
   Session,
   SessionParams,
   SessionType,
@@ -43,6 +44,7 @@ const BasicForm: FC = () => {
         label: 'Platform',
         disabled: type === SessionType.EDIT,
         onValueChange: (value, form) => handleBatchFields(value, form, apiOptions, fieldsSchema),
+        helperText: `Sessions where the platform is anything other than '${Platform.Quiz}' are listed under the 'Live Classes' tab.`,
       },
       group: {
         type: 'select',
@@ -168,7 +170,7 @@ const BasicForm: FC = () => {
         parent_id: data.parentBatch ?? '',
         batch_id: data.subBatch ? data.subBatch.join(',') : '',
         grade: data.grade,
-        number_of_fields_in_popup_form: data.isPopupForm ? data.noOfFieldsInPopup ?? '' : '',
+        number_of_fields_in_popup_form: data.isPopupForm ? (data.noOfFieldsInPopup ?? '') : '',
       },
       signup_form_id: data.activateSignUp ? data.signupFormId || null : null,
       popup_form_id: data.isPopupForm ? data.popupFormId || null : null,

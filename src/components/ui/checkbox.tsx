@@ -52,6 +52,7 @@ const ControlledCheckbox = React.forwardRef<
                 <Checkbox
                   {...restSchemaProps}
                   {...restFieldProps}
+                  value={option.value.toString()}
                   checked={(field.value ?? [])?.includes(option.value)}
                   onCheckedChange={(checked) => {
                     return checked

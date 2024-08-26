@@ -163,8 +163,13 @@ const TimePeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectorProps
 
     return (
       <div className="flex h-10 items-center">
-        <Select defaultValue={period} onValueChange={(value: Period) => handleValueChange(value)}>
+        <Select
+          name="period"
+          defaultValue={period}
+          onValueChange={(value: Period) => handleValueChange(value)}
+        >
           <SelectTrigger
+            value={period}
             ref={ref}
             className="w-[65px] focus:bg-accent focus:text-accent-foreground"
             onKeyDown={handleKeyDown}
