@@ -49,6 +49,7 @@ const TableActions = ({ session }: { session: Session }) => {
               await patchSession(
                 {
                   is_active: !session.is_active,
+                  meta_data: session.meta_data,
                 },
                 session.id ?? 0,
                 session
