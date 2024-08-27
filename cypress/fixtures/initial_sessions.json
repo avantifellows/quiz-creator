@@ -1,0 +1,149 @@
+[
+  {
+    "auth_type": "ID,DOB",
+    "created_by_id": null,
+    "end_time": "2024-08-29T18:00:00Z",
+    "id": 833,
+    "id_generation": false,
+    "inserted_at": "2024-08-27T04:28:44",
+    "is_active": true,
+    "meta_data": {
+      "batch_id": "DelhiStudents_11_Photon_Eng_24_S001",
+      "date_created": "2024-08-27T09:58:44.346Z",
+      "grade": 11,
+      "group": "DelhiStudents",
+      "number_of_fields_in_popup_form": "",
+      "parent_id": "",
+      "shortened_link": "https://lnk.avantifellows.org/rDM7",
+      "status": "success",
+      "subject": "",
+      "test_takers_count": 20,
+      "updated_keys": [
+        "auth_type",
+        "end_time",
+        "id_generation",
+        "is_active",
+        "meta_data",
+        "name",
+        "popup_form",
+        "popup_form_id",
+        "redirection",
+        "repeat_schedule",
+        "session_id",
+        "signup_form",
+        "signup_form_id",
+        "start_time",
+        "type"
+      ]
+    },
+    "name": "Testing Registration Session",
+    "owner_id": null,
+    "platform": null,
+    "platform_id": null,
+    "platform_link": null,
+    "popup_form": false,
+    "popup_form_id": null,
+    "portal_link": "https://staging-auth.avantifellows.org?sessionId=DelhiStudents_DelhiStudents_11_Photon_Eng_24_S001_45531",
+    "purpose": {
+      "sub-type": "registration"
+    },
+    "redirection": false,
+    "repeat_schedule": {
+      "params": [1, 2, 3, 4, 5, 6, 7],
+      "type": "weekly"
+    },
+    "session_id": "DelhiStudents_DelhiStudents_11_Photon_Eng_24_S001_45531",
+    "signup_form": true,
+    "signup_form_id": 12,
+    "start_time": "2024-08-27T09:55:00Z",
+    "type": "sign-up",
+    "updated_at": "2024-08-27T09:24:02"
+  },
+  {
+    "auth_type": "ID",
+    "created_by_id": null,
+    "end_time": "2025-08-01T23:00:00Z",
+    "id": 828,
+    "id_generation": false,
+    "inserted_at": "2024-08-20T10:28:48",
+    "is_active": true,
+    "meta_data": {
+      "batch_id": "HimachalStudents_12_Photon_Eng_23_001",
+      "date_created": "2024-08-20T15:58:48.303Z",
+      "grade": 12,
+      "group": "HimachalStudents",
+      "number_of_fields_in_popup_form": "",
+      "parent_id": "",
+      "shortened_link": "https://lnk.avantifellows.org/ppFP",
+      "status": "success",
+      "subject": "Maths",
+      "test_takers_count": 239
+    },
+    "name": "Test",
+    "owner_id": null,
+    "platform": "meet",
+    "platform_id": "zvp-wyjs-whd",
+    "platform_link": "https://meet.google.com/zvp-wyjs-whd",
+    "popup_form": false,
+    "popup_form_id": null,
+    "portal_link": "https://staging-auth.avantifellows.org?sessionId=HimachalStudents_HimachalStudents_12_Photon_Eng_23_001_45505_zvp-wyjs-whd",
+    "purpose": {
+      "sub-type": "liveclass"
+    },
+    "redirection": true,
+    "repeat_schedule": {
+      "params": [1, 2, 3, 4, 5, 6, 7],
+      "type": "weekly"
+    },
+    "session_id": "HimachalStudents_HimachalStudents_12_Photon_Eng_23_001_45505_zvp-wyjs-whd",
+    "signup_form": false,
+    "signup_form_id": null,
+    "start_time": "2024-08-01T00:00:00Z",
+    "type": "sign-in",
+    "updated_at": "2024-08-20T10:29:01"
+  },
+  {
+    "auth_type": "ID",
+    "created_by_id": null,
+    "end_time": "2025-08-31T23:45:00Z",
+    "id": 827,
+    "id_generation": false,
+    "inserted_at": "2024-08-20T06:03:29",
+    "is_active": true,
+    "meta_data": {
+      "batch": "HaryanaStudents_10_Foundation_24_001",
+      "batch_id": "HaryanaStudents_10_Foundation_24_001",
+      "date_created": "2024-08-20T11:33:29.249Z",
+      "grade": 10,
+      "group": "HaryanaStudents",
+      "number_of_fields_in_popup_form": "",
+      "parent_id": "",
+      "shortened_link": "https://lnk.avantifellows.org/vfaP",
+      "status": "success",
+      "subject": "Maths",
+      "test_takers_count": 1000
+    },
+    "name": "10M06_Triangle_P1",
+    "owner_id": null,
+    "platform": "SCERT-plio",
+    "platform_id": "qkhzmhnlyp",
+    "platform_link": "https://app.plio.in/scertH/play/qkhzmhnlyp",
+    "popup_form": false,
+    "popup_form_id": null,
+    "portal_link": "https://staging-auth.avantifellows.org?sessionId=HaryanaStudents_HaryanaStudents_10_Foundation_24_001_45524_qkhzmhnlyp",
+    "purpose": {
+      "sub-type": "plio"
+    },
+    "redirection": true,
+    "repeat_schedule": {
+      "params": [1, 2, 3, 4, 5, 6, 7],
+      "type": "weekly"
+    },
+    "session_id": "HaryanaStudents_HaryanaStudents_10_Foundation_24_001_45524_qkhzmhnlyp",
+    "signup_form": false,
+    "signup_form_id": null,
+    "start_time": "2024-08-20T00:00:00Z",
+    "type": "sign-in",
+    "updated_at": "2024-08-20T06:03:46"
+  }
+]
