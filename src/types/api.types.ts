@@ -48,7 +48,7 @@ export const sessionSchema = z.object({
   meta_data: metaDataSchema,
   name: z.string(),
   owner_id: z.string(),
-  platform: z.string().nullable(),
+  platform: z.string(),
   platform_id: z.string(),
   platform_link: z.string().url(),
   popup_form: z.boolean(),

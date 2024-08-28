@@ -6,6 +6,7 @@ import {
   SessionTypeOptions,
   StreamOptions,
   TestFormatOptions,
+  TestPlatformOptions,
   TestPurposeOptions,
   TestTypeOptions,
 } from '@/Constants';
@@ -49,7 +50,12 @@ export const basicSchema = z
     isIdGeneration: z.coerce.boolean(),
     signupFormId: z.coerce.number().optional().nullable(),
     popupFormId: z.coerce.number().optional().nullable(),
-    platform: z.string({ required_error: 'This field is required' }).optional().nullable(),
+    platform: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => TestPlatformOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
     name: z.string({ required_error: 'This field is required' }).min(1, 'This field is required'),
   })
   .superRefine((data, context) => {
@@ -82,14 +88,6 @@ export const basicSchema = z
 
     // Validation for sessions with Redirection = true
     if (data.isRedirection) {
-      if (!data.platform) {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'This field is required',
-          path: ['platform'],
-        });
-      }
-
       if (!data.authType) {
         context.addIssue({
           code: z.ZodIssueCode.custom,

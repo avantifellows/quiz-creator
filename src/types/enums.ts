@@ -24,6 +24,7 @@ export enum Platform {
   Others = 'others',
   Plio = 'AF-plio',
   SPlio = 'SCERT-plio',
+  NoPlatform = 'no-platform',
 }
 
 export enum Group {

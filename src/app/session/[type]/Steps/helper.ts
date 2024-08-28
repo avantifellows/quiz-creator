@@ -25,7 +25,6 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isPopupForm: false,
         popupFormId: null,
         noOfFieldsInPopup: '',
-        isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
         subBatch: [],
@@ -43,7 +42,6 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isPopupForm: false,
         popupFormId: null,
         noOfFieldsInPopup: '',
-        isRedirection: true,
         isIdGeneration: true,
         parentBatch: '',
         subBatch: [],
@@ -62,7 +60,6 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isPopupForm: false,
         popupFormId: null,
         noOfFieldsInPopup: '',
-        isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
         subBatch: [],
@@ -78,7 +75,6 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isPopupForm: false,
         popupFormId: null,
         noOfFieldsInPopup: '',
-        isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
         subBatch: [],
@@ -92,7 +88,6 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         isPopupForm: false,
         popupFormId: null,
         noOfFieldsInPopup: '',
-        isRedirection: true,
         isIdGeneration: false,
         parentBatch: '',
         subBatch: [],
@@ -283,6 +278,9 @@ export const handleBatchFields = (
     fieldsSchema.parentBatch.hide = false;
   }
 
+  if (value === Platform.NoPlatform) {
+    form.setValue('isRedirection', false, { shouldDirty: true });
+  }
   const selectedGroup = form.watch('group');
   if (selectedGroup) {
     setParentBatchOptions(selectedGroup, form, apiOptions, fieldsSchema);
