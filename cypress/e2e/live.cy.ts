@@ -310,7 +310,7 @@ describe('Live Session', () => {
           cy.customDatePicker('endDate', duplicate.endDate);
 
           // Submit the form
-          cy.get('button').contains('Submit').click();
+          cy.get('button').contains('Submit').click().wait(1000);
 
           // Verify
           cy.url().should('include', '/');
