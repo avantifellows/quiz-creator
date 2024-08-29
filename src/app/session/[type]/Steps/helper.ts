@@ -280,6 +280,8 @@ export const handleBatchFields = (
 
   if (value === Platform.NoPlatform) {
     form.setValue('isRedirection', false, { shouldDirty: true });
+  } else {
+    form.setValue('isRedirection', true, { shouldDirty: true });
   }
   const selectedGroup = form.watch('group');
   if (selectedGroup) {
