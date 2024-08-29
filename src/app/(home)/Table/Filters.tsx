@@ -79,7 +79,7 @@ const Filters = ({ table, apiOptions }: { table: Table<Session>; apiOptions: Api
   }, [table.getState().columnFilters]);
 
   return (
-    <div className="flex mb-4 gap-4 flex-col md:flex-row justify-between">
+    <div className="flex mb-4 gap-4 flex-wrap justify-between">
       <div className="flex items-center justify-normal gap-2 md:gap-4 flex-1">
         {filterColumns.map((column) => {
           return (

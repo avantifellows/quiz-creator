@@ -34,22 +34,22 @@ const Navbar = () => {
           <span className="text-2xl md:text-3xl text-bold">M</span>ANAGER
         </h1>
       </nav>
-      <nav className="flex flex-row items-center gap-6 bg-primary text-primary-foreground w-full h-16 px-4 md:px-8">
+      <nav className='flex flex-row items-center gap-3 md:gap-6 bg-primary text-primary-foreground w-full h-16 px-4 md:px-8 text-sm font-medium'>
         {NAV_LINKS.map((link) => (
           <Link
             href={link.path}
             key={link.label}
-            className={`rounded-3xl px-4 py-2 text-sm font-medium transition-colors hover:bg-accent/80 hover:text-accent-foreground ${currentPath === link.path ? 'bg-accent text-accent-foreground' : ''}`}
+            className={`rounded-3xl px-2 md:px-4 py-2 transition-colors hover:bg-accent/80 hover:text-accent-foreground ${currentPath === link.path ? 'bg-accent text-accent-foreground' : ''}`}
           >
             {link.label}
           </Link>
         ))}
-        <Button
-          asChild
-          className={`ml-auto rounded-3xl px-4 py-2 text-sm font-medium transition-colors hover:bg-accent/80 hover:text-accent-foreground ${currentPath === '/session/create' ? 'bg-accent text-accent-foreground' : ''}`}
+        <Link
+          className={`ml-auto rounded-3xl px-2 md:px-4 py-2 transition-colors hover:bg-accent/80 hover:text-accent-foreground ${currentPath === '/session/create' ? 'bg-accent text-accent-foreground' : ''}`}
+          href={'/session/create?step=basic'}
         >
-          <Link href={'/session/create?step=basic'}>+ Create Session</Link>
-        </Button>
+          + Create Session
+        </Link>
       </nav>
     </header>
   );
