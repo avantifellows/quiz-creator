@@ -24,6 +24,7 @@ export enum Platform {
   Others = 'others',
   Plio = 'AF-plio',
   SPlio = 'SCERT-plio',
+  NoPlatform = 'no-platform',
 }
 
 export enum Group {
@@ -66,10 +67,11 @@ export const GroupShortName: Record<Group, string> = {
 
 export enum AuthType {
   ID = 'ID',
-  IDPH = 'ID,PH',
   IDDOB = 'ID,DOB',
-  IDPHDOB = 'ID,PH,DOB',
   CODE = 'CODE',
+  // Removed as now we are not allowing these.
+  // IDPH = 'ID,PH',
+  // IDPHDOB = 'ID,PH,DOB',
 }
 
 export enum Subjects {

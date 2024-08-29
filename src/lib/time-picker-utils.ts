@@ -171,12 +171,14 @@ export function display12HourValue(hours: number) {
 }
 
 export function utcToISTDate(utcDate: string) {
+  if (!utcDate) return '';
   const parsedDate = new Date(utcDate);
   const istDate = addMinutes(parsedDate, UTC_IST_OFFSET).toISOString();
   return istDate;
 }
 
 export function istToUTCDate(istDate: string) {
+  if (!istDate) return '';
   const parsedDate = new Date(istDate);
   const utcDate = subMinutes(parsedDate, UTC_IST_OFFSET).toISOString();
   return utcDate;

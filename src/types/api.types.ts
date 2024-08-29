@@ -39,7 +39,7 @@ const repeatScheduleSchema = z.object({
 });
 
 export const sessionSchema = z.object({
-  auth_type: z.string(),
+  auth_type: z.string().nullable(),
   created_by_id: z.string().datetime(),
   end_time: z.string().datetime(),
   id: z.number().int(),
