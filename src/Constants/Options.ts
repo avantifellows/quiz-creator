@@ -9,7 +9,8 @@ export const TestTypeOptions: Option[] = [
 export const SessionTypeOptions: Option[] = [
   { value: 'sign-in', label: 'SignIn' },
   { value: 'sign-up', label: 'SignUp' },
-  { value: 'sign-in with forgot id', label: 'SignIn with Forgot ID' },
+  // Removed as now we are not allowing forgot id
+  // { value: 'sign-in with forgot id', label: 'SignIn with Forgot ID' },
   { value: 'broadcast', label: 'Broadcast' },
 ];
 
