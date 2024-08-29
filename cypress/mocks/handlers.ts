@@ -1,7 +1,9 @@
+import { utcToISTDate } from '@/lib/time-picker-utils';
 import { Platform, STATUS } from '@/types';
 import { Session } from '@/types/api.types';
-import { bypass, http, HttpResponse } from 'msw';
+import { bypass, delay, http, HttpResponse } from 'msw';
 import initialSessionsData from '../fixtures/initial_sessions.json';
+import { MockLiveData, MockQuizData } from './mockdata';
 
 const sessions = new Map<number, Session>(
   initialSessionsData.map((session) => [session.id, session as unknown as Session])
@@ -58,12 +60,8 @@ export const handlers = [
 
     if (sessions.has(sessionId)) {
       const existingSession = sessions.get(sessionId);
-      const updatedSession = {
-        ...existingSession,
-        ...payload,
-        meta_data: { ...payload.meta_data, status: STATUS.SUCCESS },
-      };
-      sessions.set(sessionId, { ...existingSession, ...updatedSession });
+      sessions.set(sessionId, { ...existingSession, ...payload });
+      mock_sns({ oldSession: sessions.get(sessionId) as Session });
       return HttpResponse.json(sessions.get(sessionId));
     }
 
@@ -88,3 +86,43 @@ export const handlers = [
     return HttpResponse.json(formSchemas);
   }),
 ];
+
+async function mock_sns({ oldSession }: { oldSession: Session }) {
+  let payload: Session = {};
+  if (oldSession.platform === Platform.Quiz) {
+    const { name, activeDays, endDate, startDate } = MockQuizData.edit;
+    payload = {
+      name: name,
+      end_time: utcToISTDate(endDate.toUTCString()),
+      start_time: utcToISTDate(startDate.toUTCString()),
+      repeat_schedule: {
+        type: 'weekly',
+        params: activeDays,
+      },
+    };
+  } else {
+    const { name, activeDays, endDate, startDate } = MockLiveData.edit;
+    payload = {
+      name: name,
+      end_time: utcToISTDate(endDate.toUTCString()),
+      start_time: utcToISTDate(startDate.toUTCString()),
+      repeat_schedule: {
+        type: 'weekly',
+        params: activeDays,
+      },
+    };
+  }
+  const newSession = {
+    ...oldSession,
+    ...payload,
+    meta_data: {
+      ...(oldSession?.meta_data ?? {}),
+      ...(payload?.meta_data ?? {}),
+      status: STATUS.SUCCESS,
+    },
+  };
+
+  await delay(20000);
+  sessions.set(newSession.id ?? 0, newSession);
+  return;
+}
