@@ -9,15 +9,14 @@ describe('Quiz Session', () => {
   const { create, edit, duplicate } = MockQuizData;
   beforeEach(() => {
     cy.visit('/');
-    cy.get('table > tbody > tr').should('have.length.at.least', 10);
+    cy.get('table > tbody > tr').should('have.length.greaterThan', 0);
     cy.get('table > tbody > tr').eq(0).children('td').eq(0).invoke('text').as('sessionId');
   });
 
   /**
    * Verify Create Session Flow
    */
-
-  it('Verify Create Session Flow', () => {
+  it('should verify create session flow', () => {
     // Click on 'Create Session'
     cy.get('a').contains('Create Session').click();
 
@@ -62,12 +61,19 @@ describe('Quiz Session', () => {
     cy.url().should('include', '/session/create?step=timeline');
     cy.get('h3').contains('Timeline Details');
     cy.customDatePicker('startDate', create.startDate);
+
+    // Click on submit without filling end date
+    cy.get('button').contains('Submit').click();
+
+    // Verify that the form did not submit and we are still on the same page
+    cy.url().should('include', '/session/create?step=timeline');
+
     cy.customDatePicker('endDate', create.endDate);
     cy.customInput('testTakers', create.testTakers);
     cy.customCheckbox('activeDays', create.activeDays);
 
-    // // Click on submit
-    cy.get('button').contains('Next').click();
+    // Click on submit
+    cy.get('button').contains('Submit').click().wait(1000);
 
     // Verify if session is created
     cy.url().should('include', '/');
@@ -84,8 +90,8 @@ describe('Quiz Session', () => {
       });
   });
 
-  it('Verify if session is created has correct details', () => {
-    cy.get('table > tbody > tr').eq(0).click();
+  it('should verify session details which is created', () => {
+    cy.get('table > tbody > tr').eq(0).click({ force: true });
 
     cy.get('div[role="dialog"]').then(($dialog) => {
       cy.wrap($dialog).should('be.visible').find('h2').should('have.text', 'Session Details');
@@ -165,8 +171,7 @@ describe('Quiz Session', () => {
   /**
    * Verify Edit Session Flow
    */
-
-  it('Verify Edit Session Flow', () => {
+  it('should verify edit session flow', () => {
     cy.get('@sessionId').then((sessionId) => {
       cy.get('table > tbody > tr').each(($tr) => {
         // Find the created session using sessionId
@@ -218,19 +223,21 @@ describe('Quiz Session', () => {
           cy.customDatePicker('endDate', edit.endDate);
           cy.customCheckbox('activeDays', edit.activeDays);
 
-          cy.get('button').contains('Next').click();
+          // Submit the form
+          cy.get('button').contains('Submit').click();
 
           cy.url().should('include', '/');
           cy.get('table > tbody > tr').eq(0).should('have.class', 'opacity-50');
           cy.wait(30000);
+          cy.reload();
           cy.get('table > tbody > tr').eq(0).should('not.have.class', 'opacity-50');
         }
       });
     });
   });
 
-  it('Verify if session is edited has correct details', () => {
-    cy.get('table > tbody > tr').eq(0).click();
+  it('should verify session details which is edited', () => {
+    cy.get('table > tbody > tr').eq(0).click({ force: true });
 
     cy.get('div[role="dialog"]').then(($dialog) => {
       cy.wrap($dialog).should('be.visible').find('h2').should('have.text', 'Session Details');
@@ -276,8 +283,7 @@ describe('Quiz Session', () => {
   /**
    * Verify Duplicate Session Flow
    */
-
-  it('Verify Duplicate Session Flow', () => {
+  it('should verify duplicate session flow', () => {
     cy.get('@sessionId').then((sessionId) => {
       cy.get('table > tbody > tr').each(($tr) => {
         // Find the created session using sessionId
@@ -309,34 +315,30 @@ describe('Quiz Session', () => {
           cy.get('button').contains('Next').click();
 
           // Fill platform details
-          cy.customSelect('cmsUrl', duplicate.testType);
+          cy.customSelect('testType', duplicate.testType);
           cy.customInput('cmsUrl', duplicate.cmsUrl);
+
           cy.get('button').contains('Next').click();
 
           // Fill timeline details
           cy.customDatePicker('startDate', duplicate.startDate);
           cy.customDatePicker('endDate', duplicate.endDate);
 
-          // TODO: uncomment this to create duplicate session
-          // cy.get('button').contains('Next').click();
-          // cy.url().should('include', '/');
-          // cy.get('table > tbody > tr')
-          //   .eq(0)
-          //   .children('td')
-          //   .then(($tds) => {
-          //     const tdsArray = $tds.toArray();
-          //     const hasName = tdsArray.some((td) => td.innerText.trim() === duplicate.name);
-          //     expect(hasName).to.be.true;
-          //   });
+          // Submit the form
+          cy.get('button').contains('Submit').click();
+
+          // Verify
+          cy.url().should('include', '/');
+          cy.get('table > tbody > tr')
+            .eq(0)
+            .children('td')
+            .then(($tds) => {
+              const tdsArray = $tds.toArray();
+              const hasName = tdsArray.some((td) => td.innerText.trim() === duplicate.name);
+              expect(hasName).to.be.true;
+            });
         }
       });
     });
-  });
-
-  afterEach(function () {
-    if (this.currentTest?.isFailed()) {
-      cy.log(`Test failed: ${this.currentTest?.err}`);
-      (Cypress as any).runner.stop();
-    }
   });
 });

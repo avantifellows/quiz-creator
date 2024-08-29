@@ -93,8 +93,9 @@ Cypress.Commands.addAll({
     cy.get(`div[id="${name}-calendar"]`).then(($calendar) => {
       cy.get(`div[id="${name}-calendar"] table`)
         .should('be.visible')
-        .find('td > button[name="day"]')
-        .contains(date)
+        .find('td button[name="day"]')
+        .filter(':enabled')
+        .contains(new RegExp(`^${date}$`))
         .should('not.have.class', 'opacity-50')
         .click();
     });

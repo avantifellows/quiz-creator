@@ -14,7 +14,9 @@ export const handlers = [
   http.get(`${API_BASE_URL}/session`, ({ request }) => {
     const url = new URL(request.url);
     const is_quiz = url.searchParams.get('is_quiz') === 'true';
-    let result = Array.from(sessions.values());
+    let result = Array.from(sessions.values())
+      .filter((session: Session) => session.id !== undefined)
+      .sort((a, b) => (b?.id ?? 0) - (a?.id ?? 0));
     if (is_quiz) {
       result = result.filter((session) => session.platform === Platform.Quiz);
     } else {

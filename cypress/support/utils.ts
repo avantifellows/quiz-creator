@@ -7,7 +7,7 @@ export const getDateWithTime = (value: DateValues, daysToAdd?: number) => {
 };
 
 export const getDateComponents = (value: Date) => {
-  const date = format(value, 'dd');
+  const date = format(value, 'd');
   const monthLabel = format(value, 'MMMM');
   const month = (parseInt(format(value, 'M')) - 1).toString();
   const year = format(value, 'yyyy');
