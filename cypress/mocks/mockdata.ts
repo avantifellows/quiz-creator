@@ -10,7 +10,7 @@ import {
   TestTypeOptions,
 } from '@/Constants';
 import { AuthType, Group, Platform, Subjects } from '@/types';
-import { getDateWithTime } from './utils';
+import { getDateWithTime } from '../support/utils';
 
 // Mock Data which is filled during test
 export const MockQuizData = {

@@ -1,5 +1,5 @@
 import { ActiveDaysOptions } from '@/Constants';
-import { MockLiveData } from 'cypress/support/mock';
+import { MockLiveData } from 'cypress/mocks/mockdata';
 import { format } from 'date-fns';
 
 /**

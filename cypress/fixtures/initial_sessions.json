@@ -1,8 +1,51 @@
 [
   {
+    "auth_type": "ID",
+    "created_by_id": null,
+    "end_time": "2024-08-31T23:00:00Z",
+    "id": 836,
+    "id_generation": false,
+    "inserted_at": "2024-08-28T16:07:09",
+    "is_active": true,
+    "meta_data": {
+      "batch_id": "HaryanaStudents_10_Foundation_24_001",
+      "date_created": "2024-08-28T21:37:08.670Z",
+      "grade": 10,
+      "group": "HaryanaStudents",
+      "number_of_fields_in_popup_form": "",
+      "parent_id": "",
+      "shortened_link": "https://lnk.avantifellows.org/nA7B",
+      "status": "success",
+      "subject": "",
+      "test_takers_count": 0
+    },
+    "name": "Session Register Test Edit",
+    "owner_id": null,
+    "platform": "no-platform",
+    "platform_id": null,
+    "platform_link": null,
+    "popup_form": false,
+    "popup_form_id": null,
+    "portal_link": "https://staging-auth.avantifellows.org?sessionId=HaryanaStudents_HaryanaStudents_10_Foundation_24_001_45532",
+    "purpose": {
+      "sub-type": "registration"
+    },
+    "redirection": false,
+    "repeat_schedule": {
+      "params": [1, 2, 3, 4, 5, 6, 7],
+      "type": "weekly"
+    },
+    "session_id": "HaryanaStudents_HaryanaStudents_10_Foundation_24_001_45532",
+    "signup_form": true,
+    "signup_form_id": 2,
+    "start_time": "2024-08-28T10:00:00Z",
+    "type": "sign-up",
+    "updated_at": "2024-08-28T16:10:45"
+  },
+  {
     "auth_type": "ID,DOB",
     "created_by_id": null,
-    "end_time": "2024-08-29T18:00:00Z",
+    "end_time": "2024-08-30T18:00:00Z",
     "id": 833,
     "id_generation": false,
     "inserted_at": "2024-08-27T04:28:44",
@@ -17,28 +60,11 @@
       "shortened_link": "https://lnk.avantifellows.org/rDM7",
       "status": "success",
       "subject": "",
-      "test_takers_count": 20,
-      "updated_keys": [
-        "auth_type",
-        "end_time",
-        "id_generation",
-        "is_active",
-        "meta_data",
-        "name",
-        "popup_form",
-        "popup_form_id",
-        "redirection",
-        "repeat_schedule",
-        "session_id",
-        "signup_form",
-        "signup_form_id",
-        "start_time",
-        "type"
-      ]
+      "test_takers_count": 20
     },
     "name": "Testing Registration Session",
     "owner_id": null,
-    "platform": null,
+    "platform": "no-platform",
     "platform_id": null,
     "platform_link": null,
     "popup_form": false,
@@ -57,7 +83,7 @@
     "signup_form_id": 12,
     "start_time": "2024-08-27T09:55:00Z",
     "type": "sign-up",
-    "updated_at": "2024-08-27T09:24:02"
+    "updated_at": "2024-08-28T15:53:43"
   },
   {
     "auth_type": "ID",
@@ -111,7 +137,6 @@
     "inserted_at": "2024-08-20T06:03:29",
     "is_active": true,
     "meta_data": {
-      "batch": "HaryanaStudents_10_Foundation_24_001",
       "batch_id": "HaryanaStudents_10_Foundation_24_001",
       "date_created": "2024-08-20T11:33:29.249Z",
       "grade": 10,
@@ -145,5 +170,260 @@
     "start_time": "2024-08-20T00:00:00Z",
     "type": "sign-in",
     "updated_at": "2024-08-20T06:03:46"
+  },
+  {
+    "auth_type": "ID",
+    "created_by_id": null,
+    "end_time": "2024-08-23T20:00:00Z",
+    "id": 826,
+    "id_generation": false,
+    "inserted_at": "2024-08-19T12:21:29",
+    "is_active": true,
+    "meta_data": {
+      "batch_id": "HaryanaStudents_9_Foundation_24_001,HaryanaStudents_10_Foundation_24_001",
+      "date_created": "2024-08-19T17:51:28.813Z",
+      "grade": 9,
+      "group": "HaryanaStudents",
+      "number_of_fields_in_popup_form": "",
+      "parent_id": "",
+      "shortened_link": "https://lnk.avantifellows.org/L7gH",
+      "status": "success",
+      "subject": "Maths,Physics",
+      "test_takers_count": 10
+    },
+    "name": "Cypress Live Session Edit",
+    "owner_id": null,
+    "platform": "youtube",
+    "platform_id": "jfKfPfyJRdk",
+    "platform_link": "https://www.youtube.com/live/jfKfPfyJRdk",
+    "popup_form": false,
+    "popup_form_id": null,
+    "portal_link": "https://staging-auth.avantifellows.org?sessionId=HaryanaStudents_HaryanaStudents_9_Foundation_24_001,HaryanaStudents_10_Foundation_24_001_45523_jfKfPfyJRdk",
+    "purpose": {
+      "sub-type": "liveclass"
+    },
+    "redirection": true,
+    "repeat_schedule": {
+      "params": [1, 2, 3, 4, 5, 6, 7],
+      "type": "weekly"
+    },
+    "session_id": "HaryanaStudents_HaryanaStudents_9_Foundation_24_001,HaryanaStudents_10_Foundation_24_001_45523_jfKfPfyJRdk",
+    "signup_form": false,
+    "signup_form_id": null,
+    "start_time": "2024-08-19T08:00:00Z",
+    "type": "sign-in",
+    "updated_at": "2024-08-19T12:28:26"
+  },
+  {
+    "auth_type": "ID",
+    "created_by_id": null,
+    "end_time": "2024-08-09T23:00:00Z",
+    "id": 820,
+    "id_generation": false,
+    "inserted_at": "2024-08-09T10:50:12",
+    "is_active": true,
+    "meta_data": {
+      "batch_id": "HaryanaStudents_9_Foundation_24_001",
+      "date_created": "2024-08-09T16:20:12.590Z",
+      "grade": 10,
+      "group": "HaryanaStudents",
+      "number_of_fields_in_popup_form": "",
+      "parent_id": "",
+      "status": "success",
+      "subject": "Maths",
+      "test_takers_count": 23
+    },
+    "name": "dgdh",
+    "owner_id": null,
+    "platform": "AF-plio",
+    "platform_id": "mexeblntzn",
+    "platform_link": "https://app.plio.in/scertH/play/mexeblntzn",
+    "popup_form": false,
+    "popup_form_id": null,
+    "portal_link": null,
+    "purpose": null,
+    "redirection": true,
+    "repeat_schedule": {
+      "params": [1, 2, 3, 4, 5, 6, 7],
+      "type": "weekly"
+    },
+    "session_id": null,
+    "signup_form": false,
+    "signup_form_id": null,
+    "start_time": "2024-08-09T00:10:00Z",
+    "type": "sign-in",
+    "updated_at": "2024-08-09T10:50:19"
+  },
+  {
+    "auth_type": "ID",
+    "created_by_id": null,
+    "end_time": "2024-08-07T23:59:00Z",
+    "id": 819,
+    "id_generation": false,
+    "inserted_at": "2024-08-07T17:43:39",
+    "is_active": true,
+    "meta_data": {
+      "batch_id": "HaryanaStudents_10_Foundation_24_001,HaryanaStudents_9_Foundation_24_001",
+      "date_created": "2024-08-07T23:13:39.841Z",
+      "grade": 9,
+      "group": "HaryanaStudents",
+      "number_of_fields_in_popup_form": "",
+      "parent_id": "",
+      "shortened_link": "https://lnk.avantifellows.org/WPWK",
+      "status": "success",
+      "subject": "Chemistry,Biology",
+      "test_takers_count": 0
+    },
+    "name": "Test PlatformId",
+    "owner_id": null,
+    "platform": "others",
+    "platform_id": "1mfzzeg2cbk-pj1w6wosj6qskulo12xwy",
+    "platform_link": "https://drive.google.com/file/d/1mfzzeg2cbk-pj1w6wosj6qskulo12xwy/view",
+    "popup_form": false,
+    "popup_form_id": null,
+    "portal_link": "https://staging-auth.avantifellows.org?sessionId=HaryanaStudents_HaryanaStudents_10_Foundation_24_001,HaryanaStudents_9_Foundation_24_001_45511_1mfzzeg2cbk-pj1w6wosj6qskulo12xwy",
+    "purpose": {
+      "sub-type": "experiment"
+    },
+    "redirection": true,
+    "repeat_schedule": {
+      "params": [3],
+      "type": "weekly"
+    },
+    "session_id": "HaryanaStudents_HaryanaStudents_10_Foundation_24_001,HaryanaStudents_9_Foundation_24_001_45511_1mfzzeg2cbk-pj1w6wosj6qskulo12xwy",
+    "signup_form": false,
+    "signup_form_id": null,
+    "start_time": "2024-08-07T00:15:00Z",
+    "type": "sign-in",
+    "updated_at": "2024-08-07T17:43:44"
+  },
+  {
+    "auth_type": "ID",
+    "created_by_id": null,
+    "end_time": "2024-08-21T23:00:00Z",
+    "id": 818,
+    "id_generation": false,
+    "inserted_at": "2024-08-06T14:25:28",
+    "is_active": true,
+    "meta_data": {
+      "batch_id": "DelhiStudents_11_Photon_Eng_23_001,DelhiStudents_12_Photon_med_24_S001",
+      "date_created": "2024-08-06T19:55:28.021Z",
+      "grade": 11,
+      "group": "DelhiStudents",
+      "number_of_fields_in_popup_form": "",
+      "parent_id": "",
+      "shortened_link": "https://lnk.avantifellows.org/UYY4",
+      "status": "success",
+      "subject": "Maths",
+      "test_takers_count": 23
+    },
+    "name": "curr editing ses dup",
+    "owner_id": null,
+    "platform": "meet",
+    "platform_id": "zvp-wyjs-whd",
+    "platform_link": "https://meet.google.com/zvp-wyjs-whd",
+    "popup_form": false,
+    "popup_form_id": null,
+    "portal_link": "https://staging-auth.avantifellows.org?sessionId=DelhiStudents_DelhiStudents_11_Photon_Eng_23_001,DelhiStudents_12_Photon_med_24_S001_45524_zvp-wyjs-whd",
+    "purpose": {
+      "sub-type": "liveclass"
+    },
+    "redirection": true,
+    "repeat_schedule": {
+      "params": [1, 2, 3, 4, 5, 6, 7],
+      "type": "weekly"
+    },
+    "session_id": "DelhiStudents_DelhiStudents_11_Photon_Eng_23_001,DelhiStudents_12_Photon_med_24_S001_45524_zvp-wyjs-whd",
+    "signup_form": false,
+    "signup_form_id": null,
+    "start_time": "2024-08-10T00:00:00Z",
+    "type": "sign-in",
+    "updated_at": "2024-08-06T14:25:29"
+  },
+  {
+    "auth_type": "ID",
+    "created_by_id": null,
+    "end_time": "2025-03-05T23:00:00Z",
+    "id": 817,
+    "id_generation": false,
+    "inserted_at": "2024-08-06T14:23:21",
+    "is_active": true,
+    "meta_data": {
+      "batch_id": "DelhiStudents_11_Photon_Eng_23_001,DelhiStudents_12_Photon_med_24_S001",
+      "date_created": "2024-08-06T19:53:21.295Z",
+      "grade": 11,
+      "group": "DelhiStudents",
+      "number_of_fields_in_popup_form": "",
+      "parent_id": "",
+      "shortened_link": "https://lnk.avantifellows.org/X4Mf",
+      "status": "success",
+      "subject": "Maths",
+      "test_takers_count": 23
+    },
+    "name": "zzcheck eckj",
+    "owner_id": null,
+    "platform": "meet",
+    "platform_id": "zvp-wyjs-whd",
+    "platform_link": "https://meet.google.com/zvp-wyjs-whd",
+    "popup_form": false,
+    "popup_form_id": null,
+    "portal_link": "https://staging-auth.avantifellows.org?sessionId=DelhiStudents_DelhiStudents_11_Photon_Eng_23_001,DelhiStudents_12_Photon_med_24_S001_45510_zvp-wyjs-whd",
+    "purpose": {
+      "sub-type": "liveclass"
+    },
+    "redirection": true,
+    "repeat_schedule": {
+      "params": [1, 2, 3, 4, 5, 6, 7],
+      "type": "weekly"
+    },
+    "session_id": "DelhiStudents_DelhiStudents_11_Photon_Eng_23_001,DelhiStudents_12_Photon_med_24_S001_45510_zvp-wyjs-whd",
+    "signup_form": false,
+    "signup_form_id": null,
+    "start_time": "2024-08-06T00:00:00Z",
+    "type": "sign-in",
+    "updated_at": "2024-08-06T14:24:54"
+  },
+  {
+    "auth_type": "ID",
+    "created_by_id": null,
+    "end_time": "2024-08-02T11:00:00Z",
+    "id": 815,
+    "id_generation": false,
+    "inserted_at": "2024-08-01T04:23:11",
+    "is_active": true,
+    "meta_data": {
+      "batch_id": "HaryanaStudents_9_Foundation_24_001",
+      "date_created": "2024-08-01T09:53:10.987Z",
+      "grade": 10,
+      "group": "HaryanaStudents",
+      "number_of_fields_in_popup_form": "",
+      "parent_id": "",
+      "shortened_link": "https://lnk.avantifellows.org/Y52V",
+      "status": "success",
+      "subject": "Maths",
+      "test_takers_count": 0
+    },
+    "name": "test ",
+    "owner_id": null,
+    "platform": "others",
+    "platform_id": "https://drive.google.com/file/d/1MFZZEg2CbK-Pj1w6WOsj6qSkulO12xwy/view",
+    "platform_link": "https://drive.google.com/file/d/1MFZZEg2CbK-Pj1w6WOsj6qSkulO12xwy/view",
+    "popup_form": false,
+    "popup_form_id": null,
+    "portal_link": "https://staging-auth.avantifellows.org?sessionId=HaryanaStudents_HaryanaStudents_9_Foundation_24_001_45505_https://drive.google.com/file/d/1MFZZEg2CbK-Pj1w6WOsj6qSkulO12xwy/view",
+    "purpose": {
+      "sub-type": "experiment"
+    },
+    "redirection": true,
+    "repeat_schedule": {
+      "params": [1, 2, 3, 4, 5, 6, 7],
+      "type": "weekly"
+    },
+    "session_id": "HaryanaStudents_HaryanaStudents_9_Foundation_24_001_45505_https://drive.google.com/file/d/1MFZZEg2CbK-Pj1w6WOsj6qSkulO12xwy/view",
+    "signup_form": false,
+    "signup_form_id": null,
+    "start_time": "2024-08-01T09:00:00Z",
+    "type": "sign-in",
+    "updated_at": "2024-08-01T04:23:15"
   }
 ]
