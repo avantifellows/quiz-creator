@@ -1,14 +1,17 @@
 import { ActiveDaysOptions } from '@/Constants';
-import { MockQuizData } from 'cypress/mocks/mockdata';
+import {
+  CreateQuizData as create,
+  DuplicateQuizData as duplicate,
+  PatchQuizData as edit,
+} from 'cypress/mocks/mockdata';
 import { format } from 'date-fns';
 
 /**
  * Quiz Session Flow
  */
 describe('Quiz Session', () => {
-  const { create, edit, duplicate } = MockQuizData;
   beforeEach(() => {
-    cy.visit('/');
+    cy.visit('/').wait(100);
     cy.get('table > tbody > tr').should('have.length.greaterThan', 0);
     cy.get('table > tbody > tr').eq(0).children('td').eq(0).invoke('text').as('sessionId');
   });
@@ -18,7 +21,7 @@ describe('Quiz Session', () => {
    */
   it('should verify create session flow', () => {
     // Click on 'Create Session'
-    cy.get('a').contains('Create Session').click();
+    cy.get('a').contains('Create Session').click().wait(100);
 
     // Goto create session page i.e. basic details
     cy.url().should('include', '/session/create?step=basic');
@@ -224,7 +227,7 @@ describe('Quiz Session', () => {
           cy.customCheckbox('activeDays', edit.activeDays);
 
           // Submit the form
-          cy.get('button').contains('Submit').click();
+          cy.get('button').contains('Submit').click().wait(100);
 
           cy.url().should('include', '/');
           cy.get('table > tbody > tr').eq(0).should('have.class', 'opacity-50');

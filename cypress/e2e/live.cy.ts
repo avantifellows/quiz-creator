@@ -1,14 +1,17 @@
 import { ActiveDaysOptions } from '@/Constants';
-import { MockLiveData } from 'cypress/mocks/mockdata';
+import {
+  CreateLiveData as create,
+  DuplicateLiveData as duplicate,
+  PatchLiveData as edit,
+} from 'cypress/mocks/mockdata';
 import { format } from 'date-fns';
 
 /**
  * Live Session Flow
  */
 describe('Live Session', () => {
-  const { create, edit, duplicate } = MockLiveData;
   beforeEach(() => {
-    cy.visit('/live');
+    cy.visit('/live').wait(100);
     cy.get('table > tbody > tr').should('have.length.greaterThan', 0);
     cy.get('table > tbody > tr').eq(0).children('td').eq(0).invoke('text').as('sessionId');
   });
@@ -18,7 +21,7 @@ describe('Live Session', () => {
    */
   it('should verify create session flow', () => {
     // Click on 'Create Session'
-    cy.get('a').contains('Create Session').click();
+    cy.get('a').contains('Create Session').click().wait(100);
 
     // Goto create session page i.e. basic details
     cy.url().should('include', '/session/create?step=basic');
@@ -208,7 +211,7 @@ describe('Live Session', () => {
           cy.customCheckbox('activeDays', edit.activeDays);
 
           // Submit the form
-          cy.get('button').contains('Submit').click();
+          cy.get('button').contains('Submit').click().wait(100);
 
           cy.url().should('include', '/live');
           cy.get('table > tbody > tr').eq(0).should('have.class', 'opacity-50');

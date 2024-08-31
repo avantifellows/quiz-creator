@@ -3,7 +3,7 @@ import { Platform, STATUS } from '@/types';
 import { Session } from '@/types/api.types';
 import { bypass, delay, http, HttpResponse } from 'msw';
 import initialSessionsData from '../fixtures/initial_sessions.json';
-import { MockLiveData, MockQuizData } from './mockdata';
+import { PatchLiveData, PatchQuizData } from './mockdata';
 
 const sessions = new Map<number, Session>(
   initialSessionsData.map((session) => [session.id, session as unknown as Session])
@@ -90,7 +90,7 @@ export const handlers = [
 async function mock_sns({ oldSession }: { oldSession: Session }) {
   let payload: Session = {};
   if (oldSession.platform === Platform.Quiz) {
-    const { name, activeDays, endDate, startDate } = MockQuizData.edit;
+    const { name, activeDays, endDate, startDate } = PatchQuizData;
     payload = {
       name: name,
       end_time: utcToISTDate(endDate.toUTCString()),
@@ -101,7 +101,7 @@ async function mock_sns({ oldSession }: { oldSession: Session }) {
       },
     };
   } else {
-    const { name, activeDays, endDate, startDate } = MockLiveData.edit;
+    const { name, activeDays, endDate, startDate } = PatchLiveData;
     payload = {
       name: name,
       end_time: utcToISTDate(endDate.toUTCString()),
