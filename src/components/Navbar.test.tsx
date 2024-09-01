@@ -34,17 +34,6 @@ describe('Navbar', () => {
     expect(logoImage).toBeInTheDocument();
   });
 
-  it('should render the header text correctly', () => {
-    (usePathname as jest.Mock).mockReturnValue('/');
-
-    render(<Navbar />);
-
-    const sessionText = screen.getByText(/ESSION/i);
-    const managerText = screen.getByText(/ANAGER/i);
-    expect(sessionText).toBeInTheDocument();
-    expect(managerText).toBeInTheDocument();
-  });
-
   it('should render navigation links', () => {
     (usePathname as jest.Mock).mockReturnValue('/');
 

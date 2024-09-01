@@ -7,7 +7,7 @@ on:
       - completed
 
 jobs:
-  setup:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,22 +19,31 @@ jobs:
           node-version: '20'
 
       - name: Cache node modules
-        uses: actions/cache@v3
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Install dependencies
         run: npm install
-
-  unit-tests:
-    needs: [setup]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Run Jest tests
         uses: willcaul/jest-github-action@v4
@@ -43,18 +52,14 @@ jobs:
         with:
           test-command: 'npm run test:jest'
 
-  e2e-tests-chrome:
-    needs: [setup, unit-tests]
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        env:
+          APP_ENV: ${{ secrets.TESTING_APP_ENV }}
+          AF_DB_URL: ${{ secrets.STAGING_AF_DB_URL }}
+          AF_BEARER_TOKEN: ${{ secrets.STAGING_AF_BEARER_TOKEN }}
         with:
           build: npm run build
           start: npm run start
           wait-on: 'http://localhost:3000'
           browser: chrome
-          env: APP_ENV=testing
