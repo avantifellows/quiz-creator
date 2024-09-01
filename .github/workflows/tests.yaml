@@ -7,7 +7,7 @@ on:
       - completed
 
 jobs:
-  tests:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,18 +17,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
 
       - name: Cache node modules
         uses: actions/cache@v3
@@ -52,7 +40,22 @@ jobs:
         with:
           test-command: 'npm run test:jest'
 
-      - name: Cypress run
+  e2e-tests-chrome:
+    runs-on: ubuntu-22.04
+    needs: [unit-tests]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Cypress run (Chrome)
         uses: cypress-io/github-action@v6
         env:
           APP_ENV: ${{ secrets.TESTING_APP_ENV }}
@@ -63,3 +66,30 @@ jobs:
           start: npm run start
           wait-on: 'http://localhost:3000'
           browser: chrome
+
+  e2e-tests-firefox:
+    runs-on: ubuntu-22.04
+    needs: [unit-tests]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Cypress run (Firefox)
+        uses: cypress-io/github-action@v6
+        env:
+          APP_ENV: ${{ secrets.TESTING_APP_ENV }}
+          AF_DB_URL: ${{ secrets.STAGING_AF_DB_URL }}
+          AF_BEARER_TOKEN: ${{ secrets.STAGING_AF_BEARER_TOKEN }}
+        with:
+          build: npm run build
+          start: npm run start
+          wait-on: 'http://localhost:3000'
+          browser: firefox

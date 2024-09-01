@@ -122,7 +122,7 @@ async function mock_sns({ oldSession }: { oldSession: Session }) {
     },
   };
 
-  await delay(20000);
+  await delay(4000);
   sessions.set(newSession.id ?? 0, newSession);
   return;
 }

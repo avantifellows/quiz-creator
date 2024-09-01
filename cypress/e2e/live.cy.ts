@@ -215,7 +215,7 @@ describe('Live Session', () => {
 
           cy.url().should('include', '/live');
           cy.get('table > tbody > tr').eq(0).should('have.class', 'opacity-50');
-          cy.wait(30000);
+          cy.wait(5000);
           cy.reload();
           cy.get('table > tbody > tr').eq(0).should('not.have.class', 'opacity-50');
         }
