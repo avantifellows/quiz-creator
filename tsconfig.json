@@ -14,13 +14,25 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "types": ["cypress", "node", "jest", "@testing-library/jest-dom"],
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
       "@/public/*": ["./public/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next.config.mjs"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next.config.mjs",
+    "./jest.setup.ts"
+  ],
   "exclude": ["node_modules"]
 }

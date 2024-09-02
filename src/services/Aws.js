@@ -14,6 +14,11 @@ function publishMessage(message) {
   const Message = JSON.stringify({ environment, ...message });
   const params = { Message, TopicArn };
 
+  if (environment === 'testing') {
+    console.info('[SNS DEBUG] publishing message : ', Message);
+    return;
+  }
+
   sns.publish(params, (error, data) => {
     if (error) {
       console.error('[SNS ERROR] publishing message : ', Message, error);
