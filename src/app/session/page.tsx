@@ -14,7 +14,7 @@ export default async function ViewSession({ searchParams: { id } }: Props) {
   const sessionData = await getASession(Number(id) || null);
 
   return (
-    <main className="container text-center">
+    <main className='container text-center'>
       <h2>TO BE IMPLEMENTED {(sessionData as Session)?.name}</h2>
     </main>
   );

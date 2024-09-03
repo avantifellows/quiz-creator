@@ -59,7 +59,7 @@ const RenderFields = <T extends FieldValues>(
       control={form.control}
       name={name as Path<T>}
       render={({ field }) => (
-        <FormItem className="relative">
+        <FormItem className='relative'>
           <Component field={field} schema={restSchema} form={form} />
           {helperText ? <FormDescription>{helperText}</FormDescription> : null}
           <FormMessage />
@@ -102,22 +102,22 @@ export const FormBuilder = <T extends FieldValues>({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => handleSubmit(data))}
-        className="flex flex-col gap-4"
+        className='flex flex-col gap-4'
       >
         {Object.entries(formSchema).map(([name, fieldSchema]) =>
           RenderFields(name, fieldSchema, form)
         )}
-        <div className="flex gap-4 flex-col md:flex-row-reverse justify-between mt-4">
+        <div className='flex gap-4 flex-col md:flex-row-reverse justify-between mt-4'>
           {buttons?.submit?.hidden ? null : (
-            <Button className="min-w-32" type="submit" disabled={buttons?.submit?.disabled}>
+            <Button className='min-w-32' type='submit' disabled={buttons?.submit?.disabled}>
               {buttons?.submit?.text || 'Save & Next'}
             </Button>
           )}
           {buttons?.reset?.hidden ? null : (
             <Button
-              className="min-w-32"
-              variant="outline"
-              type="reset"
+              className='min-w-32'
+              variant='outline'
+              type='reset'
               onClick={buttons?.reset?.onClick ?? router.back}
             >
               {buttons?.reset?.text || 'Back'}

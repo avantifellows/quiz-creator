@@ -118,7 +118,7 @@ const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>
           onChange?.(e);
         }}
         type={type}
-        inputMode="decimal"
+        inputMode='decimal'
         onKeyDown={(e) => {
           onKeyDown?.(e);
           handleKeyDown(e);
@@ -162,23 +162,23 @@ const TimePeriodSelect = React.forwardRef<HTMLButtonElement, PeriodSelectorProps
     };
 
     return (
-      <div className="flex h-10 items-center">
+      <div className='flex h-10 items-center'>
         <Select
-          name="period"
+          name='period'
           defaultValue={period}
           onValueChange={(value: Period) => handleValueChange(value)}
         >
           <SelectTrigger
             value={period}
             ref={ref}
-            className="w-[65px] focus:bg-accent focus:text-accent-foreground"
+            className='w-[65px] focus:bg-accent focus:text-accent-foreground'
             onKeyDown={handleKeyDown}
           >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="AM">AM</SelectItem>
-            <SelectItem value="PM">PM</SelectItem>
+            <SelectItem value='AM'>AM</SelectItem>
+            <SelectItem value='PM'>PM</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -201,21 +201,21 @@ function TimePicker({ date, setDate }: TimePickerProps) {
   const periodRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="flex items-center gap-4">
-      <ClockIcon className="size-5 text-current" />
+    <div className='flex items-center gap-4'>
+      <ClockIcon className='size-5 text-current' />
       <TimePickerInput
-        id="hours"
-        picker="hours"
+        id='hours'
+        picker='hours'
         period={period}
         date={date}
         setDate={setDate}
         ref={hourRef}
         onRightFocus={() => minuteRef.current?.focus()}
       />
-      <span className="-mx-1.5">:</span>
+      <span className='-mx-1.5'>:</span>
       <TimePickerInput
-        id="minutes"
-        picker="minutes"
+        id='minutes'
+        picker='minutes'
         date={date}
         setDate={setDate}
         ref={minuteRef}

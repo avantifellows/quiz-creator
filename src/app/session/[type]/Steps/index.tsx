@@ -39,9 +39,9 @@ const StepsController = ({ sessionData, options }: StepsControllerProps) => {
   const DynamicForm = useMemo(() => StepForms[activeStep].component ?? null, [activeStep]);
 
   return (
-    <main className="md:container mx-auto">
+    <main className='md:container mx-auto'>
       <Stepper steps={StepForms} activeStep={activeStep} />
-      <Card className="my-5">
+      <Card className='my-5'>
         <CardHeader />
         <CardContent>
           <FormDataProvider sessionData={sessionData} apiOptions={options}>

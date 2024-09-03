@@ -83,8 +83,8 @@ const TimelineForm: FC = () => {
 
   return (
     <>
-      <p className="text-sm text-muted-foreground mb-4 text-pretty">
-        <Info className="inline-block size-3.5 md:size-4 mb-1 mr-2" />
+      <p className='text-sm text-muted-foreground mb-4 text-pretty'>
+        <Info className='inline-block size-3.5 md:size-4 mb-1 mr-2' />
         Select the time period for this session to be active for each day.
       </p>
       <FormBuilder

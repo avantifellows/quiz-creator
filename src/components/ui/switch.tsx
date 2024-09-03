@@ -45,7 +45,7 @@ const ControlledSwitchField = React.forwardRef<
   }, [value, onCheckedChange]);
 
   return (
-    <span className="flex flex-row justify-between items-center gap-4 mt-2">
+    <span className='flex flex-row justify-between items-center gap-4 mt-2'>
       <FormLabel>{label}</FormLabel>
       <FormControl ref={ref}>
         <Switch
