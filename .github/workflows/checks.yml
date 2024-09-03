@@ -34,6 +34,5 @@ jobs:
       - name: Check ESLint
         run: npm run lint:check
 
-      # TODO: Uncomment when code is formated by Prettier
-      # - name: Check Prettier
-      #   run: npm run format:check
+      - name: Check Prettier
+        run: npm run format:check
