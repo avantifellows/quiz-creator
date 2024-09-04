@@ -49,8 +49,29 @@
    npm run build
    ```
 
-1. **Start the Server:**
+2. **Start the Server:**
 
    ```bash
    npm run start
+   ```
+
+## Other Useful Scripts
+
+1. **Linting & Formating:**
+
+   ```bash
+   npm run lint:fix
+   npm run format
+   ```
+
+2. **Unit Testing:**
+
+   ```bash
+   npm run test:jest
+   ```
+
+3. **E2E Testing:**
+
+   ```bash
+   npm run test:cypress
    ```

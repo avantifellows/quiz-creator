@@ -22,22 +22,22 @@
 
 ## Features
 
-1. **Create, Edit, and Duplicate Sessions**
+1. **Create, Edit, and Duplicate Sessions:**
    Easily manage sessions with options to create, edit, and duplicate.
 
-2. **Presets for Ease**
+2. **Presets for Ease:**
    Simplifies form-filling with presets based on selected groups.
 
-3. **Quiz & Live Table Management**
+3. **Quiz & Live Table Management:**
    Uses Tables with filtering, pagination, and expanded modals for more information.
 
-4. **Real-Time Polling**
+4. **Real-Time Polling:**
    Dynamically refreshes table data using polling for real-time updates.
 
-5. **Server-Side Rendering with Server Actions**
+5. **Server-Side Rendering with Server Actions:**
    Delivers fast pages and handles form submissions with SSR and Server Actions in Next.js.
 
-6. **End-to-End (E2E) Testing**
+6. **End-to-End (E2E) Testing:**
    Ensures application reliability and functionality through comprehensive Cypress E2E tests.
 
 ## Routes
