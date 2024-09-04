@@ -1,10 +1,9 @@
 name: Tests
 
 on:
-  workflow_run:
-    workflows: ['Code Checks']
-    types:
-      - completed
+  pull_request:
+  push:
+    branches: [main]
 
 jobs:
   unit-tests:
