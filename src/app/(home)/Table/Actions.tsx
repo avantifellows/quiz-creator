@@ -17,34 +17,34 @@ const TableActions = ({ session }: { session: Session }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
+        <Button variant='ghost' className='h-8 w-8 p-0'>
+          <span className='sr-only'>Open menu</span>
+          <MoreHorizontal className='h-4 w-4' />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent onClick={(e) => e.stopPropagation()}>
         <DropdownMenuItem
           asChild
-          className="cursor-pointer"
+          className='cursor-pointer'
           disabled={session.meta_data?.status === STATUS.PENDING}
         >
           <Link href={`/session/edit?id=${session.id}`} prefetch={false}>
             Edit
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild className="cursor-pointer">
+        <DropdownMenuItem asChild className='cursor-pointer'>
           <Link href={`/session/duplicate?id=${session.id}`} prefetch={false}>
             Duplicate
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
           asChild
-          className="cursor-pointer"
+          className='cursor-pointer'
           disabled={session.meta_data?.status === STATUS.PENDING}
         >
           <Button
-            variant="ghost"
-            className="w-full focus-visible:ring-0 justify-start font-normal"
+            variant='ghost'
+            className='w-full focus-visible:ring-0 justify-start font-normal'
             onClick={async () => {
               await patchSession(
                 {
@@ -86,11 +86,11 @@ const LinkAction = ({ value, status = STATUS.SUCCESS }: { value: string; status?
   const memoLink = useMemo(() => absoluteLink(value), [value]);
 
   if (status === STATUS.PENDING) {
-    return <Loader className="size-4 mx-auto motion-safe:animate-spin-slow" />;
+    return <Loader className='size-4 mx-auto motion-safe:animate-spin-slow' />;
   }
 
   if (status === STATUS.FAILED) {
-    return <AlertTriangle className="size-4 mx-auto" />;
+    return <AlertTriangle className='size-4 mx-auto' />;
   }
 
   if (!memoLink) {
@@ -98,15 +98,15 @@ const LinkAction = ({ value, status = STATUS.SUCCESS }: { value: string; status?
   }
 
   return (
-    <div className="flex place-content-center gap-1" onClick={(e) => e.stopPropagation()}>
+    <div className='flex place-content-center gap-1' onClick={(e) => e.stopPropagation()}>
       <Link
         href={memoLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex p-1"
+        target='_blank'
+        rel='noopener noreferrer'
+        className='inline-flex p-1'
         prefetch={false}
       >
-        <LinkIcon className="size-4 mx-auto cursor-pointer" />
+        <LinkIcon className='size-4 mx-auto cursor-pointer' />
       </Link>
     </div>
   );
@@ -115,14 +115,14 @@ const LinkAction = ({ value, status = STATUS.SUCCESS }: { value: string; status?
 const CopyBtn = ({ value }: { value: string }) => {
   return (
     <Button
-      variant="ghost"
-      className="p-1 h-auto"
+      variant='ghost'
+      className='p-1 h-auto'
       onClick={(e) => {
         navigator.clipboard.writeText(value);
         toast.success('Copied Link to clipboard', { duration: 2000 });
       }}
     >
-      <Copy className="size-4" />
+      <Copy className='size-4' />
     </Button>
   );
 };

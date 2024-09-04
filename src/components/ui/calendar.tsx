@@ -49,8 +49,8 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+        IconLeft: ({ ...props }) => <ChevronLeft className='h-4 w-4' />,
+        IconRight: ({ ...props }) => <ChevronRight className='h-4 w-4' />,
         Dropdown: ({ name, value, children, onChange }) => {
           type OptionElement = React.ReactElement<React.HTMLProps<HTMLOptionElement>>;
           const options = React.Children.toArray(children) as OptionElement[];
@@ -70,11 +70,11 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
             >
               <SelectTrigger
                 id={`${props.id}-${name}-selector`}
-                className="h-fit w-fit border-none p-0 focus:bg-none focus:ring-0 focus:ring-offset-0"
+                className='h-fit w-fit border-none p-0 focus:bg-none focus:ring-0 focus:ring-offset-0'
               >
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent position="popper" side="bottom" align="center" sideOffset={2}>
+              <SelectContent position='popper' side='bottom' align='center' sideOffset={2}>
                 {options.map((option, index) => {
                   return (
                     <SelectItem

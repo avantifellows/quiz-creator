@@ -176,23 +176,23 @@ const MultiSelectorTrigger = forwardRef<HTMLDivElement, React.HTMLAttributes<HTM
             )}
             variant={'secondary'}
           >
-            <span className="text-xs">{item}</span>
+            <span className='text-xs'>{item}</span>
             <button
               hidden={disabled}
               disabled={disabled}
               aria-label={`Remove ${item} option`}
-              aria-roledescription="button to remove option"
-              type="button"
+              aria-roledescription='button to remove option'
+              type='button'
               onMouseDown={mousePreventDefault}
               onClick={() => onValueChange(item)}
             >
-              <span className="sr-only">Remove {item} option</span>
-              <RemoveIcon className="h-4 w-4 hover:stroke-destructive" />
+              <span className='sr-only'>Remove {item} option</span>
+              <RemoveIcon className='h-4 w-4 hover:stroke-destructive' />
             </button>
           </Badge>
         ))}
         {children}
-        <ChevronDown className="self-center h-4 w-4 text-muted-foreground opacity-50 ml-auto" />
+        <ChevronDown className='self-center h-4 w-4 text-muted-foreground opacity-50 ml-auto' />
       </div>
     );
   }
@@ -232,7 +232,7 @@ const MultiSelectorContent = forwardRef<HTMLDivElement, React.HTMLAttributes<HTM
   ({ children }, ref) => {
     const { open } = useMultiSelect();
     return (
-      <div ref={ref} className="relative">
+      <div ref={ref} className='relative'>
         {open && children}
       </div>
     );
@@ -254,7 +254,7 @@ const MultiSelectorList = forwardRef<
       )}
     >
       {children}
-      <CommandEmpty className="py-1.5 pl-8 text-sm opacity-50">No options</CommandEmpty>
+      <CommandEmpty className='py-1.5 pl-8 text-sm opacity-50'>No options</CommandEmpty>
     </CommandList>
   );
 });
@@ -290,7 +290,7 @@ const MultiSelectorItem = forwardRef<
       onMouseDown={mousePreventDefault}
     >
       {children}
-      {isIncluded && <Check className="h-4 w-4" />}
+      {isIncluded && <Check className='h-4 w-4' />}
     </CommandItem>
   );
 });

@@ -79,19 +79,19 @@ const Filters = ({ table, apiOptions }: { table: Table<Session>; apiOptions: Api
   }, [table.getState().columnFilters]);
 
   return (
-    <div className="flex mb-4 gap-4 flex-wrap justify-between">
-      <div className="flex items-center justify-normal gap-2 md:gap-4 flex-1">
+    <div className='flex mb-4 gap-4 flex-wrap justify-between'>
+      <div className='flex items-center justify-normal gap-2 md:gap-4 flex-1'>
         {filterColumns.map((column) => {
           return (
             <DropdownMenu modal={false} key={column.name}>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="text-sm py-0 px-2 md:py-2 md:px-4">
-                  <Filter className="mr-1 size-3" />
+                <Button variant='outline' className='text-sm py-0 px-2 md:py-2 md:px-4'>
+                  <Filter className='mr-1 size-3' />
                   {column.label}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel className="text-center">
+              <DropdownMenuContent align='end'>
+                <DropdownMenuLabel className='text-center'>
                   Filter By {column.label}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -99,10 +99,10 @@ const Filters = ({ table, apiOptions }: { table: Table<Session>; apiOptions: Api
                   value={(table.getColumn(column.name)?.getFilterValue() as string) ?? ''}
                   onValueChange={column.onChange}
                 >
-                  <DropdownMenuRadioItem value="">All</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value=''>All</DropdownMenuRadioItem>
                   {(column.options ?? []).map((option) => (
                     <DropdownMenuRadioItem
-                      className="capitalize"
+                      className='capitalize'
                       key={option.value.toString()}
                       value={option.value.toString()}
                     >
@@ -116,26 +116,26 @@ const Filters = ({ table, apiOptions }: { table: Table<Session>; apiOptions: Api
         })}
         {isFiltered && (
           <Button
-            aria-label="Reset filters"
-            variant="ghost"
-            className="text-sm py-0 px-2 md:py-2 md:px-4"
+            aria-label='Reset filters'
+            variant='ghost'
+            className='text-sm py-0 px-2 md:py-2 md:px-4'
             onClick={() => table.resetColumnFilters(true)}
           >
-            <span className="hidden md:inline">Reset</span>
-            <X className="md:ml-2 size-4" aria-hidden="true" />
+            <span className='hidden md:inline'>Reset</span>
+            <X className='md:ml-2 size-4' aria-hidden='true' />
           </Button>
         )}
       </div>
 
-      <div className="flex items-center justify-between gap-2 md:gap-4">
+      <div className='flex items-center justify-between gap-2 md:gap-4'>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              <Settings2 className="mr-2 size-4" />
+            <Button variant='outline'>
+              <Settings2 className='mr-2 size-4' />
               View
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align='end'>
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
@@ -143,7 +143,7 @@ const Filters = ({ table, apiOptions }: { table: Table<Session>; apiOptions: Api
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
+                    className='capitalize'
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) => column.toggleVisibility(!!value)}
                   >

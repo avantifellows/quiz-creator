@@ -22,7 +22,7 @@ export const columns: ColumnDef<Session>[] = [
   {
     accessorKey: 'platform',
     header: 'Platform',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('platform') || 'N/A'}</div>,
+    cell: ({ row }) => <div className='capitalize'>{row.getValue('platform') || 'N/A'}</div>,
   },
   {
     id: 'group',
@@ -82,9 +82,9 @@ export const columns: ColumnDef<Session>[] = [
     header: 'Enabled',
     cell: ({ row }) =>
       row.getValue('isEnabled') ? (
-        <Check className="mx-auto" color="darkgreen" />
+        <Check className='mx-auto' color='darkgreen' />
       ) : (
-        <X className="mx-auto" color="darkred" />
+        <X className='mx-auto' color='darkred' />
       ),
   },
   {

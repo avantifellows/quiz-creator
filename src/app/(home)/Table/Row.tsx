@@ -27,14 +27,14 @@ export const SheetTableRow = ({
             )}
           >
             {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id} className="p-2">
+              <TableCell key={cell.id} className='p-2'>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </TableCell>
             ))}
           </TableRow>
         </SheetTrigger>
-        <SheetContent className="w-full md:w-1/2 sm:max-w-none overflow-x-auto">
-          <SheetHeader className="border-b space-y-0 flex-row justify-between items-center mr-6">
+        <SheetContent className='w-full md:w-1/2 sm:max-w-none overflow-x-auto'>
+          <SheetHeader className='border-b space-y-0 flex-row justify-between items-center mr-6'>
             <SheetTitle>Session Details</SheetTitle>
             <Link
               prefetch={false}
@@ -47,27 +47,27 @@ export const SheetTableRow = ({
             </Link>
           </SheetHeader>
           {displayData(row.original, formOptions).map((section, index) => (
-            <div key={section.title + index} className="flex flex-col gap-2 py-4">
-              <h4 className="font-bold text-lg underline">{section.title}</h4>
-              <ul className="flex justify-between flex-wrap gap-y-4">
+            <div key={section.title + index} className='flex flex-col gap-2 py-4'>
+              <h4 className='font-bold text-lg underline'>{section.title}</h4>
+              <ul className='flex justify-between flex-wrap gap-y-4'>
                 {section.data.map((item) => (
-                  <li key={item.label + index} className="w-1/2 lg:w-1/3 pr-4 break-words">
-                    <h4 className="font-semibold capitalize inline-flex items-center flex-nowrap gap-1">
+                  <li key={item.label + index} className='w-1/2 lg:w-1/3 pr-4 break-words'>
+                    <h4 className='font-semibold capitalize inline-flex items-center flex-nowrap gap-1'>
                       {item.label}
                       {item.isLink ? <CopyBtn value={item.value} /> : null}
                     </h4>
                     {item.isLink ? (
                       <Link
                         href={item.value}
-                        className="block truncate rounded-full border px-2.5 py-0.5 text-xs"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        className='block truncate rounded-full border px-2.5 py-0.5 text-xs'
+                        target='_blank'
+                        rel='noopener noreferrer'
                         prefetch={false}
                       >
                         {item.value}
                       </Link>
                     ) : (
-                      <p className="text-sm capitalize">{item.value || 'N/A'}</p>
+                      <p className='text-sm capitalize'>{item.value || 'N/A'}</p>
                     )}
                   </li>
                 ))}
