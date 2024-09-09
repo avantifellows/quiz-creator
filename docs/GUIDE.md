@@ -52,12 +52,129 @@
 - **_action-type_** - `create` | `edit` | `duplicate`
 - **_active-step_** - `basic` | `platform` | `timeline`
 
+## Sample Session
+
+<details>
+<summary>Sample Quiz Session</summary>
+
+```json
+{
+  "auth_type": "ID",
+  "created_by_id": null,
+  "end_time": "2024-08-26T16:00:00Z",
+  "id": 825,
+  "id_generation": false,
+  "inserted_at": "2024-08-19T11:54:57",
+  "is_active": true,
+  "meta_data": {
+    "admin_testing_link": "https://staging-quiz.avantifellows.org/quiz/66c5fb6b23b8aa8bac7665d4?apiKey=6qOO8UdF1EGxLgzwIbQN&userId=test_admin",
+    "batch_id": "HaryanaStudents_9_Foundation_24_001",
+    "cms_test_id": "https://cms.peerlearning.com/chapter_tests/6556f6763562d97a6300aa35",
+    "course": "Foundation",
+    "date_created": "2024-08-19T17:24:57.292Z",
+    "grade": 9,
+    "group": "HaryanaStudents",
+    "has_synced_to_bq": false,
+    "infinite_session": false,
+    "marking_scheme": "4,-1",
+    "number_of_fields_in_popup_form": "",
+    "optional_limits": "N/A",
+    "parent_id": "HR-9-Foundation-24",
+    "report_link": "https://lnk.avantifellows.org/8KdG",
+    "shortened_link": "https://lnk.avantifellows.org/Jtcn",
+    "show_answers": false,
+    "status": "success",
+    "stream": "pcmb",
+    "test_format": "mock_test",
+    "test_purpose": "one_time",
+    "test_takers_count": 10,
+    "test_type": "assessment"
+  },
+  "name": "Cypress Quiz Session",
+  "owner_id": null,
+  "platform": "quiz",
+  "platform_id": "66c5fb6b23b8aa8bac7665d4",
+  "platform_link": "66c5fb6b23b8aa8bac7665d4",
+  "popup_form": false,
+  "popup_form_id": null,
+  "portal_link": "https://staging-auth.avantifellows.org?sessionId=HaryanaStudents_66c5fb6b23b8aa8bac7665d4",
+  "purpose": {
+    "params": "quiz",
+    "type": "attendance"
+  },
+  "redirection": true,
+  "repeat_schedule": {
+    "params": [1, 2, 3, 4, 5],
+    "type": "weekly"
+  },
+  "session_id": "HaryanaStudents_66c5fb6b23b8aa8bac7665d4",
+  "signup_form": false,
+  "signup_form_id": null,
+  "start_time": "2024-08-19T10:00:00Z",
+  "type": "sign-in",
+  "updated_at": "2024-08-21T14:36:30"
+}
+```
+
+</details>
+
+<details>
+<summary>Sample Live Session</summary>
+
+```json
+{
+  "auth_type": "ID",
+  "created_by_id": null,
+  "end_time": "2024-08-23T20:00:00Z",
+  "id": 826,
+  "id_generation": false,
+  "inserted_at": "2024-08-19T12:21:29",
+  "is_active": true,
+  "meta_data": {
+    "batch_id": "HaryanaStudents_9_Foundation_24_001,HaryanaStudents_10_Foundation_24_001",
+    "date_created": "2024-08-19T17:51:28.813Z",
+    "grade": 9,
+    "group": "HaryanaStudents",
+    "number_of_fields_in_popup_form": "",
+    "parent_id": "",
+    "shortened_link": "https://lnk.avantifellows.org/L7gH",
+    "status": "success",
+    "subject": "Maths,Physics",
+    "test_takers_count": 10
+  },
+  "name": "Cypress Live Session Edit",
+  "owner_id": null,
+  "platform": "youtube",
+  "platform_id": "jfKfPfyJRdk",
+  "platform_link": "https://www.youtube.com/live/jfKfPfyJRdk",
+  "popup_form": false,
+  "popup_form_id": null,
+  "portal_link": "https://staging-auth.avantifellows.org?sessionId=HaryanaStudents_HaryanaStudents_9_Foundation_24_001,HaryanaStudents_10_Foundation_24_001_45523_jfKfPfyJRdk",
+  "purpose": {
+    "sub-type": "liveclass"
+  },
+  "redirection": true,
+  "repeat_schedule": {
+    "params": [1, 2, 3, 4, 5, 6, 7],
+    "type": "weekly"
+  },
+  "session_id": "HaryanaStudents_HaryanaStudents_9_Foundation_24_001,HaryanaStudents_10_Foundation_24_001_45523_jfKfPfyJRdk",
+  "signup_form": false,
+  "signup_form_id": null,
+  "start_time": "2024-08-19T08:00:00Z",
+  "type": "sign-in",
+  "updated_at": "2024-08-19T12:28:26"
+}
+```
+
+</details>
+
 ## Diagrams
 
 <details>
 <summary>Architecture</summary>
 
-![Architecture Diagram](../docs/images/architecture.png)
+![Architecture Diagram](./images/architecture.png)
 
 </details>
 
@@ -65,15 +182,7 @@
 
 <summary>Sequence Diagram</summary>
 
-![Sequence Diagram](../docs/images/sequence.png)
-
-</details>
-
-<details>
-
-<summary>CI/CD Flow Diagram</summary>
-
-![CI CD Flow](../docs/images/ci-cd-flow.png)
+![Sequence Diagram](./images/sequence.png)
 
 </details>
 
