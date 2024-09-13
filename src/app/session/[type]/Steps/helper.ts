@@ -121,7 +121,9 @@ export const setParentBatchOptions = (
         (item) => item.groupId === TNStudentsId && !item.parentId === isQuizSession
       ) ?? [];
   } else if (authGroupSelected?.value == Group.GujaratSchools) {
-    const GujaratStudentsId = apiOptions.group?.find((item) => item.value === Group.GujaratStudents)?.id;    
+    const GujaratStudentsId = apiOptions.group?.find(
+      (item) => item.value === Group.GujaratStudents
+    )?.id;
 
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
