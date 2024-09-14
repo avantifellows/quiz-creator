@@ -49,7 +49,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
       break;
 
     case Group.Delhi:
-    case Group.Gujarat:
+    case Group.GujaratStudents:
     case Group.Himachal:
     case Group.FeedingIndia:
       newDefaultData = {
@@ -119,6 +119,15 @@ export const setParentBatchOptions = (
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
         (item) => item.groupId === TNStudentsId && !item.parentId === isQuizSession
+      ) ?? [];
+  } else if (authGroupSelected?.value == Group.GujaratSchools) {
+    const GujaratStudentsId = apiOptions.group?.find(
+      (item) => item.value === Group.GujaratStudents
+    )?.id;
+
+    filteredQuizBatchOptions =
+      apiOptions?.batch?.filter(
+        (item) => item.groupId === GujaratStudentsId && !item.parentId === isQuizSession
       ) ?? [];
   } else {
     filteredQuizBatchOptions =
