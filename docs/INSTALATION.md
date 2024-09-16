@@ -3,8 +3,12 @@
 ## Prerequisites
 
 - Node.js and npm (or yarn/pnpm) [Download](https://nodejs.org/en/download)
-
-- Docker and Docker Compose [Download](https://docs.docker.com/get-docker/)
+  - Node --version: `>=20`
+  - Use [(Node Version Manager (nvm)](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating) to manage the version of node.
+  - After installing `nvm` install v20 of node, that will install `node v20` along with supported `npm` version.
+    ```bash
+    nvm install 20
+    ```
 
 ## Setup Instructions
 
@@ -18,6 +22,7 @@
 
    ```bash
    cd quiz-creator
+   nvm use 20
    npm ci
    ```
 
