@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { absoluteLink } from '@/lib/utils';
-import { patchSession } from '@/services/services';
+import { patchSession, sendRegenerateSns } from '@/services/services';
 import { type Session, STATUS } from '@/types';
 import { AlertTriangle, Copy, LinkIcon, Loader, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
@@ -62,12 +62,12 @@ const TableActions = ({ session }: { session: Session }) => {
             {session.is_active ? 'Disable' : 'Enable'} Session
           </Button>
         </DropdownMenuItem>
-        {/* <DropdownMenuItem asChild className="cursor-pointer">
+        <DropdownMenuItem asChild className='cursor-pointer'>
           <Button
-            variant="ghost"
-            className="w-full focus-visible:ring-0 justify-start font-normal"
+            variant='ghost'
+            className='w-full focus-visible:ring-0 justify-start font-normal'
             onClick={() => {
-              sendCreateSns(session.id);
+              sendRegenerateSns(session.id);
               toast.success('Request send successfully', {
                 description:
                   'The links will be available/updated shortly. Please refresh the page after a while.',
@@ -76,7 +76,7 @@ const TableActions = ({ session }: { session: Session }) => {
           >
             Regenerate Links
           </Button>
-        </DropdownMenuItem> */}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
