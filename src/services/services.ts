@@ -158,7 +158,7 @@ export async function createSession(formData: Session) {
 
 export const sendCreateSns = (id?: number) => publishMessage({ action: 'db_id', id });
 
-export const sendRegenerateSns = (id?: number) => publishMessage({action: 'regenerate_quiz', id });
+export const sendRegenerateSns = (id?: number) => publishMessage({ action: 'regenerate_quiz', id });
 
 /**
  * Patches a session on the server.

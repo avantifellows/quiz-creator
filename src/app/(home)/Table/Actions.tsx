@@ -62,10 +62,10 @@ const TableActions = ({ session }: { session: Session }) => {
             {session.is_active ? 'Disable' : 'Enable'} Session
           </Button>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild className="cursor-pointer">
+        <DropdownMenuItem asChild className='cursor-pointer'>
           <Button
-            variant="ghost"
-            className="w-full focus-visible:ring-0 justify-start font-normal"
+            variant='ghost'
+            className='w-full focus-visible:ring-0 justify-start font-normal'
             onClick={() => {
               sendRegenerateSns(session.id);
               toast.success('Request send successfully', {
