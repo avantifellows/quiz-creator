@@ -129,6 +129,15 @@ export const setParentBatchOptions = (
       apiOptions?.batch?.filter(
         (item) => item.groupId === GujaratStudentsId && !item.parentId === isQuizSession
       ) ?? [];
+  } else if (authGroupSelected?.value == Group.PunjabSchools) {
+    const PunjabStudentsId = apiOptions.group?.find(
+      (item) => item.value === Group.PunjabStudents
+    )?.id;
+
+    filteredQuizBatchOptions =
+      apiOptions?.batch?.filter(
+        (item) => item.groupId === PunjabStudentsId && !item.parentId === isQuizSession
+      ) ?? [];
   } else {
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
