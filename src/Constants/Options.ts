@@ -33,6 +33,7 @@ export const TestPurposeOptions: Option[] = [
   { value: 'reshuffling_test', label: 'Reshuffling Test' },
   { value: 'selection_test', label: 'Selection Test' },
   { value: 'one_time', label: 'One Time Test' },
+  { value: 'practice_test', label: 'Practice Test' },
   { value: 'class_hw', label: 'Class Homework' },
   { value: 'assignment', label: 'Assignment' },
 ];
