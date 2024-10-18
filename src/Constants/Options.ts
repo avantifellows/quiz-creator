@@ -73,6 +73,7 @@ export const StreamOptions: Option[] = [
   { value: 'medical', label: 'Medical' },
   { value: 'maths', label: 'Maths' },
   { value: 'science', label: 'Science' },
+  { value: 'maths_science', label: 'Maths Science' },
   { value: 'physics', label: 'Physics' },
   { value: 'chemistry', label: 'Chemistry' },
   { value: 'biology', label: 'Biology' },
