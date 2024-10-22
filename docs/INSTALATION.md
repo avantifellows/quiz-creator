@@ -60,6 +60,20 @@
    npm run start
    ```
 
+## Run Docker Container
+
+1. **Build the Docker image:**
+
+   ```bash
+   docker build -t quiz-creator .
+   ```
+
+2. **Run the Docker container:**
+
+   ```bash
+   docker run --env-file .env -p 3000:3000 quiz-creator
+   ```
+
 ## Other Useful Scripts
 
 1. **Linting & Formating:**
