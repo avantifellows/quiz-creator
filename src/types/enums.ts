@@ -93,7 +93,7 @@ export enum Subjects {
   AllSubjects = 'AllSubjects',
 }
 
-export const Grades = [9, 10, 11, 12, 13] as const;
+export const Grades = [6, 7, 8, 9, 10, 11, 12, 13] as const;
 
 export const MARKING_SCHEMES = {
   '4,-1': '4,-1',
