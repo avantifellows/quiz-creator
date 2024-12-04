@@ -86,6 +86,10 @@ const QuizForm: FC = () => {
         type: 'switch',
         label: 'Show Answers?',
       },
+      showScores: {
+        type: 'switch',
+        label: 'Show Scores?',
+      }
     }),
     []
   );
@@ -101,6 +105,7 @@ const QuizForm: FC = () => {
       markingScheme: formData.meta_data?.marking_scheme,
       optionalLimit: formData.meta_data?.optional_limits,
       showAnswers: formData.meta_data?.show_answers,
+      showScores: formData.meta_data?.show_scores,
     }),
     [formData]
   );
@@ -119,6 +124,7 @@ const QuizForm: FC = () => {
         optional_limits: data.optionalLimit,
         cms_test_id: data.cmsUrl,
         show_answers: data.showAnswers,
+        show_scores: data.showScores,
       },
     };
     updateFormData(addedData, Steps.TIMELINE);

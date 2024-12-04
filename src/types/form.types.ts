@@ -163,6 +163,7 @@ export const quizSchema = z.object({
       'Invalid option selected'
     ),
   showAnswers: z.coerce.boolean(),
+  showScores: z.coerce.boolean(),
 });
 
 export const timelineSchema = z

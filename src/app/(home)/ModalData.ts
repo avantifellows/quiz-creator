@@ -71,6 +71,7 @@ export const displayData = (data: Session, formOptions: Option[]) => {
       { label: 'Marking Scheme', value: data.meta_data?.marking_scheme },
       { label: 'Optional Limits', value: data.meta_data?.optional_limits },
       { label: 'Show Answers', value: data.meta_data?.show_answers ? 'Yes' : 'No' },
+      { label: 'Show Scores', value: data.meta_data?.show_scores ? 'Yes' : 'No' },
       {
         label: 'CMS Link',
         value: data.meta_data?.cms_test_id ? absoluteLink(data.meta_data?.cms_test_id) : 'N/A',

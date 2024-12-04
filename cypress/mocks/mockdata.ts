@@ -42,6 +42,7 @@ export const CreateQuizData = {
   cmsUrl: 'https://cms.peerlearning.com/chapter_tests/6556f6763562d97a6300aa35',
   optionalLimit: OptionalLimitOptions.find((i) => i.value === 'N/A')!,
   showAnswers: false,
+  showScores: true,
 
   // Timeline Details
   startDate: getDateWithTime({ hours: 10, minutes: 0 }),

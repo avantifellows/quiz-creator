@@ -266,6 +266,7 @@ export const handleRedirectionData = (formData: Session) => {
         optional_limits: '',
         cms_test_id: '',
         show_answers: false,
+        show_scores: true,
       },
     };
   } else {

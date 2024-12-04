@@ -56,6 +56,7 @@ describe('Quiz Session', () => {
     cy.customInput('cmsUrl', create.cmsUrl);
     cy.customSelect('optionalLimit', create.optionalLimit);
     cy.customSwitch('showAnswers', create.showAnswers);
+    cy.customSwitch('showScores', create.showScores);
 
     // Click on next
     cy.get('button').contains('Next').click();

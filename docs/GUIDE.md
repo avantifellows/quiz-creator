@@ -83,6 +83,7 @@
     "report_link": "https://lnk.avantifellows.org/8KdG",
     "shortened_link": "https://lnk.avantifellows.org/Jtcn",
     "show_answers": false,
+    "show_scores": false,
     "status": "success",
     "stream": "pcmb",
     "test_format": "mock_test",
