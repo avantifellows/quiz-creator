@@ -105,8 +105,8 @@ const QuizForm: FC = () => {
       cmsUrl: formData.meta_data?.cms_test_id,
       markingScheme: formData.meta_data?.marking_scheme,
       optionalLimit: formData.meta_data?.optional_limits,
-      showAnswers: formData.meta_data?.show_answers,
-      showScores: formData.meta_data?.show_scores,
+      showAnswers: formData.meta_data?.show_answers == false ? false : true,
+      showScores: formData.meta_data?.show_scores == false ? false : true,
     }),
     [formData]
   );
