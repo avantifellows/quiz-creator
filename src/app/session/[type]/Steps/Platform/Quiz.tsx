@@ -89,7 +89,7 @@ const QuizForm: FC = () => {
       showScores: {
         type: 'switch',
         label: 'Show Scores?',
-        defaultValue: true
+        defaultValue: "Yes"
       }
     }),
     []
