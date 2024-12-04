@@ -3,7 +3,7 @@ import { AuthType, Grades, MARKING_SCHEMES, Option, Platform, Subjects } from '@
 export const TestTypeOptions: Option[] = [
   { value: 'assessment', label: 'Assessment' },
   { value: 'homework', label: 'Homework' },
-  { value: 'omr-assessment', label: 'Omr-Assessment' },
+  // { value: 'omr-assessment', label: 'Omr-Assessment' },
 ];
 
 export const SessionTypeOptions: Option[] = [
