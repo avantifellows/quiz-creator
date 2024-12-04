@@ -119,6 +119,7 @@ export async function createSession(formData: Session) {
           ...formData.meta_data,
           report_link: '',
           shortened_link: '',
+          shortened_omr_link: '',
           has_synced_to_bq: false,
           infinite_session: false,
           status: STATUS.PENDING,

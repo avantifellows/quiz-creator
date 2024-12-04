@@ -3,6 +3,7 @@ import { STATUS } from './enums';
 
 const metaDataSchema = z.object({
   admin_testing_link: z.string().url().optional(),
+  admin_testing_omr_link: z.string().url().optional(),
   parent_id: z.string().optional(),
   batch_id: z.string().optional(),
   cms_test_id: z.string().url().optional(),
@@ -20,6 +21,7 @@ const metaDataSchema = z.object({
   optional_limits: z.string().optional(),
   report_link: z.string().url().optional(),
   shortened_link: z.string().url().optional(),
+  shortened_omr_link: z.string().url().optional(),
   stream: z.string().optional(),
   test_format: z.string().optional(),
   test_purpose: z.string().optional(),

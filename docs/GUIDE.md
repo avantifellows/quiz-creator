@@ -82,6 +82,7 @@
     "parent_id": "HR-9-Foundation-24",
     "report_link": "https://lnk.avantifellows.org/8KdG",
     "shortened_link": "https://lnk.avantifellows.org/Jtcn",
+    "shortened_omr_link": "https://lnk.avantifellows.org/Jtcn",
     "show_answers": false,
     "show_scores": true,
     "status": "success",
@@ -139,6 +140,7 @@
     "number_of_fields_in_popup_form": "",
     "parent_id": "",
     "shortened_link": "https://lnk.avantifellows.org/L7gH",
+    "shortened_omr_link": "https://lnk.avantifellows.org/Jtcn",
     "status": "success",
     "subject": "Maths,Physics",
     "test_takers_count": 10

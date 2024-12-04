@@ -90,9 +90,23 @@ export const displayData = (data: Session, formOptions: Option[]) => {
         isLink: !!data.meta_data?.shortened_link,
       },
       {
+        label: 'Shortened OMR Link',
+        value: data.meta_data?.shortened_omr_link
+          ? absoluteLink(data.meta_data?.shortened_omr_link)
+          : 'N/A',
+        isLink: !!data.meta_data?.shortened_omr_link,
+      },
+      {
         label: 'Admin Link',
         value: data.meta_data?.admin_testing_link
           ? absoluteLink(data.meta_data?.admin_testing_link)
+          : 'N/A',
+        isLink: !!data.meta_data?.admin_testing_link,
+      },
+      {
+        label: 'Admin OMR Link',
+        value: data.meta_data?.admin_testing_link + "&omrMode=true"
+          ? absoluteLink(data.meta_data?.admin_testing_link + "&omrMode=true")
           : 'N/A',
         isLink: !!data.meta_data?.admin_testing_link,
       },
@@ -118,6 +132,13 @@ export const displayData = (data: Session, formOptions: Option[]) => {
         label: 'Shortened Link',
         value: data.meta_data?.shortened_link
           ? absoluteLink(data.meta_data?.shortened_link)
+          : 'N/A',
+        isLink: !!data.portal_link,
+      },
+      {
+        label: 'Shortened OMR Link',
+        value: data.meta_data?.shortened_omr_link
+          ? absoluteLink(data.meta_data?.shortened_omr_link)
           : 'N/A',
         isLink: !!data.portal_link,
       },

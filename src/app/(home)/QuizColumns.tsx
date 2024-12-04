@@ -79,6 +79,14 @@ export const columns: ColumnDef<Session>[] = [
     ),
   },
   {
+    id: 'adminOmrLink',
+    accessorKey: 'meta_data.admin_testing_link' + "&omrMode=true",
+    header: 'Admin OMR Link',
+    cell: ({ row }) => (
+      <LinkAction value={row.getValue('adminOmrLink')} status={row.original.meta_data?.status} />
+    ),
+  },
+  {
     id: 'isEnabled',
     accessorKey: 'is_active',
     header: 'Enabled',
