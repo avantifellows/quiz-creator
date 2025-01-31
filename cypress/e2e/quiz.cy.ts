@@ -223,7 +223,6 @@ describe('Quiz Session', () => {
             'select[name="testType"]',
             'input[name="cmsUrl"]',
             'select[name="optionalLimit"]',
-            'select[name="gurukulFormatType"]',
           ]);
 
           cy.get('button').contains('Next').click();
