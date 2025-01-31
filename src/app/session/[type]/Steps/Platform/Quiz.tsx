@@ -67,7 +67,6 @@ const QuizForm: FC = () => {
         options: GurukulFormatOptions,
         placeholder: 'Select the Quiz Format to display',
         label: 'Quiz Display Format',
-        disabled: type === SessionType.EDIT,
       },
       cmsUrl: {
         type: 'text',
