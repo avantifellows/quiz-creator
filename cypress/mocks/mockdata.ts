@@ -8,6 +8,7 @@ import {
   TestFormatOptions,
   TestPurposeOptions,
   TestTypeOptions,
+  GurukulFormatOptions
 } from '@/Constants';
 import { AuthType, Group, Platform, Subjects } from '@/types';
 import { getDateWithTime } from '../support/utils';
@@ -39,6 +40,7 @@ export const CreateQuizData = {
   testFormat: TestFormatOptions.find((i) => i.value === 'mock_test')!,
   testPurpose: TestPurposeOptions.find((i) => i.value === 'one_time')!,
   testType: TestTypeOptions.find((i) => i.value === 'assessment')!,
+  gurukulFormatType: GurukulFormatOptions.find((i) => i.value === 'qa')!,
   cmsUrl: 'https://cms.peerlearning.com/chapter_tests/6556f6763562d97a6300aa35',
   optionalLimit: OptionalLimitOptions.find((i) => i.value === 'N/A')!,
   showAnswers: false,
@@ -64,6 +66,7 @@ export const PatchQuizData = {
 export const DuplicateQuizData = {
   name: 'Cypress Quiz Session Duplicate',
   testType: TestTypeOptions.find((i) => i.value === 'homework')!,
+  gurukulFormatType: GurukulFormatOptions.find((i) => i.value === 'omr')!,
   cmsUrl: 'https://cms.peerlearning.com/chapter_tests/6556f6763562d97a6300aa35',
   startDate: getDateWithTime({ hours: 14, minutes: 20 }, 1),
   endDate: getDateWithTime({ hours: 15, minutes: 50 }, 3),
