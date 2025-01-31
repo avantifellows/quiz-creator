@@ -8,7 +8,7 @@ import {
   TestFormatOptions,
   TestPurposeOptions,
   TestTypeOptions,
-  GurukulFormatOptions
+  GurukulFormatOptions,
 } from '@/Constants';
 import { AuthType, Group, Platform, Subjects } from '@/types';
 import { getDateWithTime } from '../support/utils';

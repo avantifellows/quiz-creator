@@ -91,7 +91,7 @@
     "test_purpose": "one_time",
     "test_takers_count": 10,
     "test_type": "assessment",
-    "gurukul_format_type": "qa",
+    "gurukul_format_type": "qa"
   },
   "name": "Cypress Quiz Session",
   "owner_id": null,

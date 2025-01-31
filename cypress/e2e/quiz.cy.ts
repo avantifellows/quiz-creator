@@ -133,7 +133,10 @@ describe('Quiz Session', () => {
       cy.get('@quizDetails').eq(2).children('p').should('contain.text', create.testFormat.label);
       cy.get('@quizDetails').eq(3).children('p').should('contain', create.testPurpose.label);
       cy.get('@quizDetails').eq(4).children('p').should('contain.text', create.testType.label);
-      cy.get('@quizDetails').eq(4).children('p').should('contain.text', create.gurukulFormatType.label);
+      cy.get('@quizDetails')
+        .eq(4)
+        .children('p')
+        .should('contain.text', create.gurukulFormatType.label);
       cy.get('@quizDetails').eq(6).children('p').should('contain.text', create.optionalLimit.value);
       cy.get('@quizDetails')
         .eq(8)
