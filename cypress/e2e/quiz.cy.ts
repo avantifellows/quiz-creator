@@ -53,6 +53,7 @@ describe('Quiz Session', () => {
     cy.customSelect('testFormat', create.testFormat);
     cy.customSelect('testPurpose', create.testPurpose);
     cy.customSelect('testType', create.testType);
+    cy.customSelect('gurukulFormatType', create.gurukulFormatType);
     cy.customInput('cmsUrl', create.cmsUrl);
     cy.customSelect('optionalLimit', create.optionalLimit);
     cy.customSwitch('showAnswers', create.showAnswers);
@@ -132,9 +133,13 @@ describe('Quiz Session', () => {
       cy.get('@quizDetails').eq(2).children('p').should('contain.text', create.testFormat.label);
       cy.get('@quizDetails').eq(3).children('p').should('contain', create.testPurpose.label);
       cy.get('@quizDetails').eq(4).children('p').should('contain.text', create.testType.label);
-      cy.get('@quizDetails').eq(6).children('p').should('contain.text', create.optionalLimit.value);
       cy.get('@quizDetails')
-        .eq(8)
+        .eq(5)
+        .children('p')
+        .should('contain.text', create.gurukulFormatType.label);
+      cy.get('@quizDetails').eq(7).children('p').should('contain.text', create.optionalLimit.value);
+      cy.get('@quizDetails')
+        .eq(10)
         .children('a')
         .should('contain.text', create.cmsUrl)
         .should('have.attr', 'href', create.cmsUrl);
@@ -320,6 +325,7 @@ describe('Quiz Session', () => {
 
           // Fill platform details
           cy.customSelect('testType', duplicate.testType);
+          cy.customSelect('gurukulFormatType', duplicate.gurukulFormatType);
           cy.customInput('cmsUrl', duplicate.cmsUrl);
 
           cy.get('button').contains('Next').click();

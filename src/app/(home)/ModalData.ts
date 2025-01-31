@@ -4,6 +4,7 @@ import {
   TestFormatOptions,
   TestPurposeOptions,
   TestTypeOptions,
+  GurukulFormatOptions,
 } from '@/Constants';
 import { absoluteLink } from '@/lib/utils';
 import { DataSection, Option, Session } from '@/types';
@@ -68,6 +69,14 @@ export const displayData = (data: Session, formOptions: Option[]) => {
           TestTypeOptions.find((i) => i.value === data.meta_data?.test_type)?.label ??
           data.meta_data?.test_type,
       },
+      {
+        label: 'Gurukul Format',
+        value:
+          GurukulFormatOptions.find((i) => i.value === data.meta_data?.gurukul_format_type)
+            ?.label ??
+          data.meta_data?.gurukul_format_type ??
+          'both',
+      },
       { label: 'Marking Scheme', value: data.meta_data?.marking_scheme },
       { label: 'Optional Limits', value: data.meta_data?.optional_limits },
       { label: 'Show Answers', value: data.meta_data?.show_answers ? 'Yes' : 'No' },
@@ -105,9 +114,10 @@ export const displayData = (data: Session, formOptions: Option[]) => {
       },
       {
         label: 'Admin OMR Link',
-        value: data.meta_data?.admin_testing_link + "&omrMode=true"
-          ? absoluteLink(data.meta_data?.admin_testing_link + "&omrMode=true")
-          : 'N/A',
+        value:
+          data.meta_data?.admin_testing_link + '&omrMode=true'
+            ? absoluteLink(data.meta_data?.admin_testing_link + '&omrMode=true')
+            : 'N/A',
         isLink: !!data.meta_data?.admin_testing_link,
       },
       {

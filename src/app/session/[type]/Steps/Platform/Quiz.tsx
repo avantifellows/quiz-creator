@@ -8,6 +8,7 @@ import {
   TestFormatOptions,
   TestPurposeOptions,
   TestTypeOptions,
+  GurukulFormatOptions,
 } from '@/Constants';
 import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
@@ -61,6 +62,12 @@ const QuizForm: FC = () => {
         label: 'Test Type',
         disabled: type === SessionType.EDIT,
       },
+      gurukulFormatType: {
+        type: 'select',
+        options: GurukulFormatOptions,
+        placeholder: 'Select the Quiz Format to display',
+        label: 'Quiz Display Format',
+      },
       cmsUrl: {
         type: 'text',
         label: 'Cms Url',
@@ -89,8 +96,8 @@ const QuizForm: FC = () => {
       showScores: {
         type: 'switch',
         label: 'Show Scores?',
-        defaultValue: "Yes"
-      }
+        defaultValue: 'Yes',
+      },
     }),
     []
   );
@@ -102,6 +109,7 @@ const QuizForm: FC = () => {
       testFormat: formData.meta_data?.test_format,
       testPurpose: formData.meta_data?.test_purpose,
       testType: formData.meta_data?.test_type,
+      gurukulFormatType: formData.meta_data?.gurukul_format_type,
       cmsUrl: formData.meta_data?.cms_test_id,
       markingScheme: formData.meta_data?.marking_scheme,
       optionalLimit: formData.meta_data?.optional_limits,
@@ -121,6 +129,7 @@ const QuizForm: FC = () => {
         test_format: data.testFormat,
         test_purpose: data.testPurpose,
         test_type: data.testType,
+        gurukul_format_type: data.gurukulFormatType,
         marking_scheme: isHomework ? MARKING_SCHEMES['1, 0'] : MARKING_SCHEMES['4,-1'],
         optional_limits: data.optionalLimit,
         cms_test_id: data.cmsUrl,

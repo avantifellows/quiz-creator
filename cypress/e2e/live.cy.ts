@@ -125,7 +125,7 @@ describe('Live Session', () => {
         .children('p')
         .should('contain.text', create.subject.map((s) => s.label).join(','));
       cy.get('@LiveDetails').eq(2).children('p').should('contain.text', create.platformId);
-      cy.get('@LiveDetails').eq(4).children('a').should('contain.text', create.platformLink);
+      cy.get('@LiveDetails').eq(5).children('a').should('contain.text', create.platformLink);
 
       // Verify timeline details
       cy.wrap($dialog)

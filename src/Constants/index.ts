@@ -37,6 +37,7 @@ export const KeysToDeleteBeforeDuplicate: DeepKeys<Session>[] = [
   'meta_data.admin_testing_link',
   'meta_data.cms_test_id',
   'meta_data.test_type',
+  'meta_data.gurukul_format_type',
   'meta_data.report_link',
   'meta_data.shortened_link',
   'meta_data.shortened_omr_link',

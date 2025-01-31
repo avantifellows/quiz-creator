@@ -6,6 +6,12 @@ export const TestTypeOptions: Option[] = [
   // { value: 'omr-assessment', label: 'Omr-Assessment' },
 ];
 
+export const GurukulFormatOptions: Option[] = [
+  { value: 'qa', label: 'Q & A' },
+  { value: 'omr', label: 'OMR' },
+  { value: 'both', label: 'Both' },
+];
+
 export const SessionTypeOptions: Option[] = [
   { value: 'sign-in', label: 'SignIn' },
   { value: 'sign-up', label: 'SignUp' },
