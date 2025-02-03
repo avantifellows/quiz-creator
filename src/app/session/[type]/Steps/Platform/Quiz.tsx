@@ -65,7 +65,7 @@ const QuizForm: FC = () => {
       gurukulFormatType: {
         type: 'select',
         options: GurukulFormatOptions,
-        placeholder: 'Select the Quiz Format to display',
+        placeholder: 'Select the Quiz Format to display on Gurukul',
         label: 'Quiz Display Format',
       },
       cmsUrl: {
