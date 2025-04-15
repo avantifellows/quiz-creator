@@ -25,7 +25,7 @@ import {
   setParentBatchOptions,
 } from '../helper';
 
-const opt = ['a', 'b'].map((val) => ({ value: val, label: val }));
+const opt = ['a', 'b', 'c'].map((val) => ({ value: val, label: val }));
 
 const BasicForm: FC = () => {
   const { type } = useParams<SessionParams>();
