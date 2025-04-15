@@ -25,11 +25,14 @@ import {
   setParentBatchOptions,
 } from '../helper';
 
+const opt = ['a', 'b', 'c'].map((val) => ({ value: val, label: val }));
+
 const BasicForm: FC = () => {
   const { type } = useParams<SessionParams>();
   const { formData, apiOptions = {}, updateFormData } = useFormContext();
   const isMounted = useRef(false);
 
+  console.log(apiOptions?.group?.length);
   let fieldsSchema: FieldSchema<basicFields> = useMemo(
     () => ({
       name: {
@@ -48,7 +51,7 @@ const BasicForm: FC = () => {
       },
       group: {
         type: 'select',
-        options: apiOptions?.group,
+        options: apiOptions?.group?.length == 0 ? opt : apiOptions?.group,
         placeholder: 'Select a group',
         label: 'Group',
         disabled: type === SessionType.EDIT,
@@ -67,12 +70,14 @@ const BasicForm: FC = () => {
         onValueChange: (value, form) => {
           setBatchOptions(value, form, apiOptions, fieldsSchema);
         },
+        options: opt,
       },
       subBatch: {
         type: 'multi-select',
         placeholder: 'Select a class batch',
         label: 'Class Batch',
         disabled: type === SessionType.EDIT,
+        options: opt,
       },
       grade: {
         type: 'select',
