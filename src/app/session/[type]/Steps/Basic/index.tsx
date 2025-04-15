@@ -25,6 +25,8 @@ import {
   setParentBatchOptions,
 } from '../helper';
 
+const opt = ['a', 'b', 'c'].map((val) => ({ value: val, label: val }));
+
 const BasicForm: FC = () => {
   const { type } = useParams<SessionParams>();
   const { formData, apiOptions = {}, updateFormData } = useFormContext();
@@ -73,6 +75,7 @@ const BasicForm: FC = () => {
         placeholder: 'Select a class batch',
         label: 'Class Batch',
         disabled: type === SessionType.EDIT,
+        options: opt,
       },
       grade: {
         type: 'select',
