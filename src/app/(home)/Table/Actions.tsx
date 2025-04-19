@@ -29,12 +29,16 @@ const TableActions = ({ session }: { session: Session }) => {
           disabled={session.meta_data?.status === STATUS.PENDING}
         >
           <Link href={`/session/edit?id=${session.id}`} prefetch={false}>
-            Edit
+            <Button variant='ghost' className='w-full focus-visible:ring-0 justify-start font-normal' title='Edit the session'>
+              Edit
+            </Button>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className='cursor-pointer'>
           <Link href={`/session/duplicate?id=${session.id}`} prefetch={false}>
-            Duplicate
+            <Button variant='ghost' className='w-full focus-visible:ring-0 justify-start font-normal' title='Duplicate the session'>
+              Duplicate
+            </Button>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
@@ -58,6 +62,7 @@ const TableActions = ({ session }: { session: Session }) => {
                 description: 'Please refresh the page after a while.',
               });
             }}
+            title={session.is_active ? 'Disable the session' : 'Enable the session'}
           >
             {session.is_active ? 'Disable' : 'Enable'} Session
           </Button>
@@ -73,6 +78,7 @@ const TableActions = ({ session }: { session: Session }) => {
                   'The links will be available/updated shortly. Please refresh the page after a while.',
               });
             }}
+            title='Regenerate the session links'
           >
             Regenerate Links
           </Button>
@@ -105,6 +111,7 @@ const LinkAction = ({ value, status = STATUS.SUCCESS }: { value: string; status?
         rel='noopener noreferrer'
         className='inline-flex p-1'
         prefetch={false}
+        title='Open the link'
       >
         <LinkIcon className='size-4 mx-auto cursor-pointer' />
       </Link>
@@ -121,6 +128,7 @@ const CopyBtn = ({ value }: { value: string }) => {
         navigator.clipboard.writeText(value);
         toast.success('Copied Link to clipboard', { duration: 2000 });
       }}
+      title='Copy the link to clipboard'
     >
       <Copy className='size-4' />
     </Button>
