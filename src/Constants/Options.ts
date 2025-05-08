@@ -24,6 +24,7 @@ export const TestFormatOptions: Option[] = [
   { value: 'part_test', label: 'Part Test' },
   { value: 'major_test', label: 'Major Test' },
   { value: 'chapter_test', label: 'Chapter Test' },
+  { value: 'combined_chapter_test', label: 'Combined Chapter Test' },
   { value: 'full_syllabus_test', label: 'Full Syllabus Test' },
   { value: 'evaluation_test', label: 'Evaluation Test' },
   { value: 'hiring_test', label: 'Hiring Test' },
