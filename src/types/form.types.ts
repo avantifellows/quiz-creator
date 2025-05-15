@@ -255,7 +255,49 @@ export const liveSchema = z
     })
   );
 
+export const trackerFormSchema = z
+  .object({
+    teacher_id: z
+      .string({ required_error: 'Teacher ID is required' })
+      .min(1, 'Teacher ID is required'),
+    tracker_session_type: z
+      .string({ required_error: 'Tracker Session type is required' })
+      .min(1, 'Tracker Session type is required'),
+    sub_session: z.string().default('main'),
+    program_type: z
+      .string({ required_error: 'Program type is required' })
+      .min(1, 'Program type is required'),
+    school_name: z
+      .string({ required_error: 'School name is required' })
+      .min(1, 'School name is required'),
+    batch_year: z.string().optional(),
+    grade: z.string().optional(),
+    subject: z.string({ required_error: 'Subject is required' }).min(1, 'Subject is required'),
+    chapter: z.string().optional(),
+    topic: z.array(z.string()).optional().default([]),
+    session_date: z.coerce.date({
+      required_error: 'Session date is required',
+      message: 'This is not a valid date',
+    }),
+    session_duration: z
+      .string({ required_error: 'Duration is required' })
+      .min(1, 'Duration is required'),
+  })
+  .superRefine((data, context) => {
+    // Add any cross-field validations here if needed
+    // For example, if certain subject requires grade
+    if (data.subject && !data.grade) {
+      // This is just an example - modify based on your business rules
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Grade is required when subject is specified',
+        path: ['grade'],
+      });
+    }
+  });
+
 export type basicFields = z.infer<typeof basicSchema>;
 export type quizFields = z.infer<typeof quizSchema>;
 export type liveFields = z.infer<typeof liveSchema>;
 export type timelineFields = z.infer<typeof timelineSchema>;
+export type trackerFormFields = z.infer<typeof trackerFormSchema>;

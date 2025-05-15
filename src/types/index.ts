@@ -75,3 +75,26 @@ export interface FilterColumnSchema {
 export interface FilterSchema {
   [key: string]: FilterColumnSchema;
 }
+
+export type TrackerTableParams = {
+  page?: string;
+  per_page?: string;
+  teacher_id?: string;
+  school_name?: string;
+  program_type?: string;
+  tracker_session_type?: string;
+};
+
+export type TrackerFilterParams = {
+  sort_order: string;
+  limit: number;
+  offset: number;
+  teacher_id?: string;
+  school_name?: string;
+  program_type?: string;
+  tracker_session_type?: string;
+};
+
+export interface TrackerFilterSchema {
+  [key: string]: FilterColumnSchema;
+}

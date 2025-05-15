@@ -70,4 +70,24 @@ export const sessionSchema = z.object({
   updated_at: z.string().datetime(),
 });
 
+export const trackerSchema = z.object({
+  id: z.number().int().optional(),
+  teacher_id: z.string(),
+  tracker_type: z.string().default('regular'),
+  sub_session: z.string().default('main'),
+  program_type: z.string(),
+  school_name: z.string(),
+  batch_year: z.string().optional(),
+  grade: z.string().optional(),
+  subject: z.string(),
+  tracker_session_type: z.string(),
+  chapter: z.string().optional(),
+  topic: z.array(z.string()).default([]),
+  session_date: z.string().datetime(),
+  session_duration: z.string(),
+  inserted_at: z.string().datetime().optional(),
+  updated_at: z.string().datetime().optional(),
+});
+
 export type Session = Partial<z.infer<typeof sessionSchema>>;
+export type Tracker = Partial<z.infer<typeof trackerSchema>>;

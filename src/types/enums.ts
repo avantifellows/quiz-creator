@@ -105,3 +105,28 @@ export enum STATUS {
   FAILED = 'failed',
   PENDING = 'pending',
 }
+
+export enum TrackerType {
+  CREATE = 'create',
+  EDIT = 'edit',
+  DUPLICATE = 'duplicate',
+}
+
+export enum ProgramType {
+  StateCOE = 'State_COE',
+  Foundation = 'Foundation',
+  Enable = 'Enable',
+  Nodal = 'Nodal',
+  RegionalCOE = 'Regional_COE',
+}
+
+export enum TrackerSessionType {
+  Academics = 'Academics',
+  Operations = 'Operations',
+}
+
+export enum TrackerSubSessionType {
+  Revision = 'Revision',
+  ClassSuspended = 'Class_Suspended',
+  ClassSupervising = 'Class_Supervising',
+}

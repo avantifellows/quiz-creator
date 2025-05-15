@@ -288,3 +288,91 @@ export async function getFormSchemas() {
     return [];
   }
 }
+
+/**
+ * Creates a new tracker on the server.
+ * @param {TrackerFormValues} formData - The tracker data to be created.
+ * @return {Promise<{isSuccess: boolean; id: number}>}
+ */
+export async function createTracker(formData: any) {
+  try {
+    const { data } = await instance.post('/tracker', formData);
+    console.info(`[API SUCCESS] created tracker ${data?.id}`);
+    return { isSuccess: true, id: data?.id };
+  } catch (error) {
+    console.error('Error creating tracker', error);
+    return { isSuccess: false };
+  }
+}
+
+/**
+ * Updates an existing tracker on the server.
+ * @param {TrackerFormValues} formData - The tracker data to be updated.
+ * @param {number} id - The id of the tracker to be updated.
+ * @return {Promise<{isSuccess: boolean; id: number}>}
+ */
+export async function patchTracker(formData: any, id: number) {
+  try {
+    await instance.patch(`/tracker/${id}`, formData);
+    console.info(`[API SUCCESS] updated tracker ${id}`);
+    return { isSuccess: true, id };
+  } catch (error) {
+    console.error(`Error updating tracker ${id}`, error);
+    return { isSuccess: false };
+  }
+}
+
+/**
+ * Retrieves a particular tracker from the server.
+ * @param {number} id - The id of the tracker.
+ * @return {Promise<any>} - Tracker data for the given id
+ */
+export async function getTracker(id: number) {
+  try {
+    const { data } = await instance.get(`/tracker/${id}`);
+    console.info(`[API SUCCESS] fetched tracker ${id}`);
+    return data;
+  } catch (error) {
+    console.error(`Error fetching tracker ${id}`, error);
+    return null;
+  }
+}
+
+/**
+ * Retrieves form options for the tracker form.
+ * @return {Promise<any>} - Form options for the tracker form
+ */
+export async function getFormOptions() {
+  try {
+    const { data } = await instance.get('/tracker/form-options');
+    console.info('[API SUCCESS] fetched tracker form options');
+    return data;
+  } catch (error) {
+    console.error('Error fetching tracker form options', error);
+    return {
+      programTypes: [],
+      sessions: [],
+      subjects: [],
+      grades: [],
+      schools: {},
+      sessionTypes: {},
+      chapters: {},
+      topics: {},
+    };
+  }
+}
+
+export async function getTrackerData(searchParams: any) {
+  try {
+    const { data } = await instance.get('/tracker', { params: searchParams });
+    console.info('[API SUCCESS] fetched tracker data');
+    return {
+      data: data.items || [],
+      hasMore: data.hasMore || false,
+      apiOptions: data.apiOptions || {},
+    };
+  } catch (error) {
+    console.error('Error fetching tracker data', error);
+    return { data: [], hasMore: false, apiOptions: {} };
+  }
+}
