@@ -81,10 +81,12 @@ export const CreateLiveData = {
     {
       label: 'HaryanaStudents_9_Foundation_24_001',
       value: 'HaryanaStudents_9_Foundation_24_001',
+      name: '9B01',
     },
     {
       label: 'HaryanaStudents_10_Foundation_24_001',
       value: 'HaryanaStudents_10_Foundation_24_001',
+      name: '10B01',
     },
   ],
   grade: GradeOptions.find((i) => i.value === 9)!,

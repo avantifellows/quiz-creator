@@ -108,7 +108,7 @@ describe('Live Session', () => {
       cy.get('@basicDetails')
         .eq(5)
         .children('p')
-        .should('contain.text', create.subBatch.map((subBatch) => subBatch.label).join(','));
+        .should('contain.text', create.subBatch.map((subBatch) => subBatch.name).join(', '));
       cy.get('@basicDetails').eq(6).children('p').should('contain.text', create.authType.label);
       cy.get('@basicDetails').eq(7).children('p').should('contain.text', create.sessionType.value);
 
@@ -125,7 +125,7 @@ describe('Live Session', () => {
         .children('p')
         .should('contain.text', create.subject.map((s) => s.label).join(','));
       cy.get('@LiveDetails').eq(2).children('p').should('contain.text', create.platformId);
-      cy.get('@LiveDetails').eq(5).children('a').should('contain.text', create.platformLink);
+      cy.get('@LiveDetails').eq(3).children('a').should('contain.text', create.platformLink);
 
       // Verify timeline details
       cy.wrap($dialog)

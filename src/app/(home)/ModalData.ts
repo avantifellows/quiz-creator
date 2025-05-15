@@ -154,7 +154,7 @@ export const displayData = (
     data: [
       { label: 'Subject', value: data.meta_data?.subject ?? 'N/A' },
       {
-        label: 'Q&A Link',
+        label: 'Portal Link',
         value: data.meta_data?.shortened_link ? absoluteLink(data.meta_data.shortened_link) : 'N/A',
         isLink: !!data.meta_data?.shortened_link,
       },
