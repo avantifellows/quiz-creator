@@ -1,7 +1,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { Option, Session, STATUS } from '@/types';
+import { Option, Session, STATUS, ExtendedOptions } from '@/types';
 import { flexRender, type Table as TanStackTable } from '@tanstack/react-table';
 import Link from 'next/link';
 import { displayData } from '../ModalData';
@@ -10,10 +10,12 @@ import { CopyBtn } from './Actions';
 export const SheetTableRow = ({
   table,
   formOptions,
+  batchListOptions,
   pendingSessions,
 }: {
   table: TanStackTable<Session>;
   formOptions: Option[];
+  batchListOptions: ExtendedOptions[];
   pendingSessions: number[];
 }) => {
   return table.getRowModel().rows.map((row) => (
@@ -46,7 +48,7 @@ export const SheetTableRow = ({
               Edit
             </Link>
           </SheetHeader>
-          {displayData(row.original, formOptions).map((section, index) => (
+          {displayData(row.original, formOptions, batchListOptions).map((section, index) => (
             <div key={section.title + index} className='flex flex-col gap-2 py-4'>
               <h4 className='font-bold text-lg underline'>{section.title}</h4>
               <ul className='flex justify-between flex-wrap gap-y-4'>

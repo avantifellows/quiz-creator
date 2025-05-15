@@ -5,6 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { Check, X } from 'lucide-react';
 import { LinkAction, TableActions } from './Table/Actions';
+import { ApiFormOptions } from '@/types';
 
 export const columns: ColumnDef<Session>[] = [
   {
@@ -33,13 +34,54 @@ export const columns: ColumnDef<Session>[] = [
     id: 'parentId',
     accessorKey: 'meta_data.parent_id',
     header: 'Parent Batch',
-    cell: ({ row }) => row.getValue('parentId') || 'N/A',
+    cell: ({ row, table }) => {
+      const parentId = row.original.meta_data?.parent_id;
+      if (!parentId) return 'N/A';
+      const apiOptions = (table.options.meta as { apiOptions: ApiFormOptions })?.apiOptions;
+      const batchName = apiOptions?.batch?.find((b) => b.value === parentId)?.name;
+      return batchName || parentId;
+    },
   },
   {
     id: 'batchId',
     accessorKey: 'meta_data.batch_id',
-    header: 'Sub Batch',
-    cell: ({ row }) => row.getValue('batchId') || 'N/A',
+    header: 'Class Batch',
+    cell: ({ row, table }) => {
+      const batchIdsString = row.original.meta_data?.batch_id;
+      if (!batchIdsString) return 'N/A';
+      const apiOptions = (table.options.meta as { apiOptions: ApiFormOptions })?.apiOptions;
+      const batchIds = batchIdsString.split(',').map((id) => id.trim());
+      const batchNames = batchIds.map((idValue) => {
+        const name = apiOptions?.batch?.find((b) => b.value === idValue)?.name;
+        return name || idValue;
+      });
+      return <div className='whitespace-normal break-words'>{batchNames.join(', ')}</div>;
+    },
+  },
+  {
+    id: 'stream',
+    accessorKey: 'meta_data.stream',
+    header: 'Stream',
+    cell: ({ row }) => row.original.meta_data?.stream || 'N/A',
+  },
+  {
+    accessorKey: 'meta_data.grade',
+    header: 'Grade',
+    cell: ({ row }) => row.original.meta_data?.grade || 'N/A',
+  },
+  {
+    accessorKey: 'meta_data.test_format',
+    header: 'Test Format',
+    cell: ({ row }) => row.original.meta_data?.test_format || 'N/A',
+  },
+  {
+    id: 'start_date',
+    accessorKey: 'start_time',
+    header: 'Start Date',
+    cell: ({ row }) =>
+      row.getValue('start_date')
+        ? format(new Date(row.getValue('start_date')), 'dd-MM-yyyy')
+        : 'N/A',
   },
   {
     id: 'timing',

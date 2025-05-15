@@ -1,1 +1,18 @@
-npx lint-staged
+#!/bin/sh
+# Source NVM if it exists to ensure correct Node/npm version
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+echo "Husky pre-commit hook running..."
+echo "Node version: $(node -v)"
+echo "npm version: $(npm -v)"
+echo "Which lint-staged: $(which lint-staged || echo 'lint-staged not in PATH')"
+echo "Running lint-staged..."
+
+# Try invoking lint-staged via npm script if direct execution fails
+# This can help if there are path or environment issues with npx/npm exec
+npm run lint-staged --if-present || npx lint-staged --allow-empty
+
+RESULT=$?
+echo "lint-staged finished with code $RESULT"
+exit $RESULT
