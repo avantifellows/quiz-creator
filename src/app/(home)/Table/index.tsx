@@ -67,12 +67,16 @@ export default function DataTable({
         reportLink: false,
         parentId: false,
         batchId: false,
+        stream: false,
       },
     },
     getCoreRowModel: getCoreRowModel(),
     pageCount: hasMore ? -1 : 0,
     manualPagination: true,
     manualFiltering: true,
+    meta: {
+      apiOptions,
+    },
   });
 
   const { pageIndex, pageSize, group, batchId, parentId } = useMemo(() => {
@@ -125,7 +129,8 @@ export default function DataTable({
           {table.getRowModel().rows?.length ? (
             <SheetTableRow
               table={table}
-              formOptions={apiOptions?.formSchemas ?? []}
+              formOptions={[...(apiOptions?.signupForm ?? []), ...(apiOptions?.popupForm ?? [])]}
+              batchListOptions={apiOptions?.batch ?? []}
               pendingSessions={pendingSessions}
             />
           ) : (

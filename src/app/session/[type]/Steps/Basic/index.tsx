@@ -85,6 +85,12 @@ const BasicForm: FC = () => {
         options: SessionTypeOptions,
         placeholder: 'Select a session type',
         label: 'Session Type',
+        onValueChange: (value, form) => {
+          if (value === 'sign-up') {
+            form.setValue('activateSignUp', true);
+            handleSignUpFields(true, fieldsSchema, form);
+          }
+        },
       },
       authType: {
         type: 'select',

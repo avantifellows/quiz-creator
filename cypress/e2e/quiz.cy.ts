@@ -112,11 +112,11 @@ describe('Quiz Session', () => {
       cy.get('@basicDetails').eq(1).children('p').should('contain.text', create.platform.label);
       cy.get('@basicDetails').eq(2).children('p').should('contain.text', create.grade.label);
       cy.get('@basicDetails').eq(3).children('p').should('contain.text', create.group.label);
-      cy.get('@basicDetails').eq(4).children('p').should('contain.text', create.parentBatch.label);
+      cy.get('@basicDetails').eq(4).children('p').should('contain.text', create.parentBatch.name);
       cy.get('@basicDetails')
         .eq(5)
         .children('p')
-        .should('contain.text', create.subBatch.map((subBatch) => subBatch.label).join(', '));
+        .should('contain.text', create.subBatch.map((subBatch) => subBatch.name).join(', '));
       cy.get('@basicDetails').eq(6).children('p').should('contain.text', create.authType.label);
       cy.get('@basicDetails').eq(7).children('p').should('contain.text', create.sessionType.value);
 

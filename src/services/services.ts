@@ -260,6 +260,7 @@ export async function getBatches() {
       label: item.batch_id,
       value: item.batch_id,
       id: item.id,
+      name: item.name,
       parentId: item.parent_id,
       groupId: item.auth_group_id,
     }));

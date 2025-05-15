@@ -7,10 +7,14 @@ import {
   GurukulFormatOptions,
 } from '@/Constants';
 import { absoluteLink } from '@/lib/utils';
-import { DataSection, Option, Session } from '@/types';
+import { DataSection, Option, Session, ExtendedOptions } from '@/types';
 import { format } from 'date-fns';
 
-export const displayData = (data: Session, formOptions: Option[]) => {
+export const displayData = (
+  data: Session,
+  formOptions: Option[],
+  batchListOptions: ExtendedOptions[] = []
+) => {
   const basicDetails: DataSection = {
     title: 'Basic Details',
     data: [
@@ -18,19 +22,44 @@ export const displayData = (data: Session, formOptions: Option[]) => {
       { label: 'Platform', value: data.platform },
       { label: 'Grade', value: data.meta_data?.grade },
       { label: 'Program', value: data.meta_data?.group },
-      { label: 'Quiz Batch', value: data.meta_data?.parent_id },
-      { label: 'Class Batch', value: data.meta_data?.batch_id },
+      {
+        label: 'Quiz Batch',
+        value: data.meta_data?.parent_id
+          ? (batchListOptions.find((b) => b.value === data.meta_data?.parent_id)?.name ??
+            data.meta_data.parent_id)
+          : 'N/A',
+      },
+      {
+        label: 'Class Batch',
+        value: data.meta_data?.batch_id
+          ? data.meta_data.batch_id
+              .split(',')
+              .map((id) => id.trim())
+              .map((idValue) => {
+                return batchListOptions.find((b) => b.value === idValue)?.name ?? idValue;
+              })
+              .join(', ')
+          : 'N/A',
+      },
       { label: 'Auth Type', value: data.auth_type },
       { label: 'Session Type', value: data.type },
       { label: 'Is Sign Up Form?', value: data.signup_form ? 'Yes' : 'No' },
       {
         label: 'Sign Up Form Name',
-        value: formOptions.find((i) => i.value === data.signup_form_id)?.label ?? 'N/A',
+        value: data.signup_form
+          ? (formOptions.find((i) => i.value === data.signup_form_id)?.label ??
+            data.signup_form_id?.toString() ??
+            'N/A')
+          : 'N/A',
       },
       { label: 'Is Popup Form Allowed?', value: data.popup_form ? 'Yes' : 'No' },
       {
         label: 'Popup Form Name',
-        value: formOptions.find((i) => i.value === data.popup_form_id)?.label ?? 'N/A',
+        value: data.popup_form
+          ? (formOptions.find((i) => i.value === data.popup_form_id)?.label ??
+            data.popup_form_id?.toString() ??
+            'N/A')
+          : 'N/A',
       },
       {
         label: 'No Of Fields In Popup',
@@ -87,42 +116,34 @@ export const displayData = (data: Session, formOptions: Option[]) => {
         isLink: !!data.meta_data?.cms_test_id,
       },
       {
-        label: 'Portal Link',
-        value: data.portal_link ? absoluteLink(data.portal_link) : 'N/A',
-        isLink: !!data.portal_link,
-      },
-      {
-        label: 'Shortened Link',
-        value: data.meta_data?.shortened_link
-          ? absoluteLink(data.meta_data?.shortened_link)
-          : 'N/A',
+        label: 'Q&A Link',
+        value: data.meta_data?.shortened_link ? absoluteLink(data.meta_data.shortened_link) : 'N/A',
         isLink: !!data.meta_data?.shortened_link,
       },
       {
-        label: 'Shortened OMR Link',
+        label: 'OMR Link',
         value: data.meta_data?.shortened_omr_link
-          ? absoluteLink(data.meta_data?.shortened_omr_link)
+          ? absoluteLink(data.meta_data.shortened_omr_link)
           : 'N/A',
         isLink: !!data.meta_data?.shortened_omr_link,
       },
       {
-        label: 'Admin Link',
+        label: 'Q&A Admin Link',
         value: data.meta_data?.admin_testing_link
-          ? absoluteLink(data.meta_data?.admin_testing_link)
+          ? absoluteLink(data.meta_data.admin_testing_link)
           : 'N/A',
         isLink: !!data.meta_data?.admin_testing_link,
       },
       {
-        label: 'Admin OMR Link',
-        value:
-          data.meta_data?.admin_testing_link + '&omrMode=true'
-            ? absoluteLink(data.meta_data?.admin_testing_link + '&omrMode=true')
-            : 'N/A',
+        label: 'OMR Admin Link',
+        value: data.meta_data?.admin_testing_link
+          ? absoluteLink(data.meta_data.admin_testing_link + '&omrMode=true')
+          : 'N/A',
         isLink: !!data.meta_data?.admin_testing_link,
       },
       {
         label: 'Report Link',
-        value: data.meta_data?.report_link ? absoluteLink(data.meta_data?.report_link) : 'N/A',
+        value: data.meta_data?.report_link ? absoluteLink(data.meta_data.report_link) : 'N/A',
         isLink: !!data.meta_data?.report_link,
       },
     ],
@@ -134,24 +155,10 @@ export const displayData = (data: Session, formOptions: Option[]) => {
       { label: 'Subject', value: data.meta_data?.subject ?? 'N/A' },
       {
         label: 'Portal Link',
-        value: data.portal_link ? absoluteLink(data.portal_link) : 'N/A',
-        isLink: !!data.portal_link,
+        value: data.meta_data?.shortened_link ? absoluteLink(data.meta_data.shortened_link) : 'N/A',
+        isLink: !!data.meta_data?.shortened_link,
       },
       { label: 'Platform ID', value: data.platform_id ?? 'N/A' },
-      {
-        label: 'Shortened Link',
-        value: data.meta_data?.shortened_link
-          ? absoluteLink(data.meta_data?.shortened_link)
-          : 'N/A',
-        isLink: !!data.portal_link,
-      },
-      {
-        label: 'Shortened OMR Link',
-        value: data.meta_data?.shortened_omr_link
-          ? absoluteLink(data.meta_data?.shortened_omr_link)
-          : 'N/A',
-        isLink: !!data.portal_link,
-      },
       {
         label: 'Platform Link',
         value: data.platform_link ? absoluteLink(data.platform_link) : 'N/A',

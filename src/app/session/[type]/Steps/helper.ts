@@ -138,6 +138,13 @@ export const setParentBatchOptions = (
       apiOptions?.batch?.filter(
         (item) => item.groupId === PunjabStudentsId && !item.parentId === isQuizSession
       ) ?? [];
+  } else if (authGroupSelected?.value == Group.EnableSchools) {
+    const EnableStudentsId = apiOptions.group?.find((item) => item.value === Group.Enable)?.id;
+
+    filteredQuizBatchOptions =
+      apiOptions?.batch?.filter(
+        (item) => item.groupId === EnableStudentsId && !item.parentId === isQuizSession
+      ) ?? [];
   } else {
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
@@ -302,6 +309,9 @@ export const handleBatchFields = (
     form.setValue('isRedirection', false, { shouldDirty: true });
   } else {
     form.setValue('isRedirection', true, { shouldDirty: true });
+  }
+  if (fieldsSchema.isRedirection) {
+    fieldsSchema.isRedirection.disabled = true;
   }
   const selectedGroup = form.watch('group');
   if (selectedGroup) {
