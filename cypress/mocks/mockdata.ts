@@ -18,11 +18,16 @@ export const CreateQuizData = {
   name: 'Cypress Quiz Session',
   platform: { label: Platform.Quiz, value: Platform.Quiz },
   group: { label: Group.Haryana, value: Group.Haryana },
-  parentBatch: { label: 'HR-9-Foundation-24', value: 'HR-9-Foundation-24' },
+  parentBatch: {
+    label: 'HR-9-Foundation-24',
+    value: 'HR-9-Foundation-24',
+    name: 'Haryana 9 Quiz Batch - 24',
+  },
   subBatch: [
     {
       label: 'HaryanaStudents_9_Foundation_24_001',
       value: 'HaryanaStudents_9_Foundation_24_001',
+      name: '9B01',
     },
   ],
   grade: GradeOptions.find((i) => i.value === 9)!,
