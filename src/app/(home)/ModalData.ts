@@ -110,6 +110,7 @@ export const displayData = (
       { label: 'Optional Limits', value: data.meta_data?.optional_limits },
       { label: 'Show Answers', value: data.meta_data?.show_answers ? 'Yes' : 'No' },
       { label: 'Show Scores', value: data.meta_data?.show_scores == false ? 'No' : 'Yes' },
+      { label: 'Shuffle Questions', value: data.meta_data?.shuffle ? 'Yes' : 'No' },
       {
         label: 'CMS Link',
         value: data.meta_data?.cms_test_id ? absoluteLink(data.meta_data?.cms_test_id) : 'N/A',

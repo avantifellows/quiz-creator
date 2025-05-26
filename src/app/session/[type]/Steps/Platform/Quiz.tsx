@@ -98,6 +98,10 @@ const QuizForm: FC = () => {
         label: 'Show Scores?',
         defaultValue: 'Yes',
       },
+      shuffle: {
+        type: 'switch',
+        label: 'Shuffle Questions?',
+      },
     }),
     []
   );
@@ -115,6 +119,7 @@ const QuizForm: FC = () => {
       optionalLimit: formData.meta_data?.optional_limits,
       showAnswers: formData.meta_data?.show_answers == false ? false : true,
       showScores: formData.meta_data?.show_scores == false ? false : true,
+      shuffle: formData.meta_data?.shuffle == false ? false : true,
     }),
     [formData]
   );
@@ -135,6 +140,7 @@ const QuizForm: FC = () => {
         cms_test_id: data.cmsUrl,
         show_answers: data.showAnswers,
         show_scores: data.showScores,
+        shuffle: data.shuffle,
       },
     };
     updateFormData(addedData, Steps.TIMELINE);

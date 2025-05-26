@@ -58,6 +58,7 @@ describe('Quiz Session', () => {
     cy.customSelect('optionalLimit', create.optionalLimit);
     cy.customSwitch('showAnswers', create.showAnswers);
     cy.customSwitch('showScores', create.showScores);
+    cy.customSwitch('shuffle', create.shuffle);
 
     // Click on next
     cy.get('button').contains('Next').click();

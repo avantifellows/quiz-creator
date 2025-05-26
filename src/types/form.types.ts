@@ -171,6 +171,7 @@ export const quizSchema = z.object({
     ),
   showAnswers: z.coerce.boolean(),
   showScores: z.coerce.boolean(),
+  shuffle: z.coerce.boolean(),
 });
 
 export const timelineSchema = z

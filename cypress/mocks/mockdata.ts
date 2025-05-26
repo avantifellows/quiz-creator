@@ -50,6 +50,7 @@ export const CreateQuizData = {
   optionalLimit: OptionalLimitOptions.find((i) => i.value === 'N/A')!,
   showAnswers: false,
   showScores: true,
+  shuffle: false,
 
   // Timeline Details
   startDate: getDateWithTime({ hours: 10, minutes: 0 }),

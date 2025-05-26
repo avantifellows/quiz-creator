@@ -275,6 +275,7 @@ export const handleRedirectionData = (formData: Session) => {
         cms_test_id: '',
         show_answers: false,
         show_scores: true,
+        shuffle: false,
       },
     };
   } else {
