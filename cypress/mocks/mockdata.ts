@@ -48,7 +48,7 @@ export const CreateQuizData = {
   gurukulFormatType: GurukulFormatOptions.find((i) => i.value === 'qa')!,
   cmsUrl: 'https://cms.peerlearning.com/chapter_tests/6556f6763562d97a6300aa35',
   optionalLimit: OptionalLimitOptions.find((i) => i.value === 'N/A')!,
-  showAnswers: false,
+  showAnswers: true,
   showScores: true,
   shuffle: false,
 

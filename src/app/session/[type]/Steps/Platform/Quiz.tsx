@@ -92,6 +92,7 @@ const QuizForm: FC = () => {
       showAnswers: {
         type: 'switch',
         label: 'Show Answers?',
+        defaultValue: 'Yes',
       },
       showScores: {
         type: 'switch',
@@ -101,6 +102,7 @@ const QuizForm: FC = () => {
       shuffle: {
         type: 'switch',
         label: 'Shuffle Questions?',
+        defaultValue: 'No',
       },
     }),
     []
@@ -119,7 +121,7 @@ const QuizForm: FC = () => {
       optionalLimit: formData.meta_data?.optional_limits,
       showAnswers: formData.meta_data?.show_answers == false ? false : true,
       showScores: formData.meta_data?.show_scores == false ? false : true,
-      shuffle: formData.meta_data?.shuffle == false ? false : true,
+      shuffle: formData.meta_data?.shuffle == true ? true : false,
     }),
     [formData]
   );

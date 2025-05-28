@@ -273,7 +273,7 @@ export const handleRedirectionData = (formData: Session) => {
         marking_scheme: '',
         optional_limits: '',
         cms_test_id: '',
-        show_answers: false,
+        show_answers: true,
         show_scores: true,
         shuffle: false,
       },
