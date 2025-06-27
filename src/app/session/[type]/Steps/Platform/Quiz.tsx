@@ -26,15 +26,72 @@ import { useParams } from 'next/navigation';
 import { useCallback, useMemo, type FC } from 'react';
 import React from 'react';
 
+// Custom FormBuilder that watches form values
+const DynamicFormBuilder = ({ formSchema, zodSchema, defaultValues, handleSubmit }: any) => {
+  const [watchedTestType, setWatchedTestType] = React.useState('');
+
+  // Create a modified schema based on the watched test type
+  const dynamicSchema = useMemo(() => {
+    const isForm = watchedTestType === 'form';
+
+    return Object.keys(formSchema).reduce((acc, key) => {
+      const field = { ...formSchema[key] };
+
+      // Apply dynamic disabling based on test type
+      if (
+        isForm &&
+        [
+          'testFormat',
+          'gurukulFormatType',
+          'stream',
+          'optionalLimit',
+          'showAnswers',
+          'showScores',
+          'shuffle',
+        ].includes(key)
+      ) {
+        field.disabled = true;
+      }
+
+      // Add onValueChange for testType to track changes
+      if (key === 'testType') {
+        const originalOnValueChange = field.onValueChange;
+        field.onValueChange = (value: string, form: any) => {
+          setWatchedTestType(value);
+          if (originalOnValueChange) {
+            originalOnValueChange(value, form);
+          }
+        };
+      }
+
+      acc[key] = field;
+      return acc;
+    }, {} as any);
+  }, [formSchema, watchedTestType]);
+
+  // Set initial watched type from default values
+  React.useEffect(() => {
+    if (defaultValues?.testType) {
+      setWatchedTestType(defaultValues.testType);
+    }
+  }, [defaultValues?.testType]);
+
+  return (
+    <FormBuilder
+      formSchema={dynamicSchema}
+      zodSchema={zodSchema}
+      defaultValues={defaultValues}
+      handleSubmit={handleSubmit}
+    />
+  );
+};
+
 const QuizForm: FC = () => {
   const { type } = useParams<SessionParams>();
   const { formData, updateFormData } = useFormContext();
-  const [currentTestType, setCurrentTestType] = React.useState<string>(
-    formData.meta_data?.test_type || ''
-  );
 
-  const fieldsSchema: FieldSchema<quizFields> = useMemo(
-    () => ({
+  const fieldsSchema: FieldSchema<quizFields> = useMemo(() => {
+    return {
       testType: {
         type: 'select',
         options: TestTypeOptions,
@@ -42,7 +99,7 @@ const QuizForm: FC = () => {
         label: 'Test Type',
         disabled: type === SessionType.EDIT,
         onValueChange: (value, form) => {
-          setCurrentTestType(value);
+          console.log('Test type changed to:', value);
           // Set appropriate defaults when form is selected
           if (value === 'form') {
             form.setValue('testFormat', 'questionnaire');
@@ -73,7 +130,6 @@ const QuizForm: FC = () => {
         options: StreamOptions,
         placeholder: 'Select a stream',
         label: 'Stream',
-        disabled: currentTestType === 'form',
         hide: false,
       },
       testFormat: {
@@ -81,7 +137,6 @@ const QuizForm: FC = () => {
         options: TestFormatOptions,
         placeholder: 'Select a test format',
         label: 'Test Format',
-        disabled: currentTestType === 'form',
         hide: false,
       },
       testPurpose: {
@@ -96,7 +151,6 @@ const QuizForm: FC = () => {
         options: GurukulFormatOptions,
         placeholder: 'Select the Quiz Format to display on Gurukul',
         label: 'Quiz Display Format',
-        disabled: currentTestType === 'form',
         hide: false,
       },
       cmsUrl: {
@@ -125,33 +179,29 @@ const QuizForm: FC = () => {
         options: OptionalLimitOptions,
         placeholder: 'Select an optional limit',
         label: 'Optional Limit',
-        disabled: type === SessionType.EDIT || currentTestType === 'form',
+        disabled: type === SessionType.EDIT,
         hide: false,
       },
       showAnswers: {
         type: 'switch',
         label: 'Show Answers?',
         defaultValue: 'Yes',
-        disabled: currentTestType === 'form',
         hide: false,
       },
       showScores: {
         type: 'switch',
         label: 'Show Scores?',
         defaultValue: 'Yes',
-        disabled: currentTestType === 'form',
         hide: false,
       },
       shuffle: {
         type: 'switch',
         label: 'Shuffle Questions?',
         defaultValue: 'No',
-        disabled: currentTestType === 'form',
         hide: false,
       },
-    }),
-    [type, currentTestType]
-  );
+    };
+  }, [type, formData.meta_data?.test_type]);
 
   const defaultValues: Partial<quizFields> = useMemo(
     () => ({
@@ -171,13 +221,6 @@ const QuizForm: FC = () => {
     }),
     [formData]
   );
-
-  // Update currentTestType when formData changes
-  React.useEffect(() => {
-    if (formData.meta_data?.test_type) {
-      setCurrentTestType(formData.meta_data.test_type);
-    }
-  }, [formData.meta_data?.test_type]);
 
   const onSubmit = useCallback((data: quizFields) => {
     const isHomework = data.testType === 'homework';
@@ -206,7 +249,7 @@ const QuizForm: FC = () => {
   }, []);
 
   return (
-    <FormBuilder
+    <DynamicFormBuilder
       formSchema={fieldsSchema}
       zodSchema={quizSchema}
       defaultValues={defaultValues}
