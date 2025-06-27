@@ -134,19 +134,28 @@ describe('Quiz Session', () => {
 
     // Verify that defaults were set automatically
     cy.get('select[name="testFormat"]').should('have.value', 'questionnaire');
+    cy.get('select[name="gurukulFormatType"]').should('have.value', 'qa');
     cy.get('select[name="stream"]').should('have.value', 'Others');
     cy.get('input[name="showAnswers"]').should('not.be.checked');
     cy.get('input[name="showScores"]').should('not.be.checked');
     cy.get('input[name="shuffle"]').should('not.be.checked');
 
+    // Verify that form-specific fields are disabled
+    cy.checkDisabled([
+      'select[name="testFormat"]',
+      'select[name="gurukulFormatType"]',
+      'select[name="stream"]',
+      'select[name="optionalLimit"]',
+      'input[name="showAnswers"]',
+      'input[name="showScores"]',
+      'input[name="shuffle"]',
+    ]);
+
     cy.customSelect('course', createForm.course);
     cy.customSelect('testPurpose', createForm.testPurpose);
-    cy.customSelect('gurukulFormatType', createForm.gurukulFormatType);
 
     // Upload CSV file instead of entering CMS URL
     cy.customFileUpload('csvFile', createForm.csvFile);
-
-    cy.customSelect('optionalLimit', createForm.optionalLimit);
 
     // Click on next
     cy.get('button').contains('Next').click();
