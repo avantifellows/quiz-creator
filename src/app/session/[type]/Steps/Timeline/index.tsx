@@ -64,6 +64,10 @@ const TimelineForm: FC = () => {
   );
 
   const onSubmit = useCallback(async (data: timelineFields) => {
+    // Convert dates to ISO string format instead of UTC to preserve local timezone context
+    const startDate = new Date(data.startDate);
+    const endDate = new Date(data.endDate);
+
     const addedData: Session = {
       meta_data: {
         test_takers_count: data.testTakers,
@@ -73,8 +77,8 @@ const TimelineForm: FC = () => {
         params: data.activeDays.sort((a, b) => a - b),
       },
       is_active: data.isEnabled,
-      start_time: new Date(data.startDate).toUTCString(),
-      end_time: new Date(data.endDate).toUTCString(),
+      start_time: startDate.toISOString(),
+      end_time: endDate.toISOString(),
     };
 
     updateFormData(addedData);

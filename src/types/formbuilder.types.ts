@@ -45,7 +45,8 @@ export type Field =
   | MySwitchProps
   | MyDateTimeProps
   | MyCheckboxProps
-  | MyMultiSelectProps;
+  | MyMultiSelectProps
+  | MyFileProps;
 
 export interface MySelectProps extends Omit<SelectProps, 'onValueChange'>, CommonFieldProps {
   type: 'select';
@@ -86,6 +87,11 @@ export interface MyDateTimeProps
     date?: string;
     time?: string;
   };
+}
+
+export interface MyFileProps extends InputHTMLAttributes<HTMLInputElement>, CommonFieldProps {
+  type: 'file';
+  onValueChange?: (value: string, form: UseFormReturn) => void;
 }
 
 export interface CommonFieldProps {

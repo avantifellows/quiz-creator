@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { DateTimePicker } from '@/components/ui/date-time';
 import { Form, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { ControlledInput } from '@/components/ui/input';
+import { ControlledInput, ControlledFileInput } from '@/components/ui/input';
 import { ControlledSelectField } from '@/components/ui/select';
 import { ControlledSwitchField } from '@/components/ui/switch';
 import type { Field, FormBuilderProps } from '@/types';
@@ -43,6 +43,9 @@ const RenderFields = <T extends FieldValues>(
       break;
     case 'multi-select':
       Component = ControlledMultiSelectField;
+      break;
+    case 'file':
+      Component = ControlledFileInput;
       break;
     default:
       Component = ControlledInput;
