@@ -37,20 +37,42 @@ const DynamicFormBuilder = ({ formSchema, zodSchema, defaultValues, handleSubmit
     return Object.keys(formSchema).reduce((acc, key) => {
       const field = { ...formSchema[key] };
 
-      // Apply dynamic disabling based on test type
-      if (
-        isForm &&
-        [
-          'testFormat',
-          'gurukulFormatType',
-          'stream',
-          'optionalLimit',
-          'showAnswers',
-          'showScores',
-          'shuffle',
-        ].includes(key)
-      ) {
-        field.disabled = true;
+      // Apply dynamic disabling and hiding based on test type
+      if (isForm) {
+        // When form is selected, disable these fields (fixate values)
+        if (
+          [
+            'testFormat',
+            'gurukulFormatType',
+            'stream',
+            'optionalLimit',
+            'showAnswers',
+            'showScores',
+            'shuffle',
+          ].includes(key)
+        ) {
+          field.disabled = true;
+        }
+
+        // Hide CMS URL field for forms
+        if (key === 'cmsUrl') {
+          field.hide = true;
+        }
+
+        // Show CSV file field only for forms
+        if (key === 'csvFile') {
+          field.hide = false;
+        }
+      } else {
+        // When form is NOT selected, hide CSV file field
+        if (key === 'csvFile') {
+          field.hide = true;
+        }
+
+        // Show CMS URL field for non-forms
+        if (key === 'cmsUrl') {
+          field.hide = false;
+        }
       }
 
       // Add onValueChange for testType to track changes
@@ -73,6 +95,9 @@ const DynamicFormBuilder = ({ formSchema, zodSchema, defaultValues, handleSubmit
   React.useEffect(() => {
     if (defaultValues?.testType) {
       setWatchedTestType(defaultValues.testType);
+    } else {
+      // Initialize with empty string to ensure proper initial state
+      setWatchedTestType('');
     }
   }, [defaultValues?.testType]);
 
@@ -158,13 +183,15 @@ const QuizForm: FC = () => {
         label: 'CMS URL (for Assessment/Homework)',
         placeholder: 'Enter CMS URL',
         disabled: type === SessionType.EDIT,
-        helperText: 'Enter the CMS URL for your quiz content (leave empty for forms)',
+        hide: false, // Will be dynamically controlled
+        helperText: 'Enter the CMS URL for your quiz content (required for assessments/homework)',
       },
       csvFile: {
         type: 'file',
         label: 'CSV File (for Forms only)',
         disabled: type === SessionType.EDIT,
-        helperText: 'Upload a CSV file containing your form questions (only required for forms)',
+        hide: true, // Initially hidden, will show only when form is selected
+        helperText: 'Upload a CSV file containing your form questions (required for forms)',
       },
       markingScheme: {
         type: 'select',
