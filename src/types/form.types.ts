@@ -119,60 +119,97 @@ export const basicSchema = z
     }
   });
 
-export const quizSchema = z.object({
-  course: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => CourseOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  stream: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => StreamOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  testFormat: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => TestFormatOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  testPurpose: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => TestPurposeOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  cmsUrl: z
-    .string({ required_error: 'This field is required' })
-    .url('This is not a valid url')
-    .includes('cms.peerlearning.com', {
-      message: 'This is not a valid cms url, please use https://cms.peerlearning.com',
-    }),
-  testType: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => TestTypeOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  gurukulFormatType: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => GurukulFormatOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  markingScheme: z.string().optional(),
-  optionalLimit: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => OptionalLimitOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  showAnswers: z.coerce.boolean(),
-  showScores: z.coerce.boolean(),
-  shuffle: z.coerce.boolean(),
-});
+export const quizSchema = z
+  .object({
+    course: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => CourseOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    stream: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => StreamOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    testFormat: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => TestFormatOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    testPurpose: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => TestPurposeOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    cmsUrl: z.string().optional(),
+    csvFile: z.string().optional(),
+    testType: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => TestTypeOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    gurukulFormatType: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => GurukulFormatOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    markingScheme: z.string().optional(),
+    optionalLimit: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => OptionalLimitOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    showAnswers: z.coerce.boolean(),
+    showScores: z.coerce.boolean(),
+    shuffle: z.coerce.boolean(),
+  })
+  .superRefine((data, context) => {
+    // Conditional validation based on test type
+    if (data.testType === 'form') {
+      // For forms, require CSV file
+      if (!data.csvFile || data.csvFile.trim() === '') {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'CSV file is required for form questionnaires',
+          path: ['csvFile'],
+        });
+      }
+    } else {
+      // For non-forms, require CMS URL
+      if (!data.cmsUrl || data.cmsUrl.trim() === '') {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'CMS URL is required',
+          path: ['cmsUrl'],
+        });
+      } else {
+        // Validate CMS URL format
+        try {
+          const url = new URL(data.cmsUrl);
+          if (!data.cmsUrl.includes('cms.peerlearning.com')) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'Please provide a valid CMS URL (https://cms.peerlearning.com)',
+              path: ['cmsUrl'],
+            });
+          }
+        } catch {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Please provide a valid CMS URL',
+            path: ['cmsUrl'],
+          });
+        }
+      }
+    }
+  });
 
 export const timelineSchema = z
   .object({

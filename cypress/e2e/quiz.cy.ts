@@ -1,6 +1,7 @@
 import { ActiveDaysOptions } from '@/Constants';
 import {
   CreateQuizData as create,
+  CreateFormData as createForm,
   DuplicateQuizData as duplicate,
   PatchQuizData as edit,
 } from 'cypress/mocks/mockdata';
@@ -91,6 +92,87 @@ describe('Quiz Session', () => {
         const tdsArray = $tds.toArray();
         const hasName = tdsArray.some((td) => td.innerText.trim() === create.name);
         const hasGroup = tdsArray.some((td) => td.innerText.trim() === create.group.label);
+        expect(hasName).to.be.true;
+        expect(hasGroup).to.be.true;
+      });
+  });
+
+  /**
+   * Verify Create Form Session Flow with CSV Upload
+   */
+  it('should verify create form session flow with CSV upload', () => {
+    // Click on 'Create Session'
+    cy.get('a').contains('Create Session').click().wait(100);
+
+    // Goto create session page i.e. basic details
+    cy.url().should('include', '/session/create?step=basic');
+    cy.get('h3').contains('Basic Details');
+
+    // Fill basic details
+    cy.customInput('name', createForm.name);
+    cy.customSelect('platform', createForm.platform);
+    cy.customSelect('group', createForm.group);
+    cy.customSelect('parentBatch', createForm.parentBatch);
+    cy.customMultiSelect('subBatch', createForm.subBatch);
+    cy.customSelect('grade', createForm.grade);
+    cy.customSelect('sessionType', createForm.sessionType);
+    cy.customSelect('authType', createForm.authType);
+    cy.customSwitch('activateSignUp', createForm.activateSignUp);
+    cy.customSwitch('isPopupForm', createForm.isPopupForm);
+    cy.customSwitch('isIdGeneration', createForm.isIdGeneration);
+    cy.customSwitch('isRedirection', createForm.isRedirection);
+
+    // Click on next
+    cy.get('button').contains('Next').click();
+
+    // Goto step 2 i.e. platform details
+    cy.url().should('include', '/session/create?step=platform');
+    cy.get('h3').contains('Platform Details');
+
+    // Select form as test type first - this should trigger the smart defaults
+    cy.customSelect('testType', createForm.testType);
+
+    // Verify that defaults were set automatically
+    cy.get('select[name="testFormat"]').should('have.value', 'questionnaire');
+    cy.get('select[name="stream"]').should('have.value', 'Others');
+    cy.get('input[name="showAnswers"]').should('not.be.checked');
+    cy.get('input[name="showScores"]').should('not.be.checked');
+    cy.get('input[name="shuffle"]').should('not.be.checked');
+
+    cy.customSelect('course', createForm.course);
+    cy.customSelect('testPurpose', createForm.testPurpose);
+    cy.customSelect('gurukulFormatType', createForm.gurukulFormatType);
+
+    // Upload CSV file instead of entering CMS URL
+    cy.customFileUpload('csvFile', createForm.csvFile);
+
+    cy.customSelect('optionalLimit', createForm.optionalLimit);
+
+    // Click on next
+    cy.get('button').contains('Next').click();
+
+    // Goto step 3 i.e. timeline details
+    cy.url().should('include', '/session/create?step=timeline');
+    cy.get('h3').contains('Timeline Details');
+
+    cy.customDatePicker('startDate', createForm.startDate);
+    cy.customDatePicker('endDate', createForm.endDate);
+    cy.customInput('testTakers', createForm.testTakers);
+    cy.customCheckbox('activeDays', createForm.activeDays);
+
+    // Click on submit
+    cy.get('button').contains('Submit').click().wait(1000);
+
+    // Verify if form session is created
+    cy.url().should('include', '/');
+    cy.reload();
+    cy.get('table > tbody > tr')
+      .eq(0)
+      .children('td')
+      .then(($tds) => {
+        const tdsArray = $tds.toArray();
+        const hasName = tdsArray.some((td) => td.innerText.trim() === createForm.name);
+        const hasGroup = tdsArray.some((td) => td.innerText.trim() === createForm.group.label);
         expect(hasName).to.be.true;
         expect(hasGroup).to.be.true;
       });
