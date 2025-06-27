@@ -72,7 +72,6 @@ const ControlledFileInput = React.forwardRef<
       <FormLabel>{label}</FormLabel>
       <FormControl ref={ref}>
         <Input
-          type='file'
           accept='.csv'
           onChange={handleFileChange}
           disabled={schema.disabled}
