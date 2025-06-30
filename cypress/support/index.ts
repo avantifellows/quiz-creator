@@ -40,26 +40,6 @@ Cypress.Commands.addAll({
   },
 
   /**
-   * Command to upload file
-   */
-  customFileUpload: (name: string, fileName: string, fileType: string = 'text/csv') => {
-    return cy.get(`input[name="${name}"]`).then((input) => {
-      const file = new File(['test content'], fileName, { type: fileType });
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
-
-      // Cast to any to access files property
-      (input[0] as any).files = dataTransfer.files;
-
-      // Trigger change event
-      cy.wrap(input).trigger('change', { force: true });
-
-      // Verify the file name is set
-      cy.wrap(input).should('have.prop', 'files').its('length').should('eq', 1);
-    });
-  },
-
-  /**
    * Command to click & verify switch input
    */
   customSwitch: (name: string, value: boolean) => {
@@ -180,7 +160,6 @@ declare global {
       customInput(name: string, value: string): Chainable<JQuery<HTMLElement>>;
       customSelect(name: string, option: Option): Chainable<void>;
       customMultiSelect(name: string, options: Option[]): Chainable<void>;
-      customFileUpload(name: string, fileName: string, fileType?: string): Chainable<void>;
       customSwitch(name: string, value: boolean): Chainable<void>;
       customDatePicker(name: string, value: Date): Chainable<void>;
       customCheckbox(name: string, values: any[]): Chainable<void>;

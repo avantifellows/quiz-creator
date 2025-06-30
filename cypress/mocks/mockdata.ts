@@ -93,7 +93,8 @@ export const CreateFormData = {
   testPurpose: TestPurposeOptions.find((i) => i.value === 'one_time')!,
   testType: TestTypeOptions.find((i) => i.value === 'form')!,
   gurukulFormatType: GurukulFormatOptions.find((i) => i.value === 'qa')!,
-  csvFile: 'form-questions.csv',
+  cmsUrl:
+    'https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit',
   optionalLimit: OptionalLimitOptions.find((i) => i.value === 'N/A')!,
   showAnswers: false,
   showScores: false,

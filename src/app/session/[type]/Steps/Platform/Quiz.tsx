@@ -26,94 +26,12 @@ import { useParams } from 'next/navigation';
 import { useCallback, useMemo, type FC } from 'react';
 import React from 'react';
 
-// Custom FormBuilder that watches form values
-const DynamicFormBuilder = ({ formSchema, zodSchema, defaultValues, handleSubmit }: any) => {
-  const [watchedTestType, setWatchedTestType] = React.useState('');
-
-  // Create a modified schema based on the watched test type
-  const dynamicSchema = useMemo(() => {
-    const isForm = watchedTestType === 'form';
-
-    return Object.keys(formSchema).reduce((acc, key) => {
-      const field = { ...formSchema[key] };
-
-      // Apply dynamic disabling and hiding based on test type
-      if (isForm) {
-        // When form is selected, disable these fields (fixate values)
-        if (
-          [
-            'testFormat',
-            'gurukulFormatType',
-            'stream',
-            'optionalLimit',
-            'showAnswers',
-            'showScores',
-            'shuffle',
-          ].includes(key)
-        ) {
-          field.disabled = true;
-        }
-
-        // Hide CMS URL field for forms
-        if (key === 'cmsUrl') {
-          field.hide = true;
-        }
-
-        // Show CSV file field only for forms
-        if (key === 'csvFile') {
-          field.hide = false;
-        }
-      } else {
-        // When form is NOT selected, hide CSV file field
-        if (key === 'csvFile') {
-          field.hide = true;
-        }
-
-        // Show CMS URL field for non-forms
-        if (key === 'cmsUrl') {
-          field.hide = false;
-        }
-      }
-
-      // Add onValueChange for testType to track changes
-      if (key === 'testType') {
-        const originalOnValueChange = field.onValueChange;
-        field.onValueChange = (value: string, form: any) => {
-          setWatchedTestType(value);
-          if (originalOnValueChange) {
-            originalOnValueChange(value, form);
-          }
-        };
-      }
-
-      acc[key] = field;
-      return acc;
-    }, {} as any);
-  }, [formSchema, watchedTestType]);
-
-  // Set initial watched type from default values
-  React.useEffect(() => {
-    if (defaultValues?.testType) {
-      setWatchedTestType(defaultValues.testType);
-    } else {
-      // Initialize with empty string to ensure proper initial state
-      setWatchedTestType('');
-    }
-  }, [defaultValues?.testType]);
-
-  return (
-    <FormBuilder
-      formSchema={dynamicSchema}
-      zodSchema={zodSchema}
-      defaultValues={defaultValues}
-      handleSubmit={handleSubmit}
-    />
-  );
-};
-
 const QuizForm: FC = () => {
   const { type } = useParams<SessionParams>();
   const { formData, updateFormData } = useFormContext();
+
+  const currentTestType = formData.meta_data?.test_type;
+  const isForm = currentTestType === 'form';
 
   const fieldsSchema: FieldSchema<quizFields> = useMemo(() => {
     return {
@@ -124,9 +42,10 @@ const QuizForm: FC = () => {
         label: 'Test Type',
         disabled: type === SessionType.EDIT,
         onValueChange: (value, form) => {
-          console.log('Test type changed to:', value);
+          const isFormType = value === 'form';
+
           // Set appropriate defaults when form is selected
-          if (value === 'form') {
+          if (isFormType) {
             form.setValue('testFormat', 'questionnaire');
             form.setValue('gurukulFormatType', 'qa');
             form.setValue('markingScheme', MARKING_SCHEMES['1, 0']);
@@ -135,12 +54,16 @@ const QuizForm: FC = () => {
             form.setValue('showScores', false);
             form.setValue('shuffle', false);
             form.setValue('stream', 'Others');
-            // Clear CMS URL when switching to form
-            form.setValue('cmsUrl', '');
-          } else {
-            // Clear CSV file when switching away from form
-            form.setValue('csvFile', '');
           }
+
+          // No need to hide fields - just update labels via schema
+          fieldsSchema.testFormat.disabled = isFormType || type === SessionType.EDIT;
+          fieldsSchema.gurukulFormatType.disabled = isFormType || type === SessionType.EDIT;
+          fieldsSchema.stream.disabled = isFormType || type === SessionType.EDIT;
+          fieldsSchema.optionalLimit.disabled = isFormType || type === SessionType.EDIT;
+          fieldsSchema.showAnswers.disabled = isFormType;
+          fieldsSchema.showScores.disabled = isFormType;
+          fieldsSchema.shuffle.disabled = isFormType;
         },
       },
       course: {
@@ -156,6 +79,7 @@ const QuizForm: FC = () => {
         placeholder: 'Select a stream',
         label: 'Stream',
         hide: false,
+        disabled: isForm || type === SessionType.EDIT,
       },
       testFormat: {
         type: 'select',
@@ -163,6 +87,7 @@ const QuizForm: FC = () => {
         placeholder: 'Select a test format',
         label: 'Test Format',
         hide: false,
+        disabled: isForm || type === SessionType.EDIT,
       },
       testPurpose: {
         type: 'select',
@@ -177,21 +102,16 @@ const QuizForm: FC = () => {
         placeholder: 'Select the Quiz Format to display on Gurukul',
         label: 'Quiz Display Format',
         hide: false,
+        disabled: isForm || type === SessionType.EDIT,
       },
       cmsUrl: {
         type: 'text',
-        label: 'CMS URL (for Assessment/Homework)',
-        placeholder: 'Enter CMS URL',
+        label: isForm ? 'Google Sheets Link' : 'CMS URL',
+        placeholder: isForm ? 'Enter Google Sheets link' : 'Enter CMS URL',
         disabled: type === SessionType.EDIT,
-        hide: false, // Will be dynamically controlled
-        helperText: 'Enter the CMS URL for your quiz content (required for assessments/homework)',
-      },
-      csvFile: {
-        type: 'file',
-        label: 'CSV File (for Forms only)',
-        disabled: type === SessionType.EDIT,
-        hide: true, // Initially hidden, will show only when form is selected
-        helperText: 'Upload a CSV file containing your form questions (required for forms)',
+        helperText: isForm
+          ? 'Enter the Google Sheets link containing your form questions'
+          : 'Enter the CMS URL for your quiz content',
       },
       markingScheme: {
         type: 'select',
@@ -206,7 +126,7 @@ const QuizForm: FC = () => {
         options: OptionalLimitOptions,
         placeholder: 'Select an optional limit',
         label: 'Optional Limit',
-        disabled: type === SessionType.EDIT,
+        disabled: isForm || type === SessionType.EDIT,
         hide: false,
       },
       showAnswers: {
@@ -214,21 +134,24 @@ const QuizForm: FC = () => {
         label: 'Show Answers?',
         defaultValue: 'Yes',
         hide: false,
+        disabled: isForm,
       },
       showScores: {
         type: 'switch',
         label: 'Show Scores?',
         defaultValue: 'Yes',
         hide: false,
+        disabled: isForm,
       },
       shuffle: {
         type: 'switch',
         label: 'Shuffle Questions?',
         defaultValue: 'No',
         hide: false,
+        disabled: isForm,
       },
     };
-  }, [type, formData.meta_data?.test_type]);
+  }, [type, formData.meta_data?.test_type, isForm]);
 
   const defaultValues: Partial<quizFields> = useMemo(
     () => ({
@@ -239,7 +162,6 @@ const QuizForm: FC = () => {
       testPurpose: formData.meta_data?.test_purpose,
       gurukulFormatType: formData.meta_data?.gurukul_format_type,
       cmsUrl: formData.meta_data?.cms_test_id,
-      csvFile: '', // Initialize empty for file upload
       markingScheme: formData.meta_data?.marking_scheme,
       optionalLimit: formData.meta_data?.optional_limits,
       showAnswers: formData.meta_data?.show_answers == false ? false : true,
@@ -253,8 +175,8 @@ const QuizForm: FC = () => {
     const isHomework = data.testType === 'homework';
     const isForm = data.testType === 'form';
 
-    // Use CSV file name if it's a form, otherwise use CMS URL
-    const cmsTestId = isForm ? data.csvFile : data.cmsUrl;
+    // Use CMS URL for all test types (Google Sheets link for forms, CMS URL for others)
+    const cmsTestId = data.cmsUrl;
 
     const addedData: Session = {
       meta_data: {
@@ -276,7 +198,7 @@ const QuizForm: FC = () => {
   }, []);
 
   return (
-    <DynamicFormBuilder
+    <FormBuilder
       formSchema={fieldsSchema}
       zodSchema={quizSchema}
       defaultValues={defaultValues}

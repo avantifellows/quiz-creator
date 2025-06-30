@@ -1,6 +1,0 @@
-question_id,question_text,question_type,options,required
-1,"What is your name?",text,,true
-2,"What is your age?",number,,true
-3,"What is your favorite subject?",select,"Math,Science,English,History",true
-4,"Rate your experience",rating,"1,2,3,4,5",false
-5,"Any additional comments?",textarea,,false 

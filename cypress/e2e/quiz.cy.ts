@@ -98,9 +98,9 @@ describe('Quiz Session', () => {
   });
 
   /**
-   * Verify Create Form Session Flow with CSV Upload
+   * Verify Create Form Session Flow with Google Sheets Link
    */
-  it('should verify create form session flow with CSV upload', () => {
+  it('should verify create form session flow with Google Sheets link', () => {
     // Click on 'Create Session'
     cy.get('a').contains('Create Session').click().wait(100);
 
@@ -154,8 +154,8 @@ describe('Quiz Session', () => {
     cy.customSelect('course', createForm.course);
     cy.customSelect('testPurpose', createForm.testPurpose);
 
-    // Upload CSV file instead of entering CMS URL
-    cy.customFileUpload('csvFile', createForm.csvFile);
+    // Enter Google Sheets link
+    cy.customInput('cmsUrl', createForm.cmsUrl);
 
     // Click on next
     cy.get('button').contains('Next').click();

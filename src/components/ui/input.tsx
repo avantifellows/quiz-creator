@@ -54,7 +54,7 @@ const ControlledFileInput = React.forwardRef<
   HTMLInputElement,
   { field: ControllerRenderProps } & { schema: MyFileProps } & { form: UseFormReturn }
 >(({ field, form, schema }, ref) => {
-  const { label, onValueChange, ...restSchemaProps } = schema;
+  const { label, onValueChange, type, ...restSchemaProps } = schema;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -72,6 +72,7 @@ const ControlledFileInput = React.forwardRef<
       <FormLabel>{label}</FormLabel>
       <FormControl ref={ref}>
         <Input
+          type='file'
           accept='.csv'
           onChange={handleFileChange}
           disabled={schema.disabled}

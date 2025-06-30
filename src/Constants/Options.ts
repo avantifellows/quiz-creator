@@ -94,6 +94,7 @@ export const StreamOptions: Option[] = [
   { value: 'business_studies', label: 'Business Studies' },
   { value: 'economics', label: 'Economics' },
   { value: 'nda', label: 'NDA' },
+  { value: 'Others', label: 'Others' },
 ];
 
 export const GradeOptions = Grades.map((g) => ({ value: Number(g), label: g.toString() }));

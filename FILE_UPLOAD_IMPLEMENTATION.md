@@ -1,8 +1,8 @@
-# File Upload Implementation for Form Questionnaires
+# Google Sheets Integration for Form Questionnaires
 
 ## Overview
 
-This implementation adds file upload functionality for form questionnaires in the quiz-creator application, allowing users to upload CSV files instead of typing file paths.
+This implementation adds Google Sheets integration for form questionnaires in the quiz-creator application, allowing users to provide Google Sheets links instead of uploading CSV files.
 
 ## Changes Made
 
@@ -15,58 +15,44 @@ This implementation adds file upload functionality for form questionnaires in th
 
 #### `src/types/form.types.ts`
 
-- Updated `quizSchema` to include optional `csvFile` field
-- Made `cmsUrl` optional and added conditional validation
-- Added `superRefine` validation that requires CSV file for forms and CMS URL for other types
+- Updated `quizSchema` validation logic for forms and assessments
+- Added conditional validation that requires Google Sheets links for forms and CMS URLs for other types
+- Added URL validation for Google Sheets (docs.google.com/spreadsheets) and CMS domains
 
 ### 2. UI Components
 
-#### `src/components/ui/input.tsx`
+#### `src/app/session/[type]/Steps/Platform/Quiz.tsx`
 
-- Added `ControlledFileInput` component for file uploads
-- Added proper TypeScript interfaces for both input types
-- File uploads are restricted to `.csv` files for forms
-
-#### `src/components/FormBuilder.tsx`
-
-- Added support for `file` field type in the form builder
-- Updated switch statement to handle file inputs
+- Updated form field labels and placeholders dynamically based on test type
+- For forms: Shows "Google Sheets Link" with appropriate placeholder and helper text
+- For assessments: Shows "CMS URL" with CMS-specific placeholder and helper text
 
 ### 3. Form Logic
 
-#### `src/app/session/[type]/Steps/Platform/Quiz.tsx`
+### 3. Form Logic
 
 - Added conditional logic for form vs assessment handling
 - **Form type behavior:**
-  - Shows CSV file upload field
-  - Automatically sets smart defaults (questionnaire format, no negative marking, etc.)
-  - Clears CMS URL when switching to form
+  - Shows Google Sheets Link input field
+  - Automatically sets smart defaults (questionnaire format, no negative marking, Others stream, etc.)
+  - Validates Google Sheets URL format
 - **Assessment/Homework type behavior:**
   - Shows CMS URL text input
-  - Clears CSV file when switching away from form
-- Updated labels to clearly indicate when each field should be used
+  - Validates CMS domain format
+- Updated labels and helper text to clearly indicate when each field should be used
 
 ### 4. Testing Infrastructure
 
-#### `cypress/support/index.ts`
-
-- Added `customFileUpload` command for file upload testing
-- Handles file creation and form submission simulation
-
 #### `cypress/mocks/mockdata.ts`
 
-- Added `CreateFormData` with test data for form questionnaires
+- Updated `CreateFormData` with Google Sheets link for testing
 - Includes appropriate defaults for form-specific fields
 
 #### `cypress/e2e/quiz.cy.ts`
 
-- Added comprehensive test case for form creation with file upload
+- Updated test case for form creation with Google Sheets link
 - Tests smart defaults when form type is selected
-- Verifies file upload functionality
-
-#### `cypress/fixtures/form-questions.csv`
-
-- Sample CSV file for testing file upload functionality
+- Verifies Google Sheets link input functionality
 
 ## User Experience
 
@@ -81,39 +67,40 @@ This implementation adds file upload functionality for form questionnaires in th
    - Show Scores: false
    - Shuffle: false
    - Stream: "Others"
-3. Upload CSV file using the file input field
-4. CMS URL field is available but labeled for assessments/homework
+3. Enter Google Sheets link in the URL field
+4. Link is validated to ensure it's a valid Google Sheets URL
 
 ### For Assessment/Homework:
 
 1. Select "Assessment" or "Homework" as test type
 2. Enter CMS URL in the text field
-3. CSV file field is available but labeled for forms only
+3. URL is validated to ensure it's a valid CMS domain
 
-## CSV File Format
+## Google Sheets Format
 
-The CSV file should contain form questions with appropriate headers. Example:
+The Google Sheets document should contain form questions with appropriate column headers. Example structure:
 
-```csv
-question_id,question_text,question_type,options,required
-1,"What is your name?",text,,true
-2,"What is your favorite subject?",select,"Math,Science,English,History",true
-```
+| question_id | question_text                  | question_type | options                      | required |
+| ----------- | ------------------------------ | ------------- | ---------------------------- | -------- |
+| 1           | What is your name?             | text          |                              | true     |
+| 2           | What is your favorite subject? | select        | Math,Science,English,History | true     |
 
 ## Technical Implementation Details
 
 ### Validation Logic
 
-- **Forms:** Require CSV file, CMS URL is optional
-- **Assessments/Homework:** Require CMS URL with domain validation, CSV file is optional
-- **Error Handling:** Clear validation messages for missing required fields
+- **Forms:** Require Google Sheets link with docs.google.com/spreadsheets domain validation
+- **Assessments/Homework:** Require CMS URL with cms.peerlearning.com domain validation
+- **Error Handling:** Clear validation messages for missing required fields and invalid URLs
 
-### File Handling
+### Modal Display
 
-- File uploads store the filename in the form field
-- Actual file processing would be handled by the backend
-- Frontend validates file type (CSV only)
+- **Forms:** Shows "Google Sheets Link" label with clickable link
+- **Assessments/Homework:** Shows "CMS Link" label with clickable link
+- Links are properly formatted and validated before display
 
 ## Future Enhancements
 
-1. Add file content validation
+1. Add Google Sheets API integration for content validation
+2. Add preview functionality for Google Sheets content
+3. Add support for additional spreadsheet formats

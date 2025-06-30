@@ -146,7 +146,6 @@ export const quizSchema = z
         'Invalid option selected'
       ),
     cmsUrl: z.string().optional(),
-    csvFile: z.string().optional(),
     testType: z
       .string({ required_error: 'This field is required' })
       .refine(
@@ -171,26 +170,36 @@ export const quizSchema = z
     shuffle: z.coerce.boolean(),
   })
   .superRefine((data, context) => {
-    // Conditional validation based on test type
-    if (data.testType === 'form') {
-      // For forms, require CSV file
-      if (!data.csvFile || data.csvFile.trim() === '') {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'CSV file is required for form questionnaires',
-          path: ['csvFile'],
-        });
-      }
+    // CMS URL or Google Sheets link is required for all test types
+    if (!data.cmsUrl || data.cmsUrl.trim() === '') {
+      const fieldLabel = data.testType === 'form' ? 'Google Sheets link' : 'CMS URL';
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `${fieldLabel} is required`,
+        path: ['cmsUrl'],
+      });
     } else {
-      // For non-forms, require CMS URL
-      if (!data.cmsUrl || data.cmsUrl.trim() === '') {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'CMS URL is required',
-          path: ['cmsUrl'],
-        });
+      // Conditional validation based on test type
+      if (data.testType === 'form') {
+        // For forms, validate Google Sheets URL
+        try {
+          const url = new URL(data.cmsUrl);
+          if (!data.cmsUrl.includes('docs.google.com/spreadsheets')) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'Please provide a valid Google Sheets link',
+              path: ['cmsUrl'],
+            });
+          }
+        } catch {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Please provide a valid Google Sheets link',
+            path: ['cmsUrl'],
+          });
+        }
       } else {
-        // Validate CMS URL format
+        // For non-forms, validate CMS URL format
         try {
           const url = new URL(data.cmsUrl);
           if (!data.cmsUrl.includes('cms.peerlearning.com')) {
