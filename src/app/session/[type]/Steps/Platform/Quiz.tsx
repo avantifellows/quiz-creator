@@ -56,7 +56,7 @@ const QuizForm: FC = () => {
             form.setValue('stream', 'Others');
           }
 
-          // No need to hide fields - just update labels via schema
+          // Update field visibility and disabled states dynamically
           fieldsSchema.testFormat.disabled = isFormType || type === SessionType.EDIT;
           fieldsSchema.gurukulFormatType.disabled = isFormType || type === SessionType.EDIT;
           fieldsSchema.stream.disabled = isFormType || type === SessionType.EDIT;
@@ -64,6 +64,15 @@ const QuizForm: FC = () => {
           fieldsSchema.showAnswers.disabled = isFormType;
           fieldsSchema.showScores.disabled = isFormType;
           fieldsSchema.shuffle.disabled = isFormType;
+          fieldsSchema.sheetName.hide = !isFormType;
+
+          // Update CMS URL field dynamically
+          const cmsUrlField = fieldsSchema.cmsUrl as any;
+          cmsUrlField.label = isFormType ? 'Google Sheets Link' : 'CMS URL';
+          cmsUrlField.placeholder = isFormType ? 'Enter Google Sheets link' : 'Enter CMS URL';
+          cmsUrlField.helperText = isFormType
+            ? 'Enter the Google Sheets link containing your form questions'
+            : 'Enter the CMS URL for your quiz content';
         },
       },
       course: {
@@ -112,6 +121,14 @@ const QuizForm: FC = () => {
         helperText: isForm
           ? 'Enter the Google Sheets link containing your form questions'
           : 'Enter the CMS URL for your quiz content',
+      },
+      sheetName: {
+        type: 'text',
+        label: 'Sheet Name',
+        placeholder: 'Enter the sheet name within the Google Sheets',
+        disabled: type === SessionType.EDIT,
+        hide: !isForm,
+        helperText: 'Specify which sheet/tab to use from the Google Sheets document',
       },
       markingScheme: {
         type: 'select',
@@ -162,6 +179,7 @@ const QuizForm: FC = () => {
       testPurpose: formData.meta_data?.test_purpose,
       gurukulFormatType: formData.meta_data?.gurukul_format_type,
       cmsUrl: formData.meta_data?.cms_test_id,
+      sheetName: formData.meta_data?.sheet_name,
       markingScheme: formData.meta_data?.marking_scheme,
       optionalLimit: formData.meta_data?.optional_limits,
       showAnswers: formData.meta_data?.show_answers == false ? false : true,
@@ -189,6 +207,7 @@ const QuizForm: FC = () => {
         marking_scheme: isHomework || isForm ? MARKING_SCHEMES['1, 0'] : MARKING_SCHEMES['4,-1'],
         optional_limits: data.optionalLimit,
         cms_test_id: cmsTestId,
+        ...(isForm && data.sheetName && { sheet_name: data.sheetName }),
         show_answers: data.showAnswers,
         show_scores: data.showScores,
         shuffle: data.shuffle,

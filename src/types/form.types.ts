@@ -146,6 +146,7 @@ export const quizSchema = z
         'Invalid option selected'
       ),
     cmsUrl: z.string().optional(),
+    sheetName: z.string().optional(),
     testType: z
       .string({ required_error: 'This field is required' })
       .refine(
