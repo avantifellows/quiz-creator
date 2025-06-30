@@ -50,7 +50,7 @@ const QuizForm: FC = () => {
             form.setValue('gurukulFormatType', 'qa');
             form.setValue('markingScheme', MARKING_SCHEMES['1, 0']);
             form.setValue('optionalLimit', 'N/A');
-            form.setValue('showAnswers', false);
+            form.setValue('showAnswers', true);
             form.setValue('showScores', false);
             form.setValue('shuffle', false);
             form.setValue('stream', 'Others');
