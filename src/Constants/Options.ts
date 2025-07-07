@@ -3,6 +3,7 @@ import { AuthType, Grades, MARKING_SCHEMES, Option, Platform, Subjects } from '@
 export const TestTypeOptions: Option[] = [
   { value: 'assessment', label: 'Assessment' },
   { value: 'homework', label: 'Homework' },
+  { value: 'form', label: 'Form' },
   // { value: 'omr-assessment', label: 'Omr-Assessment' },
 ];
 
@@ -30,6 +31,7 @@ export const TestFormatOptions: Option[] = [
   { value: 'hiring_test', label: 'Hiring Test' },
   { value: 'mock_test', label: 'Mock Test' },
   { value: 'homework', label: 'Homework' },
+  { value: 'questionnaire', label: 'Questionnaire' },
 ];
 
 export const TestPurposeOptions: Option[] = [
@@ -94,6 +96,7 @@ export const StreamOptions: Option[] = [
   { value: 'business_studies', label: 'Business Studies' },
   { value: 'economics', label: 'Economics' },
   { value: 'nda', label: 'NDA' },
+  { value: 'Others', label: 'Others' },
   { value: 'ca', label: 'CA' },
   { value: 'clat', label: 'CLAT' },
 ];

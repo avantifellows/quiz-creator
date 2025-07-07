@@ -145,12 +145,8 @@ export const quizSchema = z
         (value) => TestPurposeOptions.some((option) => option.value === value),
         'Invalid option selected'
       ),
-    cmsUrl: z
-      .string({ required_error: 'This field is required' })
-      .url('This is not a valid url')
-      .includes('cms.peerlearning.com', {
-        message: 'This is not a valid cms url, please use https://cms.peerlearning.com',
-      }),
+    cmsUrl: z.string().optional(),
+    sheetName: z.string().optional(),
     testType: z
       .string({ required_error: 'This field is required' })
       .refine(
@@ -178,6 +174,56 @@ export const quizSchema = z
     nextStepText: z.string().optional(),
   })
   .superRefine((data, context) => {
+    // CMS URL or Google Sheets link is required for all test types
+    if (!data.cmsUrl || data.cmsUrl.trim() === '') {
+      const fieldLabel = data.testType === 'form' ? 'Google Sheets link' : 'CMS URL';
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `${fieldLabel} is required`,
+        path: ['cmsUrl'],
+      });
+    } else {
+      // Conditional validation based on test type
+      if (data.testType === 'form') {
+        // For forms, validate Google Sheets URL
+        try {
+          const url = new URL(data.cmsUrl);
+          if (!data.cmsUrl.includes('docs.google.com/spreadsheets')) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'Please provide a valid Google Sheets link',
+              path: ['cmsUrl'],
+            });
+          }
+        } catch {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Please provide a valid Google Sheets link',
+            path: ['cmsUrl'],
+          });
+        }
+      } else {
+        // For non-forms, validate CMS URL format
+        try {
+          const url = new URL(data.cmsUrl);
+          if (!data.cmsUrl.includes('cms.peerlearning.com')) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'Please provide a valid CMS URL (https://cms.peerlearning.com)',
+              path: ['cmsUrl'],
+            });
+          }
+        } catch {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Please provide a valid CMS URL',
+            path: ['cmsUrl'],
+          });
+        }
+      }
+    }
+
+    // hasNextStep validation
     if (data.hasNextStep) {
       if (!data.nextStepUrl || data.nextStepUrl.trim() === '') {
         context.addIssue({

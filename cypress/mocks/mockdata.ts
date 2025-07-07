@@ -132,4 +132,5 @@ export const DuplicateLiveData = {
   platformId: 'K4TOrB7at0Y',
   startDate: getDateWithTime({ hours: 14, minutes: 20 }, 1),
   endDate: getDateWithTime({ hours: 15, minutes: 50 }, 3),
+  activeDays: [1, 3, 5],
 };

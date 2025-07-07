@@ -112,8 +112,8 @@ export const displayData = (
       { label: 'Show Scores', value: data.meta_data?.show_scores == false ? 'No' : 'Yes' },
       { label: 'Shuffle Questions', value: data.meta_data?.shuffle ? 'Yes' : 'No' },
       {
-        label: 'CMS Link',
-        value: data.meta_data?.cms_test_id ? absoluteLink(data.meta_data?.cms_test_id) : 'N/A',
+        label: data.meta_data?.test_type === 'form' ? 'Google Sheets Link' : 'CMS Link',
+        value: data.meta_data?.cms_test_id ? absoluteLink(data.meta_data.cms_test_id) : 'N/A',
         isLink: !!data.meta_data?.cms_test_id,
       },
       {

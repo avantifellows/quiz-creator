@@ -140,7 +140,7 @@ describe('Quiz Session', () => {
         .should('contain.text', create.gurukulFormatType.label);
       cy.get('@quizDetails').eq(7).children('p').should('contain.text', create.optionalLimit.value);
       cy.get('@quizDetails')
-        .eq(10)
+        .eq(11)
         .children('a')
         .should('contain.text', create.cmsUrl)
         .should('have.attr', 'href', create.cmsUrl);
@@ -237,6 +237,7 @@ describe('Quiz Session', () => {
           cy.get('button').contains('Submit').click().wait(100);
 
           cy.url().should('include', '/');
+          cy.reload();
           cy.get('table > tbody > tr').eq(0).should('have.class', 'opacity-50');
           cy.wait(5000);
           cy.reload();
@@ -340,6 +341,7 @@ describe('Quiz Session', () => {
 
           // Verify
           cy.url().should('include', '/');
+          cy.reload();
           cy.get('table > tbody > tr')
             .eq(0)
             .children('td')
