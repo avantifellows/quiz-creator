@@ -62,7 +62,7 @@ export const CreateQuizData = {
 
 // Form Create Details
 export const CreateFormData = {
-  name: 'Cypress Form Session',
+  name: 'Cypress Quiz Session',
   platform: { label: Platform.Quiz, value: Platform.Quiz },
   group: { label: Group.Haryana, value: Group.Haryana },
   parentBatch: {
