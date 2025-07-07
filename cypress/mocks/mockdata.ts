@@ -96,7 +96,7 @@ export const CreateFormData = {
   cmsUrl:
     'https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit',
   optionalLimit: OptionalLimitOptions.find((i) => i.value === 'N/A')!,
-  showAnswers: false,
+  showAnswers: true,
   showScores: false,
   shuffle: false,
 

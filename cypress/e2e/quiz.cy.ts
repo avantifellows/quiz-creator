@@ -136,7 +136,7 @@ describe('Quiz Session', () => {
     cy.get('select[name="testFormat"]').should('have.value', 'questionnaire');
     cy.get('select[name="gurukulFormatType"]').should('have.value', 'qa');
     cy.get('select[name="stream"]').should('have.value', 'Others');
-    cy.get('input[name="showAnswers"]').should('not.be.checked');
+    cy.get('input[name="showAnswers"]').should('be.checked');
     cy.get('input[name="showScores"]').should('not.be.checked');
     cy.get('input[name="shuffle"]').should('not.be.checked');
 
@@ -231,7 +231,7 @@ describe('Quiz Session', () => {
         .should('contain.text', create.gurukulFormatType.label);
       cy.get('@quizDetails').eq(7).children('p').should('contain.text', create.optionalLimit.value);
       cy.get('@quizDetails')
-        .eq(10)
+        .eq(11)
         .children('a')
         .should('contain.text', create.cmsUrl)
         .should('have.attr', 'href', create.cmsUrl);
