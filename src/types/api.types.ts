@@ -32,6 +32,8 @@ const metaDataSchema = z.object({
   gurukul_format_type: z.string().optional(),
   subject: z.string().optional(),
   status: z.nativeEnum(STATUS).optional(),
+  next_step_url: z.string().optional(),
+  next_step_text: z.string().optional(),
 });
 
 const purposeSchema = z.object({

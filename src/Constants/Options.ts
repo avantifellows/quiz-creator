@@ -75,6 +75,8 @@ export const CourseOptions: Option[] = [
   { value: 'Photon', label: 'Photon' },
   { value: 'JEE', label: 'JEE' },
   { value: 'CUET', label: 'CUET' },
+  { value: 'CA', label: 'CA' },
+  { value: 'CLAT', label: 'CLAT' },
 ];
 
 export const StreamOptions: Option[] = [
@@ -95,6 +97,8 @@ export const StreamOptions: Option[] = [
   { value: 'economics', label: 'Economics' },
   { value: 'nda', label: 'NDA' },
   { value: 'Others', label: 'Others' },
+  { value: 'ca', label: 'CA' },
+  { value: 'clat', label: 'CLAT' },
 ];
 
 export const GradeOptions = Grades.map((g) => ({ value: Number(g), label: g.toString() }));

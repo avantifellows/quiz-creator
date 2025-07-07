@@ -25,6 +25,7 @@ import {
 import { useParams } from 'next/navigation';
 import { useCallback, useMemo, type FC } from 'react';
 import React from 'react';
+import { handleNextStepFields } from '../helper';
 
 const QuizForm: FC = () => {
   const { type } = useParams<SessionParams>();
@@ -167,6 +168,23 @@ const QuizForm: FC = () => {
         hide: false,
         disabled: isForm,
       },
+      hasNextStep: {
+        type: 'switch',
+        label: 'Do you want to attach a next step?',
+        onCheckedChange: (value, form) => handleNextStepFields(value, fieldsSchema, form),
+      },
+      nextStepUrl: {
+        type: 'text',
+        label: 'Next Step URL',
+        placeholder: 'Enter the URL for the next step',
+        hide: true,
+      },
+      nextStepText: {
+        type: 'text',
+        label: 'Next Step Button Text',
+        placeholder: 'Enter the button text (e.g., "Proceed to Quiz")',
+        hide: true,
+      },
     };
   }, [type, formData.meta_data?.test_type, isForm]);
 
@@ -185,6 +203,9 @@ const QuizForm: FC = () => {
       showAnswers: formData.meta_data?.show_answers == false ? false : true,
       showScores: formData.meta_data?.show_scores == false ? false : true,
       shuffle: formData.meta_data?.shuffle == true ? true : false,
+      hasNextStep: formData.meta_data?.next_step_url ? true : false,
+      nextStepUrl: formData.meta_data?.next_step_url || '',
+      nextStepText: formData.meta_data?.next_step_text || '',
     }),
     [formData]
   );
@@ -211,6 +232,8 @@ const QuizForm: FC = () => {
         show_answers: data.showAnswers,
         show_scores: data.showScores,
         shuffle: data.shuffle,
+        next_step_url: data.hasNextStep ? data.nextStepUrl : undefined,
+        next_step_text: data.hasNextStep ? data.nextStepText : undefined,
       },
     };
     updateFormData(addedData, Steps.TIMELINE);

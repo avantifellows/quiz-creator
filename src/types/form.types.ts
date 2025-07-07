@@ -169,6 +169,9 @@ export const quizSchema = z
     showAnswers: z.coerce.boolean(),
     showScores: z.coerce.boolean(),
     shuffle: z.coerce.boolean(),
+    hasNextStep: z.coerce.boolean(),
+    nextStepUrl: z.string().optional(),
+    nextStepText: z.string().optional(),
   })
   .superRefine((data, context) => {
     // CMS URL or Google Sheets link is required for all test types
@@ -217,6 +220,24 @@ export const quizSchema = z
             path: ['cmsUrl'],
           });
         }
+      }
+    }
+
+    // hasNextStep validation
+    if (data.hasNextStep) {
+      if (!data.nextStepUrl || data.nextStepUrl.trim() === '') {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Next step URL is required when next step is enabled',
+          path: ['nextStepUrl'],
+        });
+      }
+      if (!data.nextStepText || data.nextStepText.trim() === '') {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Next step text is required when next step is enabled',
+          path: ['nextStepText'],
+        });
       }
     }
   });
