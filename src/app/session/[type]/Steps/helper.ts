@@ -10,6 +10,7 @@ import {
   Platform,
   Session,
   basicFields,
+  quizFields,
 } from '@/types';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -317,5 +318,22 @@ export const handleBatchFields = (
   const selectedGroup = form.watch('group');
   if (selectedGroup) {
     setParentBatchOptions(selectedGroup, form, apiOptions, fieldsSchema);
+  }
+};
+
+export const handleNextStepFields = (
+  checked: boolean,
+  formSchema: FieldSchema<quizFields>,
+  form: UseFormReturn
+) => {
+  if (checked) {
+    formSchema.nextStepUrl.hide = false;
+    formSchema.nextStepText.hide = false;
+    form.setValue('hasNextStep', true, { shouldDirty: true });
+  } else {
+    formSchema.nextStepUrl.hide = true;
+    formSchema.nextStepText.hide = true;
+    form.setValue('nextStepUrl', '', { shouldDirty: true });
+    form.setValue('nextStepText', '', { shouldDirty: true });
   }
 };

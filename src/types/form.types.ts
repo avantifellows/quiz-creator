@@ -119,60 +119,82 @@ export const basicSchema = z
     }
   });
 
-export const quizSchema = z.object({
-  course: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => CourseOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  stream: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => StreamOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  testFormat: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => TestFormatOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  testPurpose: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => TestPurposeOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  cmsUrl: z
-    .string({ required_error: 'This field is required' })
-    .url('This is not a valid url')
-    .includes('cms.peerlearning.com', {
-      message: 'This is not a valid cms url, please use https://cms.peerlearning.com',
-    }),
-  testType: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => TestTypeOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  gurukulFormatType: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => GurukulFormatOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  markingScheme: z.string().optional(),
-  optionalLimit: z
-    .string({ required_error: 'This field is required' })
-    .refine(
-      (value) => OptionalLimitOptions.some((option) => option.value === value),
-      'Invalid option selected'
-    ),
-  showAnswers: z.coerce.boolean(),
-  showScores: z.coerce.boolean(),
-  shuffle: z.coerce.boolean(),
-});
+export const quizSchema = z
+  .object({
+    course: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => CourseOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    stream: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => StreamOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    testFormat: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => TestFormatOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    testPurpose: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => TestPurposeOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    cmsUrl: z
+      .string({ required_error: 'This field is required' })
+      .url('This is not a valid url')
+      .includes('cms.peerlearning.com', {
+        message: 'This is not a valid cms url, please use https://cms.peerlearning.com',
+      }),
+    testType: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => TestTypeOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    gurukulFormatType: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => GurukulFormatOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    markingScheme: z.string().optional(),
+    optionalLimit: z
+      .string({ required_error: 'This field is required' })
+      .refine(
+        (value) => OptionalLimitOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    showAnswers: z.coerce.boolean(),
+    showScores: z.coerce.boolean(),
+    shuffle: z.coerce.boolean(),
+    hasNextStep: z.coerce.boolean(),
+    nextStepUrl: z.string().optional(),
+    nextStepText: z.string().optional(),
+  })
+  .superRefine((data, context) => {
+    if (data.hasNextStep) {
+      if (!data.nextStepUrl || data.nextStepUrl.trim() === '') {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Next step URL is required when next step is enabled',
+          path: ['nextStepUrl'],
+        });
+      }
+      if (!data.nextStepText || data.nextStepText.trim() === '') {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Next step text is required when next step is enabled',
+          path: ['nextStepText'],
+        });
+      }
+    }
+  });
 
 export const timelineSchema = z
   .object({
