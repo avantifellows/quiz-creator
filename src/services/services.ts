@@ -171,17 +171,17 @@ export const sendRegenerateSns = (id?: number) => publishMessage({ action: 'rege
  */
 export async function patchSession(formData: Session, id: number, oldSession: Session) {
   try {
-    await instance.patch<Session>(`/session/${id}`, {
+    // Delete any helper keys we do not want to propagate to the API
+    KeysToDeleteBeforeUpdate.forEach((key) => deleteByPath(formData, key));
+
+    // Build a single payload that already contains the latest updates. We keep the
+    // status as `PENDING` so that the UI can show the interim disabled state and
+    // gets flipped to `SUCCESS` by the background worker shortly afterwards.
+    const payload: Session = {
+      ...oldSession, // start with the existing data as base
+      ...formData, // override with the fields changed in the form
       meta_data: {
         ...oldSession.meta_data,
-        date_created: utcToISTDate(formData.meta_data?.date_created ?? ''),
-        status: STATUS.PENDING,
-      },
-    });
-    KeysToDeleteBeforeUpdate.forEach((key) => deleteByPath(formData, key));
-    const payload: Session = {
-      ...formData,
-      meta_data: {
         ...formData.meta_data,
         date_created: utcToISTDate(formData.meta_data?.date_created ?? ''),
         status: STATUS.PENDING,
@@ -189,7 +189,11 @@ export async function patchSession(formData: Session, id: number, oldSession: Se
       ...(formData.start_time ? { start_time: utcToISTDate(formData.start_time) } : {}),
       ...(formData.end_time ? { end_time: utcToISTDate(formData.end_time) } : {}),
     };
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Send the full PATCH update so that list / detail fetches reflect the changes immediately.
+    await instance.patch<Session>(`/session/${id}`, payload);
+
+    // Additionally notify the downstream worker to perform any heavy processing.
     publishMessage({ action: 'patch', id, patch_session: payload });
 
     console.info(`[SUCCESS] updated session for ${id}`);

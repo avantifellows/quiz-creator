@@ -214,6 +214,7 @@ describe('Live Session', () => {
           cy.get('button').contains('Submit').click().wait(100);
 
           cy.url().should('include', '/live');
+          cy.reload();
           cy.get('table > tbody > tr').eq(0).should('have.class', 'opacity-50');
           cy.wait(5000);
           cy.reload();
@@ -313,10 +314,11 @@ describe('Live Session', () => {
           cy.customDatePicker('endDate', duplicate.endDate);
 
           // Submit the form
-          cy.get('button').contains('Submit').click().wait(1000);
+          cy.get('button').contains('Submit').click().wait(3000);
 
           // Verify
-          cy.url().should('include', '/');
+          cy.url().should('include', '/live');
+          cy.reload();
           cy.get('table > tbody > tr')
             .eq(0)
             .children('td')
