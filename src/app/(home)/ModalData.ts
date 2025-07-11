@@ -104,7 +104,7 @@ export const displayData = (
           GurukulFormatOptions.find((i) => i.value === data.meta_data?.gurukul_format_type)
             ?.label ??
           data.meta_data?.gurukul_format_type ??
-          'both',
+          'Q & A',
       },
       { label: 'Marking Scheme', value: data.meta_data?.marking_scheme },
       { label: 'Optional Limits', value: data.meta_data?.optional_limits },

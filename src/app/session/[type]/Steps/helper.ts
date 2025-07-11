@@ -270,7 +270,7 @@ export const handleRedirectionData = (formData: Session) => {
         test_format: '',
         test_purpose: '',
         test_type: '',
-        gurukul_format_type: '',
+        gurukul_format_type: 'qa',
         marking_scheme: '',
         optional_limits: '',
         cms_test_id: '',

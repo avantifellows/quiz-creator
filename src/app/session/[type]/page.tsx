@@ -30,7 +30,7 @@ export default async function SessionCreator({
   if (id) {
     if (params.type === SessionType.EDIT) {
       sessionData = await getASession(Number(id));
-    } else if (params.type === SessionType.DUPPLICATE) {
+    } else if (params.type === SessionType.DUPLICATE) {
       sessionData = await getASession(Number(id));
       KeysToDeleteBeforeDuplicate.forEach((key) => deleteByPath(sessionData, key));
     }

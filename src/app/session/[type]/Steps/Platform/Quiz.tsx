@@ -59,8 +59,8 @@ const QuizForm: FC = () => {
 
           // Update field visibility and disabled states dynamically
           fieldsSchema.testFormat.disabled = isFormType || type === SessionType.EDIT;
-          fieldsSchema.gurukulFormatType.disabled = isFormType || type === SessionType.EDIT;
-          fieldsSchema.stream.disabled = isFormType || type === SessionType.EDIT;
+          fieldsSchema.gurukulFormatType.disabled = isFormType; // Allow editing in edit mode
+          fieldsSchema.stream.disabled = isFormType; // Allow editing in edit mode
           fieldsSchema.optionalLimit.disabled = isFormType || type === SessionType.EDIT;
           fieldsSchema.showAnswers.disabled = isFormType;
           fieldsSchema.showScores.disabled = isFormType;
@@ -89,7 +89,7 @@ const QuizForm: FC = () => {
         placeholder: 'Select a stream',
         label: 'Stream',
         hide: false,
-        disabled: isForm || type === SessionType.EDIT,
+        disabled: isForm, // Allow editing in edit mode
       },
       testFormat: {
         type: 'select',
@@ -112,7 +112,7 @@ const QuizForm: FC = () => {
         placeholder: 'Select the Quiz Format to display on Gurukul',
         label: 'Quiz Display Format',
         hide: false,
-        disabled: isForm || type === SessionType.EDIT,
+        disabled: isForm, // Allow editing in edit mode
       },
       cmsUrl: {
         type: 'text',
@@ -195,7 +195,7 @@ const QuizForm: FC = () => {
       stream: formData.meta_data?.stream,
       testFormat: formData.meta_data?.test_format,
       testPurpose: formData.meta_data?.test_purpose,
-      gurukulFormatType: formData.meta_data?.gurukul_format_type,
+      gurukulFormatType: formData.meta_data?.gurukul_format_type || 'qa',
       cmsUrl: formData.meta_data?.cms_test_id,
       sheetName: formData.meta_data?.sheet_name,
       markingScheme: formData.meta_data?.marking_scheme,
@@ -210,34 +210,44 @@ const QuizForm: FC = () => {
     [formData]
   );
 
-  const onSubmit = useCallback((data: quizFields) => {
-    const isHomework = data.testType === 'homework';
-    const isForm = data.testType === 'form';
+  const onSubmit = useCallback(
+    (data: quizFields) => {
+      const isHomework = data.testType === 'homework';
+      const isForm = data.testType === 'form';
 
-    // Use CMS URL for all test types (Google Sheets link for forms, CMS URL for others)
-    const cmsTestId = data.cmsUrl;
+      // Use CMS URL for all test types (Google Sheets link for forms, CMS URL for others)
+      const cmsTestId = data.cmsUrl;
 
-    const addedData: Session = {
-      meta_data: {
-        course: data.course,
-        stream: data.stream,
-        test_format: data.testFormat,
-        test_purpose: data.testPurpose,
-        test_type: data.testType,
-        gurukul_format_type: data.gurukulFormatType,
-        marking_scheme: isHomework || isForm ? MARKING_SCHEMES['1, 0'] : MARKING_SCHEMES['4,-1'],
-        optional_limits: data.optionalLimit,
-        cms_test_id: cmsTestId,
-        ...(isForm && data.sheetName && { sheet_name: data.sheetName }),
-        show_answers: data.showAnswers,
-        show_scores: data.showScores,
-        shuffle: data.shuffle,
-        next_step_url: data.hasNextStep ? data.nextStepUrl : undefined,
-        next_step_text: data.hasNextStep ? data.nextStepText : undefined,
-      },
-    };
-    updateFormData(addedData, Steps.TIMELINE);
-  }, []);
+      // In edit mode, preserve original values for disabled fields
+      const isEditMode = type === SessionType.EDIT;
+
+      const addedData: Session = {
+        meta_data: {
+          course: data.course,
+          stream: data.stream, // Allow editing in edit mode
+          test_format: isEditMode && !isForm ? formData.meta_data?.test_format : data.testFormat,
+          test_purpose: data.testPurpose,
+          test_type: data.testType,
+          gurukul_format_type: data.gurukulFormatType, // Allow editing in edit mode
+          marking_scheme: isHomework || isForm ? MARKING_SCHEMES['1, 0'] : MARKING_SCHEMES['4,-1'],
+          optional_limits:
+            isEditMode && !isForm ? formData.meta_data?.optional_limits : data.optionalLimit,
+          cms_test_id: isEditMode ? formData.meta_data?.cms_test_id : cmsTestId,
+          ...(isForm &&
+            data.sheetName && {
+              sheet_name: isEditMode ? formData.meta_data?.sheet_name : data.sheetName,
+            }),
+          show_answers: data.showAnswers,
+          show_scores: data.showScores,
+          shuffle: data.shuffle,
+          next_step_url: data.hasNextStep ? data.nextStepUrl : undefined,
+          next_step_text: data.hasNextStep ? data.nextStepText : undefined,
+        },
+      };
+      updateFormData(addedData, Steps.TIMELINE);
+    },
+    [type, formData, isForm]
+  );
 
   return (
     <FormBuilder

@@ -1,7 +1,7 @@
 export enum SessionType {
   CREATE = 'create',
   EDIT = 'edit',
-  DUPPLICATE = 'duplicate',
+  DUPLICATE = 'duplicate',
 }
 
 export enum Steps {
