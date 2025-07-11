@@ -58,8 +58,8 @@ const QuizForm: FC = () => {
           }
 
           // Update field visibility and disabled states dynamically
-          fieldsSchema.testFormat.disabled = isFormType || type === SessionType.EDIT;
-          fieldsSchema.gurukulFormatType.disabled = isFormType; // Allow editing in edit mode
+          fieldsSchema.gurukulFormatType.disabled = isFormType || type === SessionType.EDIT;
+          fieldsSchema.stream.disabled = isFormType || type === SessionType.EDIT;
           fieldsSchema.stream.disabled = isFormType; // Allow editing in edit mode
           fieldsSchema.optionalLimit.disabled = isFormType || type === SessionType.EDIT;
           fieldsSchema.showAnswers.disabled = isFormType;

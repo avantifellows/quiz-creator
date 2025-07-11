@@ -4,7 +4,7 @@ export const TestTypeOptions: Option[] = [
   { value: 'assessment', label: 'Assessment' },
   { value: 'homework', label: 'Homework' },
   { value: 'form', label: 'Form' },
-  // { value: 'omr-assessment', label: 'Omr-Assessment' },
+  { value: 'omr-assessment', label: 'OMR Assessment' },
 ];
 
 export const GurukulFormatOptions: Option[] = [
