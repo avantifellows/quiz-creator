@@ -56,7 +56,7 @@ export const CreateQuizData = {
   startDate: getDateWithTime({ hours: 10, minutes: 0 }),
   endDate: getDateWithTime({ hours: 16, minutes: 0 }, 7),
   testTakers: '10',
-  activeDays: [1, 2, 3, 4, 5],
+  sessionPattern: 'continuous', // Quiz platforms use continuous pattern (24/7)
   isEnabled: true,
 };
 
@@ -65,7 +65,7 @@ export const PatchQuizData = {
   startDate: getDateWithTime({ hours: 11, minutes: 0 }),
   endDate: getDateWithTime({ hours: 15, minutes: 0 }, 4),
   name: 'Cypress Quiz Session Edit',
-  activeDays: [1, 2, 3, 4, 5, 6, 7],
+  sessionPattern: 'continuous', // Quiz platforms use continuous pattern (24/7)
 };
 
 // Quiz Duplicate Details
@@ -113,6 +113,7 @@ export const CreateLiveData = {
   startDate: getDateWithTime({ hours: 10, minutes: 0 }),
   endDate: getDateWithTime({ hours: 16, minutes: 0 }, 7),
   testTakers: '10',
+  sessionPattern: 'weekly', // Live sessions use weekly pattern (specific days)
   activeDays: [1, 2, 3, 4, 5],
   isEnabled: true,
 };
@@ -122,6 +123,7 @@ export const PatchLiveData = {
   startDate: getDateWithTime({ hours: 8, minutes: 0 }),
   endDate: getDateWithTime({ hours: 20, minutes: 0 }, 4),
   name: 'Cypress Live Session Edit',
+  sessionPattern: 'weekly',
   activeDays: [1, 2, 3, 4, 5, 6, 7],
 };
 
@@ -132,5 +134,6 @@ export const DuplicateLiveData = {
   platformId: 'K4TOrB7at0Y',
   startDate: getDateWithTime({ hours: 14, minutes: 20 }, 1),
   endDate: getDateWithTime({ hours: 15, minutes: 50 }, 3),
+  sessionPattern: 'weekly',
   activeDays: [1, 3, 5],
 };

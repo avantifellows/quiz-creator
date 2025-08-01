@@ -119,3 +119,8 @@ export const ActiveDaysOptions: Option[] = [
   { label: 'Saturday', value: 6 },
   { label: 'Sunday', value: 7 },
 ];
+
+export const SessionPatternOptions: Option[] = [
+  { label: 'Continuous (Available 24/7)', value: 'continuous' },
+  { label: 'Weekly (Specific Days)', value: 'weekly' },
+];
