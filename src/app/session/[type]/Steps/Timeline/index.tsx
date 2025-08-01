@@ -59,16 +59,8 @@ const TimelineForm: FC = () => {
           // Update field properties directly (similar to Quiz form pattern)
           fieldsSchema.activeDays.disabled = isContinuousPattern;
 
-          // Update form data to trigger re-render
-          const updatedData: Session = {
-            repeat_schedule: {
-              type: value,
-              params: isContinuousPattern
-                ? [1, 2, 3, 4, 5, 6, 7]
-                : (formData?.repeat_schedule?.params ?? [1, 2, 3, 4, 5, 6, 7]),
-            },
-          };
-          updateFormData(updatedData);
+          // Don't call updateFormData here - it causes circular re-renders
+          // The form state will be handled in onSubmit
         },
       },
       isEnabled: {
@@ -82,12 +74,12 @@ const TimelineForm: FC = () => {
         disabled: isContinuous,
       },
     };
-  }, [currentSessionPattern, isContinuous, formData, updateFormData]);
+  }, [currentSessionPattern, isContinuous]);
 
   const defaultValues: Partial<timelineFields> = useMemo(() => {
     return {
-      startDate: formData?.start_time && new Date(formData?.start_time),
-      endDate: formData?.end_time && new Date(formData?.end_time),
+      startDate: formData?.start_time ? new Date(formData.start_time) : undefined,
+      endDate: formData?.end_time ? new Date(formData.end_time) : undefined,
       isEnabled: formData?.is_active ?? true,
       testTakers: formData?.meta_data?.test_takers_count,
       sessionPattern: currentSessionPattern,
@@ -96,7 +88,15 @@ const TimelineForm: FC = () => {
         ? [1, 2, 3, 4, 5, 6, 7] // All days for continuous
         : (formData?.repeat_schedule?.params ?? [1, 2, 3, 4, 5, 6, 7]), // Selected days for weekly
     };
-  }, [formData, currentSessionPattern, isContinuous]);
+  }, [
+    formData?.start_time,
+    formData?.end_time,
+    formData?.is_active,
+    formData?.meta_data?.test_takers_count,
+    currentSessionPattern,
+    isContinuous,
+    formData?.repeat_schedule?.params,
+  ]);
 
   const onSubmit = useCallback(
     async (data: timelineFields) => {
