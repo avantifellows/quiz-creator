@@ -76,7 +76,10 @@ describe('Quiz Session', () => {
 
     cy.customDatePicker('endDate', create.endDate);
     cy.customInput('testTakers', create.testTakers);
-    cy.customCheckbox('activeDays', create.activeDays);
+    cy.customSelect('sessionPattern', {
+      label: 'Continuous (Available 24/7)',
+      value: 'continuous',
+    });
 
     // Click on submit
     cy.get('button').contains('Submit').click().wait(1000);
@@ -166,15 +169,7 @@ describe('Quiz Session', () => {
           'contain.text',
           `${format(create.startDate, 'p')} - ${format(create.endDate, 'p')}`
         );
-      cy.get('@timeDetails')
-        .last()
-        .children('p')
-        .should(
-          'contain.text',
-          create.activeDays
-            .map((value) => ActiveDaysOptions.find((option) => option.value === value)?.label)
-            .join(', ')
-        );
+      // Note: Quiz sessions use continuous pattern, so no active days are displayed
     });
   });
 
@@ -231,7 +226,10 @@ describe('Quiz Session', () => {
           // Fill timeline details
           cy.customDatePicker('startDate', edit.startDate);
           cy.customDatePicker('endDate', edit.endDate);
-          cy.customCheckbox('activeDays', edit.activeDays);
+          cy.customSelect('sessionPattern', {
+            label: 'Continuous (Available 24/7)',
+            value: 'continuous',
+          });
 
           // Submit the form
           cy.get('button').contains('Submit').click().wait(100);
@@ -279,15 +277,8 @@ describe('Quiz Session', () => {
         .eq(2)
         .children('p')
         .should('contain.text', `${format(edit.startDate, 'p')} - ${format(edit.endDate, 'p')}`);
-      cy.get('@timeDetails')
-        .last()
-        .children('p')
-        .should(
-          'contain.text',
-          edit.activeDays
-            .map((value) => ActiveDaysOptions.find((option) => option.value === value)?.label)
-            .join(', ')
-        );
+      cy.get('@timeDetails');
+      // Note: Quiz sessions use continuous pattern, so no active days are displayed
     });
   });
 

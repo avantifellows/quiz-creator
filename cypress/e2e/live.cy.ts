@@ -68,6 +68,7 @@ describe('Live Session', () => {
 
     cy.customDatePicker('endDate', create.endDate);
     cy.customInput('testTakers', create.testTakers);
+    cy.customSelect('sessionPattern', { label: 'Weekly (Specific Days)', value: 'weekly' });
     cy.customCheckbox('activeDays', create.activeDays);
 
     // Click on submit
@@ -208,6 +209,7 @@ describe('Live Session', () => {
           // Fill timeline details
           cy.customDatePicker('startDate', edit.startDate);
           cy.customDatePicker('endDate', edit.endDate);
+          cy.customSelect('sessionPattern', { label: 'Weekly (Specific Days)', value: 'weekly' });
           cy.customCheckbox('activeDays', edit.activeDays);
 
           // Submit the form
@@ -312,6 +314,8 @@ describe('Live Session', () => {
           // Fill timeline details
           cy.customDatePicker('startDate', duplicate.startDate);
           cy.customDatePicker('endDate', duplicate.endDate);
+          cy.customSelect('sessionPattern', { label: 'Weekly (Specific Days)', value: 'weekly' });
+          cy.customCheckbox('activeDays', duplicate.activeDays);
 
           // Submit the form
           cy.get('button').contains('Submit').click().wait(3000);

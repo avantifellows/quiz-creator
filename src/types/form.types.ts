@@ -257,14 +257,21 @@ export const timelineSchema = z
       })
       .or(z.string()),
     isEnabled: z.coerce.boolean(),
-    activeDays: z.array(
-      z
-        .number({ required_error: 'This field is required' })
-        .refine(
-          (value) => ActiveDaysOptions.some((option) => option.value === value),
-          'Invalid option selected'
-        )
-    ),
+    sessionPattern: z
+      .string({
+        required_error: 'Session pattern is required',
+      })
+      .refine((value) => ['continuous', 'weekly'].includes(value), 'Invalid session pattern'),
+    activeDays: z
+      .array(
+        z
+          .number({ required_error: 'This field is required' })
+          .refine(
+            (value) => ActiveDaysOptions.some((option) => option.value === value),
+            'Invalid option selected'
+          )
+      )
+      .optional(),
     testTakers: z.coerce
       .number({
         required_error: 'This field is required',
@@ -274,6 +281,15 @@ export const timelineSchema = z
       .min(0, 'Test Takers must be greater than 0'),
   })
   .superRefine((data, context) => {
+    // Validate that activeDays is provided for weekly session pattern
+    if (data.sessionPattern === 'weekly' && (!data.activeDays || data.activeDays.length === 0)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Active days are required for weekly session pattern',
+        path: ['activeDays'],
+      });
+    }
+
     const startDate = new Date(data.startDate).toDateString();
     const endDate = new Date(data.endDate).toDateString();
     const startTIme = new Date(data.startDate).toTimeString();
