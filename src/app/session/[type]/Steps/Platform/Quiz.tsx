@@ -218,7 +218,7 @@ const QuizForm: FC = () => {
       // Use CMS URL for all test types (Google Sheets link for forms, CMS URL for others)
       const cmsTestId = data.cmsUrl;
 
-      // In edit mode, preserve original values for disabled fields
+      // In edit mode, preserve original values for disabled fields.
       const isEditMode = type === SessionType.EDIT;
 
       const addedData: Session = {
