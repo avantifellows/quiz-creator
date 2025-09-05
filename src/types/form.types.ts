@@ -290,23 +290,39 @@ export const timelineSchema = z
       });
     }
 
-    const startDate = new Date(data.startDate).toDateString();
-    const endDate = new Date(data.endDate).toDateString();
-    const startTIme = new Date(data.startDate).toTimeString();
-    const endTIme = new Date(data.endDate).toTimeString();
-    if (isBefore(endDate, startDate)) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'End date must be greater than start date.',
-        path: ['endDate'],
-      });
-    }
-    if (endTIme < startTIme) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'End Time must be greater than start Time.',
-        path: ['endDate'],
-      });
+    const startDateTime = new Date(data.startDate);
+    const endDateTime = new Date(data.endDate);
+
+    if (data.sessionPattern === 'continuous') {
+      // For continuous sessions, validate full datetime (date + time)
+      if (isBefore(endDateTime, startDateTime)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'End date and time must be after start date and time.',
+          path: ['endDate'],
+        });
+      }
+    } else if (data.sessionPattern === 'weekly') {
+      // For weekly sessions, validate that end time > start time (same day comparison)
+      const startTime = startDateTime.toTimeString();
+      const endTime = endDateTime.toTimeString();
+
+      if (endTime <= startTime) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'End time must be greater than start time.',
+          path: ['endDate'],
+        });
+      }
+
+      // Also validate that end date >= start date for weekly sessions
+      if (isBefore(endDateTime.toDateString(), startDateTime.toDateString())) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'End date must be greater than or equal to start date.',
+          path: ['endDate'],
+        });
+      }
     }
   });
 

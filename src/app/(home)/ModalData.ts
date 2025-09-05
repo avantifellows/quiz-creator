@@ -168,6 +168,9 @@ export const displayData = (
     ],
   };
 
+  const sessionPattern = data.repeat_schedule?.type ?? 'weekly';
+  const isContinuous = sessionPattern === 'continuous';
+
   const timeDetails: DataSection = {
     title: 'Time Details',
     data: [
@@ -175,7 +178,9 @@ export const displayData = (
       { label: 'End Date', value: format(new Date(data.end_time!), 'PP') },
       {
         label: 'Timings',
-        value: `${format(new Date(data.start_time!), 'p')} - ${format(new Date(data.end_time!), 'p')}`,
+        value: isContinuous
+          ? `${format(new Date(data.start_time!), 'PPp')} - ${format(new Date(data.end_time!), 'PPp')}`
+          : `${format(new Date(data.start_time!), 'p')} - ${format(new Date(data.end_time!), 'p')}`,
       },
       { label: 'Expected Attendance', value: data.meta_data?.test_takers_count },
       { label: 'Is Enabled?', value: data.is_active ? 'Yes' : 'No' },
