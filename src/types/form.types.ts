@@ -147,6 +147,7 @@ export const quizSchema = z
       ),
     cmsUrl: z.string().optional(),
     sheetName: z.string().optional(),
+    singlePageHeaderText: z.string().optional(),
     testType: z
       .string({ required_error: 'This field is required' })
       .refine(

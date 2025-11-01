@@ -19,6 +19,7 @@ const metaDataSchema = z.object({
   show_scores: z.boolean().optional(),
   shuffle: z.boolean().optional(),
   sheet_name: z.string().optional(),
+  single_page_header_text: z.string().optional(),
   number_of_fields_in_popup_form: z.number().int().optional().or(z.string().optional()),
   optional_limits: z.string().optional(),
   report_link: z.string().url().optional(),

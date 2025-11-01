@@ -66,6 +66,7 @@ const QuizForm: FC = () => {
           fieldsSchema.showScores.disabled = isFormType;
           fieldsSchema.shuffle.disabled = isFormType;
           fieldsSchema.sheetName.hide = !isFormType;
+          fieldsSchema.singlePageHeaderText.hide = !isFormType;
 
           // Update CMS URL field dynamically
           const cmsUrlField = fieldsSchema.cmsUrl as any;
@@ -130,6 +131,13 @@ const QuizForm: FC = () => {
         disabled: type === SessionType.EDIT,
         hide: !isForm,
         helperText: 'Specify which sheet/tab to use from the Google Sheets document',
+      },
+      singlePageHeaderText: {
+        type: 'text',
+        label: 'Single Page Header Text',
+        placeholder: 'Enter the header text to display on the form',
+        hide: !isForm,
+        helperText: 'This text will appear as a header on the single page form',
       },
       markingScheme: {
         type: 'select',
@@ -198,6 +206,7 @@ const QuizForm: FC = () => {
       gurukulFormatType: formData.meta_data?.gurukul_format_type || 'qa',
       cmsUrl: formData.meta_data?.cms_test_id,
       sheetName: formData.meta_data?.sheet_name,
+      singlePageHeaderText: formData.meta_data?.single_page_header_text || '',
       markingScheme: formData.meta_data?.marking_scheme,
       optionalLimit: formData.meta_data?.optional_limits,
       showAnswers: formData.meta_data?.show_answers == false ? false : true,
@@ -236,6 +245,10 @@ const QuizForm: FC = () => {
           ...(isForm &&
             data.sheetName && {
               sheet_name: isEditMode ? formData.meta_data?.sheet_name : data.sheetName,
+            }),
+          ...(isForm &&
+            data.singlePageHeaderText && {
+              single_page_header_text: data.singlePageHeaderText,
             }),
           show_answers: data.showAnswers,
           show_scores: data.showScores,
