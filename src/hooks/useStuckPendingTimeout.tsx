@@ -11,7 +11,7 @@ import { useCallback, useEffect, useRef } from 'react';
 const useStuckPendingTimeout = (data: Session[], onSessionExpired?: (session: Session) => void) => {
   const pendingTimestamps = useRef<Map<number, { timestamp: number; session: Session }>>(new Map());
 
-  const STUCK_TIMEOUT = 2 * 60 * 1000; // 2 minutes
+  const STUCK_TIMEOUT = 3 * 60 * 1000; // 3 minutes
 
   // Track when sessions enter PENDING state with full session data
   useEffect(() => {
