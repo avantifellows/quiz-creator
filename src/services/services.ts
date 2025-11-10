@@ -207,6 +207,36 @@ export async function patchSession(formData: Session, id: number, oldSession: Se
 }
 
 /**
+ * Marks a session as FAILED on the server due to timeout/stuck PENDING state
+ * @param {Session} session - The full session object to preserve metadata
+ * @return {Promise<{isSuccess: boolean}>}
+ */
+export async function markSessionAsFailed(session: Session) {
+  try {
+    if (!session?.id) {
+      console.error('Invalid session: missing id');
+      return { isSuccess: false };
+    }
+
+    // Merge entire meta_data with status update
+    const payload: Session = {
+      ...session,
+      meta_data: {
+        ...session.meta_data,
+        status: STATUS.FAILED,
+      },
+    };
+
+    await instance.patch<Session>(`/session/${session.id}`, payload);
+    console.info(`[SUCCESS] marked session ${session.id} as failed due to timeout`);
+    return { isSuccess: true };
+  } catch (error) {
+    console.error(`Error marking session as failed:`, error);
+    return { isSuccess: false };
+  }
+}
+
+/**
  * Fetch required data from the server
  * - group: List of groups
  * - batch: List of batches
