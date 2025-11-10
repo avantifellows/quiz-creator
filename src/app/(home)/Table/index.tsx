@@ -10,7 +10,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import usePolling from '@/hooks/usePolling';
+import useStuckPendingTimeout from '@/hooks/useStuckPendingTimeout';
 import { createQueryString } from '@/lib/utils';
+import { markSessionAsFailed } from '@/services/services';
 import type { ApiFormOptions, Session } from '@/types';
 import {
   ColumnFiltersState,
@@ -20,7 +22,8 @@ import {
   type ColumnDef,
 } from '@tanstack/react-table';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
+import { toast } from 'sonner';
 import Filters from './Filters';
 import Pagination from './Pagination';
 import { SheetTableRow } from './Row';
@@ -105,6 +108,22 @@ export default function DataTable({
   }, [pageIndex, pageSize, group, batchId, parentId]);
 
   const { pendingSessions } = usePolling(data);
+
+  const handleStuckSessionExpired = useCallback(
+    async (session: Session) => {
+      const { isSuccess } = await markSessionAsFailed(session);
+      if (isSuccess) {
+        toast.error('Session creation timed out', {
+          description: `Session "${session.name}" took too long. Marked as failed. Please retry if needed.`,
+          duration: 5000,
+        });
+        router.refresh();
+      }
+    },
+    [router]
+  );
+
+  useStuckPendingTimeout(data, handleStuckSessionExpired);
 
   return (
     <>
