@@ -47,6 +47,7 @@ export enum Group {
   TNStudents = 'TNStudents',
   Uttarakhand = 'UttarakhandStudents',
   Chhattisgarh = 'ChhattisgarhStudents',
+  Bihar = 'BiharStudents',
   AllIndia = 'AllIndiaStudents',
 }
 
@@ -70,6 +71,7 @@ export const GroupShortName: Record<Group, string> = {
   [Group.TNStudents]: 'TN',
   [Group.Uttarakhand]: 'Uttarakhand',
   [Group.Chhattisgarh]: 'Chhattisgarh',
+  [Group.Bihar]: 'Bihar',
   [Group.AllIndia]: 'AllIndia',
 } as const;
 
