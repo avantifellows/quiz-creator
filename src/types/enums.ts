@@ -49,6 +49,7 @@ export enum Group {
   Chhattisgarh = 'ChhattisgarhStudents',
   Bihar = 'BiharStudents',
   AllIndia = 'AllIndiaStudents',
+  HiringCandidates = 'HiringCandidates',
 }
 
 export const GroupShortName: Record<Group, string> = {
@@ -73,6 +74,7 @@ export const GroupShortName: Record<Group, string> = {
   [Group.Chhattisgarh]: 'Chhattisgarh',
   [Group.Bihar]: 'Bihar',
   [Group.AllIndia]: 'AllIndia',
+  [Group.HiringCandidates]: 'HiringCandidates',
 } as const;
 
 export enum AuthType {
