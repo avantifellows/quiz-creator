@@ -5,6 +5,7 @@ import {
   ExtendedOptions,
   FieldSchema,
   Group,
+  GroupFormAliases,
   GroupShortName,
   MySelectProps,
   Platform,
@@ -167,6 +168,15 @@ export const setPopupSignUpOptions = (
   fieldsSchema: FieldSchema<basicFields>,
   authGroupSelected?: ExtendedOptions
 ) => {
+  const getGroupFormTokens = (group?: Group) => {
+    if (!group) return [];
+
+    const tokens = [GroupShortName[group], ...(GroupFormAliases[group] ?? [])].filter(Boolean);
+    return tokens;
+  };
+
+  const matchTokens = getGroupFormTokens(authGroupSelected?.value as Group);
+
   let options: Record<'popup' | 'signUp', ExtendedOptions[]> = {
     popup: [],
     signUp: [],
@@ -174,12 +184,12 @@ export const setPopupSignUpOptions = (
 
   options.popup =
     apiOptions.popupForm?.filter((item) =>
-      item.label.includes(GroupShortName[authGroupSelected?.value as Group])
+      matchTokens.some((token) => item.label.includes(token))
     ) ?? [];
 
   options.signUp =
     apiOptions.signupForm?.filter((item) =>
-      item.label.includes(GroupShortName[authGroupSelected?.value as Group])
+      matchTokens.some((token) => item.label.includes(token))
     ) ?? [];
 
   (fieldsSchema.signupFormId as MySelectProps).options = options.signUp ?? [];
