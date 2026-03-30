@@ -184,7 +184,9 @@ export async function patchSession(formData: Session, id: number, oldSession: Se
         ...formData.meta_data,
         date_created: formData.meta_data?.date_created
           ? utcToISTDate(formData.meta_data.date_created)
-          : oldSession.meta_data?.date_created,
+          : oldSession.meta_data?.date_created
+            ? utcToISTDate(oldSession.meta_data.date_created)
+            : undefined,
         status: STATUS.PENDING,
       },
       ...(formData.start_time ? { start_time: utcToISTDate(formData.start_time) } : {}),
