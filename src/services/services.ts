@@ -219,9 +219,9 @@ export async function markSessionAsFailed(session: Session) {
       return { isSuccess: false };
     }
 
-    // Merge entire meta_data with status update
+    // Send only the status update while preserving the full meta_data map.
+    // Re-sending the whole session row can leak display-transformed time fields.
     const payload: Session = {
-      ...session,
       meta_data: {
         ...session.meta_data,
         status: STATUS.FAILED,

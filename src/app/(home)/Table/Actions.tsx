@@ -46,7 +46,7 @@ const TableActions = ({ session }: { session: Session }) => {
             variant='ghost'
             className='w-full focus-visible:ring-0 justify-start font-normal'
             onClick={async () => {
-              await patchSession(
+              const { isSuccess } = await patchSession(
                 {
                   is_active: !session.is_active,
                   meta_data: session.meta_data,
@@ -54,9 +54,15 @@ const TableActions = ({ session }: { session: Session }) => {
                 session.id ?? 0,
                 session
               );
-              toast.success(session.is_active ? 'Disabled the session' : 'Enabled the session', {
-                description: 'Please refresh the page after a while.',
-              });
+              if (isSuccess) {
+                toast.success(session.is_active ? 'Disabled the session' : 'Enabled the session', {
+                  description: 'Please refresh the page after a while.',
+                });
+              } else {
+                toast.error('Failed to update session', {
+                  description: 'Please retry in a moment.',
+                });
+              }
             }}
           >
             {session.is_active ? 'Disable' : 'Enable'} Session
