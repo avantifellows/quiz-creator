@@ -174,12 +174,11 @@ export async function patchSession(formData: Session, id: number, oldSession: Se
     // Delete any helper keys we do not want to propagate to the API
     KeysToDeleteBeforeUpdate.forEach((key) => deleteByPath(formData, key));
 
-    // Build a single payload that already contains the latest updates. We keep the
-    // status as `PENDING` so that the UI can show the interim disabled state and
-    // gets flipped to `SUCCESS` by the background worker shortly afterwards.
+    // Build the PATCH payload from the submitted form data only. This avoids
+    // re-sending stale fields from list rows, while still preserving nested
+    // meta_data keys that would otherwise be replaced server-side.
     const payload: Session = {
-      ...oldSession, // start with the existing data as base
-      ...formData, // override with the fields changed in the form
+      ...formData,
       meta_data: {
         ...oldSession.meta_data,
         ...formData.meta_data,
@@ -192,7 +191,7 @@ export async function patchSession(formData: Session, id: number, oldSession: Se
       ...(formData.end_time ? { end_time: utcToISTDate(formData.end_time) } : {}),
     };
 
-    // Send the full PATCH update so that list / detail fetches reflect the changes immediately.
+    // Send only the submitted updates while preserving the merged meta_data map.
     await instance.patch<Session>(`/session/${id}`, payload);
 
     // Additionally notify the downstream worker to perform any heavy processing.
@@ -273,12 +272,12 @@ export const getAllOptions = cache(async function (): Promise<ApiFormOptions> {
 
 export async function getAuthGroups() {
   try {
-    const { data } = await instance.get<Record<string, string>[]>(`/auth-group`);
+    const { data } = await instance.get<Record<string, unknown>[]>(`/auth-group`);
 
     const authGroups = data?.map((item) => ({
-      label: item.name,
-      value: item.name,
-      id: item.id,
+      label: String(item.name ?? ''),
+      value: String(item.name ?? ''),
+      id: item.id == null ? undefined : String(item.id),
     }));
     console.info('[API SUCCESS] fetching auth groups : ', authGroups.length);
     return authGroups ?? [];
@@ -290,15 +289,15 @@ export async function getAuthGroups() {
 
 export async function getBatches() {
   try {
-    const { data } = await instance.get<Record<string, string>[]>(`/batch`);
+    const { data } = await instance.get<Record<string, unknown>[]>(`/batch`);
 
     const batches = data?.map((item) => ({
-      label: item.batch_id,
-      value: item.batch_id,
-      id: item.id,
-      name: item.name,
-      parentId: item.parent_id,
-      groupId: item.auth_group_id,
+      label: String(item.batch_id ?? ''),
+      value: String(item.batch_id ?? ''),
+      id: item.id == null ? undefined : String(item.id),
+      name: String(item.name ?? ''),
+      parentId: item.parent_id == null ? undefined : String(item.parent_id),
+      groupId: item.auth_group_id == null ? undefined : String(item.auth_group_id),
     }));
 
     console.info('[API SUCCESS] fetching batches : ', batches.length);
