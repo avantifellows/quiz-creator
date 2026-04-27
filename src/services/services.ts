@@ -251,10 +251,10 @@ export const getAllOptions = cache(async function (): Promise<ApiFormOptions> {
       getFormSchemas(),
     ]);
 
-    const createFormOptionFilter = (keyword: string) =>
-      formSchemaOptions.filter((item) => item.label.includes(keyword));
-    const popupForm = createFormOptionFilter('Profile');
-    const signupForm = createFormOptionFilter('Registration');
+    const createFormOptionFilter = (keywords: string[]) =>
+      formSchemaOptions.filter((item) => keywords.some((keyword) => item.label.includes(keyword)));
+    const popupForm = createFormOptionFilter(['Profile']);
+    const signupForm = createFormOptionFilter(['Registration', 'Hiring', 'Academic Mentor']);
     return {
       group: groupOptions,
       batch: batchOptions,

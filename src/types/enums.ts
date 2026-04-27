@@ -80,6 +80,7 @@ export const GroupShortName: Record<Group, string> = {
 // Optional extra tokens to match form names beyond the default short name.
 export const GroupFormAliases: Partial<Record<Group, string[]>> = {
   [Group.Enable]: ['NVS'],
+  [Group.HiringCandidates]: ['Academic Mentor', 'Hiring'],
 } as const;
 
 export enum AuthType {
