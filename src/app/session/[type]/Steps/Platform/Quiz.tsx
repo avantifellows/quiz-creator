@@ -62,6 +62,10 @@ const QuizForm: FC = () => {
           fieldsSchema.stream.disabled = isFormType || type === SessionType.EDIT;
           fieldsSchema.stream.disabled = isFormType; // Allow editing in edit mode
           fieldsSchema.optionalLimit.disabled = isFormType || type === SessionType.EDIT;
+          fieldsSchema.isAdvancedFormat.disabled = isFormType || type === SessionType.EDIT;
+          if (isFormType) {
+            form.setValue('isAdvancedFormat', false);
+          }
           fieldsSchema.showAnswers.disabled = isFormType;
           fieldsSchema.showScores.disabled = isFormType;
           fieldsSchema.shuffle.disabled = isFormType;
@@ -155,6 +159,13 @@ const QuizForm: FC = () => {
         disabled: isForm || type === SessionType.EDIT,
         hide: false,
       },
+      isAdvancedFormat: {
+        type: 'switch',
+        label: 'Advanced Format?',
+        defaultValue: 'No',
+        hide: false,
+        disabled: isForm || type === SessionType.EDIT,
+      },
       showAnswers: {
         type: 'switch',
         label: 'Show Answers?',
@@ -209,6 +220,7 @@ const QuizForm: FC = () => {
       singlePageHeaderText: formData.meta_data?.single_page_header_text || '',
       markingScheme: formData.meta_data?.marking_scheme,
       optionalLimit: formData.meta_data?.optional_limits,
+      isAdvancedFormat: formData.meta_data?.is_advanced_format == true ? true : false,
       showAnswers: formData.meta_data?.show_answers == false ? false : true,
       showScores: formData.meta_data?.show_scores == false ? false : true,
       shuffle: formData.meta_data?.shuffle == true ? true : false,
@@ -241,6 +253,7 @@ const QuizForm: FC = () => {
           marking_scheme: isHomework || isForm ? MARKING_SCHEMES['1, 0'] : MARKING_SCHEMES['4,-1'],
           optional_limits:
             isEditMode && !isForm ? formData.meta_data?.optional_limits : data.optionalLimit,
+          is_advanced_format: isForm ? false : data.isAdvancedFormat,
           cms_test_id: isEditMode ? formData.meta_data?.cms_test_id : cmsTestId,
           ...(isForm &&
             data.sheetName && {

@@ -283,6 +283,7 @@ export const handleRedirectionData = (formData: Session) => {
         gurukul_format_type: 'qa',
         marking_scheme: '',
         optional_limits: '',
+        is_advanced_format: false,
         cms_test_id: '',
         show_answers: true,
         show_scores: true,

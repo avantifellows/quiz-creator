@@ -14,6 +14,7 @@ const metaDataSchema = z.object({
   group: z.string().optional(),
   has_synced_to_bq: z.boolean().optional(),
   infinite_session: z.boolean().optional(),
+  is_advanced_format: z.boolean().optional(),
   marking_scheme: z.string().optional(),
   show_answers: z.boolean().optional(),
   show_scores: z.boolean().optional(),

@@ -20,6 +20,7 @@ Key compatibility findings:
   - `testFormat` -> `test_format`
   - `testPurpose` -> `test_purpose`
   - `optionalLimit` -> `optional_limits`
+  - `isAdvancedFormat` -> `is_advanced_format`
   - `cmsUrl` -> `cms_test_id`
   - `sheetName` -> `sheet_name`
   - `singlePageHeaderText` -> `single_page_header_text`

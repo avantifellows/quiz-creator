@@ -167,6 +167,7 @@ export const quizSchema = z
         (value) => OptionalLimitOptions.some((option) => option.value === value),
         'Invalid option selected'
       ),
+    isAdvancedFormat: z.coerce.boolean(),
     showAnswers: z.coerce.boolean(),
     showScores: z.coerce.boolean(),
     shuffle: z.coerce.boolean(),

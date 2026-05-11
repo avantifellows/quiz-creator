@@ -108,6 +108,7 @@ export const displayData = (
       },
       { label: 'Marking Scheme', value: data.meta_data?.marking_scheme },
       { label: 'Optional Limits', value: data.meta_data?.optional_limits },
+      { label: 'Advanced Format', value: data.meta_data?.is_advanced_format ? 'Yes' : 'No' },
       { label: 'Show Answers', value: data.meta_data?.show_answers ? 'Yes' : 'No' },
       { label: 'Show Scores', value: data.meta_data?.show_scores == false ? 'No' : 'Yes' },
       { label: 'Shuffle Questions', value: data.meta_data?.shuffle ? 'Yes' : 'No' },
