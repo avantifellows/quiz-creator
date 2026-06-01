@@ -9,6 +9,12 @@ import { cache } from 'react';
 import { instance } from '../lib/axios';
 import { publishMessage } from './Aws';
 
+const HIDDEN_SESSION_SOURCES = new Set(['lms']);
+
+function isHiddenSession(session: Session) {
+  return HIDDEN_SESSION_SOURCES.has(String(session.meta_data?.created_from ?? '').toLowerCase());
+}
+
 /**
  * Retrieves sessions data from the server.
  *
@@ -36,7 +42,8 @@ export async function getSessions(filterParams: FilterParams) {
     }));
 
     const hasMore = data.length === filterParams.limit;
-    const items = hasMore ? parsedData.slice(0, -1) : parsedData;
+    const pageData = hasMore ? parsedData.slice(0, -1) : parsedData;
+    const items = pageData.filter((session) => !isHiddenSession(session));
     console.info('[API SUCCESS] fetching sessions : ', {
       length: items.length,
       hasMore,
@@ -124,6 +131,7 @@ export async function createSession(formData: Session) {
           infinite_session: false,
           status: STATUS.PENDING,
           date_created: utcToISTDate(new Date().toISOString()),
+          created_from: 'session_manager',
         },
         purpose: {
           type: 'attendance',
@@ -140,6 +148,7 @@ export async function createSession(formData: Session) {
           ...formData.meta_data,
           status: STATUS.PENDING,
           date_created: utcToISTDate(new Date().toISOString()),
+          created_from: 'session_manager',
         },
         purpose: '',
         start_time: utcToISTDate(formData.start_time ?? ''),

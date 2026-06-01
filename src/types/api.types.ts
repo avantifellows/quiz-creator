@@ -8,6 +8,8 @@ const metaDataSchema = z.object({
   batch_id: z.string().optional(),
   cms_test_id: z.string().url().optional(),
   course: z.string().optional(),
+  created_by: z.string().optional(),
+  created_from: z.string().optional(),
   date_created: z.string().datetime().optional(),
   enabled: z.number().int().optional(),
   grade: z.number().int().optional(),
