@@ -10,6 +10,7 @@ import { instance } from '../lib/axios';
 import { publishMessage } from './Aws';
 
 const HIDDEN_SESSION_SOURCES = new Set(['lms']);
+const MAX_SESSION_FETCH_PAGES = 5;
 
 function isHiddenSession(session: Session) {
   return HIDDEN_SESSION_SOURCES.has(String(session.meta_data?.created_from ?? '').toLowerCase());
@@ -26,24 +27,39 @@ function isHiddenSession(session: Session) {
 export async function getSessions(filterParams: FilterParams) {
   try {
     const filteredParams = filterObject(filterParams);
+    const requestedLimit = filterParams.limit;
+    const pageSize = Math.max(requestedLimit - 1, 1);
+    const visibleSessions: Session[] = [];
+    let hasMoreRawSessions = false;
 
-    const { data } = await instance.get<Session[]>(`/session`, { params: filteredParams });
+    for (let page = 0; page < MAX_SESSION_FETCH_PAGES; page += 1) {
+      const params = {
+        ...filteredParams,
+        limit: requestedLimit,
+        offset: filterParams.offset + page * requestedLimit,
+      };
+      const { data } = await instance.get<Session[]>(`/session`, { params });
+      hasMoreRawSessions = data.length === requestedLimit;
 
-    const parsedData = data.map((i) => ({
-      ...i,
-      start_time: i.start_time ? istToUTCDate(i.start_time) : undefined,
-      end_time: i.end_time ? istToUTCDate(i.end_time) : undefined,
-      meta_data: {
-        ...i.meta_data,
-        date_created: i.meta_data?.date_created
-          ? istToUTCDate(i.meta_data?.date_created)
-          : undefined,
-      },
-    }));
+      const parsedData = data.map((i) => ({
+        ...i,
+        start_time: i.start_time ? istToUTCDate(i.start_time) : undefined,
+        end_time: i.end_time ? istToUTCDate(i.end_time) : undefined,
+        meta_data: {
+          ...i.meta_data,
+          date_created: i.meta_data?.date_created
+            ? istToUTCDate(i.meta_data?.date_created)
+            : undefined,
+        },
+      }));
 
-    const hasMore = data.length === filterParams.limit;
-    const pageData = hasMore ? parsedData.slice(0, -1) : parsedData;
-    const items = pageData.filter((session) => !isHiddenSession(session));
+      visibleSessions.push(...parsedData.filter((session) => !isHiddenSession(session)));
+
+      if (visibleSessions.length > pageSize || !hasMoreRawSessions) break;
+    }
+
+    const hasMore = visibleSessions.length > pageSize || hasMoreRawSessions;
+    const items = visibleSessions.slice(0, pageSize);
     console.info('[API SUCCESS] fetching sessions : ', {
       length: items.length,
       hasMore,
@@ -166,9 +182,11 @@ export async function createSession(formData: Session) {
   }
 }
 
-export const sendCreateSns = (id?: number) => publishMessage({ action: 'db_id', id });
+export const sendCreateSns = (id?: number) =>
+  publishMessage({ action: 'db_id', id, environment: 'production' });
 
-export const sendRegenerateSns = (id?: number) => publishMessage({ action: 'regenerate_quiz', id });
+export const sendRegenerateSns = (id?: number) =>
+  publishMessage({ action: 'regenerate_quiz', id, environment: 'production' });
 
 /**
  * Patches a session on the server.
@@ -206,7 +224,7 @@ export async function patchSession(formData: Session, id: number, oldSession: Se
     await instance.patch<Session>(`/session/${id}`, payload);
 
     // Additionally notify the downstream worker to perform any heavy processing.
-    publishMessage({ action: 'patch', id, patch_session: payload });
+    publishMessage({ action: 'patch', id, patch_session: payload, environment: 'production' });
 
     console.info(`[SUCCESS] updated session for ${id}`);
     return { isSuccess: true, id };

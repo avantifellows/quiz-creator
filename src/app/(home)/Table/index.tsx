@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
 import usePolling from '@/hooks/usePolling';
 import useStuckPendingTimeout from '@/hooks/useStuckPendingTimeout';
 import { createQueryString } from '@/lib/utils';
@@ -22,7 +23,7 @@ import {
   type ColumnDef,
 } from '@tanstack/react-table';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import Filters from './Filters';
 import Pagination from './Pagination';
@@ -42,8 +43,31 @@ export default function DataTable({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState('');
   const page = Number(searchParams.get('page') || 0);
   const perPage = Number(searchParams.get('per_page') || DATA_PER_PAGE);
+  const tableData = useMemo(() => {
+    const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+    if (!normalizedSearchTerm) return data;
+
+    return data.filter((session) => {
+      const searchableText = [
+        session.id,
+        session.name,
+        session.session_id,
+        session.platform_id,
+        session.meta_data?.cms_test_id,
+        session.meta_data?.group,
+        session.meta_data?.parent_id,
+        session.meta_data?.batch_id,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return searchableText.includes(normalizedSearchTerm);
+    });
+  }, [data, searchTerm]);
   const initColumnsFilters = useMemo(() => {
     const filters = ['group', 'batchId', 'parentId'].reduce<ColumnFiltersState>((acc, key) => {
       const value = searchParams.get(key);
@@ -54,7 +78,7 @@ export default function DataTable({
   }, [searchParams]);
 
   const table = useReactTable<Session>({
-    data,
+    data: tableData,
     columns,
     initialState: {
       columnFilters: initColumnsFilters,
@@ -128,6 +152,16 @@ export default function DataTable({
   return (
     <>
       <Filters table={table} apiOptions={apiOptions} />
+      <div className='mb-4 flex flex-col gap-1 md:max-w-md'>
+        <Input
+          placeholder='Search loaded rows by name, DB id, session id, batch...'
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
+        <p className='text-xs text-muted-foreground'>
+          Searches the rows loaded on this page. Use filters for server-side narrowing.
+        </p>
+      </div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
