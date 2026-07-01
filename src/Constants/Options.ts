@@ -41,6 +41,10 @@ export const TestPurposeOptions: Option[] = [
   { value: 'monthly_test', label: 'Monthly Test' },
   { value: 'reshuffling_test', label: 'Reshuffling Test' },
   { value: 'selection_test', label: 'Selection Test' },
+  { value: 'system_wide_mandated', label: 'System-wide Mandated' },
+  { value: 'system_wide_selection', label: 'System-wide Selection' },
+  { value: 'system_wide_optional', label: 'System-wide Optional' },
+  { value: 'demo_test', label: 'Demo Test' },
   { value: 'one_time', label: 'One Time Test' },
   { value: 'practice_test', label: 'Practice Test' },
   { value: 'class_hw', label: 'Class Homework' },
@@ -77,6 +81,7 @@ export const CourseOptions: Option[] = [
   { value: 'CUET', label: 'CUET' },
   { value: 'CA', label: 'CA' },
   { value: 'CLAT', label: 'CLAT' },
+  { value: 'CET', label: 'CET' },
 ];
 
 export const StreamOptions: Option[] = [
@@ -99,6 +104,7 @@ export const StreamOptions: Option[] = [
   { value: 'Others', label: 'Others' },
   { value: 'ca', label: 'CA' },
   { value: 'clat', label: 'CLAT' },
+  { value: 'cet', label: 'CET' },
 ];
 
 export const GradeOptions = Grades.map((g) => ({ value: Number(g), label: g.toString() }));
