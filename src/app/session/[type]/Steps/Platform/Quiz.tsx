@@ -53,6 +53,7 @@ const QuizForm: FC = () => {
             form.setValue('optionalLimit', 'N/A');
             form.setValue('showAnswers', true);
             form.setValue('showScores', false);
+            form.setValue('requireAllQuestions', false);
             form.setValue('shuffle', false);
             form.setValue('stream', 'Others');
           }
@@ -68,6 +69,7 @@ const QuizForm: FC = () => {
           }
           fieldsSchema.showAnswers.disabled = isFormType;
           fieldsSchema.showScores.disabled = isFormType;
+          fieldsSchema.requireAllQuestions.hide = !isFormType;
           fieldsSchema.shuffle.disabled = isFormType;
           fieldsSchema.sheetName.hide = !isFormType;
           fieldsSchema.singlePageHeaderText.hide = !isFormType;
@@ -180,6 +182,12 @@ const QuizForm: FC = () => {
         hide: false,
         disabled: isForm,
       },
+      requireAllQuestions: {
+        type: 'switch',
+        label: 'Require all questions?',
+        defaultValue: 'No',
+        hide: !isForm,
+      },
       shuffle: {
         type: 'switch',
         label: 'Shuffle Questions?',
@@ -223,6 +231,7 @@ const QuizForm: FC = () => {
       isAdvancedFormat: formData.meta_data?.is_advanced_format == true ? true : false,
       showAnswers: formData.meta_data?.show_answers == false ? false : true,
       showScores: formData.meta_data?.show_scores == false ? false : true,
+      requireAllQuestions: formData.meta_data?.require_all_questions == true ? true : false,
       shuffle: formData.meta_data?.shuffle == true ? true : false,
       hasNextStep: formData.meta_data?.next_step_url ? true : false,
       nextStepUrl: formData.meta_data?.next_step_url || '',
@@ -263,6 +272,7 @@ const QuizForm: FC = () => {
             data.singlePageHeaderText && {
               single_page_header_text: data.singlePageHeaderText,
             }),
+          require_all_questions: isForm ? data.requireAllQuestions == true : false,
           show_answers: data.showAnswers,
           show_scores: data.showScores,
           shuffle: data.shuffle,

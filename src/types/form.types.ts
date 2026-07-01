@@ -170,6 +170,7 @@ export const quizSchema = z
     isAdvancedFormat: z.coerce.boolean(),
     showAnswers: z.coerce.boolean(),
     showScores: z.coerce.boolean(),
+    requireAllQuestions: z.coerce.boolean().optional(),
     shuffle: z.coerce.boolean(),
     hasNextStep: z.coerce.boolean(),
     nextStepUrl: z.string().optional(),

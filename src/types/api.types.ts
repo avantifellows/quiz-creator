@@ -20,6 +20,7 @@ const metaDataSchema = z.object({
   marking_scheme: z.string().optional(),
   show_answers: z.boolean().optional(),
   show_scores: z.boolean().optional(),
+  require_all_questions: z.boolean().optional(),
   shuffle: z.boolean().optional(),
   sheet_name: z.string().optional(),
   single_page_header_text: z.string().optional(),
