@@ -18,12 +18,13 @@ import { Platform } from './enums';
 
 const LEGACY_CMS_HOST = 'cms.peerlearning.com';
 const NEW_CMS_HOSTS = new Set(['new-cms.avantifellows.org', 'staging-new-cms.avantifellows.org']);
+const NEW_CMS_TEST_PATHS = new Set(['/test', '/tests/edit-test']);
 
 export function isValidCmsUrl(value: string): boolean {
   try {
     const url = new URL(value);
     if (url.hostname === LEGACY_CMS_HOST) return true;
-    if (!NEW_CMS_HOSTS.has(url.hostname) || url.pathname !== '/tests/edit-test') return false;
+    if (!NEW_CMS_HOSTS.has(url.hostname) || !NEW_CMS_TEST_PATHS.has(url.pathname)) return false;
 
     return ['id', 'curriculum_id', 'grade_id'].every((key) => {
       const rawValue = url.searchParams.get(key);

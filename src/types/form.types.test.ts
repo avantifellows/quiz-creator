@@ -6,13 +6,19 @@ describe('isValidCmsUrl', () => {
   });
 
   it.each(['new-cms.avantifellows.org', 'staging-new-cms.avantifellows.org'])(
-    'accepts complete new-CMS edit links from %s',
+    'accepts complete new-CMS test links from %s',
     (host) => {
-      expect(
-        isValidCmsUrl(`https://${host}/tests/edit-test?id=504&curriculum_id=9&grade_id=2`)
-      ).toBe(true);
+      expect(isValidCmsUrl(`https://${host}/test?id=5327&curriculum_id=9&grade_id=4`)).toBe(true);
     }
   );
+
+  it('continues to accept new-CMS edit-test links', () => {
+    expect(
+      isValidCmsUrl(
+        'https://new-cms.avantifellows.org/tests/edit-test?id=504&curriculum_id=9&grade_id=2'
+      )
+    ).toBe(true);
+  });
 
   it('rejects new-CMS links missing ingest parameters', () => {
     expect(isValidCmsUrl('https://new-cms.avantifellows.org/tests/edit-test?id=504')).toBe(false);
