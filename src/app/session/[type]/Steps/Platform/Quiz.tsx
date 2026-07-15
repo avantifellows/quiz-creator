@@ -80,7 +80,7 @@ const QuizForm: FC = () => {
           cmsUrlField.placeholder = isFormType ? 'Enter Google Sheets link' : 'Enter CMS URL';
           cmsUrlField.helperText = isFormType
             ? 'Enter the Google Sheets link containing your form questions'
-            : 'Enter the CMS URL for your quiz content';
+            : 'Enter a legacy CMS test URL or a new-CMS edit-test URL';
         },
       },
       course: {
@@ -128,7 +128,7 @@ const QuizForm: FC = () => {
         disabled: type === SessionType.EDIT,
         helperText: isForm
           ? 'Enter the Google Sheets link containing your form questions'
-          : 'Enter the CMS URL for your quiz content',
+          : 'Enter a legacy CMS test URL or a new-CMS edit-test URL',
       },
       sheetName: {
         type: 'text',
