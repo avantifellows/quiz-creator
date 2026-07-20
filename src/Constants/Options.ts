@@ -82,6 +82,11 @@ export const CourseOptions: Option[] = [
   { value: 'CA', label: 'CA' },
   { value: 'CLAT', label: 'CLAT' },
   { value: 'CET', label: 'CET' },
+  { value: 'NDA', label: 'NDA' },
+  { value: 'NCHMJEE', label: 'NCHMJEE' },
+  { value: 'NIFT', label: 'NIFT' },
+  { value: 'UCEED', label: 'UCEED' },
+  { value: 'CHSL', label: 'CHSL' },
 ];
 
 export const StreamOptions: Option[] = [
@@ -100,11 +105,16 @@ export const StreamOptions: Option[] = [
   { value: 'tbd', label: 'TBD' },
   { value: 'business_studies', label: 'Business Studies' },
   { value: 'economics', label: 'Economics' },
-  { value: 'nda', label: 'NDA' },
   { value: 'Others', label: 'Others' },
   { value: 'ca', label: 'CA' },
   { value: 'clat', label: 'CLAT' },
   { value: 'cet', label: 'CET' },
+  { value: 'cuet', label: 'CUET' },
+  { value: 'foundation', label: 'Foundation' },
+  { value: 'defence', label: 'Defence' },
+  { value: 'hospitality', label: 'Hospitality' },
+  { value: 'design', label: 'Design' },
+  { value: 'alternate_pathways', label: 'Alternate Pathways' },
 ];
 
 export const GradeOptions = Grades.map((g) => ({ value: Number(g), label: g.toString() }));
