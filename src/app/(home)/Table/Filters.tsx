@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { isSelectableBatchOption } from '@/lib/batch-options';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -62,14 +63,18 @@ const Filters = ({ table, apiOptions }: { table: Table<Session>; apiOptions: Api
     if (groupFilter) {
       const authGroupId = apiOptions.group?.find((item) => item.value === groupFilter)?.id;
       const filteredQuizBatchOptions =
-        apiOptions?.batch?.filter((item) => item.groupId === authGroupId && !item.parentId) ?? [];
+        apiOptions?.batch?.filter(
+          (item) => item.groupId === authGroupId && !item.parentId && isSelectableBatchOption(item)
+        ) ?? [];
       fields.parentId.options = filteredQuizBatchOptions;
       fields.parentId.show = true;
 
       if (parentIdFilter) {
         const quizBatchId = apiOptions.batch?.find((item) => item.value === parentIdFilter)?.id;
         const filteredClassBatchOptions =
-          apiOptions?.batch?.filter((item) => item.parentId === quizBatchId) ?? [];
+          apiOptions?.batch?.filter(
+            (item) => item.parentId === quizBatchId && isSelectableBatchOption(item)
+          ) ?? [];
         fields.batchId.options = filteredClassBatchOptions;
         fields.batchId.show = true;
       }

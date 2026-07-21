@@ -3,8 +3,10 @@
 import { AuthOptions, GradeOptions, SessionTypeOptions, TestPlatformOptions } from '@/Constants';
 import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
+import { isSelectableBatchOption } from '@/lib/batch-options';
 import {
   FieldSchema,
+  ExtendedOptions,
   Platform,
   Session,
   SessionParams,
@@ -45,6 +47,14 @@ const BasicForm: FC = () => {
         return { parentBatchOptions: [], subBatchOptions: [] };
       }
 
+      const selectedBatchIds = new Set(
+        formData?.meta_data?.batch_id?.split(',').map((batchId) => batchId.trim()) ?? []
+      );
+      const isAvailableBatch = (item: ExtendedOptions) =>
+        isSelectableBatchOption(item) ||
+        item.value === formData?.meta_data?.parent_id ||
+        selectedBatchIds.has(String(item.value));
+
       let filteredBatchOptions: any[] = [];
 
       // Apply the same filtering logic as setParentBatchOptions
@@ -53,7 +63,9 @@ const BasicForm: FC = () => {
         filteredBatchOptions =
           apiOptions?.batch?.filter(
             (item) =>
-              item.groupId === TNStudentsId && (isQuizSession ? !item.parentId : !!item.parentId)
+              item.groupId === TNStudentsId &&
+              (isQuizSession ? !item.parentId : !!item.parentId) &&
+              isAvailableBatch(item)
           ) ?? [];
       } else if (authGroupSelected.value === Group.GujaratSchools) {
         const GujaratStudentsId = apiOptions.group?.find(
@@ -63,7 +75,8 @@ const BasicForm: FC = () => {
           apiOptions?.batch?.filter(
             (item) =>
               item.groupId === GujaratStudentsId &&
-              (isQuizSession ? !item.parentId : !!item.parentId)
+              (isQuizSession ? !item.parentId : !!item.parentId) &&
+              isAvailableBatch(item)
           ) ?? [];
       } else if (authGroupSelected.value === Group.PunjabSchools) {
         const PunjabStudentsId = apiOptions.group?.find(
@@ -73,7 +86,8 @@ const BasicForm: FC = () => {
           apiOptions?.batch?.filter(
             (item) =>
               item.groupId === PunjabStudentsId &&
-              (isQuizSession ? !item.parentId : !!item.parentId)
+              (isQuizSession ? !item.parentId : !!item.parentId) &&
+              isAvailableBatch(item)
           ) ?? [];
       } else if (authGroupSelected.value === Group.EnableSchools) {
         const EnableStudentsId = apiOptions.group?.find((item) => item.value === Group.Enable)?.id;
@@ -81,14 +95,16 @@ const BasicForm: FC = () => {
           apiOptions?.batch?.filter(
             (item) =>
               item.groupId === EnableStudentsId &&
-              (isQuizSession ? !item.parentId : !!item.parentId)
+              (isQuizSession ? !item.parentId : !!item.parentId) &&
+              isAvailableBatch(item)
           ) ?? [];
       } else {
         filteredBatchOptions =
           apiOptions?.batch?.filter(
             (item) =>
               item.groupId === authGroupSelected?.id &&
-              (isQuizSession ? !item.parentId : !!item.parentId)
+              (isQuizSession ? !item.parentId : !!item.parentId) &&
+              isAvailableBatch(item)
           ) ?? [];
       }
 
@@ -102,7 +118,9 @@ const BasicForm: FC = () => {
             (item) => item.value === formData.meta_data?.parent_id
           )?.id;
           subBatchOptions =
-            apiOptions?.batch?.filter((item) => item.parentId === quizBatchId) ?? [];
+            apiOptions?.batch?.filter(
+              (item) => item.parentId === quizBatchId && isAvailableBatch(item)
+            ) ?? [];
         }
 
         return { parentBatchOptions, subBatchOptions };
@@ -110,7 +128,12 @@ const BasicForm: FC = () => {
         return { parentBatchOptions: [], subBatchOptions: filteredBatchOptions };
       }
     },
-    [apiOptions?.batch, apiOptions?.group, formData?.meta_data?.parent_id]
+    [
+      apiOptions?.batch,
+      apiOptions?.group,
+      formData?.meta_data?.batch_id,
+      formData?.meta_data?.parent_id,
+    ]
   );
 
   // Get current batch options reactively

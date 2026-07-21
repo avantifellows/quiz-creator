@@ -19,15 +19,15 @@ export const CreateQuizData = {
   platform: { label: Platform.Quiz, value: Platform.Quiz },
   group: { label: Group.Haryana, value: Group.Haryana },
   parentBatch: {
-    label: 'HR-9-Foundation-24',
-    value: 'HR-9-Foundation-24',
-    name: 'Haryana 9 Quiz Batch - 24',
+    label: 'HR-9-Foundation-25',
+    value: 'HR-9-Foundation-25',
+    name: 'Haryana 9 Quiz Batch - 25',
   },
   subBatch: [
     {
-      label: 'HaryanaStudents_9_Foundation_24_001',
-      value: 'HaryanaStudents_9_Foundation_24_001',
-      name: '9B01',
+      label: 'HaryanaStudents_9_Foundation_25_001',
+      value: 'HaryanaStudents_9_Foundation_25_001',
+      name: '9B01 2025',
     },
   ],
   grade: GradeOptions.find((i) => i.value === 9)!,
@@ -85,14 +85,14 @@ export const CreateLiveData = {
   group: { label: Group.Haryana, value: Group.Haryana },
   subBatch: [
     {
-      label: 'HaryanaStudents_9_Foundation_24_001',
-      value: 'HaryanaStudents_9_Foundation_24_001',
-      name: '9B01',
+      label: 'HaryanaStudents_9_Foundation_25_001',
+      value: 'HaryanaStudents_9_Foundation_25_001',
+      name: '9B01 2025',
     },
     {
-      label: 'HaryanaStudents_10_Foundation_24_001',
-      value: 'HaryanaStudents_10_Foundation_24_001',
-      name: '10B01',
+      label: 'HaryanaStudents_10_Foundation_25_001',
+      value: 'HaryanaStudents_10_Foundation_25_001',
+      name: '10B01 2025',
     },
   ],
   grade: GradeOptions.find((i) => i.value === 9)!,
