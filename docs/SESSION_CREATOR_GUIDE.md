@@ -95,6 +95,9 @@ The batch dropdowns are not a raw full list. They are filtered by group and by p
 
 - quiz sessions use parent batches
 - live sessions use child batches
+- batch IDs with a cohort year from the current or previous calendar year are shown first and
+  remain selectable; older families are hidden when a group has recent families
+- groups without any recent parseable batch IDs retain their existing options as a fallback
 
 There are also special mappings for school groups:
 

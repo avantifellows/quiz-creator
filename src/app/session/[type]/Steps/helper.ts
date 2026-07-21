@@ -13,6 +13,7 @@ import {
   basicFields,
   quizFields,
 } from '@/types';
+import { isSelectableBatchOption } from '@/lib/batch-options';
 import { UseFormReturn } from 'react-hook-form';
 
 export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: ApiFormOptions) => {
@@ -120,7 +121,10 @@ export const setParentBatchOptions = (
 
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
-        (item) => item.groupId === TNStudentsId && !item.parentId === isQuizSession
+        (item) =>
+          item.groupId === TNStudentsId &&
+          !item.parentId === isQuizSession &&
+          isSelectableBatchOption(item)
       ) ?? [];
   } else if (authGroupSelected?.value == Group.GujaratSchools) {
     const GujaratStudentsId = apiOptions.group?.find(
@@ -129,7 +133,10 @@ export const setParentBatchOptions = (
 
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
-        (item) => item.groupId === GujaratStudentsId && !item.parentId === isQuizSession
+        (item) =>
+          item.groupId === GujaratStudentsId &&
+          !item.parentId === isQuizSession &&
+          isSelectableBatchOption(item)
       ) ?? [];
   } else if (authGroupSelected?.value == Group.PunjabSchools) {
     const PunjabStudentsId = apiOptions.group?.find(
@@ -138,19 +145,28 @@ export const setParentBatchOptions = (
 
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
-        (item) => item.groupId === PunjabStudentsId && !item.parentId === isQuizSession
+        (item) =>
+          item.groupId === PunjabStudentsId &&
+          !item.parentId === isQuizSession &&
+          isSelectableBatchOption(item)
       ) ?? [];
   } else if (authGroupSelected?.value == Group.EnableSchools) {
     const EnableStudentsId = apiOptions.group?.find((item) => item.value === Group.Enable)?.id;
 
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
-        (item) => item.groupId === EnableStudentsId && !item.parentId === isQuizSession
+        (item) =>
+          item.groupId === EnableStudentsId &&
+          !item.parentId === isQuizSession &&
+          isSelectableBatchOption(item)
       ) ?? [];
   } else {
     filteredQuizBatchOptions =
       apiOptions?.batch?.filter(
-        (item) => item.groupId === authGroupSelected?.id && !item.parentId === isQuizSession
+        (item) =>
+          item.groupId === authGroupSelected?.id &&
+          !item.parentId === isQuizSession &&
+          isSelectableBatchOption(item)
       ) ?? [];
   }
 
@@ -206,7 +222,7 @@ export const setBatchOptions = (
 
   const quizBatchId = apiOptions.batch?.find((item) => item.value === value)?.id;
   const filteredClassBatchOptions = apiOptions?.batch?.filter(
-    (item) => item.parentId === quizBatchId
+    (item) => item.parentId === quizBatchId && isSelectableBatchOption(item)
   );
   form.setValue('subBatch', []);
   (fieldsSchema.subBatch as MySelectProps).options = filteredClassBatchOptions ?? [];

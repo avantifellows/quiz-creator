@@ -3,6 +3,7 @@
 import { DATA_PER_PAGE, KeysToDeleteBeforeUpdate } from '@/Constants';
 import { istToUTCDate, utcToISTDate } from '@/lib/time-picker-utils';
 import { deleteByPath, filterObject } from '@/lib/utils';
+import { markSelectableBatchFamilies, MAX_BATCH_OPTIONS } from '@/lib/batch-options';
 import { ApiFormOptions, FilterParams, Platform, STATUS, TableParams } from '@/types';
 import { Session } from '@/types/api.types';
 import { cache } from 'react';
@@ -318,19 +319,26 @@ export async function getAuthGroups() {
 
 export async function getBatches() {
   try {
-    const { data } = await instance.get<Record<string, unknown>[]>(`/batch`);
+    const { data } = await instance.get<Record<string, unknown>[]>(`/batch`, {
+      params: { limit: MAX_BATCH_OPTIONS, offset: 0 },
+    });
 
-    const batches = data?.map((item) => ({
-      label: String(item.batch_id ?? ''),
-      value: String(item.batch_id ?? ''),
-      id: item.id == null ? undefined : String(item.id),
-      name: String(item.name ?? ''),
-      parentId: item.parent_id == null ? undefined : String(item.parent_id),
-      groupId: item.auth_group_id == null ? undefined : String(item.auth_group_id),
-    }));
+    const batches = markSelectableBatchFamilies(
+      data?.map((item) => ({
+        label: String(item.batch_id ?? ''),
+        value: String(item.batch_id ?? ''),
+        id: item.id == null ? undefined : String(item.id),
+        name: String(item.name ?? ''),
+        parentId: item.parent_id == null ? undefined : String(item.parent_id),
+        groupId: item.auth_group_id == null ? undefined : String(item.auth_group_id),
+      })) ?? []
+    );
 
+    if (data.length === MAX_BATCH_OPTIONS) {
+      console.warn(`[API WARNING] batch options reached the ${MAX_BATCH_OPTIONS} row cap`);
+    }
     console.info('[API SUCCESS] fetching batches : ', batches.length);
-    return batches ?? [];
+    return batches;
   } catch (error) {
     console.error(`[API ERROR] fetching options : ${error}`);
     return [];
