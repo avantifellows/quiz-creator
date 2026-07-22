@@ -32,7 +32,7 @@ describe('Navbar', () => {
 
     render(<Navbar actorEmail='test@avantifellows.org' />);
 
-    const logoImage = screen.getByAltText('Avanti fellows logo');
+    const logoImage = screen.getByAltText('Avanti Fellows logo');
     const link = screen.getByTitle('Avanti Fellows');
     expect(link).toHaveAttribute('href', '/');
     expect(logoImage).toBeInTheDocument();
@@ -58,11 +58,11 @@ describe('Navbar', () => {
     NAV_LINKS.forEach((link) => {
       const navLink = screen.getByText(link.label);
       if (link.path === '/live') {
-        expect(navLink).toHaveClass('bg-accent');
-        expect(navLink).toHaveClass('text-accent-foreground');
+        expect(navLink).toHaveClass('bg-white/20');
+        expect(navLink).toHaveAttribute('aria-current', 'page');
       } else {
-        expect(navLink).not.toHaveClass('bg-accent');
-        expect(navLink).not.toHaveClass('text-accent-foreground');
+        expect(navLink).not.toHaveClass('bg-white/20');
+        expect(navLink).not.toHaveAttribute('aria-current');
       }
     });
   });
