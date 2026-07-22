@@ -49,6 +49,7 @@ jobs:
         uses: cypress-io/github-action@v6
         env:
           APP_ENV: ${{ secrets.TESTING_APP_ENV }}
+          NEXTAUTH_SECRET: ci-only-nextauth-secret
           AF_DB_URL: ${{ secrets.STAGING_AF_DB_URL }}
           AF_BEARER_TOKEN: ${{ secrets.STAGING_AF_BEARER_TOKEN }}
         with:
@@ -67,6 +68,7 @@ jobs:
         uses: cypress-io/github-action@v6
         env:
           APP_ENV: ${{ secrets.TESTING_APP_ENV }}
+          NEXTAUTH_SECRET: ci-only-nextauth-secret
           AF_DB_URL: ${{ secrets.STAGING_AF_DB_URL }}
           AF_BEARER_TOKEN: ${{ secrets.STAGING_AF_BEARER_TOKEN }}
         with:

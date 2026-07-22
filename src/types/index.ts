@@ -45,6 +45,7 @@ interface DataItem {
   label: string;
   value: any;
   isLink?: boolean;
+  preserveCase?: boolean;
 }
 
 export interface DataSection {
