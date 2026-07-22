@@ -12,11 +12,14 @@ frontend:
             export APP_ENV=production
             export AF_BEARER_TOKEN=$PROD_AF_BEARER_TOKEN
             export AF_DB_URL=$PROD_AF_DB_URL
+            export NEXTAUTH_URL=https://www.sessions.avantifellows.org
           else
             echo "Setting up staging environment variables"
             export APP_ENV=staging
             export AF_BEARER_TOKEN=$STAGING_AF_BEARER_TOKEN
             export AF_DB_URL=$STAGING_AF_DB_URL
+            AMPLIFY_BRANCH_HOST=$(echo "$AWS_BRANCH" | tr '/' '-')
+            export NEXTAUTH_URL=https://${AMPLIFY_BRANCH_HOST}.${AWS_APP_ID}.amplifyapp.com
           fi
         - env | grep -e AF_BEARER_TOKEN -e AF_DB_URL -e AF_TOPIC_ARN -e AF_ACCESS_KEY_ID -e AF_SECRET_ACCESS_KEY -e APP_ENV -e NEXTAUTH_URL -e NEXTAUTH_SECRET -e GOOGLE_CLIENT_ID -e GOOGLE_CLIENT_SECRET >> .env.production
         - npm run build
