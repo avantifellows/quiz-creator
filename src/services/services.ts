@@ -2,6 +2,7 @@
 
 import { DATA_PER_PAGE, KeysToDeleteBeforeUpdate } from '@/Constants';
 import { istToUTCDate, utcToISTDate } from '@/lib/time-picker-utils';
+import { requireActorEmail } from '@/lib/auth';
 import { deleteByPath, filterObject } from '@/lib/utils';
 import { markSelectableBatchFamilies, MAX_BATCH_OPTIONS } from '@/lib/batch-options';
 import { ApiFormOptions, FilterParams, Platform, STATUS, TableParams } from '@/types';
@@ -130,6 +131,7 @@ export async function getASession(id: number | null): Promise<Session | {}> {
  */
 export async function createSession(formData: Session) {
   try {
+    const actorEmail = await requireActorEmail();
     const platform = formData?.platform;
 
     let payload: Session = {};
@@ -148,6 +150,7 @@ export async function createSession(formData: Session) {
           infinite_session: false,
           status: STATUS.PENDING,
           date_created: utcToISTDate(new Date().toISOString()),
+          created_by: actorEmail,
           created_from: 'session_manager',
         },
         purpose: {
@@ -165,6 +168,7 @@ export async function createSession(formData: Session) {
           ...formData.meta_data,
           status: STATUS.PENDING,
           date_created: utcToISTDate(new Date().toISOString()),
+          created_by: actorEmail,
           created_from: 'session_manager',
         },
         purpose: '',
@@ -174,7 +178,7 @@ export async function createSession(formData: Session) {
     }
     console.info(`[PAYLOAD] generated for ${platform} : ${JSON.stringify(payload)}`);
     const { data } = await instance.post<Session>(`/session`, payload);
-    sendCreateSns(data.id);
+    await sendCreateSns(data.id);
     console.info(`[API SUCCESS] created session ${data?.id} : ${data}`);
     return { isSuccess: true, id: data?.id };
   } catch (error) {
@@ -183,11 +187,29 @@ export async function createSession(formData: Session) {
   }
 }
 
-export const sendCreateSns = (id?: number) =>
-  publishMessage({ action: 'db_id', id, environment: 'production' });
+const sendCreateSns = (id?: number) => publishMessage({ action: 'db_id', id });
 
-export const sendRegenerateSns = (id?: number) =>
-  publishMessage({ action: 'regenerate_quiz', id, environment: 'production' });
+export async function sendRegenerateSns(id?: number) {
+  try {
+    if (!id) return { isSuccess: false };
+
+    const actorEmail = await requireActorEmail();
+    const { data: session } = await instance.get<Session>(`/session/${id}`);
+    const payload = {
+      meta_data: {
+        ...session.meta_data,
+        last_regenerated_by: actorEmail,
+        last_regenerated_at: new Date().toISOString(),
+      },
+    };
+    await instance.patch<Session>(`/session/${id}`, payload);
+    await publishMessage({ action: 'regenerate_quiz', id });
+    return { isSuccess: true };
+  } catch (error) {
+    console.error(`Error regenerating session ${id}`, error);
+    return { isSuccess: false };
+  }
+}
 
 /**
  * Patches a session on the server.
@@ -199,6 +221,7 @@ export const sendRegenerateSns = (id?: number) =>
  */
 export async function patchSession(formData: Session, id: number, oldSession: Session) {
   try {
+    const actorEmail = await requireActorEmail();
     // Delete any helper keys we do not want to propagate to the API
     KeysToDeleteBeforeUpdate.forEach((key) => deleteByPath(formData, key));
 
@@ -216,6 +239,8 @@ export async function patchSession(formData: Session, id: number, oldSession: Se
             ? utcToISTDate(oldSession.meta_data.date_created)
             : undefined,
         status: STATUS.PENDING,
+        last_edited_by: actorEmail,
+        last_edited_at: new Date().toISOString(),
       },
       ...(formData.start_time ? { start_time: utcToISTDate(formData.start_time) } : {}),
       ...(formData.end_time ? { end_time: utcToISTDate(formData.end_time) } : {}),
@@ -225,7 +250,11 @@ export async function patchSession(formData: Session, id: number, oldSession: Se
     await instance.patch<Session>(`/session/${id}`, payload);
 
     // Additionally notify the downstream worker to perform any heavy processing.
-    publishMessage({ action: 'patch', id, patch_session: payload, environment: 'production' });
+    await publishMessage({
+      action: 'patch',
+      id,
+      patch_session: payload,
+    });
 
     console.info(`[SUCCESS] updated session for ${id}`);
     return { isSuccess: true, id };

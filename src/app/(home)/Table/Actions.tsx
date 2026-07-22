@@ -72,12 +72,18 @@ const TableActions = ({ session }: { session: Session }) => {
           <Button
             variant='ghost'
             className='w-full focus-visible:ring-0 justify-start font-normal'
-            onClick={() => {
-              sendRegenerateSns(session.id);
-              toast.success('Request send successfully', {
-                description:
-                  'The links will be available/updated shortly. Please refresh the page after a while.',
-              });
+            onClick={async () => {
+              const { isSuccess } = await sendRegenerateSns(session.id);
+              if (isSuccess) {
+                toast.success('Request sent successfully', {
+                  description:
+                    'The links will be available/updated shortly. Please refresh the page after a while.',
+                });
+              } else {
+                toast.error('Failed to regenerate session', {
+                  description: 'Please retry in a moment.',
+                });
+              }
             }}
           >
             Regenerate Links

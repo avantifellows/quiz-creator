@@ -69,7 +69,9 @@ export const SheetTableRow = ({
                         {item.value}
                       </Link>
                     ) : (
-                      <p className='text-sm capitalize'>{item.value || 'N/A'}</p>
+                      <p className={cn('text-sm', !item.preserveCase && 'capitalize')}>
+                        {item.value || 'N/A'}
+                      </p>
                     )}
                   </li>
                 ))}
