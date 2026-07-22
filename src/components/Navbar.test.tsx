@@ -4,6 +4,10 @@ import { usePathname } from 'next/navigation';
 import type { ComponentPropsWithoutRef } from 'react';
 import Navbar from '../components/Navbar';
 
+jest.mock('next-auth/react', () => ({
+  signOut: jest.fn(),
+}));
+
 jest.mock('next/navigation', () => ({
   usePathname: jest.fn(),
 }));
@@ -26,7 +30,7 @@ describe('Navbar', () => {
   it('should render the logo with a link to the homepage', () => {
     (usePathname as jest.Mock).mockReturnValue('/');
 
-    render(<Navbar />);
+    render(<Navbar actorEmail='test@avantifellows.org' />);
 
     const logoImage = screen.getByAltText('Avanti fellows logo');
     const link = screen.getByTitle('Avanti Fellows');
@@ -37,7 +41,7 @@ describe('Navbar', () => {
   it('should render navigation links', () => {
     (usePathname as jest.Mock).mockReturnValue('/');
 
-    render(<Navbar />);
+    render(<Navbar actorEmail='test@avantifellows.org' />);
 
     NAV_LINKS.forEach((link) => {
       const navLink = screen.getByText(link.label);
@@ -49,7 +53,7 @@ describe('Navbar', () => {
   it('should highlight the current page link', () => {
     (usePathname as jest.Mock).mockReturnValue('/live');
 
-    render(<Navbar />);
+    render(<Navbar actorEmail='test@avantifellows.org' />);
 
     NAV_LINKS.forEach((link) => {
       const navLink = screen.getByText(link.label);
