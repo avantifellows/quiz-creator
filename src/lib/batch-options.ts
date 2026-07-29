@@ -15,9 +15,25 @@ export function inferBatchYear(batchId: string): number | undefined {
   return undefined;
 }
 
+/**
+ * A batch is expired when its end_date has already passed. Batches without an
+ * end_date are never treated as expired: several live cohorts still have the
+ * column unset, so a missing date must not hide them.
+ */
+export function isExpiredBatch(batch: ExtendedOptions, today = new Date()): boolean {
+  const endDate = batch.endDate;
+  if (!endDate) return false;
+
+  const parsed = new Date(`${String(endDate).slice(0, 10)}T23:59:59.999`);
+  if (Number.isNaN(parsed.getTime())) return false;
+
+  return parsed.getTime() < today.getTime();
+}
+
 export function markSelectableBatchFamilies(
   batches: ExtendedOptions[],
-  currentYear = new Date().getFullYear()
+  currentYear = new Date().getFullYear(),
+  today = new Date()
 ): ExtendedOptions[] {
   const cutoffYear = currentYear - 1;
   const familyYears = new Map<string, number>();
@@ -39,6 +55,16 @@ export function markSelectableBatchFamilies(
     }
   }
 
+  // A parent's expiry cascades to its class batches, which often carry no
+  // end_date of their own.
+  const expiredFamilies = new Set<string>();
+  for (const batch of batches) {
+    const ownId = String(batch.id ?? batch.value);
+    if (batch.parentId == null && isExpiredBatch(batch, today)) {
+      expiredFamilies.add(ownId);
+    }
+  }
+
   return batches
     .map((batch) => {
       const familyId = String(batch.parentId ?? batch.id ?? batch.value);
@@ -46,12 +72,18 @@ export function markSelectableBatchFamilies(
       const groupId = batch.groupId == null ? undefined : String(batch.groupId);
       const groupHasRecentFamilies = groupId != null && groupsWithRecentFamilies.has(groupId);
 
+      const isExpired =
+        isExpiredBatch(batch, today) ||
+        (batch.parentId != null && expiredFamilies.has(String(batch.parentId)));
+
       return {
         ...batch,
         id: batch.id,
         batchYear: familyYear,
+        isExpiredBatch: isExpired,
         isSelectableBatch:
-          (familyYear != null && familyYear >= cutoffYear) || !groupHasRecentFamilies,
+          !isExpired &&
+          ((familyYear != null && familyYear >= cutoffYear) || !groupHasRecentFamilies),
       };
     })
     .sort((left, right) => {

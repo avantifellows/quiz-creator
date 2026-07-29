@@ -360,6 +360,7 @@ export async function getBatches() {
         name: String(item.name ?? ''),
         parentId: item.parent_id == null ? undefined : String(item.parent_id),
         groupId: item.auth_group_id == null ? undefined : String(item.auth_group_id),
+        endDate: item.end_date == null ? undefined : String(item.end_date),
       })) ?? []
     );
 
