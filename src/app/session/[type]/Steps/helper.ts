@@ -213,26 +213,27 @@ export const setPopupSignUpOptions = (
 };
 
 /**
- * Recompute the class-batch options from the selected quiz (parent) batches.
+ * The class batches selectable for a set of quiz (parent) batches: the UNION of every
+ * selected parent's children.
  *
- * A quiz session can target several quiz batches, so the options are the UNION
- * of every selected parent's children. Selections already made are preserved as
- * long as they still belong to one of the selected parents — deselecting one
- * quiz batch must only drop that parent's class batches, not the whole choice.
+ * Pure, and called from the subBatch field's `deriveOptions` on each render, so the
+ * dropdown always follows the live Quiz Batch selection. Deriving rather than mutating
+ * the schema matters: the field schema is memoised on type+label, so a mutation from an
+ * onValueChange handler never reaches the render, and performing it from an effect
+ * re-triggers that effect (React #185, "maximum update depth exceeded").
+ *
+ * Stale selections need no pruning here — a class batch whose quiz batch was deselected
+ * simply stops being an option, and zod validates the submitted values.
  */
-export const setBatchOptions = (
-  value: string | string[],
-  form: UseFormReturn,
-  apiOptions: ApiFormOptions,
-  fieldsSchema: FieldSchema<basicFields>
-) => {
-  const selectedParentValues = (Array.isArray(value) ? value : [value]).filter(Boolean);
+export const classBatchOptionsFor = (
+  selectedParentBatches: string | string[] | undefined,
+  apiOptions: ApiFormOptions
+): ExtendedOptions[] => {
+  const selectedParentValues = (
+    Array.isArray(selectedParentBatches) ? selectedParentBatches : [selectedParentBatches]
+  ).filter(Boolean) as string[];
 
-  if (selectedParentValues.length === 0) {
-    form.setValue('subBatch', []);
-    (fieldsSchema.subBatch as MySelectProps).options = [];
-    return;
-  }
+  if (selectedParentValues.length === 0) return [];
 
   const quizBatchIds = new Set(
     apiOptions.batch
@@ -240,18 +241,11 @@ export const setBatchOptions = (
       .map((item) => item.id)
   );
 
-  const filteredClassBatchOptions =
+  return (
     apiOptions?.batch?.filter(
       (item) => quizBatchIds.has(item.parentId) && isSelectableBatchOption(item)
-    ) ?? [];
-
-  const availableValues = new Set(filteredClassBatchOptions.map((item) => String(item.value)));
-  const retainedSubBatches = ((form.getValues('subBatch') as string[]) ?? []).filter((batchId) =>
-    availableValues.has(String(batchId))
+    ) ?? []
   );
-
-  form.setValue('subBatch', retainedSubBatches);
-  (fieldsSchema.subBatch as MySelectProps).options = filteredClassBatchOptions;
 };
 
 export const setPlatformId = (value: string, form: UseFormReturn) => {

@@ -52,7 +52,17 @@ const RenderFields = <T extends FieldValues>(
       break;
   }
 
-  const { hide = false, helperText, ...restSchema } = memoSchema;
+  const { hide = false, helperText, deriveOptions, ...restSchema } = memoSchema;
+
+  // A field whose options depend on ANOTHER field's current value (e.g. Class Batch is
+  // the union of the children of the selected Quiz Batches) cannot read them off the
+  // memoised schema: memoSchema is keyed on type+label, so mutating `.options` from an
+  // onValueChange handler never reaches the render. `deriveOptions` recomputes them from
+  // live form state on every render instead, which keeps the data flow one-directional
+  // and avoids the setValue-driven update loops that cross-field mutation caused.
+  const watchedValues = form.watch();
+  const derivedOptions = deriveOptions ? deriveOptions(watchedValues) : undefined;
+  const schemaForField = derivedOptions ? { ...restSchema, options: derivedOptions } : restSchema;
 
   if (hide) return null;
 
@@ -63,7 +73,7 @@ const RenderFields = <T extends FieldValues>(
       name={name as Path<T>}
       render={({ field }) => (
         <FormItem className='relative'>
-          <Component field={field} schema={restSchema} form={form} />
+          <Component field={field} schema={schemaForField} form={form} />
           {helperText ? <FormDescription>{helperText}</FormDescription> : null}
           <FormMessage />
         </FormItem>

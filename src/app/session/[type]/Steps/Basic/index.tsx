@@ -24,7 +24,7 @@ import {
   handlePopupFields,
   handleRedirectionData,
   handleSignUpFields,
-  setBatchOptions,
+  classBatchOptionsFor,
   setGroupPreset,
   setParentBatchOptions,
 } from '../helper';
@@ -183,9 +183,6 @@ const BasicForm: FC = () => {
         label: 'Quiz Batch',
         disabled: type === SessionType.EDIT,
         options: currentBatchOptions.parentBatchOptions,
-        onValueChange: (value: string[], form: UseFormReturn) => {
-          setBatchOptions(value, form, apiOptions, fieldsSchema);
-        },
       },
       subBatch: {
         type: 'multi-select',
@@ -193,6 +190,14 @@ const BasicForm: FC = () => {
         label: 'Class Batch',
         disabled: type === SessionType.EDIT,
         options: currentBatchOptions.subBatchOptions,
+        // Class batches are the union of the children of every selected Quiz Batch, so
+        // they follow the LIVE form values — on create there is no saved session data to
+        // read, and for non-quiz platforms this field lists batches directly (no parent),
+        // so fall through to the statically computed options there.
+        deriveOptions: (values) =>
+          values.platform === Platform.Quiz
+            ? classBatchOptionsFor(values.parentBatch, apiOptions)
+            : currentBatchOptions.subBatchOptions,
       },
       grade: {
         type: 'select',

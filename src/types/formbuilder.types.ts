@@ -103,6 +103,15 @@ export interface CommonFieldProps {
   helperText?: string;
   disabled?: boolean;
   hide?: boolean;
+  /**
+   * Compute this field's options from the form's current values, on every render.
+   *
+   * For options that depend on another field's live selection (Class Batch depends on
+   * the chosen Quiz Batches). The field schema is memoised on type+label, so mutating
+   * `.options` from an onValueChange handler never reaches the render — and doing the
+   * write from an effect re-triggers that effect. Deriving here keeps it one-directional.
+   */
+  deriveOptions?: (values: Record<string, any>) => Option[];
 }
 
 export interface Option {

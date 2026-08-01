@@ -312,13 +312,27 @@ const ControlledMultiSelectField = React.forwardRef<
     ...restSchemaProps
   } = schema;
 
+  // Notify the schema's onValueChange when the selection changes.
+  //
+  // Two things here are load-bearing, both learned the hard way (React #185,
+  // "maximum update depth exceeded"):
+  //   1. Guard on length, not truthiness — an empty multi-select value is `[]`, which
+  //      is truthy, so a bare `if (value)` fires this on mount. (The single-select
+  //      version is safe only because its empty value is the falsy `''`.)
+  //   2. Do NOT call form.setValue for the field itself. react-hook-form hands back a
+  //      new array identity on every render, so writing the value re-renders, which
+  //      changes `value`'s identity, which re-runs this effect — forever. The field is
+  //      already controlled via `onValuesChange={onChange}` below, so the write was
+  //      redundant anyway.
+  // Depend on the serialised selection rather than the array identity for the same reason.
+  const serializedValue = React.useMemo(() => (value ?? []).join(','), [value]);
+
   React.useEffect(() => {
-    if (value && onValueChange) {
-      const value = form.watch(field.name);
-      form.setValue(field.name, value, { shouldDirty: true });
-      onValueChange(value, form);
+    if (serializedValue && onValueChange) {
+      onValueChange(serializedValue.split(','), form);
     }
-  }, [value, onValueChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serializedValue, onValueChange]);
 
   return (
     <>
