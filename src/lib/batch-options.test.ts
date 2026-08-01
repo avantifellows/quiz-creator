@@ -1,9 +1,40 @@
 import {
+  buildBatchLabel,
   inferBatchYear,
   isExpiredBatch,
   isSelectableBatchOption,
   markSelectableBatchFamilies,
 } from './batch-options';
+
+describe('buildBatchLabel', () => {
+  it('shows the batch name alongside the batch id', () => {
+    expect(buildBatchLabel('FeedingIndia 11 Selection Batch', 'FI-11-Selection-25')).toBe(
+      'FeedingIndia 11 Selection Batch (FI-11-Selection-25)'
+    );
+  });
+
+  it('keeps same-name batches from different years distinguishable', () => {
+    // Both years stay selectable, so the name alone is ambiguous.
+    const name = 'FeedingIndia 11 Selection Batch';
+    expect(buildBatchLabel(name, 'FI-11-Selection-24')).not.toBe(
+      buildBatchLabel(name, 'FI-11-Selection-25')
+    );
+  });
+
+  it('falls back to the batch id when there is no name', () => {
+    expect(buildBatchLabel('', 'EN-11-25')).toBe('EN-11-25');
+    expect(buildBatchLabel(null, 'EN-11-25')).toBe('EN-11-25');
+    expect(buildBatchLabel(undefined, 'EN-11-25')).toBe('EN-11-25');
+  });
+
+  it('does not repeat the id when the name is already the id', () => {
+    expect(buildBatchLabel('EN-11-25', 'EN-11-25')).toBe('EN-11-25');
+  });
+
+  it('handles a missing batch id', () => {
+    expect(buildBatchLabel('Some Batch', null)).toBe('Some Batch');
+  });
+});
 
 describe('batch options', () => {
   test.each([

@@ -25,8 +25,11 @@ export const displayData = (
       {
         label: 'Quiz Batch',
         value: data.meta_data?.parent_id
-          ? (batchListOptions.find((b) => b.value === data.meta_data?.parent_id)?.name ??
-            data.meta_data.parent_id)
+          ? data.meta_data.parent_id
+              .split(',')
+              .map((id) => id.trim())
+              .map((idValue) => batchListOptions.find((b) => b.value === idValue)?.name ?? idValue)
+              .join(', ')
           : 'N/A',
       },
       {

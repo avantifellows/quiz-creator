@@ -4,7 +4,11 @@ import { DATA_PER_PAGE, KeysToDeleteBeforeUpdate } from '@/Constants';
 import { istToUTCDate, utcToISTDate } from '@/lib/time-picker-utils';
 import { requireActorEmail } from '@/lib/auth';
 import { deleteByPath, filterObject } from '@/lib/utils';
-import { markSelectableBatchFamilies, MAX_BATCH_OPTIONS } from '@/lib/batch-options';
+import {
+  buildBatchLabel,
+  markSelectableBatchFamilies,
+  MAX_BATCH_OPTIONS,
+} from '@/lib/batch-options';
 import { ApiFormOptions, FilterParams, Platform, STATUS, TableParams } from '@/types';
 import { Session } from '@/types/api.types';
 import { cache } from 'react';
@@ -354,7 +358,11 @@ export async function getBatches() {
 
     const batches = markSelectableBatchFamilies(
       data?.map((item) => ({
-        label: String(item.batch_id ?? ''),
+        // Show the human batch name (as the LMS does) but keep the batch_id visible:
+        // consecutive years share a name (e.g. FI-11-Selection-24/-25 are both
+        // "FeedingIndia 11 Selection Batch") and both stay selectable, so the name
+        // alone cannot distinguish them. The value stays the batch_id.
+        label: buildBatchLabel(item.name, item.batch_id),
         value: String(item.batch_id ?? ''),
         id: item.id == null ? undefined : String(item.id),
         name: String(item.name ?? ''),

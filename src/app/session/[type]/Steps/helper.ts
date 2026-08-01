@@ -29,7 +29,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         popupFormId: null,
         noOfFieldsInPopup: '',
         isIdGeneration: false,
-        parentBatch: '',
+        parentBatch: [],
         subBatch: [],
       };
       break;
@@ -46,7 +46,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         popupFormId: null,
         noOfFieldsInPopup: '',
         isIdGeneration: true,
-        parentBatch: '',
+        parentBatch: [],
         subBatch: [],
       };
       break;
@@ -64,7 +64,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         popupFormId: null,
         noOfFieldsInPopup: '',
         isIdGeneration: false,
-        parentBatch: '',
+        parentBatch: [],
         subBatch: [],
       };
       break;
@@ -79,7 +79,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         popupFormId: null,
         noOfFieldsInPopup: '',
         isIdGeneration: false,
-        parentBatch: '',
+        parentBatch: [],
         subBatch: [],
       };
       break;
@@ -92,7 +92,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
         popupFormId: null,
         noOfFieldsInPopup: '',
         isIdGeneration: false,
-        parentBatch: '',
+        parentBatch: [],
         subBatch: [],
       };
       break;
@@ -212,20 +212,46 @@ export const setPopupSignUpOptions = (
   (fieldsSchema.popupFormId as MySelectProps).options = options.popup ?? [];
 };
 
+/**
+ * Recompute the class-batch options from the selected quiz (parent) batches.
+ *
+ * A quiz session can target several quiz batches, so the options are the UNION
+ * of every selected parent's children. Selections already made are preserved as
+ * long as they still belong to one of the selected parents — deselecting one
+ * quiz batch must only drop that parent's class batches, not the whole choice.
+ */
 export const setBatchOptions = (
-  value: string,
+  value: string | string[],
   form: UseFormReturn,
   apiOptions: ApiFormOptions,
   fieldsSchema: FieldSchema<basicFields>
 ) => {
-  if (!value) return;
+  const selectedParentValues = (Array.isArray(value) ? value : [value]).filter(Boolean);
 
-  const quizBatchId = apiOptions.batch?.find((item) => item.value === value)?.id;
-  const filteredClassBatchOptions = apiOptions?.batch?.filter(
-    (item) => item.parentId === quizBatchId && isSelectableBatchOption(item)
+  if (selectedParentValues.length === 0) {
+    form.setValue('subBatch', []);
+    (fieldsSchema.subBatch as MySelectProps).options = [];
+    return;
+  }
+
+  const quizBatchIds = new Set(
+    apiOptions.batch
+      ?.filter((item) => selectedParentValues.includes(String(item.value)))
+      .map((item) => item.id)
   );
-  form.setValue('subBatch', []);
-  (fieldsSchema.subBatch as MySelectProps).options = filteredClassBatchOptions ?? [];
+
+  const filteredClassBatchOptions =
+    apiOptions?.batch?.filter(
+      (item) => quizBatchIds.has(item.parentId) && isSelectableBatchOption(item)
+    ) ?? [];
+
+  const availableValues = new Set(filteredClassBatchOptions.map((item) => String(item.value)));
+  const retainedSubBatches = ((form.getValues('subBatch') as string[]) ?? []).filter((batchId) =>
+    availableValues.has(String(batchId))
+  );
+
+  form.setValue('subBatch', retainedSubBatches);
+  (fieldsSchema.subBatch as MySelectProps).options = filteredClassBatchOptions;
 };
 
 export const setPlatformId = (value: string, form: UseFormReturn) => {
@@ -329,7 +355,7 @@ export const handleBatchFields = (
 ) => {
   if (value !== Platform.Quiz) {
     fieldsSchema.parentBatch.hide = true;
-    form.setValue('parentBatch', '');
+    form.setValue('parentBatch', []);
   } else {
     fieldsSchema.parentBatch.hide = false;
   }

@@ -55,10 +55,14 @@ export interface MySelectProps extends Omit<SelectProps, 'onValueChange'>, Commo
 }
 
 export interface MyMultiSelectProps
-  extends Omit<MultiSelectorProps, 'onValueChange'>,
+  extends Omit<MultiSelectorProps, 'onValueChange' | 'values' | 'onValuesChange'>,
     CommonFieldProps {
   type: 'multi-select';
   options: Option[];
+  // `values`/`onValuesChange` are supplied by ControlledMultiSelectField from the
+  // react-hook-form field, so a field schema must not have to declare them.
+  values?: string[];
+  onValuesChange?: (value: string[]) => void;
   onValueChange?: (value: string[], form: UseFormReturn) => void;
 }
 

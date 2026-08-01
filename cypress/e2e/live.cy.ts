@@ -31,7 +31,8 @@ describe('Live Session', () => {
     cy.customInput('name', create.name);
     cy.customSelect('platform', create.platform);
     cy.customSelect('group', create.group);
-    cy.get('select[name="parentBatch"]').should('not.exist');
+    // Quiz Batch is hidden for non-quiz platforms (multi-select renders an input).
+    cy.get('input[name="parentBatch"]').should('not.exist');
     cy.customMultiSelect('subBatch', create.subBatch);
     cy.customSelect('grade', create.grade);
     cy.customSelect('sessionType', create.sessionType);

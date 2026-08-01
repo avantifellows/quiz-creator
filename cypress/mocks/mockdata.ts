@@ -11,25 +11,28 @@ import {
   GurukulFormatOptions,
 } from '@/Constants';
 import { AuthType, Group, Platform, Subjects } from '@/types';
+import { buildBatchLabel } from '@/lib/batch-options';
 import { getDateWithTime } from '../support/utils';
+
+/**
+ * Batch fixture. The dropdown label is derived with the same helper the app uses
+ * (`name (batch_id)`), so fixtures stay correct if the label format changes.
+ */
+const batchFixture = (batchId: string, name: string) => ({
+  label: buildBatchLabel(name, batchId),
+  value: batchId,
+  name,
+});
 
 // Quiz Create Details
 export const CreateQuizData = {
   name: 'Cypress Quiz Session',
   platform: { label: Platform.Quiz, value: Platform.Quiz },
   group: { label: Group.Haryana, value: Group.Haryana },
-  parentBatch: {
-    label: 'HR-9-Foundation-25',
-    value: 'HR-9-Foundation-25',
-    name: 'Haryana 9 Quiz Batch - 25',
-  },
-  subBatch: [
-    {
-      label: 'HaryanaStudents_9_Foundation_25_001',
-      value: 'HaryanaStudents_9_Foundation_25_001',
-      name: '9B01 2025',
-    },
-  ],
+  // Quiz sessions can target several quiz batches; the class-batch options are the
+  // union of the selected parents' children.
+  parentBatch: [batchFixture('HR-9-Foundation-25', 'Haryana 9 Quiz Batch - 25')],
+  subBatch: [batchFixture('HaryanaStudents_9_Foundation_25_001', '9B01 2025')],
   grade: GradeOptions.find((i) => i.value === 9)!,
   sessionType: SessionTypeOptions.find((i) => i.value === 'sign-in')!,
   authType: AuthOptions.find((i) => (i.value = AuthType.ID))!,
@@ -84,16 +87,8 @@ export const CreateLiveData = {
   platform: { label: Platform.Youtube, value: Platform.Youtube },
   group: { label: Group.Haryana, value: Group.Haryana },
   subBatch: [
-    {
-      label: 'HaryanaStudents_9_Foundation_25_001',
-      value: 'HaryanaStudents_9_Foundation_25_001',
-      name: '9B01 2025',
-    },
-    {
-      label: 'HaryanaStudents_10_Foundation_25_001',
-      value: 'HaryanaStudents_10_Foundation_25_001',
-      name: '10B01 2025',
-    },
+    batchFixture('HaryanaStudents_9_Foundation_25_001', '9B01 2025'),
+    batchFixture('HaryanaStudents_10_Foundation_25_001', '10B01 2025'),
   ],
   grade: GradeOptions.find((i) => i.value === 9)!,
   sessionType: SessionTypeOptions.find((i) => i.value === 'sign-in')!,

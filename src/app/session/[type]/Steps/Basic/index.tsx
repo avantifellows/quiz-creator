@@ -18,6 +18,7 @@ import {
 } from '@/types';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, type FC } from 'react';
+import type { UseFormReturn } from 'react-hook-form';
 import {
   handleBatchFields,
   handlePopupFields,
@@ -50,9 +51,13 @@ const BasicForm: FC = () => {
       const selectedBatchIds = new Set(
         formData?.meta_data?.batch_id?.split(',').map((batchId) => batchId.trim()) ?? []
       );
+      // parent_id holds one or more comma-separated quiz batches.
+      const selectedParentIds = new Set(
+        formData?.meta_data?.parent_id?.split(',').map((batchId) => batchId.trim()) ?? []
+      );
       const isAvailableBatch = (item: ExtendedOptions) =>
         isSelectableBatchOption(item) ||
-        item.value === formData?.meta_data?.parent_id ||
+        selectedParentIds.has(String(item.value)) ||
         selectedBatchIds.has(String(item.value));
 
       let filteredBatchOptions: any[] = [];
@@ -112,14 +117,16 @@ const BasicForm: FC = () => {
         const parentBatchOptions = filteredBatchOptions;
         let subBatchOptions: any[] = [];
 
-        // If there's a parentBatch, also set subBatch options
-        if (formData?.meta_data?.parent_id) {
-          const quizBatchId = apiOptions.batch?.find(
-            (item) => item.value === formData.meta_data?.parent_id
-          )?.id;
+        // Class batches are the union of every selected quiz batch's children.
+        if (selectedParentIds.size > 0) {
+          const quizBatchIds = new Set(
+            apiOptions.batch
+              ?.filter((item) => selectedParentIds.has(String(item.value)))
+              .map((item) => item.id)
+          );
           subBatchOptions =
             apiOptions?.batch?.filter(
-              (item) => item.parentId === quizBatchId && isAvailableBatch(item)
+              (item) => quizBatchIds.has(item.parentId) && isAvailableBatch(item)
             ) ?? [];
         }
 
@@ -171,12 +178,12 @@ const BasicForm: FC = () => {
         },
       },
       parentBatch: {
-        type: 'select',
-        placeholder: 'Select a quiz batch',
+        type: 'multi-select',
+        placeholder: 'Select quiz batches',
         label: 'Quiz Batch',
         disabled: type === SessionType.EDIT,
         options: currentBatchOptions.parentBatchOptions,
-        onValueChange: (value, form) => {
+        onValueChange: (value: string[], form: UseFormReturn) => {
           setBatchOptions(value, form, apiOptions, fieldsSchema);
         },
       },
@@ -268,7 +275,9 @@ const BasicForm: FC = () => {
   const defaultValues: Partial<basicFields> = useMemo(
     () => ({
       group: formData?.meta_data?.group,
-      parentBatch: formData?.meta_data?.parent_id,
+      parentBatch: formData?.meta_data?.parent_id
+        ? formData.meta_data.parent_id.split(',').map((batchId) => batchId.trim())
+        : [],
       subBatch: formData?.meta_data?.batch_id ? formData?.meta_data?.batch_id?.split(',') : [],
       grade: formData?.meta_data?.grade,
       authType: formData?.auth_type,
@@ -292,7 +301,7 @@ const BasicForm: FC = () => {
     const addedData: Session = {
       meta_data: {
         group: data.group,
-        parent_id: data.parentBatch ?? '',
+        parent_id: data.parentBatch ? data.parentBatch.join(',') : '',
         batch_id: data.subBatch ? data.subBatch.join(',') : '',
         grade: data.grade,
         number_of_fields_in_popup_form: data.isPopupForm ? (data.noOfFieldsInPopup ?? '') : '',

@@ -5,6 +5,25 @@ export const MAX_BATCH_OPTIONS = 10_000;
 const FOUR_DIGIT_YEAR = /(?:^|[_-])(20\d{2})(?=[_-]|$)/;
 const TWO_DIGIT_YEAR = /(?:^|[_-])A?(2\d)(?=[_-]|$)/;
 
+/**
+ * Dropdown label for a batch: the human name plus the batch_id.
+ *
+ * The LMS shows batch names, which read far better than raw ids, but names are
+ * not unique — consecutive years share one (e.g. `FI-11-Selection-24` and
+ * `FI-11-Selection-25` are both "FeedingIndia 11 Selection Batch") and both
+ * remain selectable, so the name alone cannot tell them apart. Falls back to the
+ * id when a batch has no name.
+ */
+export function buildBatchLabel(name: unknown, batchId: unknown): string {
+  const batchIdText = String(batchId ?? '').trim();
+  const nameText = String(name ?? '').trim();
+
+  if (!nameText) return batchIdText;
+  if (!batchIdText || nameText === batchIdText) return nameText;
+
+  return `${nameText} (${batchIdText})`;
+}
+
 export function inferBatchYear(batchId: string): number | undefined {
   const fourDigitMatch = batchId.match(FOUR_DIGIT_YEAR);
   if (fourDigitMatch) return Number(fourDigitMatch[1]);

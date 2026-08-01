@@ -31,7 +31,7 @@ describe('Quiz Session', () => {
     cy.customInput('name', create.name);
     cy.customSelect('platform', create.platform);
     cy.customSelect('group', create.group);
-    cy.customSelect('parentBatch', create.parentBatch);
+    cy.customMultiSelect('parentBatch', create.parentBatch);
     cy.customMultiSelect('subBatch', create.subBatch);
     cy.customSelect('grade', create.grade);
     cy.customSelect('sessionType', create.sessionType);
@@ -116,7 +116,13 @@ describe('Quiz Session', () => {
       cy.get('@basicDetails').eq(1).children('p').should('contain.text', create.platform.label);
       cy.get('@basicDetails').eq(2).children('p').should('contain.text', create.grade.label);
       cy.get('@basicDetails').eq(3).children('p').should('contain.text', create.group.label);
-      cy.get('@basicDetails').eq(4).children('p').should('contain.text', create.parentBatch.name);
+      cy.get('@basicDetails')
+        .eq(4)
+        .children('p')
+        .should(
+          'contain.text',
+          create.parentBatch.map((parentBatch) => parentBatch.name).join(', ')
+        );
       cy.get('@basicDetails')
         .eq(5)
         .children('p')
@@ -208,7 +214,8 @@ describe('Quiz Session', () => {
           cy.checkDisabled([
             'select[name="platform"]',
             'select[name="group"]',
-            'select[name="parentBatch"]',
+            // parentBatch is a multi-select now, so it renders an input like subBatch.
+            'input[name="parentBatch"]',
             'input[name="subBatch"]',
           ]);
 

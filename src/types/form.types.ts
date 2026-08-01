@@ -38,7 +38,9 @@ export function isValidCmsUrl(value: string): boolean {
 export const basicSchema = z
   .object({
     group: z.string({ required_error: 'This field is required' }).min(1, 'This field is required'),
-    parentBatch: z.string().optional(),
+    // Quiz sessions can target several quiz (parent) batches at once; the class
+    // batch options are the union of those parents' children.
+    parentBatch: z.array(z.string()).optional(),
     subBatch: z.array(z.string()).optional(),
     grade: z.coerce
       .number({
@@ -119,7 +121,7 @@ export const basicSchema = z
 
     if (data.platform === Platform.Quiz) {
       // Quiz platform validation
-      if (!data.parentBatch) {
+      if (!data.parentBatch?.length) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'This field is required',

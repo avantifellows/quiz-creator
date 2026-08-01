@@ -35,11 +35,16 @@ export const columns: ColumnDef<Session>[] = [
     accessorKey: 'meta_data.parent_id',
     header: 'Parent Batch',
     cell: ({ row, table }) => {
-      const parentId = row.original.meta_data?.parent_id;
-      if (!parentId) return 'N/A';
+      const parentIdsString = row.original.meta_data?.parent_id;
+      if (!parentIdsString) return 'N/A';
       const apiOptions = (table.options.meta as { apiOptions: ApiFormOptions })?.apiOptions;
-      const batchName = apiOptions?.batch?.find((b) => b.value === parentId)?.name;
-      return batchName || parentId;
+      // parent_id can hold several comma-separated quiz batches.
+      const batchNames = parentIdsString
+        .split(',')
+        .map((id) => id.trim())
+        .filter(Boolean)
+        .map((idValue) => apiOptions?.batch?.find((b) => b.value === idValue)?.name || idValue);
+      return <div className='whitespace-normal break-words'>{batchNames.join(', ')}</div>;
     },
   },
   {
