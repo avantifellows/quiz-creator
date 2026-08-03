@@ -32,9 +32,13 @@ Cypress.Commands.addAll({
     options.forEach((option) => {
       cy.get(`input[name="${name}"]`).click();
 
-      cy.get(`div[data-value="${option.value}"`).click().contains(option.label);
+      // cmdk derives `data-value` from the item's rendered TEXT, not its value prop, so
+      // pick the option by its visible label. (Batch labels are "name (batch_id)", so
+      // keying on the bare value stopped matching when that format was introduced.)
+      cy.get('div[cmdk-item]').contains(option.label).click();
 
-      cy.get(`input[name="${name}"]`).siblings('div').contains(option.label);
+      // The selected chip shows the raw VALUE, not the label.
+      cy.get(`input[name="${name}"]`).parent().contains(String(option.value));
     });
     cy.get('body').click(0, 0);
   },
