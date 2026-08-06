@@ -20,16 +20,26 @@ const LEGACY_CMS_HOST = 'cms.peerlearning.com';
 const NEW_CMS_HOSTS = new Set(['new-cms.avantifellows.org', 'staging-new-cms.avantifellows.org']);
 const NEW_CMS_TEST_PATHS = new Set(['/test', '/tests/edit-test']);
 
+function isPositiveIntParam(url: URL, key: string, required: boolean): boolean {
+  const rawValue = url.searchParams.get(key);
+  if (rawValue === null) return !required;
+  return /^\d+$/.test(rawValue) && Number(rawValue) > 0;
+}
+
 export function isValidCmsUrl(value: string): boolean {
   try {
     const url = new URL(value);
     if (url.hostname === LEGACY_CMS_HOST) return true;
     if (!NEW_CMS_HOSTS.has(url.hostname) || !NEW_CMS_TEST_PATHS.has(url.pathname)) return false;
 
-    return ['id', 'curriculum_id', 'grade_id'].every((key) => {
-      const rawValue = url.searchParams.get(key);
-      return rawValue !== null && /^\d+$/.test(rawValue) && Number(rawValue) > 0;
-    });
+    // Only the test id is required: the CMS shortened its test links to `/test?id=<id>`
+    // (nex-gen-cms #170) and a problem belongs to exactly one curriculum (db-service #651),
+    // so curriculum/grade never selected content. They stay validated when present.
+    return (
+      isPositiveIntParam(url, 'id', true) &&
+      isPositiveIntParam(url, 'curriculum_id', false) &&
+      isPositiveIntParam(url, 'grade_id', false)
+    );
   } catch {
     return false;
   }

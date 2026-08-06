@@ -20,8 +20,24 @@ describe('isValidCmsUrl', () => {
     ).toBe(true);
   });
 
-  it('rejects new-CMS links missing ingest parameters', () => {
-    expect(isValidCmsUrl('https://new-cms.avantifellows.org/tests/edit-test?id=504')).toBe(false);
+  it('accepts short new-CMS links carrying only a test id', () => {
+    // The CMS shortened its test links to `/test?id=<id>` (nex-gen-cms #170).
+    expect(isValidCmsUrl('https://new-cms.avantifellows.org/test?id=8901')).toBe(true);
+    expect(isValidCmsUrl('https://new-cms.avantifellows.org/tests/edit-test?id=504')).toBe(true);
+  });
+
+  it('still validates curriculum_id / grade_id when they are present', () => {
+    expect(isValidCmsUrl('https://new-cms.avantifellows.org/test?id=504&curriculum_id=0')).toBe(
+      false
+    );
+    expect(isValidCmsUrl('https://new-cms.avantifellows.org/test?id=504&grade_id=abc')).toBe(false);
+  });
+
+  it('rejects new-CMS links with no test id', () => {
+    expect(isValidCmsUrl('https://new-cms.avantifellows.org/test?curriculum_id=9&grade_id=2')).toBe(
+      false
+    );
+    expect(isValidCmsUrl('https://new-cms.avantifellows.org/test?id=abc')).toBe(false);
   });
 
   it('rejects unrelated hosts and new-CMS pages', () => {
