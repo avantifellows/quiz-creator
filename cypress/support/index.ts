@@ -150,10 +150,28 @@ Cypress.Commands.addAll({
     });
   },
 
-  checkDisabled: (selector: string[]) => {
-    return selector.forEach((selector) => {
-      cy.get(selector).should('be.disabled');
-    });
+  /**
+   * Clicks "Create Session" and waits until the create form is actually showing.
+   *
+   * A plain click is not enough: the home page revalidates its session table right
+   * after load, and a client-side navigation started mid-revalidation gets dropped, so
+   * the app silently stays on the list. Retry the click until the URL changes.
+   */
+  goToCreateSession: () => {
+    const attempt = (attemptsLeft: number) => {
+      cy.url().then((currentUrl) => {
+        if (currentUrl.includes('/session/create')) return;
+        if (attemptsLeft <= 0) {
+          throw new Error('Create Session never navigated to the create form');
+        }
+        cy.get('a').contains('Create Session').should('be.visible').click();
+        cy.wait(500);
+        attempt(attemptsLeft - 1);
+      });
+    };
+
+    attempt(5);
+    return cy.url().should('include', '/session/create');
   },
 });
 
@@ -167,7 +185,7 @@ declare global {
       customSwitch(name: string, value: boolean): Chainable<void>;
       customDatePicker(name: string, value: Date): Chainable<void>;
       customCheckbox(name: string, values: any[]): Chainable<void>;
-      checkDisabled(selector: string[]): Chainable<void>;
+      goToCreateSession(): Chainable<string>;
     }
   }
 }
