@@ -16,6 +16,18 @@ import {
 import { isSelectableBatchOption } from '@/lib/batch-options';
 import { UseFormReturn } from 'react-hook-form';
 
+/**
+ * School-facing groups own no batches of their own: their sessions target the batches of
+ * the corresponding student group. Mirrors the per-group special cases in
+ * `setParentBatchOptions`.
+ */
+export const BATCH_GROUP_ALIASES: Partial<Record<Group, Group>> = {
+  [Group.TNSchools]: Group.TNStudents,
+  [Group.GujaratSchools]: Group.GujaratStudents,
+  [Group.PunjabSchools]: Group.PunjabStudents,
+  [Group.EnableSchools]: Group.Enable,
+};
+
 export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: ApiFormOptions) => {
   if (!value) return;
 
@@ -244,6 +256,32 @@ export const classBatchOptionsFor = (
   return (
     apiOptions?.batch?.filter(
       (item) => quizBatchIds.has(item.parentId) && isSelectableBatchOption(item)
+    ) ?? []
+  );
+};
+
+/**
+ * The class batches selectable for a non-quiz (Live Classes) session: every CHILD batch
+ * belonging to the selected group.
+ *
+ * Non-quiz platforms have no Quiz Batch field to hang the list off, so the group alone
+ * determines it. Pure and driven by the LIVE `group` value for the same reason as
+ * `classBatchOptionsFor`: computing it from the saved session left the dropdown empty
+ * whenever the group had only just been picked, which is always the case on create.
+ */
+export const nonQuizClassBatchOptionsFor = (
+  selectedGroup: string | undefined,
+  apiOptions: ApiFormOptions
+): ExtendedOptions[] => {
+  if (!selectedGroup) return [];
+
+  const batchGroupValue = BATCH_GROUP_ALIASES[selectedGroup as Group] ?? selectedGroup;
+  const batchGroupId = apiOptions.group?.find((item) => item.value === batchGroupValue)?.id;
+  if (batchGroupId == null) return [];
+
+  return (
+    apiOptions?.batch?.filter(
+      (item) => item.groupId === batchGroupId && !!item.parentId && isSelectableBatchOption(item)
     ) ?? []
   );
 };

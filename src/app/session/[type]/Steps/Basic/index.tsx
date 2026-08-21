@@ -25,6 +25,7 @@ import {
   handleRedirectionData,
   handleSignUpFields,
   classBatchOptionsFor,
+  nonQuizClassBatchOptionsFor,
   setGroupPreset,
   setParentBatchOptions,
 } from '../helper';
@@ -190,14 +191,15 @@ const BasicForm: FC = () => {
         label: 'Class Batch',
         disabled: type === SessionType.EDIT,
         options: currentBatchOptions.subBatchOptions,
-        // Class batches are the union of the children of every selected Quiz Batch, so
-        // they follow the LIVE form values — on create there is no saved session data to
-        // read, and for non-quiz platforms this field lists batches directly (no parent),
-        // so fall through to the statically computed options there.
+        // Both branches follow the LIVE form values: on create there is no saved session
+        // to read, so deriving from `formData` left this dropdown empty as soon as a
+        // group was picked. For Quiz the options are the union of the selected Quiz
+        // Batches' children; for every other platform they are the group's child batches
+        // directly, since those sessions have no Quiz Batch field.
         deriveOptions: (values) =>
           values.platform === Platform.Quiz
             ? classBatchOptionsFor(values.parentBatch, apiOptions)
-            : currentBatchOptions.subBatchOptions,
+            : nonQuizClassBatchOptionsFor(values.group, apiOptions),
       },
       grade: {
         type: 'select',
