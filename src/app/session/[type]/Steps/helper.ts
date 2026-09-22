@@ -67,6 +67,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
     case Group.GujaratStudents:
     case Group.Himachal:
     case Group.FeedingIndia:
+    case Group.OLF:
       newDefaultData = {
         sessionType: 'sign-in',
         authType: AuthType.ID,
