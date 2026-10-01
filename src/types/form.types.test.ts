@@ -1,4 +1,4 @@
-import { isValidCmsUrl } from './form.types';
+import { isValidCmsUrl, quizSchema } from './form.types';
 
 describe('isValidCmsUrl', () => {
   it('accepts legacy CMS test links', () => {
@@ -47,5 +47,19 @@ describe('isValidCmsUrl', () => {
     expect(
       isValidCmsUrl('https://new-cms.avantifellows.org/tests?id=504&curriculum_id=9&grade_id=2')
     ).toBe(false);
+  });
+});
+
+describe('quizSchema quizLanguage', () => {
+  const field = quizSchema.innerType().shape.quizLanguage;
+
+  it('accepts English, the regional options, or nothing', () => {
+    for (const value of ['en', 'hi', 'gu', 'ta', undefined]) {
+      expect(field.safeParse(value).success).toBe(true);
+    }
+  });
+
+  it('rejects anything else', () => {
+    expect(field.safeParse('hindi').success).toBe(false);
   });
 });

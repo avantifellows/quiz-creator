@@ -9,6 +9,7 @@ import {
   TestPurposeOptions,
   TestTypeOptions,
   GurukulFormatOptions,
+  QuizLanguageOptions,
 } from '@/Constants';
 import { FormBuilder } from '@/components/FormBuilder';
 import { useFormContext } from '@/hooks/useFormContext';
@@ -72,6 +73,7 @@ const QuizForm: FC = () => {
           fieldsSchema.requireAllQuestions.hide = !isFormType;
           fieldsSchema.shuffle.disabled = isFormType;
           fieldsSchema.sheetName.hide = !isFormType;
+          fieldsSchema.quizLanguage.hide = isFormType;
           fieldsSchema.singlePageHeaderText.hide = !isFormType;
 
           // Update CMS URL field dynamically
@@ -129,6 +131,15 @@ const QuizForm: FC = () => {
         helperText: isForm
           ? 'Enter the Google Sheets link containing your form questions'
           : 'Enter a legacy or new CMS test URL',
+      },
+      quizLanguage: {
+        type: 'select',
+        options: QuizLanguageOptions,
+        placeholder: 'Select the quiz language',
+        label: 'Quiz Language',
+        disabled: type === SessionType.EDIT,
+        hide: isForm,
+        helperText: 'New CMS tests only. Questions without a translation stay in English.',
       },
       sheetName: {
         type: 'text',
@@ -224,6 +235,7 @@ const QuizForm: FC = () => {
       testPurpose: formData.meta_data?.test_purpose,
       gurukulFormatType: formData.meta_data?.gurukul_format_type || 'qa',
       cmsUrl: formData.meta_data?.cms_test_id,
+      quizLanguage: formData.meta_data?.lang_code || 'en',
       sheetName: formData.meta_data?.sheet_name,
       singlePageHeaderText: formData.meta_data?.single_page_header_text || '',
       markingScheme: formData.meta_data?.marking_scheme,
@@ -264,6 +276,12 @@ const QuizForm: FC = () => {
             isEditMode && !isForm ? formData.meta_data?.optional_limits : data.optionalLimit,
           is_advanced_format: isForm ? false : data.isAdvancedFormat,
           cms_test_id: isEditMode ? formData.meta_data?.cms_test_id : cmsTestId,
+          // Language can't change after create: regenerate is blocked for new-CMS sessions.
+          lang_code: isEditMode
+            ? formData.meta_data?.lang_code
+            : !isForm && data.quizLanguage && data.quizLanguage !== 'en'
+              ? data.quizLanguage
+              : undefined,
           ...(isForm &&
             data.sheetName && {
               sheet_name: isEditMode ? formData.meta_data?.sheet_name : data.sheetName,
