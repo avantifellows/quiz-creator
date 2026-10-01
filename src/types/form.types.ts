@@ -10,6 +10,7 @@ import {
   TestPurposeOptions,
   TestTypeOptions,
   GurukulFormatOptions,
+  QuizLanguageOptions,
 } from '@/Constants';
 import { absoluteLink } from '@/lib/utils';
 import { isBefore } from 'date-fns';
@@ -189,6 +190,13 @@ export const quizSchema = z
       .string({ required_error: 'This field is required' })
       .refine(
         (value) => GurukulFormatOptions.some((option) => option.value === value),
+        'Invalid option selected'
+      ),
+    quizLanguage: z
+      .string()
+      .optional()
+      .refine(
+        (value) => !value || QuizLanguageOptions.some((option) => option.value === value),
         'Invalid option selected'
       ),
     markingScheme: z.string().optional(),
