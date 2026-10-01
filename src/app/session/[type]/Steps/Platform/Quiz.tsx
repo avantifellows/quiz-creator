@@ -136,10 +136,11 @@ const QuizForm: FC = () => {
         type: 'select',
         options: QuizLanguageOptions,
         placeholder: 'Select the quiz language',
-        label: 'Quiz Language',
+        label: 'Quiz Language (bilingual, if available)',
         disabled: type === SessionType.EDIT,
         hide: isForm,
-        helperText: 'New CMS tests only. Questions without a translation stay in English.',
+        helperText:
+          'New CMS tests only. Shows the chosen language under the English for questions translated in the CMS; the rest stay in English.',
       },
       sheetName: {
         type: 'text',
