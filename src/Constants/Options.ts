@@ -13,6 +13,14 @@ export const GurukulFormatOptions: Option[] = [
   { value: 'both', label: 'Both' },
 ];
 
+// New-CMS quiz language: the chosen language is shown under the English.
+export const QuizLanguageOptions: Option[] = [
+  { value: 'en', label: 'English' },
+  { value: 'hi', label: 'English + Hindi' },
+  { value: 'gu', label: 'English + Gujarati' },
+  { value: 'ta', label: 'English + Tamil' },
+];
+
 export const SessionTypeOptions: Option[] = [
   { value: 'sign-in', label: 'SignIn' },
   { value: 'sign-up', label: 'SignUp' },
