@@ -83,6 +83,7 @@ export const setGroupPreset = (value: string, form: UseFormReturn, apiOptions: A
       break;
 
     case Group.Uttarakhand:
+    case Group.Foundation:
       newDefaultData = {
         sessionType: 'sign-in',
         authType: AuthType.IDDOB,
