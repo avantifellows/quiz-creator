@@ -51,6 +51,7 @@ export enum Group {
   AllIndia = 'AllIndiaStudents',
   HiringCandidates = 'HiringCandidates',
   OLF = 'OLFStudents',
+  Foundation = 'FoundationStudents',
 }
 
 export const GroupShortName: Record<Group, string> = {
@@ -77,6 +78,7 @@ export const GroupShortName: Record<Group, string> = {
   [Group.AllIndia]: 'AllIndia',
   [Group.HiringCandidates]: 'HiringCandidates',
   [Group.OLF]: 'OLF',
+  [Group.Foundation]: 'FoundationStudents',
 } as const;
 
 // Optional extra tokens to match form names beyond the default short name.
