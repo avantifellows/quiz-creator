@@ -38,6 +38,7 @@ export const TestFormatOptions: Option[] = [
   { value: 'evaluation_test', label: 'Evaluation Test' },
   { value: 'hiring_test', label: 'Hiring Test' },
   { value: 'mock_test', label: 'Mock Test' },
+  { value: 'previous_year_test', label: 'Previous Year Test' },
   { value: 'homework', label: 'Homework' },
   { value: 'questionnaire', label: 'Questionnaire' },
 ];
