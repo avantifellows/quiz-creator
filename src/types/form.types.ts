@@ -210,6 +210,7 @@ export const quizSchema = z
     showAnswers: z.coerce.boolean(),
     showScores: z.coerce.boolean(),
     requireAllQuestions: z.coerce.boolean().optional(),
+    hideInGurukul: z.coerce.boolean().optional(),
     shuffle: z.coerce.boolean(),
     hasNextStep: z.coerce.boolean(),
     nextStepUrl: z.string().optional(),

@@ -200,6 +200,12 @@ const QuizForm: FC = () => {
         defaultValue: 'No',
         hide: !isForm,
       },
+      hideInGurukul: {
+        type: 'switch',
+        label: 'Hide from Gurukul home screen?',
+        defaultValue: 'No',
+        hide: false,
+      },
       shuffle: {
         type: 'switch',
         label: 'Shuffle Questions?',
@@ -245,6 +251,7 @@ const QuizForm: FC = () => {
       showAnswers: formData.meta_data?.show_answers == false ? false : true,
       showScores: formData.meta_data?.show_scores == false ? false : true,
       requireAllQuestions: formData.meta_data?.require_all_questions == true ? true : false,
+      hideInGurukul: formData.meta_data?.hide_in_gurukul == true ? true : false,
       shuffle: formData.meta_data?.shuffle == true ? true : false,
       hasNextStep: formData.meta_data?.next_step_url ? true : false,
       nextStepUrl: formData.meta_data?.next_step_url || '',
@@ -292,6 +299,7 @@ const QuizForm: FC = () => {
               single_page_header_text: data.singlePageHeaderText,
             }),
           require_all_questions: isForm ? data.requireAllQuestions == true : false,
+          hide_in_gurukul: data.hideInGurukul == true,
           show_answers: data.showAnswers,
           show_scores: data.showScores,
           shuffle: data.shuffle,
