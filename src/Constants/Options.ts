@@ -78,24 +78,35 @@ export const OptionalLimitOptions: Option[] = [
   { value: 'NA', label: 'NA' },
 ];
 
+// The exam a session prepares for. Programme tiers (Photon, Alpha, Catalyst,
+// Foundation) and test purposes (Hiring, Certification) used to live here too;
+// the sessions carrying those were backfilled to the exam they actually test,
+// so the field now means one thing.
 export const CourseOptions: Option[] = [
+  { value: 'JEE Mains', label: 'JEE Mains' },
+  { value: 'JEE Advanced', label: 'JEE Advanced' },
   { value: 'NEET', label: 'NEET' },
-  { value: 'Catalyst', label: 'Catalyst' },
-  { value: 'Alpha', label: 'Alpha' },
-  { value: 'Hiring', label: 'Hiring' },
-  { value: 'Certification', label: 'Certification' },
-  { value: 'Foundation', label: 'Foundation' },
-  { value: 'Photon', label: 'Photon' },
-  { value: 'JEE', label: 'JEE' },
-  { value: 'CUET', label: 'CUET' },
-  { value: 'CA', label: 'CA' },
+  { value: 'CA Foundation', label: 'CA Foundation' },
   { value: 'CLAT', label: 'CLAT' },
-  { value: 'CET', label: 'CET' },
+  { value: 'CUET', label: 'CUET' },
   { value: 'NDA', label: 'NDA' },
+  { value: 'NEST', label: 'NEST' },
+  { value: 'AP EAMCET', label: 'AP EAMCET' },
+  { value: 'TS EAMCET', label: 'TS EAMCET' },
+  { value: 'GCET', label: 'GCET' },
+  { value: 'GUJCET', label: 'GUJCET' },
+  { value: 'KCET', label: 'KCET' },
+  { value: 'KEAM', label: 'KEAM' },
+  { value: 'MHT CET', label: 'MHT CET' },
+  { value: 'UPCET', label: 'UPCET' },
+  { value: 'WBJEE', label: 'WBJEE' },
   { value: 'NCHMJEE', label: 'NCHMJEE' },
   { value: 'NIFT', label: 'NIFT' },
   { value: 'UCEED', label: 'UCEED' },
   { value: 'CHSL', label: 'CHSL' },
+  // Kept so the ten sessions holding a bare "CET" still render and stay
+  // editable; new sessions should pick the state's CET above.
+  { value: 'CET', label: 'CET (unspecified)' },
 ];
 
 export const StreamOptions: Option[] = [

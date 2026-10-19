@@ -43,7 +43,7 @@ export const CreateQuizData = {
   isIdGeneration: false,
 
   // Platform Details
-  course: CourseOptions.find((i) => i.value === 'Foundation')!,
+  course: CourseOptions.find((i) => i.value === 'JEE Mains')!,
   stream: StreamOptions.find((i) => i.value === 'pcmb')!,
   testFormat: TestFormatOptions.find((i) => i.value === 'mock_test')!,
   testPurpose: TestPurposeOptions.find((i) => i.value === 'one_time')!,
