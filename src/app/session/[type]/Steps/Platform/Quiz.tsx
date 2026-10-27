@@ -23,6 +23,7 @@ import {
   quizFields,
   quizSchema,
 } from '@/types';
+import { formBuilderMarker, formIdFromMarker } from '@/app/form-builder/lib/definition';
 import { useParams } from 'next/navigation';
 import { useCallback, useMemo, type FC } from 'react';
 import React from 'react';
@@ -123,8 +124,44 @@ const QuizForm: FC = () => {
         hide: false,
         disabled: isForm, // Allow editing in edit mode
       },
+      // Form sessions: a form built in the Forms page (default) or a Google Sheet (legacy,
+      // decision D17). These three only show for forms; see deriveHide.
+      formSource: {
+        type: 'select',
+        options: [
+          { label: 'Form builder', value: 'builder' },
+          { label: 'Google Sheet (legacy)', value: 'sheet' },
+        ],
+        label: 'Form Source',
+        placeholder: 'Where the form comes from',
+        disabled: type === SessionType.EDIT,
+        deriveHide: (values) => values.testType !== 'form',
+      },
+      formId: {
+        type: 'form-picker',
+        label: 'Form',
+        placeholder: 'Search your saved forms',
+        disabled: type === SessionType.EDIT,
+        helperText:
+          'Only complete forms are listed. Once a session uses a form, the form can no longer be edited.',
+        deriveHide: (values) => values.testType !== 'form' || values.formSource === 'sheet',
+      },
+      // the picked form's languages, kept by the picker (decides whether Hindi is offered)
+      formLanguages: { type: 'text', hide: true },
+      showHindi: {
+        type: 'switch',
+        label: 'Also show Hindi?',
+        disabled: type === SessionType.EDIT,
+        helperText:
+          'English is always shown. With Hindi, students see each text in English with Hindi below it.',
+        deriveHide: (values) =>
+          values.testType !== 'form' ||
+          values.formSource === 'sheet' ||
+          !(values.formLanguages ?? []).includes('hi'),
+      },
       cmsUrl: {
         type: 'text',
+        deriveHide: (values) => values.testType === 'form' && values.formSource !== 'sheet',
         label: isForm ? 'Google Sheets Link' : 'CMS URL',
         placeholder: isForm ? 'Enter Google Sheets link' : 'Enter CMS URL',
         disabled: type === SessionType.EDIT,
@@ -148,6 +185,7 @@ const QuizForm: FC = () => {
         placeholder: 'Enter the sheet name within the Google Sheets',
         disabled: type === SessionType.EDIT,
         hide: !isForm,
+        deriveHide: (values) => values.formSource !== 'sheet',
         helperText: 'Specify which sheet/tab to use from the Google Sheets document',
       },
       singlePageHeaderText: {
@@ -199,6 +237,8 @@ const QuizForm: FC = () => {
         label: 'Require all questions?',
         defaultValue: 'No',
         hide: !isForm,
+        // a form-builder form sets Required per question itself
+        deriveHide: (values) => values.formSource !== 'sheet',
       },
       hideInGurukul: {
         type: 'switch',
@@ -241,7 +281,20 @@ const QuizForm: FC = () => {
       testFormat: formData.meta_data?.test_format,
       testPurpose: formData.meta_data?.test_purpose,
       gurukulFormatType: formData.meta_data?.gurukul_format_type || 'qa',
-      cmsUrl: formData.meta_data?.cms_test_id,
+      // A form-builder session stores "form-builder:<id>" in cms_test_id; any other form
+      // session with a cms_test_id is a Google Sheet one.
+      formSource:
+        formData.meta_data?.test_type === 'form' &&
+        formData.meta_data?.cms_test_id &&
+        !formIdFromMarker(formData.meta_data.cms_test_id)
+          ? 'sheet'
+          : 'builder',
+      formId: formIdFromMarker(formData.meta_data?.cms_test_id) ?? undefined,
+      formLanguages: [],
+      showHindi: formData.meta_data?.test_type === 'form' && formData.meta_data?.lang_code === 'hi',
+      cmsUrl: formIdFromMarker(formData.meta_data?.cms_test_id)
+        ? ''
+        : formData.meta_data?.cms_test_id,
       quizLanguage: formData.meta_data?.lang_code || 'en',
       sheetName: formData.meta_data?.sheet_name,
       singlePageHeaderText: formData.meta_data?.single_page_header_text || '',
@@ -264,6 +317,7 @@ const QuizForm: FC = () => {
     (data: quizFields) => {
       const isHomework = data.testType === 'homework';
       const isForm = data.testType === 'form';
+      const isBuilderForm = isForm && data.formSource !== 'sheet';
 
       // Use CMS URL for all test types (Google Sheets link for forms, CMS URL for others)
       const cmsTestId = data.cmsUrl;
@@ -283,14 +337,24 @@ const QuizForm: FC = () => {
           optional_limits:
             isEditMode && !isForm ? formData.meta_data?.optional_limits : data.optionalLimit,
           is_advanced_format: isForm ? false : data.isAdvancedFormat,
-          cms_test_id: isEditMode ? formData.meta_data?.cms_test_id : cmsTestId,
+          cms_test_id: isEditMode
+            ? formData.meta_data?.cms_test_id
+            : isBuilderForm
+              ? formBuilderMarker(data.formId!)
+              : cmsTestId,
           // Language can't change after create: regenerate is blocked for new-CMS sessions.
+          // A form-builder form shows English, plus Hindi if chosen (decision D21).
           lang_code: isEditMode
             ? formData.meta_data?.lang_code
-            : !isForm && data.quizLanguage && data.quizLanguage !== 'en'
-              ? data.quizLanguage
-              : undefined,
+            : isBuilderForm
+              ? data.showHindi
+                ? 'hi'
+                : undefined
+              : !isForm && data.quizLanguage && data.quizLanguage !== 'en'
+                ? data.quizLanguage
+                : undefined,
           ...(isForm &&
+            !isBuilderForm &&
             data.sheetName && {
               sheet_name: isEditMode ? formData.meta_data?.sheet_name : data.sheetName,
             }),
@@ -298,7 +362,8 @@ const QuizForm: FC = () => {
             data.singlePageHeaderText && {
               single_page_header_text: data.singlePageHeaderText,
             }),
-          require_all_questions: isForm ? data.requireAllQuestions == true : false,
+          require_all_questions:
+            isForm && !isBuilderForm ? data.requireAllQuestions == true : false,
           hide_in_gurukul: data.hideInGurukul == true,
           show_answers: data.showAnswers,
           show_scores: data.showScores,

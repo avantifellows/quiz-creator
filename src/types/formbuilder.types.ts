@@ -46,7 +46,8 @@ export type Field =
   | MyDateTimeProps
   | MyCheckboxProps
   | MyMultiSelectProps
-  | MyFileProps;
+  | MyFileProps
+  | MyFormPickerProps;
 
 export interface MySelectProps extends Omit<SelectProps, 'onValueChange'>, CommonFieldProps {
   type: 'select';
@@ -93,6 +94,12 @@ export interface MyDateTimeProps
   };
 }
 
+/** Searchable picker over saved form-builder forms (stores the form id). */
+export interface MyFormPickerProps extends CommonFieldProps {
+  type: 'form-picker';
+  placeholder?: string;
+}
+
 export interface MyFileProps extends InputHTMLAttributes<HTMLInputElement>, CommonFieldProps {
   type: 'file';
   onValueChange?: (value: string, form: UseFormReturn) => void;
@@ -112,6 +119,11 @@ export interface CommonFieldProps {
    * write from an effect re-triggers that effect. Deriving here keeps it one-directional.
    */
   deriveOptions?: (values: Record<string, any>) => Option[];
+  /**
+   * Hide this field depending on the form's current values, on every render (same reason as
+   * deriveOptions). Combined with `hide`: the field shows only when neither hides it.
+   */
+  deriveHide?: (values: Record<string, any>) => boolean;
 }
 
 export interface Option {

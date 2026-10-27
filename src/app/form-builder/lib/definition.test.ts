@@ -2,7 +2,13 @@
  * @jest-environment node
  */
 // Pure mapping between the builder state and the stored form — no DOM needed.
-import { duplicateForm, fromDefinition, toDefinition } from './definition';
+import {
+  duplicateForm,
+  formBuilderMarker,
+  formIdFromMarker,
+  fromDefinition,
+  toDefinition,
+} from './definition';
 import { newOption, newQuestion, newSection, seedExample } from './model';
 import { reducer } from './reducer';
 import { FormState } from './types';
@@ -102,5 +108,15 @@ describe('duplicateForm', () => {
     const ids = allQs(next).flatMap((q) => q.options.map((o) => o.id));
     expect(new Set(ids).size).toBe(ids.length);
     expect(newOption().id).not.toBe(newOption().id);
+  });
+});
+
+describe('form-builder marker', () => {
+  it('round-trips a form id and ignores other cms_test_ids', () => {
+    expect(formIdFromMarker(formBuilderMarker('abc123'))).toBe('abc123');
+    expect(formIdFromMarker(' form-builder:abc123 ')).toBe('abc123');
+    expect(formIdFromMarker('form-builder:')).toBeNull();
+    expect(formIdFromMarker('https://docs.google.com/spreadsheets/d/x')).toBeNull();
+    expect(formIdFromMarker(undefined)).toBeNull();
   });
 });

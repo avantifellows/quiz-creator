@@ -152,3 +152,16 @@ export function duplicateForm(state: FormState): FormState {
   }
   return copy;
 }
+
+/** A form session's `meta_data.cms_test_id` for a form-builder form (sessionCreator reads it). */
+export const FORM_BUILDER_PREFIX = 'form-builder:';
+
+export const formBuilderMarker = (formId: string) => `${FORM_BUILDER_PREFIX}${formId}`;
+
+/** The form id in a form-builder `cms_test_id`, or null for a sheet / CMS link. */
+export function formIdFromMarker(cmsTestId: string | undefined | null): string | null {
+  const value = (cmsTestId ?? '').trim();
+  return value.startsWith(FORM_BUILDER_PREFIX)
+    ? value.slice(FORM_BUILDER_PREFIX.length).trim() || null
+    : null;
+}
