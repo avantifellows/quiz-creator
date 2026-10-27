@@ -8,14 +8,14 @@ import {
   computeVisibility,
   conditionSummary,
   FOLLOW_UP_TEXT,
-  hasOtherOption,
+  isOtherOption,
   nestingDepths,
   newFollowUp,
   newOption,
   newQuestion,
   newSection,
+  OTHER_MAX_CHARS,
   OTHER_OPTION_TEXT,
-  OTHER_SPECIFY_TEXT,
   seedExample,
   toQuizPayload,
   validate,
@@ -197,27 +197,89 @@ describe('follow-ups', () => {
     });
   });
 
-  it('"Other (please specify)" appends the option and a follow-up conditioned on it', () => {
-    const { state, q1, q2 } = condForm();
-    const trigger = state.sections[0].questions[0];
-    const option = newOption(OTHER_OPTION_TEXT.en, OTHER_OPTION_TEXT.hi);
-    const question = newFollowUp(trigger, option.id, OTHER_SPECIFY_TEXT);
-    const next = reducer(state, { type: 'add-other', qid: q1, option, question });
-    const t = next.sections[0].questions[0];
-    expect(t.options.map((o) => o.text.en)).toEqual(['Yes', 'No', 'Other']);
-    expect(hasOtherOption(t)).toBe(true);
-    expect(ids(next)).toEqual([q1, q2, question.id]);
-    expect(toQuizPayload(next).question_sets[0].questions[2]).toMatchObject({
-      type: 'subjective',
-      text: 'Please specify',
-      display_condition: { source_position: 0, option_indices: [2] },
-    });
-  });
-
   it('shortens the condition summary when the card is nested under its trigger', () => {
     const { state } = condForm();
     const dep = state.sections[0].questions[1];
     expect(conditionSummary(state, dep, { nested: true })).toBe('If "Yes"');
+  });
+});
+
+describe('single-choice-other', () => {
+  /** condForm's trigger switched to single-choice-other. */
+  function otherForm() {
+    const f = condForm();
+    const state = reducer(f.state, {
+      type: 'set-qtype',
+      qid: f.q1,
+      value: 'single-choice-other',
+    });
+    return { ...f, state, trigger: () => state.sections[0].questions[0] };
+  }
+
+  it('appends a fixed "Other" as the last option when the type is chosen', () => {
+    const { trigger } = otherForm();
+    const t = trigger();
+    expect(t.options.map((o) => o.text.en)).toEqual(['Yes', 'No', 'Other']);
+    expect(isOtherOption(t, t.options[2].id)).toBe(true);
+    expect(isOtherOption(t, t.options[0].id)).toBe(false);
+  });
+
+  it('reuses a trailing option already labelled "Other" instead of adding a second one', () => {
+    const { state, q1 } = condForm();
+    const withOther = reducer(state, { type: 'add-option', qid: q1 });
+    const oid = withOther.sections[0].questions[0].options[2].id;
+    const typed = reducer(withOther, {
+      type: 'set-option',
+      qid: q1,
+      oid,
+      lang: 'en',
+      value: 'other ',
+    });
+    const next = reducer(typed, { type: 'set-qtype', qid: q1, value: 'single-choice-other' });
+    const t = next.sections[0].questions[0];
+    expect(t.options.map((o) => o.text.en)).toEqual(['Yes', 'No', 'Other']);
+    expect(t.options[2].id).toBe(oid);
+  });
+
+  it('adds new options above "Other" and never edits or deletes "Other"', () => {
+    const { state, q1, trigger } = otherForm();
+    const otherId = trigger().options[2].id;
+    let next = reducer(state, { type: 'add-option', qid: q1 });
+    next = reducer(next, { type: 'set-option', qid: q1, oid: otherId, lang: 'en', value: 'X' });
+    next = reducer(next, { type: 'del-option', qid: q1, oid: otherId });
+    const t = next.sections[0].questions[0];
+    expect(t.options).toHaveLength(4);
+    expect(t.options[3]).toMatchObject({ id: otherId, text: OTHER_OPTION_TEXT });
+  });
+
+  it('removes "Other" when the type changes, dropping conditions that pointed at it', () => {
+    const { state, q1, q2, trigger } = otherForm();
+    const otherId = trigger().options[2].id;
+    let next = reducer(state, { type: 'cond-opt', qid: q2, oid: otherId, checked: true });
+    next = reducer(next, { type: 'set-qtype', qid: q1, value: 'single-choice' });
+    const [t, dep] = next.sections[0].questions;
+    expect(t.options.map((o) => o.text.en)).toEqual(['Yes', 'No']);
+    expect(dep.cond.opts).toEqual([state.sections[0].questions[1].cond.opts[0]]);
+  });
+
+  it('emits the runtime type with "Other" last and the 500-char limit', () => {
+    const { state } = otherForm();
+    const q = toQuizPayload(state).question_sets[0].questions[0];
+    expect(q.type).toBe('single-choice-other');
+    expect(q.options.map((o) => o.text)).toEqual(['Yes', 'No', 'Other']);
+    expect(q.max_char_limit).toBe(OTHER_MAX_CHARS);
+  });
+
+  it('can trigger a follow-up on its "Other" option', () => {
+    const { state, q1, trigger } = otherForm();
+    const fu = newFollowUp(trigger(), trigger().options[2].id, FOLLOW_UP_TEXT);
+    const next = reducer(state, { type: 'add-follow-up', qid: q1, question: fu });
+    // Placed after q2, the trigger's existing follow-up.
+    expect(toQuizPayload(next).question_sets[0].questions[2].display_condition).toEqual({
+      source_position: 0,
+      option_indices: [2],
+    });
+    expect(computeVisibility(next, { [q1]: [trigger().options[2].id] })[fu.id]).toBe(true);
   });
 });
 

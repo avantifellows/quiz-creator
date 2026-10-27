@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { tr } from '../lib/model';
-import { Lang, PreviewAnswer, PreviewAnswers, Question } from '../lib/types';
+import { OTHER_MAX_CHARS, otherTextKey, tr } from '../lib/model';
+import { CHOICE_TYPES, Lang, PreviewAnswer, PreviewAnswers, Question } from '../lib/types';
 
 /**
  * One question rendered the way a respondent sees it. Used by the live Preview (interactive:
@@ -30,6 +30,9 @@ export function StudentQuestion({
   // Read-only controls must not take focus or clicks: the surrounding card handles the click.
   const controlProps = interactive ? {} : { readOnly: true, tabIndex: -1 };
   const selected = Array.isArray(answers[q.id]) ? (answers[q.id] as string[]) : [];
+  const otherOption =
+    q.type === 'single-choice-other' ? q.options[q.options.length - 1] : undefined;
+  const otherKey = otherTextKey(q.id);
   const scale = tr(q.scale, lang)
     .split(',')
     .map((s) => s.trim())
@@ -63,7 +66,7 @@ export function StudentQuestion({
         />
       )}
 
-      {(q.type === 'single-choice' || q.type === 'multi-choice') && (
+      {CHOICE_TYPES.includes(q.type) && (
         <div className={cn('flex flex-col', compact ? 'gap-1' : 'gap-1.5')}>
           {q.options.map((o, i) => (
             <label
@@ -76,7 +79,7 @@ export function StudentQuestion({
               )}
             >
               <input
-                type={q.type === 'single-choice' ? 'radio' : 'checkbox'}
+                type={q.type === 'multi-choice' ? 'checkbox' : 'radio'}
                 name={`pv-${q.id}`}
                 className='accent-primary'
                 checked={selected.includes(o.id)}
@@ -86,6 +89,17 @@ export function StudentQuestion({
               <span>{tr(o.text, lang) || `Option ${i + 1}`}</span>
             </label>
           ))}
+          {/* "Other" picked: its text box appears below the options, as in the student app. */}
+          {interactive && otherOption && selected.includes(otherOption.id) && (
+            <textarea
+              rows={2}
+              maxLength={OTHER_MAX_CHARS}
+              placeholder='Please specify…'
+              className='flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:italic placeholder:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+              value={typeof answers[otherKey] === 'string' ? (answers[otherKey] as string) : ''}
+              onChange={(e) => onAnswer?.(otherKey, () => e.target.value)}
+            />
+          )}
         </div>
       )}
 

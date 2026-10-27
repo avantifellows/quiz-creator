@@ -151,12 +151,21 @@ export function newFollowUp(trigger: Question, oid: string, text: LangText): Que
 }
 
 export const FOLLOW_UP_TEXT: LangText = { en: 'Please tell us more', hi: 'कृपया और बताएं' };
-export const OTHER_OPTION_TEXT: LangText = { en: 'Other', hi: 'अन्य' };
-export const OTHER_SPECIFY_TEXT: LangText = { en: 'Please specify', hi: 'कृपया बताएं' };
 
-/** True when the question already offers an "Other" option (English text, any case). */
-export const hasOtherOption = (q: Question): boolean =>
-  q.options.some((o) => o.text.en.trim().toLowerCase() === OTHER_OPTION_TEXT.en.toLowerCase());
+// ---- single-choice-other ---------------------------------------------------
+/** Fixed label of the "Other" option; the sheet flow (sessionCreator) uses the same text. */
+export const OTHER_OPTION_TEXT: LangText = { en: 'Other', hi: 'अन्य' };
+/** Limit on the "Other" text, matching sessionCreator. */
+export const OTHER_MAX_CHARS = 500;
+
+/** True for the fixed "Other" option: the last option of a `single-choice-other` question. */
+export const isOtherOption = (q: Question, oid: string): boolean =>
+  q.type === 'single-choice-other' &&
+  q.options.length > 0 &&
+  q.options[q.options.length - 1].id === oid;
+
+/** Preview-answer key holding the text typed for a question's "Other" option. */
+export const otherTextKey = (qid: string): string => `${qid}::other`;
 
 /**
  * Display-only indentation depth per question within one section. A conditional question is
@@ -277,6 +286,7 @@ export function toQuizPayload(state: FormState): QuizPayload {
       if (q.type === 'matrix-rating') {
         base.matrix_rows = q.rows.map((r) => combineLang(r.text, hiEnabled));
       }
+      if (q.type === 'single-choice-other') base.max_char_limit = OTHER_MAX_CHARS;
       const dc = resolveCondition(state, q.cond, positions);
       if (dc) base.display_condition = dc;
       return base;

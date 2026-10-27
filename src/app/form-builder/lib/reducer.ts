@@ -7,8 +7,15 @@
  * question/option.
  */
 
-import { CHOICE_TYPES, FormState, Lang, Option, Question, QuestionType } from './types';
-import { followUpInsertIndex, newOption, newQuestion, newSection } from './model';
+import { CHOICE_TYPES, FormState, Lang, Question, QuestionType } from './types';
+import {
+  OTHER_OPTION_TEXT,
+  followUpInsertIndex,
+  isOtherOption,
+  newOption,
+  newQuestion,
+  newSection,
+} from './model';
 
 export type Action =
   | { type: 'set-name'; value: string }
@@ -35,8 +42,6 @@ export type Action =
   // The caller builds the new question (so it knows the id up front, to open it for editing).
   /** Insert `question` as a follow-up of `qid`, after the trigger's existing nested block. */
   | { type: 'add-follow-up'; qid: string; question: Question }
-  /** Append an "Other" option to `qid` plus its free-text "please specify" follow-up. */
-  | { type: 'add-other'; qid: string; option: Option; question: Question }
   /** Insert `question` (a fresh-id copy of `qid`) right after it. */
   | { type: 'dup-question'; qid: string; question: Question }
   | { type: 'load'; state: FormState };
@@ -58,6 +63,25 @@ function pruneConditions(s: FormState): void {
     }
     const optIds = new Set(src.options.map((o) => o.id));
     q.cond.opts = q.cond.opts.filter((oid) => optIds.has(oid));
+  }
+}
+
+/**
+ * Apply a type change's effect on the fixed "Other" option (it is always the last option of a
+ * `single-choice-other` question). Switching TO the type reuses a trailing option already
+ * labelled "Other" (as sessionCreator does), otherwise appends one; switching AWAY removes it.
+ */
+function syncOtherOption(q: Question, from: QuestionType): void {
+  const to = q.type;
+  if (to === 'single-choice-other' && from !== 'single-choice-other') {
+    const last = q.options[q.options.length - 1];
+    if (last && last.text.en.trim().toLowerCase() === OTHER_OPTION_TEXT.en.toLowerCase()) {
+      last.text = { ...OTHER_OPTION_TEXT };
+    } else {
+      q.options.push(newOption(OTHER_OPTION_TEXT.en, OTHER_OPTION_TEXT.hi));
+    }
+  } else if (from === 'single-choice-other' && to !== 'single-choice-other') {
+    q.options.pop();
   }
 }
 
@@ -110,11 +134,14 @@ export function reducer(state: FormState, action: Action): FormState {
     case 'set-qtype': {
       const q = findQ(s, action.qid);
       if (q) {
+        const from = q.type;
         q.type = action.value;
         if (CHOICE_TYPES.includes(q.type) && q.options.length === 0)
           q.options = [newOption(), newOption()];
-        // A question that is no longer choice-type can't be a trigger — prune dependents.
-        if (!CHOICE_TYPES.includes(q.type)) pruneConditions(s);
+        syncOtherOption(q, from);
+        // A question that is no longer choice-type can't be a trigger, and a removed "Other"
+        // can't be a trigger option — prune dependents.
+        pruneConditions(s);
       }
       return s;
     }
@@ -125,18 +152,23 @@ export function reducer(state: FormState, action: Action): FormState {
     }
     case 'add-option': {
       const q = findQ(s, action.qid);
-      if (q) q.options.push(newOption());
+      if (!q) return s;
+      // "Other" must stay last, so new options go above it.
+      const at = q.type === 'single-choice-other' ? q.options.length - 1 : q.options.length;
+      q.options.splice(Math.max(at, 0), 0, newOption());
       return s;
     }
     case 'del-option': {
       const q = findQ(s, action.qid);
-      if (q) q.options = q.options.filter((o) => o.id !== action.oid);
+      if (!q || isOtherOption(q, action.oid)) return s;
+      q.options = q.options.filter((o) => o.id !== action.oid);
       pruneConditions(s);
       return s;
     }
     case 'set-option': {
       const q = findQ(s, action.qid);
-      const o = q?.options.find((x) => x.id === action.oid);
+      if (!q || isOtherOption(q, action.oid)) return s; // the "Other" label is fixed
+      const o = q.options.find((x) => x.id === action.oid);
       if (o) o.text[action.lang] = action.value;
       return s;
     }
@@ -183,14 +215,6 @@ export function reducer(state: FormState, action: Action): FormState {
           q.cond.opts = q.cond.opts.filter((x) => x !== action.oid);
         }
       }
-      return s;
-    }
-    case 'add-other': {
-      // "Other (please specify)": the option goes last on the trigger, then its follow-up.
-      const trigger = findQ(s, action.qid);
-      if (!trigger || !CHOICE_TYPES.includes(trigger.type)) return s;
-      trigger.options.push(action.option);
-      insertFollowUp(s, action.qid, action.question);
       return s;
     }
     case 'add-follow-up':

@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { computeVisibility, tr } from '../lib/model';
+import { computeVisibility, isOtherOption, otherTextKey, tr } from '../lib/model';
 import { FormState, Lang, PreviewAnswers, Question } from '../lib/types';
 import { StudentQuestion } from './StudentQuestion';
 
@@ -24,8 +24,15 @@ export function Preview({ state }: { state: FormState }) {
     setAnswers((prev) => {
       const cur = Array.isArray(prev[q.id]) ? (prev[q.id] as string[]) : [];
       const next =
-        q.type === 'single-choice' ? [oid] : checked ? [...cur, oid] : cur.filter((x) => x !== oid);
-      return { ...prev, [q.id]: next };
+        q.type === 'multi-choice'
+          ? checked
+            ? [...cur, oid]
+            : cur.filter((x) => x !== oid)
+          : [oid];
+      const updated = { ...prev, [q.id]: next };
+      // Moving off "Other" clears its text, as in the student app.
+      if (!isOtherOption(q, oid)) delete updated[otherTextKey(q.id)];
+      return updated;
     });
   }
 

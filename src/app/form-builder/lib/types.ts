@@ -16,10 +16,19 @@ export interface LangText {
   hi: string;
 }
 
-export type QuestionType = 'single-choice' | 'multi-choice' | 'subjective' | 'matrix-rating';
+export type QuestionType =
+  | 'single-choice'
+  | 'single-choice-other'
+  | 'multi-choice'
+  | 'subjective'
+  | 'matrix-rating';
 
 /** Only these answer shapes can drive a condition (v1 rule: list-shaped answers only). */
-export const CHOICE_TYPES: QuestionType[] = ['single-choice', 'multi-choice'];
+export const CHOICE_TYPES: QuestionType[] = [
+  'single-choice',
+  'single-choice-other',
+  'multi-choice',
+];
 
 export interface Option {
   id: string;
@@ -41,7 +50,7 @@ export interface Question {
   id: string;
   type: QuestionType;
   text: LangText;
-  /** choice questions */
+  /** choice questions. For `single-choice-other` the LAST option is the fixed "Other". */
   options: Option[];
   /** matrix-rating rows to rate */
   rows: Option[];
@@ -66,7 +75,8 @@ export interface FormState {
 }
 
 /** Preview answer map: questionId -> answer. Choice = option-id list; subjective = string;
- *  matrix = { rowId: scaleIndex }. Only choice answers participate in visibility. */
+ *  matrix = { rowId: scaleIndex }. Only choice answers participate in visibility. The text
+ *  typed for "Other" is kept under `otherTextKey(qid)`. */
 export type PreviewAnswer = string[] | string | Record<string, number>;
 export type PreviewAnswers = Record<string, PreviewAnswer>;
 
@@ -91,6 +101,8 @@ export interface PayloadQuestion {
   correct_answer: null;
   /** Per-question opt-out of require_all_questions (quiz-backend `Question.required`). */
   required: boolean;
+  /** Character limit for the "Other" text of a `single-choice-other` question. */
+  max_char_limit?: number;
   display_condition?: DisplayCondition;
 }
 

@@ -26,11 +26,9 @@ import {
   cloneQuestion,
   conditionSummary,
   FOLLOW_UP_TEXT,
-  hasOtherOption,
+  isOtherOption,
   newFollowUp,
-  newOption,
   OTHER_OPTION_TEXT,
-  OTHER_SPECIFY_TEXT,
   possibleSources,
   questionById,
 } from '../lib/model';
@@ -41,6 +39,7 @@ import { StudentQuestion } from './StudentQuestion';
 
 const QUESTION_TYPES: { value: QuestionType; label: string }[] = [
   { value: 'single-choice', label: 'Single choice' },
+  { value: 'single-choice-other', label: 'Single choice + Other' },
   { value: 'multi-choice', label: 'Multiple choice' },
   { value: 'subjective', label: 'Free text' },
   { value: 'matrix-rating', label: 'Rating grid' },
@@ -381,7 +380,7 @@ function OptionsEditor({
   dispatch: Dispatch<Action>;
   openQuestion: (qid: string) => void;
 }) {
-  const Glyph = q.type === 'single-choice' ? Circle : Square;
+  const Glyph = q.type === 'multi-choice' ? Square : Circle;
   const followUpCount = (oid: string) =>
     state.sections
       .flatMap((s) => s.questions)
@@ -393,31 +392,38 @@ function OptionsEditor({
     openQuestion(fu.id);
   }
 
-  function addOther() {
-    const option = newOption(OTHER_OPTION_TEXT.en, OTHER_OPTION_TEXT.hi);
-    const question = newFollowUp(q, option.id, OTHER_SPECIFY_TEXT);
-    // Stay on the trigger: the author sees the new option here and the follow-up below it.
-    dispatch({ type: 'add-other', qid: q.id, option, question });
-  }
-
   return (
     <div className='mt-4 flex flex-col gap-2'>
       {q.options.map((opt) => {
         const n = followUpCount(opt.id);
+        const isOther = isOtherOption(q, opt.id);
         return (
           <div key={opt.id} className='flex items-start gap-2'>
             <Glyph className='mt-3 h-4 w-4 shrink-0 text-muted-foreground' />
-            <PairedInput
-              className='flex-1'
-              inputClassName={QUIET_INPUT}
-              text={opt.text}
-              hiEnabled={hi}
-              onChange={(lang, value) =>
-                dispatch({ type: 'set-option', qid: q.id, oid: opt.id, lang, value })
-              }
-              enPlaceholder='Option'
-              hiPlaceholder='विकल्प (Hindi)'
-            />
+            {isOther ? (
+              // Fixed label (same as the sheet flow); the student gets a text box under it.
+              <div className='flex-1 px-3 py-2 text-sm'>
+                <span className='font-medium'>
+                  {OTHER_OPTION_TEXT.en}
+                  {hi && <span className='text-muted-foreground'> / {OTHER_OPTION_TEXT.hi}</span>}
+                </span>
+                <span className='ml-2 text-xs italic text-muted-foreground'>
+                  student types their answer
+                </span>
+              </div>
+            ) : (
+              <PairedInput
+                className='flex-1'
+                inputClassName={QUIET_INPUT}
+                text={opt.text}
+                hiEnabled={hi}
+                onChange={(lang, value) =>
+                  dispatch({ type: 'set-option', qid: q.id, oid: opt.id, lang, value })
+                }
+                enPlaceholder='Option'
+                hiPlaceholder='विकल्प (Hindi)'
+              />
+            )}
             <Button
               type='button'
               variant='ghost'
@@ -435,20 +441,25 @@ function OptionsEditor({
                 </span>
               )}
             </Button>
-            <Button
-              type='button'
-              variant='ghost'
-              size='icon'
-              className='mt-0.5 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive'
-              title='Remove option'
-              onClick={() => dispatch({ type: 'del-option', qid: q.id, oid: opt.id })}
-            >
-              <X className='h-4 w-4' />
-            </Button>
+            {isOther ? (
+              // Same footprint as the remove button, so the rows stay aligned.
+              <span className='h-8 w-8 shrink-0' aria-hidden />
+            ) : (
+              <Button
+                type='button'
+                variant='ghost'
+                size='icon'
+                className='mt-0.5 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive'
+                title='Remove option'
+                onClick={() => dispatch({ type: 'del-option', qid: q.id, oid: opt.id })}
+              >
+                <X className='h-4 w-4' />
+              </Button>
+            )}
           </div>
         );
       })}
-      <div className='flex flex-wrap items-center gap-x-2 pl-6 text-sm'>
+      <div className='pl-6 text-sm'>
         <Button
           type='button'
           variant='link'
@@ -457,20 +468,6 @@ function OptionsEditor({
         >
           Add option
         </Button>
-        {!hasOtherOption(q) && (
-          <>
-            <span className='text-muted-foreground'>or</span>
-            <Button
-              type='button'
-              variant='link'
-              className='h-auto p-0 text-sm'
-              title='Adds an "Other" option and a free-text question shown only when it is picked'
-              onClick={addOther}
-            >
-              add “Other (please specify)”
-            </Button>
-          </>
-        )}
       </div>
     </div>
   );
