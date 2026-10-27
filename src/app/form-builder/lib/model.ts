@@ -234,7 +234,7 @@ export function combineLang(text: LangText, hiEnabled: boolean): string {
   return en;
 }
 
-function splitScale(text: LangText, hiEnabled: boolean): string[] {
+export function splitScale(text: LangText, hiEnabled: boolean): string[] {
   const en = text.en
     .split(',')
     .map((s) => s.trim())
@@ -270,6 +270,56 @@ function resolveCondition(
     .filter((i) => i >= 0);
   if (option_indices.length === 0) return undefined;
   return { source_position, option_indices };
+}
+
+/** 1 → "a", 26 → "z", 27 → "aa" (quiz-frontend `toLetters`). */
+function toLetters(count: number): string {
+  let letters = '';
+  while (count > 0) {
+    count -= 1;
+    letters = String.fromCharCode(97 + (count % 26)) + letters;
+    count = Math.floor(count / 26);
+  }
+  return letters;
+}
+
+/**
+ * The label students see for each question ("2" in "Q.2: "), keyed by question id. Mirrors
+ * quiz-frontend `computeQuestionLabels`: unconditional questions count 1, 2, 3…; a follow-up
+ * of 2 is 2a, 2b; a follow-up of 2a is 2a.1. Only a question that would be emitted with a
+ * display_condition counts as a follow-up (an incomplete condition is emitted without one).
+ */
+export function questionLabels(state: FormState): Record<string, string> {
+  const positions = positionIndex(state);
+  const labels: string[] = [];
+  const depths: number[] = [];
+  const numFollowUps: number[] = [];
+  let numTopLevel = 0;
+  const qs = allQuestions(state);
+  qs.forEach((q, position) => {
+    numFollowUps.push(0);
+    const source = resolveCondition(state, q.cond, positions)?.source_position;
+    if (source == null) {
+      numTopLevel += 1;
+      labels.push(String(numTopLevel));
+      depths.push(0);
+      return;
+    }
+    if (source >= position) {
+      labels.push(String(position + 1));
+      depths.push(0);
+      return;
+    }
+    numFollowUps[source] += 1;
+    const depth = depths[source] + 1;
+    labels.push(
+      depth % 2 === 1
+        ? `${labels[source]}${toLetters(numFollowUps[source])}`
+        : `${labels[source]}.${numFollowUps[source]}`
+    );
+    depths.push(depth);
+  });
+  return Object.fromEntries(qs.map((q, i) => [q.id, labels[i]]));
 }
 
 /** Transform the authoring tree into the exact POST /quiz payload. No network call. */

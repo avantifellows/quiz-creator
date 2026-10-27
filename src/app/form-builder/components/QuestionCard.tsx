@@ -288,7 +288,7 @@ function CollapsedQuestion({
           </span>
         )}
       </div>
-      <StudentQuestion q={q} lang='en' compact />
+      <StudentQuestion q={q} lang='en' />
     </div>
   );
 }

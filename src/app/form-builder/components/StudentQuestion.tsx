@@ -1,51 +1,21 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import { OTHER_MAX_CHARS, otherTextKey, tr } from '../lib/model';
-import { CHOICE_TYPES, Lang, PreviewAnswer, PreviewAnswers, Question } from '../lib/types';
+import { tr } from '../lib/model';
+import { CHOICE_TYPES, Lang, Question } from '../lib/types';
 
 /**
- * One question rendered the way a respondent sees it. Used by the live Preview (interactive:
- * pass `onChoice` + `onAnswer`) and the builder's collapsed question cards (read-only: omit
- * them). `compact` drops the per-option boxes so the builder's list stays light.
+ * Light, read-only rendering of a question for the builder's collapsed cards: the question,
+ * its options as plain rows and a rating grid. The student-look preview is `Preview`.
  */
-export function StudentQuestion({
-  q,
-  lang,
-  number,
-  answers = {},
-  compact = false,
-  onChoice,
-  onAnswer,
-}: {
-  q: Question;
-  lang: Lang;
-  number?: number;
-  answers?: PreviewAnswers;
-  compact?: boolean;
-  onChoice?: (q: Question, oid: string, checked: boolean) => void;
-  onAnswer?: (qid: string, update: (prev: PreviewAnswer | undefined) => PreviewAnswer) => void;
-}) {
-  const interactive = Boolean(onChoice && onAnswer);
-  // Read-only controls must not take focus or clicks: the surrounding card handles the click.
-  const controlProps = interactive ? {} : { readOnly: true, tabIndex: -1 };
-  const selected = Array.isArray(answers[q.id]) ? (answers[q.id] as string[]) : [];
-  const otherOption =
-    q.type === 'single-choice-other' ? q.options[q.options.length - 1] : undefined;
-  const otherKey = otherTextKey(q.id);
+export function StudentQuestion({ q, lang }: { q: Question; lang: Lang }) {
   const scale = tr(q.scale, lang)
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
-  const matrix =
-    answers[q.id] && typeof answers[q.id] === 'object' && !Array.isArray(answers[q.id])
-      ? (answers[q.id] as Record<string, number>)
-      : {};
 
   return (
-    <div className={cn(!interactive && 'pointer-events-none select-none')}>
+    <div className='pointer-events-none select-none'>
       <p className='mb-3 text-[15px] font-semibold leading-snug text-foreground'>
-        {number != null && <span className='mr-1 font-mono text-muted-foreground'>{number}.</span>}
         {tr(q.text, lang) || (
           <span className='italic text-muted-foreground'>(untitled question)</span>
         )}
@@ -57,49 +27,25 @@ export function StudentQuestion({
       </p>
 
       {q.type === 'subjective' && (
-        <textarea
-          rows={2}
-          placeholder='Your answer…'
-          className='flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:italic placeholder:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-          onChange={(e) => onAnswer?.(q.id, () => e.target.value)}
-          {...controlProps}
-        />
+        <div className='h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-sm italic text-muted-foreground/80'>
+          Your answer…
+        </div>
       )}
 
       {CHOICE_TYPES.includes(q.type) && (
-        <div className={cn('flex flex-col', compact ? 'gap-1' : 'gap-1.5')}>
+        <div className='flex flex-col gap-1'>
           {q.options.map((o, i) => (
-            <label
-              key={o.id}
-              className={cn(
-                'inline-flex cursor-pointer items-center gap-2.5 text-sm',
-                compact
-                  ? 'py-0.5'
-                  : 'rounded-lg border border-border px-3 py-2 transition-colors hover:bg-muted/50'
-              )}
-            >
+            <label key={o.id} className='inline-flex items-center gap-2.5 py-0.5 text-sm'>
               <input
                 type={q.type === 'multi-choice' ? 'checkbox' : 'radio'}
-                name={`pv-${q.id}`}
                 className='accent-primary'
-                checked={selected.includes(o.id)}
-                onChange={(e) => onChoice?.(q, o.id, e.target.checked)}
-                {...controlProps}
+                readOnly
+                tabIndex={-1}
+                checked={false}
               />
               <span>{tr(o.text, lang) || `Option ${i + 1}`}</span>
             </label>
           ))}
-          {/* "Other" picked: its text box appears below the options, as in the student app. */}
-          {interactive && otherOption && selected.includes(otherOption.id) && (
-            <textarea
-              rows={2}
-              maxLength={OTHER_MAX_CHARS}
-              placeholder='Please specify…'
-              className='flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:italic placeholder:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-              value={typeof answers[otherKey] === 'string' ? (answers[otherKey] as string) : ''}
-              onChange={(e) => onAnswer?.(otherKey, () => e.target.value)}
-            />
-          )}
         </div>
       )}
 
@@ -124,17 +70,10 @@ export function StudentQuestion({
                     <td key={si} className='text-center'>
                       <input
                         type='radio'
-                        name={`pv-${q.id}-${row.id}`}
                         className='accent-primary'
-                        checked={matrix[row.id] === si}
-                        onChange={() =>
-                          onAnswer?.(q.id, (prev) => {
-                            const cur =
-                              prev && typeof prev === 'object' && !Array.isArray(prev) ? prev : {};
-                            return { ...cur, [row.id]: si };
-                          })
-                        }
-                        {...controlProps}
+                        readOnly
+                        tabIndex={-1}
+                        checked={false}
                       />
                     </td>
                   ))}

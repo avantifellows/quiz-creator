@@ -108,7 +108,7 @@ export function FormBuilder({
       </div>
 
       {mode === 'locked' && (
-        <p className='mx-auto mb-4 flex max-w-2xl items-start gap-2 rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground'>
+        <p className='mx-auto mb-4 flex max-w-5xl items-start gap-2 rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground'>
           <Lock className='mt-0.5 h-4 w-4 shrink-0' />
           This form was used in a session and can&apos;t be changed. Duplicate it to make changes.
         </p>
@@ -116,7 +116,7 @@ export function FormBuilder({
 
       {showPreview ? (
         // Fresh mount on every open, so each preview run starts with no answers.
-        <div className='mx-auto max-w-2xl'>
+        <div className='mx-auto max-w-5xl'>
           <Preview state={state} />
         </div>
       ) : (

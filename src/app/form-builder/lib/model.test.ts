@@ -13,6 +13,7 @@ import {
   newOption,
   newQuestion,
   newSection,
+  questionLabels,
   OTHER_MAX_CHARS,
   OTHER_OPTION_TEXT,
   seedExample,
@@ -125,6 +126,39 @@ describe('toQuizPayload', () => {
     expect(q.type).toBe('matrix-rating');
     expect(q.matrix_rows?.length).toBe(2);
     expect(q.options.length).toBeGreaterThan(0);
+  });
+});
+
+describe('questionLabels', () => {
+  it('numbers unconditional questions and labels follow-ups under their parent (2a, 2b, 2a.1)', () => {
+    // 1: q1 (trigger) · 1a: q2 (on q1) · 2: q3 · 2a, 2b: q4, q5 (on q3) · 2a.1: q6 (on q4)
+    const q = (type: 'single-choice' | 'subjective') => {
+      const x = newQuestion(type);
+      x.options = [newOption('Yes'), newOption('No')];
+      return x;
+    };
+    const [q1, q2, q3, q4, q5, q6] = [
+      q('single-choice'),
+      q('subjective'),
+      q('single-choice'),
+      q('single-choice'),
+      q('subjective'),
+      q('subjective'),
+    ];
+    q2.cond = { on: true, src: q1.id, opts: [q1.options[0].id] };
+    q4.cond = { on: true, src: q3.id, opts: [q3.options[0].id] };
+    q5.cond = { on: true, src: q3.id, opts: [q3.options[1].id] };
+    q6.cond = { on: true, src: q4.id, opts: [q4.options[0].id] };
+    const s = newSection('S');
+    s.questions = [q1, q2, q3, q4, q5, q6];
+    const state: FormState = { name: 'T', langs: { en: true, hi: false }, sections: [s] };
+    expect(Object.values(questionLabels(state))).toEqual(['1', '1a', '2', '2a', '2b', '2a.1']);
+  });
+
+  it('treats a question with an incomplete condition as unconditional', () => {
+    const { state, q1, q2 } = condForm();
+    const next = reducer(state, { type: 'cond-src', qid: q2, src: q1 }); // clears the options
+    expect(Object.values(questionLabels(next))).toEqual(['1', '2']);
   });
 });
 
