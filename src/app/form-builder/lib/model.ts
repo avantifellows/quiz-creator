@@ -142,15 +142,16 @@ export function conditionSummary(
 }
 
 // ---- follow-ups, nesting, duplication -------------------------------------
-/** A free-text question shown only when `oid` of `trigger` is chosen. */
-export function newFollowUp(trigger: Question, oid: string, text: LangText): Question {
+/**
+ * An empty free-text question conditioned on `trigger`. With no `oids` the condition is left
+ * for the author to finish (they pick the revealing option(s) in the new question's editor);
+ * preselecting one would silently produce a wrong rule if they forgot to change it.
+ */
+export function newFollowUp(trigger: Question, oids: string[] = []): Question {
   const q = newQuestion('subjective');
-  q.text = { ...text };
-  q.cond = { on: true, src: trigger.id, opts: [oid] };
+  q.cond = { on: true, src: trigger.id, opts: [...oids] };
   return q;
 }
-
-export const FOLLOW_UP_TEXT: LangText = { en: 'Please tell us more', hi: 'कृपया और बताएं' };
 
 // ---- single-choice-other ---------------------------------------------------
 /** Fixed label of the "Other" option; the sheet flow (sessionCreator) uses the same text. */

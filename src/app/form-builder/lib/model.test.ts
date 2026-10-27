@@ -7,7 +7,6 @@ import {
   cloneQuestion,
   computeVisibility,
   conditionSummary,
-  FOLLOW_UP_TEXT,
   isOtherOption,
   nestingDepths,
   newFollowUp,
@@ -187,7 +186,7 @@ describe('follow-ups', () => {
   it('inserts a follow-up after the trigger’s existing follow-ups, before unrelated questions', () => {
     const { state, q1, q2, q3, opt1 } = withTail();
     const trigger = state.sections[0].questions[0];
-    const fu = newFollowUp(trigger, opt1, FOLLOW_UP_TEXT);
+    const fu = newFollowUp(trigger, [opt1]);
     const next = reducer(state, { type: 'add-follow-up', qid: q1, question: fu });
     expect(ids(next)).toEqual([q1, q2, fu.id, q3]);
     // and the emitted condition points at the trigger's second option
@@ -195,6 +194,17 @@ describe('follow-ups', () => {
       source_position: 0,
       option_indices: [1],
     });
+  });
+
+  it('a new follow-up starts empty, conditioned on its trigger with no option chosen yet', () => {
+    const { state, q1 } = condForm();
+    const fu = newFollowUp(state.sections[0].questions[0]);
+    const next = reducer(state, { type: 'add-follow-up', qid: q1, question: fu });
+    expect(fu).toMatchObject({ type: 'subjective', text: { en: '', hi: '' } });
+    expect(fu.cond).toEqual({ on: true, src: q1, opts: [] });
+    expect(validate(next)).toContain(
+      '"(untitled question)" is conditional but no trigger option is chosen.'
+    );
   });
 
   it('shortens the condition summary when the card is nested under its trigger', () => {
@@ -272,7 +282,7 @@ describe('single-choice-other', () => {
 
   it('can trigger a follow-up on its "Other" option', () => {
     const { state, q1, trigger } = otherForm();
-    const fu = newFollowUp(trigger(), trigger().options[2].id, FOLLOW_UP_TEXT);
+    const fu = newFollowUp(trigger(), [trigger().options[2].id]);
     const next = reducer(state, { type: 'add-follow-up', qid: q1, question: fu });
     // Placed after q2, the trigger's existing follow-up.
     expect(toQuizPayload(next).question_sets[0].questions[2].display_condition).toEqual({

@@ -25,7 +25,6 @@ import { cn } from '@/lib/utils';
 import {
   cloneQuestion,
   conditionSummary,
-  FOLLOW_UP_TEXT,
   isOtherOption,
   newFollowUp,
   OTHER_OPTION_TEXT,
@@ -105,6 +104,14 @@ export function QuestionCard({
       dispatch({ type: 'cond-src', qid: q.id, src: sources[sources.length - 1].id });
   }
 
+  function addFollowUp() {
+    // Goes after this question's existing follow-ups; it opens with "Show only if <this> is …"
+    // so the author picks the revealing option(s) right away.
+    const fu = newFollowUp(q);
+    dispatch({ type: 'add-follow-up', qid: q.id, question: fu });
+    openQuestion(fu.id);
+  }
+
   function duplicate() {
     const copy = cloneQuestion(q);
     dispatch({ type: 'dup-question', qid: q.id, question: copy });
@@ -152,15 +159,7 @@ export function QuestionCard({
 
         {q.cond.on && <ConditionSentence state={state} q={q} dispatch={dispatch} />}
 
-        {isChoice && (
-          <OptionsEditor
-            state={state}
-            q={q}
-            hi={hi}
-            dispatch={dispatch}
-            openQuestion={openQuestion}
-          />
-        )}
+        {isChoice && <OptionsEditor q={q} hi={hi} dispatch={dispatch} />}
         {q.type === 'matrix-rating' && <MatrixEditor q={q} hi={hi} dispatch={dispatch} />}
         {q.type === 'subjective' && (
           <p className='mt-4 flex items-center gap-2 text-sm italic text-muted-foreground'>
@@ -171,25 +170,37 @@ export function QuestionCard({
 
       {/* settings bar */}
       <div className='flex flex-wrap items-center justify-between gap-2 border-t border-border px-5 py-2'>
-        {q.cond.on ? (
-          <span />
-        ) : (
-          <Button
-            type='button'
-            variant='ghost'
-            size='sm'
-            className='text-muted-foreground'
-            disabled={sources.length === 0}
-            title={
-              sources.length === 0
-                ? 'Needs a single/multiple-choice question above this one'
-                : 'Show this question only for certain answers to an earlier question'
-            }
-            onClick={addCondition}
-          >
-            <GitBranch className='mr-1.5 h-4 w-4' /> Show only if…
-          </Button>
-        )}
+        <div className='flex flex-wrap items-center gap-1'>
+          {!q.cond.on && (
+            <Button
+              type='button'
+              variant='ghost'
+              size='sm'
+              className='text-muted-foreground'
+              disabled={sources.length === 0}
+              title={
+                sources.length === 0
+                  ? 'Needs a single/multiple-choice question above this one'
+                  : 'Show this question only for certain answers to an earlier question'
+              }
+              onClick={addCondition}
+            >
+              <GitBranch className='mr-1.5 h-4 w-4' /> Show only if…
+            </Button>
+          )}
+          {isChoice && (
+            <Button
+              type='button'
+              variant='ghost'
+              size='sm'
+              className='text-muted-foreground'
+              title='Add a question below that is shown only for certain answers to this one'
+              onClick={addFollowUp}
+            >
+              <CornerDownRight className='mr-1.5 h-4 w-4' /> Add follow-up question
+            </Button>
+          )}
+        </div>
         <div className='flex items-center gap-1'>
           <label
             className='flex cursor-pointer items-center gap-2 pr-2'
@@ -368,34 +379,19 @@ function ConditionSentence({
 }
 
 function OptionsEditor({
-  state,
   q,
   hi,
   dispatch,
-  openQuestion,
 }: {
-  state: FormState;
   q: Question;
   hi: boolean;
   dispatch: Dispatch<Action>;
-  openQuestion: (qid: string) => void;
 }) {
   const Glyph = q.type === 'multi-choice' ? Square : Circle;
-  const followUpCount = (oid: string) =>
-    state.sections
-      .flatMap((s) => s.questions)
-      .filter((x) => x.cond.on && x.cond.src === q.id && x.cond.opts.includes(oid)).length;
-
-  function addFollowUp(oid: string) {
-    const fu = newFollowUp(q, oid, FOLLOW_UP_TEXT);
-    dispatch({ type: 'add-follow-up', qid: q.id, question: fu });
-    openQuestion(fu.id);
-  }
 
   return (
     <div className='mt-4 flex flex-col gap-2'>
       {q.options.map((opt) => {
-        const n = followUpCount(opt.id);
         const isOther = isOtherOption(q, opt.id);
         return (
           <div key={opt.id} className='flex items-start gap-2'>
@@ -424,23 +420,6 @@ function OptionsEditor({
                 hiPlaceholder='विकल्प (Hindi)'
               />
             )}
-            <Button
-              type='button'
-              variant='ghost'
-              size='sm'
-              // Fixed width so a count badge on some rows doesn't misalign the option inputs.
-              className='mt-0.5 shrink-0 justify-start text-muted-foreground sm:w-[124px]'
-              title='Ask a follow-up question when a student picks this option'
-              onClick={() => addFollowUp(opt.id)}
-            >
-              <CornerDownRight className='h-4 w-4 shrink-0 sm:mr-1' />
-              <span className='hidden sm:inline'>Follow-up</span>
-              {n > 0 && (
-                <span className='ml-1 rounded-full bg-accent px-1.5 text-[11px] font-bold text-accent-foreground'>
-                  {n}
-                </span>
-              )}
-            </Button>
             {isOther ? (
               // Same footprint as the remove button, so the rows stay aligned.
               <span className='h-8 w-8 shrink-0' aria-hidden />
