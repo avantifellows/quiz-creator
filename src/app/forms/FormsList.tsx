@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Copy, Eye, Lock, MoreHorizontal, Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
@@ -32,15 +32,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { FormSummary } from './sampleForms';
+import { deleteForm, getFormSessions } from '@/services/forms';
+import type { FormSession, FormSummary } from '@/app/form-builder/lib/definition';
 
-const PAGE_SIZE = 20;
 const LANG_LABEL: Record<string, string> = { en: 'EN', hi: 'HI' };
 
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-
-const NOT_SAVED = 'Prototype: nothing is saved yet — this works once forms are stored.';
+const formatDate = (iso: string | null) =>
+  iso
+    ? new Date(iso).toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      })
+    : '—';
 
 async function copyFormId(id: string) {
   try {
@@ -52,25 +56,44 @@ async function copyFormId(id: string) {
 }
 
 /**
- * Forms list (decision D14): newest updated first, title search, details on row click, and the
- * row actions Preview / Edit (View when locked) / Duplicate / Copy form ID / Delete.
+ * Forms list (decision D14): newest updated first, title search (all forms, server-side),
+ * details on row click, and the row actions Preview / Edit (View when locked) / Duplicate /
+ * Copy form ID / Delete. Search and page live in the URL, so the server page refetches.
  */
-export function FormsList({ forms }: { forms: FormSummary[] }) {
+export function FormsList({
+  forms,
+  search,
+  page,
+  hasMore,
+  failed,
+}: {
+  forms: FormSummary[];
+  search: string;
+  page: number;
+  hasMore: boolean;
+  failed: boolean;
+}) {
   const router = useRouter();
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(0);
+  const pathname = usePathname();
+  const [term, setTerm] = useState(search);
   const [detailsOf, setDetailsOf] = useState<FormSummary | null>(null);
   const [deleting, setDeleting] = useState<FormSummary | null>(null);
 
-  // The real list searches ALL forms server-side; the prototype filters the sample rows.
-  const rows = useMemo(() => {
-    const term = search.trim().toLowerCase();
-    return [...forms]
-      .filter((f) => !term || f.title.toLowerCase().includes(term))
-      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-  }, [forms, search]);
-  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
-  const pageRows = rows.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const go = (nextSearch: string, nextPage: number) => {
+    const params = new URLSearchParams();
+    if (nextSearch.trim()) params.set('search', nextSearch.trim());
+    if (nextPage > 0) params.set('page', String(nextPage));
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname);
+  };
+
+  // Search as the author types, without a request per keystroke.
+  useEffect(() => {
+    if (term.trim() === search.trim()) return;
+    const timer = setTimeout(() => go(term, 0), 300);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [term]);
 
   return (
     <div>
@@ -88,20 +111,13 @@ export function FormsList({ forms }: { forms: FormSummary[] }) {
         </Button>
       </div>
 
-      <p className='mb-4 rounded-md border border-dashed border-border px-3 py-2 text-sm italic text-muted-foreground'>
-        Prototype: sample forms, nothing is saved.
-      </p>
-
       <div className='relative mb-4 max-w-sm'>
         <Search className='pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
         <Input
           className='pl-9'
           placeholder='Search forms by title'
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(0);
-          }}
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
         />
       </div>
 
@@ -120,28 +136,32 @@ export function FormsList({ forms }: { forms: FormSummary[] }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {pageRows.length === 0 ? (
+            {forms.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className='h-24 text-center text-muted-foreground'>
-                  {search ? 'No forms match your search.' : 'No forms yet. Create your first form.'}
+                  {failed
+                    ? 'Could not load forms. Please refresh in a moment.'
+                    : search
+                      ? 'No forms match your search.'
+                      : 'No forms yet. Create your first form.'}
                 </TableCell>
               </TableRow>
             ) : (
-              pageRows.map((form) => (
+              forms.map((form) => (
                 <TableRow
-                  key={form.id}
+                  key={form._id}
                   className='cursor-pointer'
                   onClick={() => setDetailsOf(form)}
                 >
-                  <TableCell className='p-2 font-medium'>{form.title}</TableCell>
+                  <TableCell className='p-2 font-medium'>{form.title || 'Untitled form'}</TableCell>
                   <TableCell className='p-2'>
                     <StatusBadge form={form} />
                   </TableCell>
                   <TableCell className='p-2'>
-                    {form.languages.map((l) => LANG_LABEL[l]).join(' · ')}
+                    {form.languages.map((l) => LANG_LABEL[l] ?? l).join(' · ')}
                   </TableCell>
-                  <TableCell className='p-2'>{formatDate(form.updatedAt)}</TableCell>
-                  <TableCell className='p-2 text-muted-foreground'>{form.createdBy}</TableCell>
+                  <TableCell className='p-2'>{formatDate(form.updated_at)}</TableCell>
+                  <TableCell className='p-2 text-muted-foreground'>{form.created_by}</TableCell>
                   <TableCell className='p-2' onClick={(e) => e.stopPropagation()}>
                     <RowActions
                       form={form}
@@ -156,32 +176,44 @@ export function FormsList({ forms }: { forms: FormSummary[] }) {
         </Table>
       </div>
 
-      <div className='flex items-center justify-between py-4 text-sm text-muted-foreground'>
-        <span>
-          {rows.length} form{rows.length === 1 ? '' : 's'}
-        </span>
-        <div className='flex gap-4'>
-          <Button onClick={() => setPage((p) => p - 1)} disabled={page === 0}>
-            Previous
-          </Button>
-          <Button onClick={() => setPage((p) => p + 1)} disabled={page >= pageCount - 1}>
-            Next
-          </Button>
-        </div>
+      <div className='flex items-center justify-end gap-4 py-4'>
+        <Button onClick={() => go(search, page - 1)} disabled={page === 0}>
+          Previous
+        </Button>
+        <Button onClick={() => go(search, page + 1)} disabled={!hasMore}>
+          Next
+        </Button>
       </div>
 
       <FormDetails form={detailsOf} onClose={() => setDetailsOf(null)} />
-      <DeleteDialog form={deleting} onClose={() => setDeleting(null)} />
+      <DeleteDialog
+        form={deleting}
+        onClose={() => setDeleting(null)}
+        onDeleted={() => router.refresh()}
+      />
     </div>
   );
 }
 
+/** Locked (used by a session) / Draft (not complete yet, so not offered for sessions) / Ready. */
 function StatusBadge({ form }: { form: FormSummary }) {
-  return form.lockedAt ? (
-    <Badge variant='secondary' className='gap-1 font-medium'>
-      <Lock className='h-3 w-3' /> Locked
-    </Badge>
-  ) : (
+  if (form.locked_at)
+    return (
+      <Badge variant='secondary' className='gap-1 font-medium'>
+        <Lock className='h-3 w-3' /> Locked
+      </Badge>
+    );
+  if (!form.ready)
+    return (
+      <Badge
+        variant='outline'
+        className='font-medium text-muted-foreground'
+        title='Not complete yet, so it is not offered when creating a session'
+      >
+        Draft
+      </Badge>
+    );
+  return (
     <Badge variant='outline' className='font-medium'>
       Editable
     </Badge>
@@ -197,7 +229,7 @@ function RowActions({
   onOpen: (path: string) => void;
   onDelete: () => void;
 }) {
-  const locked = Boolean(form.lockedAt);
+  const locked = Boolean(form.locked_at);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -206,17 +238,17 @@ function RowActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
-        <DropdownMenuItem onSelect={() => onOpen(`/forms/edit?id=${form.id}&preview=1`)}>
+        <DropdownMenuItem onSelect={() => onOpen(`/forms/edit?id=${form._id}&preview=1`)}>
           <Eye className='mr-2 h-4 w-4' /> Preview
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => onOpen(`/forms/edit?id=${form.id}`)}>
+        <DropdownMenuItem onSelect={() => onOpen(`/forms/edit?id=${form._id}`)}>
           {locked ? <Lock className='mr-2 h-4 w-4' /> : <Pencil className='mr-2 h-4 w-4' />}
           {locked ? 'View' : 'Edit'}
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => toast.info('Duplicate', { description: NOT_SAVED })}>
+        <DropdownMenuItem onSelect={() => onOpen(`/forms/create?from=${form._id}`)}>
           <Copy className='mr-2 h-4 w-4' /> Duplicate
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => copyFormId(form.id)}>
+        <DropdownMenuItem onSelect={() => copyFormId(form._id)}>
           <Copy className='mr-2 h-4 w-4' /> Copy form ID
         </DropdownMenuItem>
         <DropdownMenuSeparator />
@@ -241,23 +273,37 @@ function RowActions({
 }
 
 function FormDetails({ form, onClose }: { form: FormSummary | null; onClose: () => void }) {
+  const [sessions, setSessions] = useState<FormSession[] | null | undefined>(undefined);
+
+  useEffect(() => {
+    setSessions(undefined);
+    if (!form) return;
+    let cancelled = false;
+    getFormSessions(form._id).then((rows) => {
+      if (!cancelled) setSessions(rows);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [form]);
+
   return (
     <Sheet open={form != null} onOpenChange={(open) => !open && onClose()}>
       <SheetContent className='w-full overflow-y-auto sm:max-w-md'>
         {form && (
           <>
             <SheetHeader className='mr-6 border-b pb-3'>
-              <SheetTitle>{form.title}</SheetTitle>
+              <SheetTitle>{form.title || 'Untitled form'}</SheetTitle>
               <div className='flex items-center gap-2'>
                 <StatusBadge form={form} />
                 <Link
-                  href={`/forms/edit?id=${form.id}`}
+                  href={`/forms/edit?id=${form._id}`}
                   className='text-sm text-primary underline-offset-4 hover:underline'
                 >
-                  {form.lockedAt ? 'View' : 'Edit'}
+                  {form.locked_at ? 'View' : 'Edit'}
                 </Link>
                 <Link
-                  href={`/forms/edit?id=${form.id}&preview=1`}
+                  href={`/forms/edit?id=${form._id}&preview=1`}
                   className='text-sm text-primary underline-offset-4 hover:underline'
                 >
                   Preview
@@ -265,34 +311,39 @@ function FormDetails({ form, onClose }: { form: FormSummary | null; onClose: () 
               </div>
             </SheetHeader>
             <dl className='grid grid-cols-2 gap-x-4 gap-y-4 py-4 text-sm'>
-              <Detail label='Questions'>{form.questionCount}</Detail>
-              <Detail label='Conditional questions'>{form.conditionalCount}</Detail>
+              <Detail label='Questions'>{form.question_count}</Detail>
+              <Detail label='Conditional questions'>{form.conditional_count}</Detail>
               <Detail label='Languages'>
-                {form.languages.map((l) => LANG_LABEL[l]).join(' · ')}
+                {form.languages.map((l) => LANG_LABEL[l] ?? l).join(' · ')}
               </Detail>
               <Detail label='Locked since'>
-                {form.lockedAt ? formatDate(form.lockedAt) : 'Not used yet'}
+                {form.locked_at ? formatDate(form.locked_at) : 'Not used yet'}
               </Detail>
-              <Detail label='Created by'>{form.createdBy}</Detail>
-              <Detail label='Created'>{formatDate(form.createdAt)}</Detail>
-              <Detail label='Last updated'>{formatDate(form.updatedAt)}</Detail>
+              <Detail label='Created by'>{form.created_by ?? '—'}</Detail>
+              <Detail label='Created'>{formatDate(form.created_at)}</Detail>
+              <Detail label='Last updated'>{formatDate(form.updated_at)}</Detail>
               <Detail label='Form ID'>
-                <span className='break-all font-mono text-xs'>{form.id}</span>
+                <span className='break-all font-mono text-xs'>{form._id}</span>
               </Detail>
             </dl>
             <div className='border-t pt-4'>
               <h4 className='mb-2 text-sm font-semibold'>
-                Sessions using this form ({form.sessions.length})
+                Sessions using this form{sessions ? ` (${sessions.length})` : ''}
               </h4>
-              {form.sessions.length === 0 ? (
+              {sessions === undefined ? (
+                <p className='text-sm text-muted-foreground'>Loading…</p>
+              ) : sessions === null ? (
+                <p className='text-sm text-muted-foreground'>Could not load the sessions.</p>
+              ) : sessions.length === 0 ? (
                 <p className='text-sm text-muted-foreground'>
                   Not used in any session yet, so it can still be edited or deleted.
                 </p>
               ) : (
                 <ul className='flex flex-col gap-1 text-sm'>
-                  {form.sessions.map((s) => (
-                    <li key={s.id}>
-                      {s.name} <span className='text-muted-foreground'>· #{s.id}</span>
+                  {sessions.map((s) => (
+                    <li key={s.quiz_id}>
+                      {s.title || 'Untitled session'}{' '}
+                      <span className='text-muted-foreground'>· {formatDate(s.created_at)}</span>
                     </li>
                   ))}
                 </ul>
@@ -314,29 +365,47 @@ function Detail({ label, children }: { label: string; children: React.ReactNode 
   );
 }
 
-function DeleteDialog({ form, onClose }: { form: FormSummary | null; onClose: () => void }) {
+function DeleteDialog({
+  form,
+  onClose,
+  onDeleted,
+}: {
+  form: FormSummary | null;
+  onClose: () => void;
+  onDeleted: () => void;
+}) {
+  const [pending, startTransition] = useTransition();
+  const remove = () =>
+    startTransition(async () => {
+      if (!form) return;
+      const result = await deleteForm(form._id);
+      if (result.isSuccess) {
+        toast.success('Form deleted', { description: form.title });
+        onDeleted();
+      } else {
+        toast.error(result.locked ? 'This form is used in a session' : 'Could not delete', {
+          description: result.locked ? "It can't be deleted." : result.error,
+        });
+      }
+      onClose();
+    });
+
   return (
     <Dialog open={form != null} onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete “{form?.title}”?</DialogTitle>
+          <DialogTitle>Delete “{form?.title || 'Untitled form'}”?</DialogTitle>
           <DialogDescription>
             This permanently deletes the form. It has not been used in any session. This can&apos;t
             be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant='outline' onClick={onClose}>
+          <Button variant='outline' onClick={onClose} disabled={pending}>
             Cancel
           </Button>
-          <Button
-            variant='destructive'
-            onClick={() => {
-              toast.info('Delete', { description: NOT_SAVED });
-              onClose();
-            }}
-          >
-            Delete
+          <Button variant='destructive' onClick={remove} disabled={pending}>
+            {pending ? 'Deleting…' : 'Delete'}
           </Button>
         </DialogFooter>
       </DialogContent>

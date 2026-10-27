@@ -24,10 +24,11 @@ import {
 } from './types';
 
 // ---- id generation -------------------------------------------------------
-// A monotonic counter gives stable, collision-free keys for React and for condition
-// references. Prototype-only; the real builder would use server ids after persistence.
-let _uid = 1;
-export const nid = (): string => `id${_uid++}`;
+// Ids are stored in the saved form (conditions point at them) and a loaded form keeps its
+// ids, so new ones must never collide with ids from an earlier session: random, not a
+// counter that restarts at 1 on every page load.
+export const nid = (): string =>
+  Date.now().toString(36).slice(-4) + Math.random().toString(36).slice(2, 10);
 
 // ---- constructors --------------------------------------------------------
 export function newOption(en = '', hi = ''): Option {

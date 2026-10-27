@@ -1,43 +1,47 @@
 'use client';
 
-import { useLayoutEffect, useReducer, useRef, useState } from 'react';
+import { useLayoutEffect, useReducer, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, Copy, Eye, Lock, Pencil, Plus, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { newForm, seedExample } from '../lib/model';
+import { createForm, saveForm } from '@/services/forms';
+import { toDefinition } from '../lib/definition';
+import { newForm, validate } from '../lib/model';
 import { reducer } from '../lib/reducer';
+import { FormState } from '../lib/types';
 import { FieldLabel } from './fields';
 import { Preview } from './Preview';
 import { SectionCard } from './SectionCard';
 
 /**
- * `create`: a new form. `edit`: an unused form. `locked`: a form already used in a session
- * (decision D13) — shown as the student sees it, with Duplicate as the way to change it.
- * PROTOTYPE: there is no form backend yet, so edit/locked open the seeded example under the
- * listed form's title, and Save / Duplicate only explain that nothing is stored.
+ * `create`: a new form (empty, or a Duplicate's copy in `initial`). `edit`: a saved form no
+ * session has used. `locked`: a form already used in a session (decision D13) — shown as the
+ * student sees it, with Duplicate as the way to change it. Forms are stored by quiz-backend
+ * (services/forms.ts); a draft may be saved incomplete, it is just not offered for sessions.
  */
 export function FormBuilder({
   mode,
-  title,
+  formId,
+  initial,
   startInPreview = false,
 }: {
   mode: 'create' | 'edit' | 'locked';
-  title?: string;
+  formId?: string;
+  initial?: FormState;
   startInPreview?: boolean;
 }) {
-  const [state, dispatch] = useReducer(reducer, undefined, () => {
-    if (mode === 'create') return newForm();
-    const example = seedExample();
-    return title ? { ...example, name: title } : example;
-  });
+  const router = useRouter();
+  const [saving, startSaving] = useTransition();
+  const [state, dispatch] = useReducer(reducer, undefined, () => initial ?? newForm());
   const [showPreview, setShowPreview] = useState(startInPreview || mode === 'locked');
   // The one question showing its editor; all others render as the student sees them. A new
   // form opens its first (empty) question.
   const [activeId, setActiveId] = useState<string | null>(() =>
-    mode === 'create' ? (state.sections[0]?.questions[0]?.id ?? null) : null
+    mode === 'create' && !initial ? (state.sections[0]?.questions[0]?.id ?? null) : null
   );
 
   // Preview replaces the builder full-screen. Remember where the author was so "Back to
@@ -58,8 +62,41 @@ export function FormBuilder({
   }
 
   const heading = { create: 'Create form', edit: 'Edit form', locked: 'View form' }[mode];
-  const notSaved = (what: string) =>
-    toast.info(what, { description: 'Prototype: nothing is saved yet.' });
+
+  function save() {
+    if (!state.name.trim()) {
+      toast.error('Give the form a name before saving');
+      return;
+    }
+    startSaving(async () => {
+      const content = toDefinition(state);
+      const result = formId ? await saveForm(formId, content) : await createForm(content);
+      if (!result.isSuccess) {
+        if (result.locked) {
+          toast.error('This form was just used in a session', {
+            description: "It can't be changed any more. Duplicate it to make changes.",
+          });
+          router.refresh();
+        } else {
+          toast.error('Could not save the form', { description: result.error });
+        }
+        return;
+      }
+      // A draft may be incomplete; it is saved but not offered when creating a session.
+      const todo = validate(state);
+      if (todo.length) {
+        toast.warning('Saved as a draft', {
+          description: `Not ready for sessions yet: ${todo[0]}${
+            todo.length > 1 ? ` (+${todo.length - 1} more)` : ''
+          }`,
+        });
+      } else {
+        toast.success('Form saved');
+      }
+      if (!formId && result.id) router.replace(`/forms/edit?id=${result.id}`);
+      else router.refresh();
+    });
+  }
 
   return (
     <div>
@@ -77,13 +114,15 @@ export function FormBuilder({
               ? 'Shown as a student sees it — answer questions to see conditional ones appear.'
               : showPreview
                 ? 'Previewing as a student — answer questions to see conditional ones appear.'
-                : 'Prototype · nothing is saved. Click any question to edit it.'}
+                : 'Click any question to edit it. Save often — a form can be saved before it is complete.'}
           </p>
         </div>
         <div className='flex items-center gap-2'>
           {mode === 'locked' ? (
-            <Button type='button' onClick={() => notSaved('Duplicate')}>
-              <Copy className='mr-1 h-4 w-4' /> Duplicate to edit
+            <Button asChild>
+              <Link href={`/forms/create?from=${formId}`}>
+                <Copy className='mr-1 h-4 w-4' /> Duplicate to edit
+              </Link>
             </Button>
           ) : (
             <>
@@ -99,8 +138,8 @@ export function FormBuilder({
                 )}
                 {showPreview ? 'Back to editing' : 'Preview'}
               </Button>
-              <Button type='button' onClick={() => notSaved('Save')}>
-                <Save className='mr-1 h-4 w-4' /> Save
+              <Button type='button' onClick={save} disabled={saving}>
+                <Save className='mr-1 h-4 w-4' /> {saving ? 'Saving…' : 'Save'}
               </Button>
             </>
           )}
