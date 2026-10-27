@@ -1,9 +1,17 @@
 'use client';
 
 import { Dispatch, useEffect, useRef } from 'react';
-import { CornerDownRight, Keyboard, Trash2, X } from 'lucide-react';
+import {
+  Circle,
+  Copy,
+  CornerDownRight,
+  GitBranch,
+  Keyboard,
+  Square,
+  Trash2,
+  X,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -13,7 +21,19 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { conditionSummary, possibleSources, questionById } from '../lib/model';
+import { cn } from '@/lib/utils';
+import {
+  cloneQuestion,
+  conditionSummary,
+  FOLLOW_UP_TEXT,
+  hasOtherOption,
+  newFollowUp,
+  newOption,
+  OTHER_OPTION_TEXT,
+  OTHER_SPECIFY_TEXT,
+  possibleSources,
+  questionById,
+} from '../lib/model';
 import type { Action } from '../lib/reducer';
 import { CHOICE_TYPES, FormState, Question, QuestionType } from '../lib/types';
 import { FieldLabel, PairedInput } from './fields';
@@ -22,9 +42,14 @@ import { StudentQuestion } from './StudentQuestion';
 const QUESTION_TYPES: { value: QuestionType; label: string }[] = [
   { value: 'single-choice', label: 'Single choice' },
   { value: 'multi-choice', label: 'Multiple choice' },
-  { value: 'subjective', label: 'Subjective (free text)' },
-  { value: 'matrix-rating', label: 'Matrix rating' },
+  { value: 'subjective', label: 'Free text' },
+  { value: 'matrix-rating', label: 'Rating grid' },
 ];
+
+// Option/row inputs look like plain text until hovered or focused, so the open editor reads
+// like the question itself rather than a wall of boxes.
+const QUIET_INPUT =
+  'border-transparent bg-muted/40 shadow-none hover:border-border focus-visible:border-input';
 
 interface Props {
   state: FormState;
@@ -34,9 +59,22 @@ interface Props {
   /** Only the active question shows the editor; every other one renders as the student sees it. */
   active: boolean;
   onActivate: () => void;
+  /** Open another question for editing (a new follow-up or a duplicate). */
+  openQuestion: (qid: string) => void;
+  /** Display-only nesting under the trigger (see model `nestingDepths`). */
+  nested: boolean;
 }
 
-export function QuestionCard({ state, q, index, dispatch, active, onActivate }: Props) {
+export function QuestionCard({
+  state,
+  q,
+  index,
+  dispatch,
+  active,
+  onActivate,
+  openQuestion,
+  nested,
+}: Props) {
   const hi = state.langs.hi;
   const isChoice = CHOICE_TYPES.includes(q.type);
   const ref = useRef<HTMLDivElement>(null);
@@ -48,36 +86,118 @@ export function QuestionCard({ state, q, index, dispatch, active, onActivate }: 
   }, [active]);
 
   if (!active) {
-    return <CollapsedQuestion state={state} q={q} index={index} onActivate={onActivate} />;
+    return (
+      <CollapsedQuestion
+        state={state}
+        q={q}
+        index={index}
+        nested={nested}
+        onActivate={onActivate}
+      />
+    );
+  }
+
+  const sources = possibleSources(state, q.id);
+
+  function addCondition() {
+    dispatch({ type: 'cond-toggle', qid: q.id, value: true });
+    // Most conditions hang off the nearest choice question above, so preselect it.
+    if (!q.cond.src && sources.length > 0)
+      dispatch({ type: 'cond-src', qid: q.id, src: sources[sources.length - 1].id });
+  }
+
+  function duplicate() {
+    const copy = cloneQuestion(q);
+    dispatch({ type: 'dup-question', qid: q.id, question: copy });
+    openQuestion(copy.id);
   }
 
   return (
     <div
       ref={ref}
-      className='mb-4 rounded-lg border border-border border-l-4 border-l-primary bg-background p-5 shadow-md'
+      className='mb-4 rounded-lg border border-border border-l-4 border-l-primary bg-background shadow-md'
     >
-      {/* header */}
-      <div className='mb-4 flex items-center justify-between'>
-        <span className='flex items-center gap-2'>
-          <span className='inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary font-mono text-xs font-bold text-primary-foreground'>
+      <div className='p-5'>
+        {/* question text + answer type on one line */}
+        <div className='flex flex-col gap-3 sm:flex-row sm:items-start'>
+          <span className='mt-2 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary font-mono text-xs font-bold text-primary-foreground'>
             {index + 1}
           </span>
-          <span className='text-xs font-bold uppercase tracking-wide text-muted-foreground'>
-            Question
-          </span>
-          {q.cond.on && (
-            <span className='rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-accent-foreground'>
-              conditional
-            </span>
-          )}
-        </span>
-        <span className='flex items-center gap-3'>
+          <PairedInput
+            className='flex-1'
+            inputClassName='text-base font-medium'
+            text={q.text}
+            hiEnabled={hi}
+            onChange={(lang, value) => dispatch({ type: 'set-qtext', qid: q.id, lang, value })}
+            enPlaceholder='Question'
+            hiPlaceholder='प्रश्न (Hindi)'
+          />
+          <Select
+            value={q.type}
+            onValueChange={(value) =>
+              dispatch({ type: 'set-qtype', qid: q.id, value: value as QuestionType })
+            }
+          >
+            <SelectTrigger className='sm:w-44' aria-label='Answer type'>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {QUESTION_TYPES.map((t) => (
+                <SelectItem key={t.value} value={t.value}>
+                  {t.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {q.cond.on && <ConditionSentence state={state} q={q} dispatch={dispatch} />}
+
+        {isChoice && (
+          <OptionsEditor
+            state={state}
+            q={q}
+            hi={hi}
+            dispatch={dispatch}
+            openQuestion={openQuestion}
+          />
+        )}
+        {q.type === 'matrix-rating' && <MatrixEditor q={q} hi={hi} dispatch={dispatch} />}
+        {q.type === 'subjective' && (
+          <p className='mt-4 flex items-center gap-2 text-sm italic text-muted-foreground'>
+            <Keyboard className='h-4 w-4' /> Student types a free-text answer.
+          </p>
+        )}
+      </div>
+
+      {/* settings bar */}
+      <div className='flex flex-wrap items-center justify-between gap-2 border-t border-border px-5 py-2'>
+        {q.cond.on ? (
+          <span />
+        ) : (
+          <Button
+            type='button'
+            variant='ghost'
+            size='sm'
+            className='text-muted-foreground'
+            disabled={sources.length === 0}
+            title={
+              sources.length === 0
+                ? 'Needs a single/multiple-choice question above this one'
+                : 'Show this question only for certain answers to an earlier question'
+            }
+            onClick={addCondition}
+          >
+            <GitBranch className='mr-1.5 h-4 w-4' /> Show only if…
+          </Button>
+        )}
+        <div className='flex items-center gap-1'>
           <label
-            className='flex cursor-pointer items-center gap-2'
+            className='flex cursor-pointer items-center gap-2 pr-2'
             title={
               q.cond.on
                 ? 'Conditional: only required while the question is shown'
-                : 'Respondent must answer this question before submitting'
+                : 'Student must answer this question before submitting'
             }
           >
             <span className='text-sm text-foreground'>Required</span>
@@ -86,6 +206,17 @@ export function QuestionCard({ state, q, index, dispatch, active, onActivate }: 
               onCheckedChange={(v) => dispatch({ type: 'set-required', qid: q.id, value: v })}
             />
           </label>
+          <span className='mx-1 h-6 w-px bg-border' aria-hidden />
+          <Button
+            type='button'
+            variant='ghost'
+            size='icon'
+            className='h-8 w-8 text-muted-foreground'
+            title='Duplicate question'
+            onClick={duplicate}
+          >
+            <Copy className='h-4 w-4' />
+          </Button>
           <Button
             type='button'
             variant='ghost'
@@ -96,51 +227,8 @@ export function QuestionCard({ state, q, index, dispatch, active, onActivate }: 
           >
             <Trash2 className='h-4 w-4' />
           </Button>
-        </span>
+        </div>
       </div>
-
-      {/* question text */}
-      <FieldLabel>Question text{hi && ' (English + Hindi)'}</FieldLabel>
-      <PairedInput
-        text={q.text}
-        hiEnabled={hi}
-        onChange={(lang, value) => dispatch({ type: 'set-qtext', qid: q.id, lang, value })}
-        enPlaceholder='Type the question in English'
-        hiPlaceholder='हिन्दी में प्रश्न लिखें'
-      />
-
-      {/* answer type */}
-      <div className='mt-4 max-w-xs'>
-        <FieldLabel>Answer type</FieldLabel>
-        <Select
-          value={q.type}
-          onValueChange={(value) =>
-            dispatch({ type: 'set-qtype', qid: q.id, value: value as QuestionType })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {QUESTION_TYPES.map((t) => (
-              <SelectItem key={t.value} value={t.value}>
-                {t.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* type-specific editors */}
-      {isChoice && <OptionsEditor q={q} hi={hi} dispatch={dispatch} />}
-      {q.type === 'matrix-rating' && <MatrixEditor q={q} hi={hi} dispatch={dispatch} />}
-      {q.type === 'subjective' && (
-        <p className='mt-3 flex items-center gap-2 text-sm italic text-muted-foreground'>
-          <Keyboard className='h-4 w-4' /> Respondent types a free-text answer.
-        </p>
-      )}
-
-      <ConditionEditor state={state} q={q} dispatch={dispatch} />
     </div>
   );
 }
@@ -150,14 +238,16 @@ function CollapsedQuestion({
   state,
   q,
   index,
+  nested,
   onActivate,
 }: {
   state: FormState;
   q: Question;
   index: number;
+  nested: boolean;
   onActivate: () => void;
 }) {
-  const summary = conditionSummary(state, q);
+  const summary = conditionSummary(state, q, { nested });
   return (
     <div
       role='button'
@@ -193,65 +283,194 @@ function CollapsedQuestion({
   );
 }
 
+/** `Show only if [question ▾] is (opt) (opt) …  ✕` — the whole condition on one line. */
+function ConditionSentence({
+  state,
+  q,
+  dispatch,
+}: {
+  state: FormState;
+  q: Question;
+  dispatch: Dispatch<Action>;
+}) {
+  const sources = possibleSources(state, q.id);
+  const src = questionById(state, q.cond.src);
+
+  return (
+    <div className='mt-3 flex flex-wrap items-center gap-2 rounded-md bg-accent/60 px-3 py-2 text-sm text-accent-foreground'>
+      <GitBranch className='h-4 w-4 shrink-0' />
+      <span className='font-medium'>Show only if</span>
+      {sources.length === 0 ? (
+        <span className='text-destructive'>
+          — add a single/multiple-choice question above this one first.
+        </span>
+      ) : (
+        <Select
+          value={q.cond.src ?? ''}
+          onValueChange={(value) => dispatch({ type: 'cond-src', qid: q.id, src: value })}
+        >
+          <SelectTrigger
+            className='h-8 w-auto max-w-[260px] bg-background'
+            aria-label='Trigger question'
+          >
+            <SelectValue placeholder='pick a question…' />
+          </SelectTrigger>
+          <SelectContent>
+            {sources.map((s) => {
+              const lbl = s.text.en || '(untitled question)';
+              return (
+                <SelectItem key={s.id} value={s.id}>
+                  {lbl.length > 60 ? lbl.slice(0, 60) + '…' : lbl}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+      )}
+      {src && (
+        <>
+          <span className='font-medium'>is</span>
+          {src.options.map((o, i) => {
+            const on = q.cond.opts.includes(o.id);
+            return (
+              <button
+                key={o.id}
+                type='button'
+                aria-pressed={on}
+                onClick={() => dispatch({ type: 'cond-opt', qid: q.id, oid: o.id, checked: !on })}
+                className={cn(
+                  'rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors',
+                  on
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-border bg-background text-muted-foreground hover:bg-muted'
+                )}
+              >
+                {o.text.en || `Option ${i + 1}`}
+              </button>
+            );
+          })}
+          {q.cond.opts.length === 0 && (
+            <span className='text-xs text-destructive'>pick at least one option</span>
+          )}
+        </>
+      )}
+      <Button
+        type='button'
+        variant='ghost'
+        size='icon'
+        className='ml-auto h-7 w-7'
+        title='Remove condition (always show this question)'
+        onClick={() => dispatch({ type: 'cond-toggle', qid: q.id, value: false })}
+      >
+        <X className='h-4 w-4' />
+      </Button>
+    </div>
+  );
+}
+
 function OptionsEditor({
+  state,
   q,
   hi,
   dispatch,
+  openQuestion,
 }: {
+  state: FormState;
   q: Question;
   hi: boolean;
   dispatch: Dispatch<Action>;
+  openQuestion: (qid: string) => void;
 }) {
+  const Glyph = q.type === 'single-choice' ? Circle : Square;
+  const followUpCount = (oid: string) =>
+    state.sections
+      .flatMap((s) => s.questions)
+      .filter((x) => x.cond.on && x.cond.src === q.id && x.cond.opts.includes(oid)).length;
+
+  function addFollowUp(oid: string) {
+    const fu = newFollowUp(q, oid, FOLLOW_UP_TEXT);
+    dispatch({ type: 'add-follow-up', qid: q.id, question: fu });
+    openQuestion(fu.id);
+  }
+
+  function addOther() {
+    const option = newOption(OTHER_OPTION_TEXT.en, OTHER_OPTION_TEXT.hi);
+    const question = newFollowUp(q, option.id, OTHER_SPECIFY_TEXT);
+    // Stay on the trigger: the author sees the new option here and the follow-up below it.
+    dispatch({ type: 'add-other', qid: q.id, option, question });
+  }
+
   return (
-    <div className='mt-4'>
-      <FieldLabel>Options</FieldLabel>
-      <div className='mt-1'>
-        {q.options.map((opt, i) => (
-          <div key={opt.id} className='mb-2.5 flex items-start gap-3'>
-            <span className='mt-3 w-5 shrink-0 text-right font-mono text-xs text-muted-foreground'>
-              {i + 1}.
-            </span>
+    <div className='mt-4 flex flex-col gap-2'>
+      {q.options.map((opt) => {
+        const n = followUpCount(opt.id);
+        return (
+          <div key={opt.id} className='flex items-start gap-2'>
+            <Glyph className='mt-3 h-4 w-4 shrink-0 text-muted-foreground' />
             <PairedInput
               className='flex-1'
+              inputClassName={QUIET_INPUT}
               text={opt.text}
               hiEnabled={hi}
               onChange={(lang, value) =>
                 dispatch({ type: 'set-option', qid: q.id, oid: opt.id, lang, value })
               }
-              enPlaceholder='Option (English)'
+              enPlaceholder='Option'
               hiPlaceholder='विकल्प (Hindi)'
             />
             <Button
               type='button'
               variant='ghost'
+              size='sm'
+              // Fixed width so a count badge on some rows doesn't misalign the option inputs.
+              className='mt-0.5 shrink-0 justify-start text-muted-foreground sm:w-[124px]'
+              title='Ask a follow-up question when a student picks this option'
+              onClick={() => addFollowUp(opt.id)}
+            >
+              <CornerDownRight className='h-4 w-4 shrink-0 sm:mr-1' />
+              <span className='hidden sm:inline'>Follow-up</span>
+              {n > 0 && (
+                <span className='ml-1 rounded-full bg-accent px-1.5 text-[11px] font-bold text-accent-foreground'>
+                  {n}
+                </span>
+              )}
+            </Button>
+            <Button
+              type='button'
+              variant='ghost'
               size='icon'
-              className='mt-1 h-8 w-8 text-muted-foreground hover:text-destructive'
+              className='mt-0.5 h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive'
               title='Remove option'
               onClick={() => dispatch({ type: 'del-option', qid: q.id, oid: opt.id })}
             >
               <X className='h-4 w-4' />
             </Button>
           </div>
-        ))}
-      </div>
-      <div className='mt-3 flex flex-wrap items-center gap-x-5 gap-y-1'>
+        );
+      })}
+      <div className='flex flex-wrap items-center gap-x-2 pl-6 text-sm'>
         <Button
           type='button'
           variant='link'
           className='h-auto p-0 text-sm'
           onClick={() => dispatch({ type: 'add-option', qid: q.id })}
         >
-          + Add option
+          Add option
         </Button>
-        <Button
-          type='button'
-          variant='link'
-          className='h-auto p-0 text-sm'
-          title='Adds a subjective follow-up shown only when a chosen option is selected'
-          onClick={() => dispatch({ type: 'add-justify', qid: q.id })}
-        >
-          + Add “please justify” follow-up
-        </Button>
+        {!hasOtherOption(q) && (
+          <>
+            <span className='text-muted-foreground'>or</span>
+            <Button
+              type='button'
+              variant='link'
+              className='h-auto p-0 text-sm'
+              title='Adds an "Other" option and a free-text question shown only when it is picked'
+              onClick={addOther}
+            >
+              add “Other (please specify)”
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
@@ -267,43 +486,46 @@ function MatrixEditor({
   dispatch: Dispatch<Action>;
 }) {
   return (
-    <div className='mt-3'>
+    <div className='mt-4'>
       <FieldLabel>Rows to rate</FieldLabel>
-      {q.rows.map((row) => (
-        <div key={row.id} className='mb-2 flex items-start gap-2'>
-          <PairedInput
-            className='flex-1'
-            text={row.text}
-            hiEnabled={hi}
-            onChange={(lang, value) =>
-              dispatch({ type: 'set-row', qid: q.id, rid: row.id, lang, value })
-            }
-            enPlaceholder='Row item (English)'
-            hiPlaceholder='पंक्ति (Hindi)'
-          />
-          <Button
-            type='button'
-            variant='ghost'
-            size='icon'
-            className='mt-1 h-8 w-8 text-muted-foreground hover:text-destructive'
-            title='Remove row'
-            onClick={() => dispatch({ type: 'del-row', qid: q.id, rid: row.id })}
-          >
-            <X className='h-4 w-4' />
-          </Button>
-        </div>
-      ))}
+      <div className='flex flex-col gap-2'>
+        {q.rows.map((row) => (
+          <div key={row.id} className='flex items-start gap-2'>
+            <PairedInput
+              className='flex-1'
+              inputClassName={QUIET_INPUT}
+              text={row.text}
+              hiEnabled={hi}
+              onChange={(lang, value) =>
+                dispatch({ type: 'set-row', qid: q.id, rid: row.id, lang, value })
+              }
+              enPlaceholder='Row item'
+              hiPlaceholder='पंक्ति (Hindi)'
+            />
+            <Button
+              type='button'
+              variant='ghost'
+              size='icon'
+              className='mt-0.5 h-8 w-8 text-muted-foreground hover:text-destructive'
+              title='Remove row'
+              onClick={() => dispatch({ type: 'del-row', qid: q.id, rid: row.id })}
+            >
+              <X className='h-4 w-4' />
+            </Button>
+          </div>
+        ))}
+      </div>
       <Button
         type='button'
         variant='link'
-        className='h-auto p-0 text-sm'
+        className='mt-2 h-auto p-0 text-sm'
         onClick={() => dispatch({ type: 'add-row', qid: q.id })}
       >
-        + Add row
+        Add row
       </Button>
-      <div className={`mt-3 grid grid-cols-1 gap-2 ${hi ? 'sm:grid-cols-2' : ''}`}>
+      <div className={cn('mt-4 grid grid-cols-1 gap-2', hi && 'sm:grid-cols-2')}>
         <div>
-          <FieldLabel>Rating scale, comma-separated (English)</FieldLabel>
+          <FieldLabel>Rating scale (comma-separated)</FieldLabel>
           <Input
             value={q.scale.en}
             onChange={(e) =>
@@ -323,91 +545,6 @@ function MatrixEditor({
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function ConditionEditor({
-  state,
-  q,
-  dispatch,
-}: {
-  state: FormState;
-  q: Question;
-  dispatch: Dispatch<Action>;
-}) {
-  const sources = possibleSources(state, q.id);
-  const src = questionById(state, q.cond.src);
-
-  return (
-    <div className='mt-4 rounded-lg border border-border bg-muted/40 p-4'>
-      <label className='inline-flex cursor-pointer items-center gap-2'>
-        <Checkbox
-          checked={q.cond.on}
-          onCheckedChange={(v) => dispatch({ type: 'cond-toggle', qid: q.id, value: v === true })}
-        />
-        <span className='text-xs font-bold uppercase tracking-wide text-muted-foreground'>
-          Show only if… (conditional)
-        </span>
-      </label>
-
-      {q.cond.on &&
-        (sources.length === 0 ? (
-          <p className='mt-2 text-sm text-destructive'>
-            Add a single/multiple-choice question <em>before</em> this one to use as the trigger.
-          </p>
-        ) : (
-          <>
-            <div className='mt-2'>
-              <FieldLabel>Trigger question</FieldLabel>
-              <Select
-                value={q.cond.src ?? ''}
-                onValueChange={(value) => dispatch({ type: 'cond-src', qid: q.id, src: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder='Select a question…' />
-                </SelectTrigger>
-                <SelectContent>
-                  {sources.map((s) => {
-                    const lbl = s.text.en || '(untitled question)';
-                    return (
-                      <SelectItem key={s.id} value={s.id}>
-                        {lbl.length > 60 ? lbl.slice(0, 60) + '…' : lbl}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {src && (
-              <div className='mt-2'>
-                <FieldLabel>…when one of these options is chosen</FieldLabel>
-                <div className='flex flex-col gap-1'>
-                  {src.options.map((o, i) => (
-                    <label
-                      key={o.id}
-                      className='inline-flex cursor-pointer items-center gap-2 text-sm'
-                    >
-                      <Checkbox
-                        checked={q.cond.opts.includes(o.id)}
-                        onCheckedChange={(v) =>
-                          dispatch({
-                            type: 'cond-opt',
-                            qid: q.id,
-                            oid: o.id,
-                            checked: v === true,
-                          })
-                        }
-                      />
-                      <span>{o.text.en || `Option ${i + 1}`}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
-        ))}
     </div>
   );
 }

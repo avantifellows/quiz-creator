@@ -4,11 +4,18 @@
 // Pure model/reducer logic — no DOM needed, and jsdom lacks the reducer's structuredClone.
 import { reducer } from './reducer';
 import {
+  cloneQuestion,
   computeVisibility,
   conditionSummary,
+  FOLLOW_UP_TEXT,
+  hasOtherOption,
+  nestingDepths,
+  newFollowUp,
   newOption,
   newQuestion,
   newSection,
+  OTHER_OPTION_TEXT,
+  OTHER_SPECIFY_TEXT,
   seedExample,
   toQuizPayload,
   validate,
@@ -148,6 +155,92 @@ describe('reducer add-question', () => {
     const q = newQuestion('subjective');
     const next = reducer(state, { type: 'add-question', sid: state.sections[0].id, question: q });
     expect(next.sections[0].questions.at(-1)?.id).toBe(q.id);
+  });
+});
+
+describe('follow-ups', () => {
+  /** q1 (trigger) -> q2 (follows q1), then an unrelated q3 at the end. */
+  function withTail() {
+    const base = condForm();
+    const q3 = newQuestion('subjective');
+    q3.text.en = 'Unrelated';
+    base.state.sections[0].questions.push(q3);
+    return { ...base, q3: q3.id };
+  }
+  const ids = (s: FormState) => s.sections[0].questions.map((q) => q.id);
+
+  it('nests a contiguous follow-up block under its trigger, display only', () => {
+    const { state, q1, q2, q3 } = withTail();
+    expect(nestingDepths(state.sections[0])).toEqual({ [q1]: 0, [q2]: 1, [q3]: 0 });
+  });
+
+  it('does not nest a dependent separated from its trigger by an unrelated question', () => {
+    const { state, q1, q2 } = condForm();
+    const gap = newQuestion('subjective');
+    state.sections[0].questions = [
+      state.sections[0].questions[0],
+      gap,
+      state.sections[0].questions[1],
+    ];
+    const d = nestingDepths(state.sections[0]);
+    expect([d[q1], d[gap.id], d[q2]]).toEqual([0, 0, 0]);
+  });
+
+  it('inserts a follow-up after the trigger’s existing follow-ups, before unrelated questions', () => {
+    const { state, q1, q2, q3, opt1 } = withTail();
+    const trigger = state.sections[0].questions[0];
+    const fu = newFollowUp(trigger, opt1, FOLLOW_UP_TEXT);
+    const next = reducer(state, { type: 'add-follow-up', qid: q1, question: fu });
+    expect(ids(next)).toEqual([q1, q2, fu.id, q3]);
+    // and the emitted condition points at the trigger's second option
+    expect(toQuizPayload(next).question_sets[0].questions[2].display_condition).toEqual({
+      source_position: 0,
+      option_indices: [1],
+    });
+  });
+
+  it('"Other (please specify)" appends the option and a follow-up conditioned on it', () => {
+    const { state, q1, q2 } = condForm();
+    const trigger = state.sections[0].questions[0];
+    const option = newOption(OTHER_OPTION_TEXT.en, OTHER_OPTION_TEXT.hi);
+    const question = newFollowUp(trigger, option.id, OTHER_SPECIFY_TEXT);
+    const next = reducer(state, { type: 'add-other', qid: q1, option, question });
+    const t = next.sections[0].questions[0];
+    expect(t.options.map((o) => o.text.en)).toEqual(['Yes', 'No', 'Other']);
+    expect(hasOtherOption(t)).toBe(true);
+    expect(ids(next)).toEqual([q1, q2, question.id]);
+    expect(toQuizPayload(next).question_sets[0].questions[2]).toMatchObject({
+      type: 'subjective',
+      text: 'Please specify',
+      display_condition: { source_position: 0, option_indices: [2] },
+    });
+  });
+
+  it('shortens the condition summary when the card is nested under its trigger', () => {
+    const { state } = condForm();
+    const dep = state.sections[0].questions[1];
+    expect(conditionSummary(state, dep, { nested: true })).toBe('If "Yes"');
+  });
+});
+
+describe('dup-question', () => {
+  it('inserts a fresh-id copy right after the original, keeping its condition', () => {
+    const { state, q1, q2 } = condForm();
+    const original = state.sections[0].questions[1];
+    const copy = cloneQuestion(original);
+    expect(copy.id).not.toBe(original.id);
+    const next = reducer(state, { type: 'dup-question', qid: q2, question: copy });
+    expect(next.sections[0].questions.map((q) => q.id)).toEqual([q1, q2, copy.id]);
+    expect(next.sections[0].questions[2].cond).toEqual(original.cond);
+  });
+
+  it('gives a copied choice question new option ids', () => {
+    const { state } = condForm();
+    const trigger = state.sections[0].questions[0];
+    const copy = cloneQuestion(trigger);
+    const before = new Set(trigger.options.map((o) => o.id));
+    expect(copy.options.some((o) => before.has(o.id))).toBe(false);
+    expect(copy.options.map((o) => o.text.en)).toEqual(['Yes', 'No']);
   });
 });
 

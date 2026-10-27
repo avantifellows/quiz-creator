@@ -4,10 +4,14 @@ import { Dispatch } from 'react';
 import { Layers, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { newQuestion } from '../lib/model';
+import { cn } from '@/lib/utils';
+import { nestingDepths, newQuestion } from '../lib/model';
 import type { Action } from '../lib/reducer';
 import { FormState, Section } from '../lib/types';
 import { QuestionCard } from './QuestionCard';
+
+/** Deeper chains still render, just without further indentation. */
+const MAX_INDENT = 3;
 
 export function SectionCard({
   state,
@@ -24,6 +28,8 @@ export function SectionCard({
   activeId: string | null;
   onActivate: (qid: string) => void;
 }) {
+  const depths = nestingDepths(section);
+
   function addQuestion() {
     const question = newQuestion('single-choice');
     dispatch({ type: 'add-question', sid: section.id, question });
@@ -56,17 +62,28 @@ export function SectionCard({
         </Button>
       </div>
 
-      {section.questions.map((q, i) => (
-        <QuestionCard
-          key={q.id}
-          state={state}
-          q={q}
-          index={i}
-          dispatch={dispatch}
-          active={q.id === activeId}
-          onActivate={() => onActivate(q.id)}
-        />
-      ))}
+      {section.questions.map((q, i) => {
+        // Follow-ups sit indented under their trigger with a guide line (display only).
+        const depth = Math.min(depths[q.id] ?? 0, MAX_INDENT);
+        return (
+          <div
+            key={q.id}
+            className={cn(depth > 0 && 'border-l-2 border-primary/25 pl-4')}
+            style={depth > 0 ? { marginLeft: `${(depth - 1) * 1.25 + 0.75}rem` } : undefined}
+          >
+            <QuestionCard
+              state={state}
+              q={q}
+              index={i}
+              dispatch={dispatch}
+              active={q.id === activeId}
+              onActivate={() => onActivate(q.id)}
+              openQuestion={onActivate}
+              nested={depth > 0}
+            />
+          </div>
+        );
+      })}
 
       <Button type='button' variant='secondary' size='sm' className='mt-1' onClick={addQuestion}>
         + Add Question

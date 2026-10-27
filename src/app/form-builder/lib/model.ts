@@ -124,16 +124,80 @@ export function computeVisibility(
  * `Shown if "Do you go for offline coaching…" is "Yes"`. Null when the question is not
  * conditional or the condition is incomplete.
  */
-export function conditionSummary(state: FormState, q: Question): string | null {
+export function conditionSummary(
+  state: FormState,
+  q: Question,
+  /** `nested`: the card sits right under its trigger, so naming the trigger is redundant. */
+  { nested = false }: { nested?: boolean } = {}
+): string | null {
   if (!q.cond.on || !q.cond.src) return null;
   const src = questionById(state, q.cond.src);
   if (!src) return null;
   const chosen = src.options.filter((o) => q.cond.opts.includes(o.id));
   if (chosen.length === 0) return null;
+  const opts = chosen.map((o, i) => `"${o.text.en.trim() || `Option ${i + 1}`}"`).join(' or ');
+  if (nested) return `If ${opts}`;
   const srcText = src.text.en.trim() || 'untitled question';
   const short = srcText.length > 48 ? `${srcText.slice(0, 48).trimEnd()}…` : srcText;
-  const opts = chosen.map((o, i) => `"${o.text.en.trim() || `Option ${i + 1}`}"`).join(' or ');
   return `Shown if "${short}" is ${opts}`;
+}
+
+// ---- follow-ups, nesting, duplication -------------------------------------
+/** A free-text question shown only when `oid` of `trigger` is chosen. */
+export function newFollowUp(trigger: Question, oid: string, text: LangText): Question {
+  const q = newQuestion('subjective');
+  q.text = { ...text };
+  q.cond = { on: true, src: trigger.id, opts: [oid] };
+  return q;
+}
+
+export const FOLLOW_UP_TEXT: LangText = { en: 'Please tell us more', hi: 'कृपया और बताएं' };
+export const OTHER_OPTION_TEXT: LangText = { en: 'Other', hi: 'अन्य' };
+export const OTHER_SPECIFY_TEXT: LangText = { en: 'Please specify', hi: 'कृपया बताएं' };
+
+/** True when the question already offers an "Other" option (English text, any case). */
+export const hasOtherOption = (q: Question): boolean =>
+  q.options.some((o) => o.text.en.trim().toLowerCase() === OTHER_OPTION_TEXT.en.toLowerCase());
+
+/**
+ * Display-only indentation depth per question within one section. A conditional question is
+ * nested one level under its trigger when the trigger is earlier in the same section and every
+ * question in between is itself nested under that trigger — i.e. the follow-ups form one
+ * contiguous block right below it. Anything else stays at depth 0 (its "Shown if" chip still
+ * names the trigger). Never affects positions: the payload is built from document order.
+ */
+export function nestingDepths(section: Section): Record<string, number> {
+  const qs = section.questions;
+  const depths: number[] = [];
+  qs.forEach((q, i) => {
+    let d = 0;
+    if (q.cond.on && q.cond.src) {
+      const t = qs.findIndex((x) => x.id === q.cond.src);
+      if (t >= 0 && t < i && depths.slice(t + 1, i).every((x) => x > depths[t])) d = depths[t] + 1;
+    }
+    depths.push(d);
+  });
+  return Object.fromEntries(qs.map((q, i) => [q.id, depths[i]]));
+}
+
+/** Where a new follow-up of `triggerId` goes: after the trigger's existing nested block. */
+export function followUpInsertIndex(section: Section, triggerId: string): number {
+  const qs = section.questions;
+  const t = qs.findIndex((q) => q.id === triggerId);
+  if (t < 0) return qs.length;
+  const depth = nestingDepths(section);
+  let j = t + 1;
+  while (j < qs.length && depth[qs[j].id] > depth[triggerId]) j++;
+  return j;
+}
+
+/** Deep copy with fresh ids. The copy keeps the original's condition (same trigger/options). */
+export function cloneQuestion(q: Question): Question {
+  const copy: Question = structuredClone(q);
+  copy.id = nid();
+  copy.options = copy.options.map((o) => ({ ...o, id: nid() }));
+  copy.rows = copy.rows.map((r) => ({ ...r, id: nid() }));
+  return copy;
 }
 
 // ---- language helpers ----------------------------------------------------

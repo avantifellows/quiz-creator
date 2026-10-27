@@ -7,8 +7,8 @@
  * question/option.
  */
 
-import { CHOICE_TYPES, FormState, Lang, Question, QuestionType } from './types';
-import { newOption, newQuestion, newSection } from './model';
+import { CHOICE_TYPES, FormState, Lang, Option, Question, QuestionType } from './types';
+import { followUpInsertIndex, newOption, newQuestion, newSection } from './model';
 
 export type Action =
   | { type: 'set-name'; value: string }
@@ -33,7 +33,13 @@ export type Action =
   | { type: 'cond-toggle'; qid: string; value: boolean }
   | { type: 'cond-src'; qid: string; src: string | null }
   | { type: 'cond-opt'; qid: string; oid: string; checked: boolean }
-  | { type: 'add-justify'; qid: string }
+  // The caller builds the new question (so it knows the id up front, to open it for editing).
+  /** Insert `question` as a follow-up of `qid`, after the trigger's existing nested block. */
+  | { type: 'add-follow-up'; qid: string; question: Question }
+  /** Append an "Other" option to `qid` plus its free-text "please specify" follow-up. */
+  | { type: 'add-other'; qid: string; option: Option; question: Question }
+  /** Insert `question` (a fresh-id copy of `qid`) right after it. */
+  | { type: 'dup-question'; qid: string; question: Question }
   | { type: 'load'; state: FormState };
 
 const clone = (s: FormState): FormState => structuredClone(s);
@@ -54,6 +60,13 @@ function pruneConditions(s: FormState): void {
     const optIds = new Set(src.options.map((o) => o.id));
     q.cond.opts = q.cond.opts.filter((oid) => optIds.has(oid));
   }
+}
+
+/** Place a follow-up right below its trigger's existing follow-ups (same section). */
+function insertFollowUp(s: FormState, triggerId: string, question: Question): void {
+  const sec = s.sections.find((x) => x.questions.some((q) => q.id === triggerId));
+  if (!sec) return;
+  sec.questions.splice(followUpInsertIndex(sec, triggerId), 0, question);
 }
 
 export function reducer(state: FormState, action: Action): FormState {
@@ -176,18 +189,22 @@ export function reducer(state: FormState, action: Action): FormState {
       }
       return s;
     }
-    case 'add-justify': {
-      // The yes/no + "please justify" preset: a subjective dependent inserted right after the
-      // trigger, shown only when the trigger's last option (typically "Other"/"No") is chosen.
+    case 'add-other': {
+      // "Other (please specify)": the option goes last on the trigger, then its follow-up.
+      const trigger = findQ(s, action.qid);
+      if (!trigger || !CHOICE_TYPES.includes(trigger.type)) return s;
+      trigger.options.push(action.option);
+      insertFollowUp(s, action.qid, action.question);
+      return s;
+    }
+    case 'add-follow-up':
+      insertFollowUp(s, action.qid, action.question);
+      return s;
+    case 'dup-question': {
       const sec = s.sections.find((x) => x.questions.some((q) => q.id === action.qid));
-      const trigger = sec?.questions.find((q) => q.id === action.qid);
-      if (!sec || !trigger) return s;
-      const dep = newQuestion('subjective');
-      dep.text = { en: 'Please explain your answer', hi: 'कृपया अपना उत्तर समझाएँ' };
-      const lastOpt = trigger.options[trigger.options.length - 1];
-      dep.cond = { on: true, src: trigger.id, opts: lastOpt ? [lastOpt.id] : [] };
-      const idx = sec.questions.findIndex((q) => q.id === trigger.id);
-      sec.questions.splice(idx + 1, 0, dep);
+      if (!sec) return s;
+      const idx = sec.questions.findIndex((q) => q.id === action.qid);
+      sec.questions.splice(idx + 1, 0, action.question);
       return s;
     }
     default:
