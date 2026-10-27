@@ -57,11 +57,11 @@ export function Preview({ state }: { state: FormState }) {
         )}
       </div>
 
-      {state.singlePageHeaderText.trim() && (
-        <p className='mb-5 rounded-md bg-muted/50 p-3 text-sm text-muted-foreground'>
-          {state.singlePageHeaderText}
-        </p>
-      )}
+      {/* The header text belongs to the session (wizard), not the form: a used form is locked,
+          while a session's header can still be edited. */}
+      <p className='mb-5 rounded-md border border-dashed border-border p-3 text-sm italic text-muted-foreground'>
+        Header text is added when you create the session.
+      </p>
 
       {state.sections.map((section) => {
         const visibleQs = section.questions.filter((q) => visibility[q.id]);

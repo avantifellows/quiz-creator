@@ -12,7 +12,6 @@ import { followUpInsertIndex, newOption, newQuestion, newSection } from './model
 
 export type Action =
   | { type: 'set-name'; value: string }
-  | { type: 'set-header'; value: string }
   | { type: 'toggle-hi' }
   | { type: 'add-section' }
   | { type: 'del-section'; sid: string }
@@ -76,9 +75,6 @@ export function reducer(state: FormState, action: Action): FormState {
       return action.state;
     case 'set-name':
       s.name = action.value;
-      return s;
-    case 'set-header':
-      s.singlePageHeaderText = action.value;
       return s;
     case 'toggle-hi':
       s.langs.hi = !s.langs.hi;

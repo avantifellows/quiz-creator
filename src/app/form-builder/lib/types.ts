@@ -60,7 +60,6 @@ export interface Section {
 
 export interface FormState {
   name: string;
-  singlePageHeaderText: string;
   /** English is always on; Hindi is toggleable. */
   langs: { en: true; hi: boolean };
   sections: Section[];
@@ -111,7 +110,6 @@ export interface QuizPayload {
   require_all_questions: boolean;
   metadata: {
     quiz_type: 'form';
-    single_page_header_text?: string;
     source: string;
     source_id: null;
   };

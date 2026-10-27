@@ -56,7 +56,6 @@ export function newSection(title = ''): Section {
 export function emptyForm(): FormState {
   return {
     name: '',
-    singlePageHeaderText: '',
     langs: { en: true, hi: false },
     sections: [],
   };
@@ -297,9 +296,6 @@ export function toQuizPayload(state: FormState): QuizPayload {
     require_all_questions: allQuestions(state).some((q) => q.required),
     metadata: {
       quiz_type: 'form',
-      ...(state.singlePageHeaderText.trim()
-        ? { single_page_header_text: state.singlePageHeaderText.trim() }
-        : {}),
       source: 'quiz-creator-form-builder',
       source_id: null,
     },
@@ -396,7 +392,6 @@ export function seedExample(): FormState {
 
   return {
     name: 'Grade 12 Mentorship Screener',
-    singlePageHeaderText: 'Please answer honestly — this helps us match you with the right mentor.',
     langs: { en: true, hi: true },
     sections: [s1, s2],
   };

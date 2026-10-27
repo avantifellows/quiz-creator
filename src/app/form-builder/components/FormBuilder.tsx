@@ -100,23 +100,13 @@ export function FormBuilder() {
         <div className='mx-auto max-w-4xl'>
           {/* form-level settings */}
           <div className='mb-6 rounded-xl border border-border bg-card p-5 shadow-sm'>
-            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-              <div>
-                <FieldLabel>Form name</FieldLabel>
-                <Input
-                  value={state.name}
-                  onChange={(e) => dispatch({ type: 'set-name', value: e.target.value })}
-                  placeholder='e.g. Grade 12 Mentorship Screener'
-                />
-              </div>
-              <div>
-                <FieldLabel>Single-page header text</FieldLabel>
-                <Input
-                  value={state.singlePageHeaderText}
-                  onChange={(e) => dispatch({ type: 'set-header', value: e.target.value })}
-                  placeholder='Shown above the form for respondents'
-                />
-              </div>
+            <div className='max-w-xl'>
+              <FieldLabel>Form name</FieldLabel>
+              <Input
+                value={state.name}
+                onChange={(e) => dispatch({ type: 'set-name', value: e.target.value })}
+                placeholder='e.g. Grade 12 Mentorship Screener'
+              />
             </div>
             <div className='mt-4 flex flex-wrap items-center gap-6'>
               <div className='flex items-center gap-2'>
