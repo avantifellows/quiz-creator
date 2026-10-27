@@ -5,15 +5,16 @@ import { tr } from '../lib/model';
 import { Lang, PreviewAnswer, PreviewAnswers, Question } from '../lib/types';
 
 /**
- * One question rendered the way a respondent sees it. Shared by the live Preview (interactive:
+ * One question rendered the way a respondent sees it. Used by the live Preview (interactive:
  * pass `onChoice` + `onAnswer`) and the builder's collapsed question cards (read-only: omit
- * them), so both always look identical.
+ * them). `compact` drops the per-option boxes so the builder's list stays light.
  */
 export function StudentQuestion({
   q,
   lang,
   number,
   answers = {},
+  compact = false,
   onChoice,
   onAnswer,
 }: {
@@ -21,6 +22,7 @@ export function StudentQuestion({
   lang: Lang;
   number?: number;
   answers?: PreviewAnswers;
+  compact?: boolean;
   onChoice?: (q: Question, oid: string, checked: boolean) => void;
   onAnswer?: (qid: string, update: (prev: PreviewAnswer | undefined) => PreviewAnswer) => void;
 }) {
@@ -62,11 +64,16 @@ export function StudentQuestion({
       )}
 
       {(q.type === 'single-choice' || q.type === 'multi-choice') && (
-        <div className='flex flex-col gap-1.5'>
+        <div className={cn('flex flex-col', compact ? 'gap-1' : 'gap-1.5')}>
           {q.options.map((o, i) => (
             <label
               key={o.id}
-              className='inline-flex cursor-pointer items-center gap-2.5 rounded-lg border border-border px-3 py-2 text-sm transition-colors hover:bg-muted/50'
+              className={cn(
+                'inline-flex cursor-pointer items-center gap-2.5 text-sm',
+                compact
+                  ? 'py-0.5'
+                  : 'rounded-lg border border-border px-3 py-2 transition-colors hover:bg-muted/50'
+              )}
             >
               <input
                 type={q.type === 'single-choice' ? 'radio' : 'checkbox'}

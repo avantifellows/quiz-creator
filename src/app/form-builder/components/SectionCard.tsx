@@ -4,7 +4,6 @@ import { Dispatch } from 'react';
 import { Layers, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
 import { nestingDepths, newQuestion } from '../lib/model';
 import type { Action } from '../lib/reducer';
 import { FormState, Section } from '../lib/types';
@@ -38,12 +37,13 @@ export function SectionCard({
 
   return (
     <div className='mb-6 rounded-xl border border-border bg-card p-5 shadow-sm'>
-      <div className='mb-5 flex items-center gap-3 border-b-2 border-primary/30 pb-3'>
+      <div className='mb-4 flex items-center gap-3'>
         <span className='inline-flex shrink-0 items-center gap-2 text-xs font-bold uppercase tracking-wide text-primary'>
           <Layers className='h-4 w-4' /> Section {sIndex + 1}
         </span>
+        {/* Reads as a heading; the input border only shows on hover / focus. */}
         <Input
-          className='font-bold'
+          className='border-transparent bg-transparent px-2 text-lg font-bold hover:border-input focus-visible:border-input'
           value={section.title}
           onChange={(e) =>
             dispatch({ type: 'set-section-title', sid: section.id, value: e.target.value })
@@ -63,14 +63,11 @@ export function SectionCard({
       </div>
 
       {section.questions.map((q, i) => {
-        // Follow-ups sit indented under their trigger with a guide line (display only).
+        // Follow-ups sit indented under their trigger (display only); the "If …" chip on the
+        // card names the trigger, so no guide line.
         const depth = Math.min(depths[q.id] ?? 0, MAX_INDENT);
         return (
-          <div
-            key={q.id}
-            className={cn(depth > 0 && 'border-l-2 border-primary/25 pl-4')}
-            style={depth > 0 ? { marginLeft: `${(depth - 1) * 1.25 + 0.75}rem` } : undefined}
-          >
+          <div key={q.id} style={depth > 0 ? { marginLeft: `${depth * 1.75}rem` } : undefined}>
             <QuestionCard
               state={state}
               q={q}
