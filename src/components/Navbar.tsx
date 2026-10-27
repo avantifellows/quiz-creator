@@ -13,6 +13,7 @@ const NAV_LINKS = [
     label: 'Live Classes',
     path: '/live',
   },
+  { label: 'Forms', path: '/forms' },
 ];
 
 const Navbar = ({ actorEmail }: { actorEmail?: string | null }) => {
@@ -42,7 +43,10 @@ const Navbar = ({ actorEmail }: { actorEmail?: string | null }) => {
         <nav className='flex min-h-14 w-full items-center gap-1 bg-primary px-3 py-2 text-sm font-medium text-primary-foreground md:gap-2 md:px-8'>
           <div className='flex items-center gap-1 md:gap-2'>
             {NAV_LINKS.map((link) => {
-              const isActive = currentPath === link.path;
+              // Forms has sub-pages (/forms/create, /forms/edit) that keep the tab active.
+              const isActive =
+                currentPath === link.path ||
+                (link.path === '/forms' && currentPath.startsWith('/forms/'));
 
               return (
                 <Link

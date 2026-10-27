@@ -61,6 +61,13 @@ export function emptyForm(): FormState {
   };
 }
 
+/** What "Create form" starts from: one untitled section holding one empty question. */
+export function newForm(): FormState {
+  const section = newSection('');
+  section.questions = [newQuestion()];
+  return { ...emptyForm(), sections: [section] };
+}
+
 // ---- lookups -------------------------------------------------------------
 export const allQuestions = (state: FormState): Question[] =>
   state.sections.flatMap((s) => s.questions);

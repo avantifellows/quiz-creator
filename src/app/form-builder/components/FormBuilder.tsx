@@ -1,23 +1,44 @@
 'use client';
 
 import { useLayoutEffect, useReducer, useRef, useState } from 'react';
-import { Eye, Pencil, Plus, RotateCcw } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowLeft, Copy, Eye, Lock, Pencil, Plus, Save } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { emptyForm, seedExample } from '../lib/model';
+import { newForm, seedExample } from '../lib/model';
 import { reducer } from '../lib/reducer';
-import { FormState } from '../lib/types';
 import { FieldLabel } from './fields';
-import { EmitDialog } from './EmitDialog';
 import { Preview } from './Preview';
 import { SectionCard } from './SectionCard';
 
-export function FormBuilder() {
-  const [state, dispatch] = useReducer(reducer, undefined, seedExample);
-  const [showPreview, setShowPreview] = useState(false);
-  // The one question showing its editor; all others render as the student sees them.
-  const [activeId, setActiveId] = useState<string | null>(null);
+/**
+ * `create`: a new form. `edit`: an unused form. `locked`: a form already used in a session
+ * (decision D13) — shown as the student sees it, with Duplicate as the way to change it.
+ * PROTOTYPE: there is no form backend yet, so edit/locked open the seeded example under the
+ * listed form's title, and Save / Duplicate only explain that nothing is stored.
+ */
+export function FormBuilder({
+  mode,
+  title,
+  startInPreview = false,
+}: {
+  mode: 'create' | 'edit' | 'locked';
+  title?: string;
+  startInPreview?: boolean;
+}) {
+  const [state, dispatch] = useReducer(reducer, undefined, () => {
+    if (mode === 'create') return newForm();
+    const example = seedExample();
+    return title ? { ...example, name: title } : example;
+  });
+  const [showPreview, setShowPreview] = useState(startInPreview || mode === 'locked');
+  // The one question showing its editor; all others render as the student sees them. A new
+  // form opens its first (empty) question.
+  const [activeId, setActiveId] = useState<string | null>(() =>
+    mode === 'create' ? (state.sections[0]?.questions[0]?.id ?? null) : null
+  );
 
   // Preview replaces the builder full-screen. Remember where the author was so "Back to
   // editing" returns them to the same spot; the preview itself starts at the top.
@@ -36,60 +57,62 @@ export function FormBuilder() {
     setShowPreview((v) => !v);
   }
 
-  function load(next: FormState) {
-    dispatch({ type: 'load', state: next });
-    setActiveId(null);
-  }
+  const heading = { create: 'Create form', edit: 'Edit form', locked: 'View form' }[mode];
+  const notSaved = (what: string) =>
+    toast.info(what, { description: 'Prototype: nothing is saved yet.' });
 
   return (
-    <div className='mx-auto max-w-[1400px] px-4 py-8 sm:px-6'>
+    <div>
+      <Link
+        href='/forms'
+        className='mb-3 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground'
+      >
+        <ArrowLeft className='h-4 w-4' /> Forms
+      </Link>
       <div className='mb-6 flex flex-wrap items-end justify-between gap-4'>
         <div>
-          <h1 className='text-2xl font-bold text-foreground'>Form Builder</h1>
+          <h1 className='text-2xl font-bold text-foreground'>{heading}</h1>
           <p className='text-sm text-muted-foreground'>
-            {showPreview ? (
-              'Previewing as a student — answer questions to see conditional ones appear.'
-            ) : (
-              <>
-                Prototype · authors a <code>quiz_type=form</code> with conditional display. Nothing
-                is saved. Click any question to edit it.
-              </>
-            )}
+            {mode === 'locked'
+              ? 'Shown as a student sees it — answer questions to see conditional ones appear.'
+              : showPreview
+                ? 'Previewing as a student — answer questions to see conditional ones appear.'
+                : 'Prototype · nothing is saved. Click any question to edit it.'}
           </p>
         </div>
         <div className='flex items-center gap-2'>
-          <Button
-            type='button'
-            variant={showPreview ? 'default' : 'outline'}
-            onClick={togglePreview}
-          >
-            {showPreview ? <Pencil className='mr-1 h-4 w-4' /> : <Eye className='mr-1 h-4 w-4' />}
-            {showPreview ? 'Back to editing' : 'Preview'}
-          </Button>
-          {/* Form-replacing actions are editing-only, so a preview click can't wipe the form. */}
-          {!showPreview && (
+          {mode === 'locked' ? (
+            <Button type='button' onClick={() => notSaved('Duplicate')}>
+              <Copy className='mr-1 h-4 w-4' /> Duplicate to edit
+            </Button>
+          ) : (
             <>
               <Button
                 type='button'
-                variant='outline'
-                onClick={() => load(seedExample())}
-                title='Reload the seeded example'
+                variant={showPreview ? 'default' : 'outline'}
+                onClick={togglePreview}
               >
-                <RotateCcw className='mr-1 h-4 w-4' /> Reset example
+                {showPreview ? (
+                  <Pencil className='mr-1 h-4 w-4' />
+                ) : (
+                  <Eye className='mr-1 h-4 w-4' />
+                )}
+                {showPreview ? 'Back to editing' : 'Preview'}
               </Button>
-              <Button
-                type='button'
-                variant='outline'
-                onClick={() => load(emptyForm())}
-                title='Start from an empty form'
-              >
-                Clear
+              <Button type='button' onClick={() => notSaved('Save')}>
+                <Save className='mr-1 h-4 w-4' /> Save
               </Button>
             </>
           )}
-          <EmitDialog state={state} />
         </div>
       </div>
+
+      {mode === 'locked' && (
+        <p className='mx-auto mb-4 flex max-w-2xl items-start gap-2 rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground'>
+          <Lock className='mt-0.5 h-4 w-4 shrink-0' />
+          This form was used in a session and can&apos;t be changed. Duplicate it to make changes.
+        </p>
+      )}
 
       {showPreview ? (
         // Fresh mount on every open, so each preview run starts with no answers.
