@@ -99,3 +99,12 @@ describe('quizSchema form source', () => {
     ).not.toContain('cmsUrl');
   });
 });
+
+describe('quizSchema form language', () => {
+  const field = quizSchema.innerType().shape.formLanguage;
+
+  it('is optional and takes a language code', () => {
+    expect(field.safeParse(undefined).success).toBe(true);
+    expect(field.safeParse('hi').success).toBe(true);
+  });
+});

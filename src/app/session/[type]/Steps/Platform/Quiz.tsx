@@ -146,18 +146,24 @@ const QuizForm: FC = () => {
           'Only complete forms are listed. Once a session uses a form, the form can no longer be edited.',
         deriveHide: (values) => values.testType !== 'form' || values.formSource === 'sheet',
       },
-      // the picked form's languages, kept by the picker (decides whether Hindi is offered)
+      // the picked form's languages, kept by the picker (decides which languages are offered)
       formLanguages: { type: 'text', hide: true },
-      showHindi: {
-        type: 'switch',
-        label: 'Also show Hindi?',
+      // Same choice and labels as the new-CMS "Quiz Language", limited to the languages the
+      // picked form has (decision D21: English, or English + one more, shown stacked).
+      formLanguage: {
+        type: 'select',
+        options: QuizLanguageOptions,
+        deriveOptions: (values) =>
+          QuizLanguageOptions.filter(
+            (option) =>
+              option.value === 'en' || (values.formLanguages ?? []).includes(option.value as string)
+          ),
+        placeholder: 'Select the form language',
+        label: 'Form Language',
         disabled: type === SessionType.EDIT,
         helperText:
-          'English is always shown. With Hindi, students see each text in English with Hindi below it.',
-        deriveHide: (values) =>
-          values.testType !== 'form' ||
-          values.formSource === 'sheet' ||
-          !(values.formLanguages ?? []).includes('hi'),
+          'Lists the languages this form has. English is always shown; another language appears below it.',
+        deriveHide: (values) => values.testType !== 'form' || values.formSource === 'sheet',
       },
       cmsUrl: {
         type: 'text',
@@ -291,7 +297,8 @@ const QuizForm: FC = () => {
           : 'builder',
       formId: formIdFromMarker(formData.meta_data?.cms_test_id) ?? undefined,
       formLanguages: [],
-      showHindi: formData.meta_data?.test_type === 'form' && formData.meta_data?.lang_code === 'hi',
+      formLanguage:
+        (formData.meta_data?.test_type === 'form' && formData.meta_data?.lang_code) || 'en',
       cmsUrl: formIdFromMarker(formData.meta_data?.cms_test_id)
         ? ''
         : formData.meta_data?.cms_test_id,
@@ -343,12 +350,12 @@ const QuizForm: FC = () => {
               ? formBuilderMarker(data.formId!)
               : cmsTestId,
           // Language can't change after create: regenerate is blocked for new-CMS sessions.
-          // A form-builder form shows English, plus Hindi if chosen (decision D21).
+          // A form-builder form shows English, plus the chosen language (decision D21).
           lang_code: isEditMode
             ? formData.meta_data?.lang_code
             : isBuilderForm
-              ? data.showHindi
-                ? 'hi'
+              ? data.formLanguage && data.formLanguage !== 'en'
+                ? data.formLanguage
                 : undefined
               : !isForm && data.quizLanguage && data.quizLanguage !== 'en'
                 ? data.quizLanguage

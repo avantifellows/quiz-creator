@@ -181,9 +181,10 @@ export const quizSchema = z
     // Form sessions: a form-builder form (formId) or a Google Sheet (legacy, cmsUrl).
     formSource: z.enum(['builder', 'sheet']).optional(),
     formId: z.string().optional(),
-    // The picked form's languages (set by the picker) and whether to show Hindi (D21).
+    // The picked form's languages (set by the picker) and the one chosen for the session:
+    // "en", or a language shown under the English (D21).
     formLanguages: z.array(z.string()).optional(),
-    showHindi: z.coerce.boolean().optional(),
+    formLanguage: z.string().optional(),
     sheetName: z.string().optional(),
     singlePageHeaderText: z.string().optional(),
     testType: z

@@ -41,8 +41,8 @@ const describe = (
 /**
  * Pick a saved form-builder form for a form session (decision D12): searchable on the server,
  * newest first, only forms complete enough to use (`ready`). Stores the form id in the field
- * and the form's languages in `formLanguages`, which decides whether "Also show Hindi" is
- * offered (D21).
+ * and the form's languages in `formLanguages`, which decides the languages the Form Language
+ * dropdown offers (D21).
  */
 const ControlledFormPicker = ({
   field,
@@ -97,7 +97,9 @@ const ControlledFormPicker = ({
     field.onChange(picked._id);
     setSelected({ title: picked.title });
     form.setValue('formLanguages', picked.languages);
-    if (!picked.languages.includes('hi')) form.setValue('showHindi', false);
+    // A language the newly picked form doesn't have falls back to English.
+    if (!picked.languages.includes(form.getValues('formLanguage')))
+      form.setValue('formLanguage', 'en');
     setOpen(false);
   }
 
