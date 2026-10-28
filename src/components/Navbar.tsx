@@ -13,7 +13,7 @@ const NAV_LINKS = [
     label: 'Live Classes',
     path: '/live',
   },
-  { label: 'Forms', path: '/forms' },
+  { label: 'Form Builder', path: '/forms' },
 ];
 
 const Navbar = ({ actorEmail }: { actorEmail?: string | null }) => {

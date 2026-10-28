@@ -104,7 +104,7 @@ export function FormBuilder({
         href='/forms'
         className='mb-3 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground'
       >
-        <ArrowLeft className='h-4 w-4' /> Forms
+        <ArrowLeft className='h-4 w-4' /> Form Builder
       </Link>
       <div className='mb-6 flex flex-wrap items-end justify-between gap-4'>
         <div>

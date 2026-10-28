@@ -99,7 +99,7 @@ export function FormsList({
     <div>
       <div className='mb-4 flex flex-wrap items-end justify-between gap-4'>
         <div>
-          <h1 className='text-2xl font-bold text-foreground'>Forms</h1>
+          <h1 className='text-2xl font-bold text-foreground'>Form Builder</h1>
           <p className='text-sm text-muted-foreground'>
             Build a form once, then pick it when you create a form session.
           </p>

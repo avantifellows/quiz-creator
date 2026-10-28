@@ -3,7 +3,7 @@ import { listForms } from '@/services/forms';
 import { FormsList } from './FormsList';
 
 export const metadata: Metadata = {
-  title: 'Forms',
+  title: 'Form Builder',
   description: 'Build forms and pick them when creating a form session',
 };
 
