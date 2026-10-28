@@ -18,7 +18,7 @@ import {
   OTHER_OPTION_TEXT,
   seedExample,
   toQuizPayload,
-  validate,
+  formProblems,
 } from './model';
 import { FormState, PreviewAnswers } from './types';
 
@@ -236,9 +236,11 @@ describe('follow-ups', () => {
     const next = reducer(state, { type: 'add-follow-up', qid: q1, question: fu });
     expect(fu).toMatchObject({ type: 'subjective', text: { en: '', hi: '' } });
     expect(fu.cond).toEqual({ on: true, src: q1, opts: [] });
-    expect(validate(next)).toContain(
-      '"(untitled question)" is conditional but no trigger option is chosen.'
-    );
+    const problems = formProblems(next).filter((p) => p.qid === fu.id);
+    expect(problems.map((p) => p.message)).toEqual([
+      'The question text is missing.',
+      'Pick the option(s) of Q.1 that show this question.',
+    ]);
   });
 
   it('shortens the condition summary when the card is nested under its trigger', () => {
@@ -348,16 +350,60 @@ describe('dup-question', () => {
   });
 });
 
-describe('validate', () => {
-  it('flags a conditional question with no trigger selected', () => {
-    const { state, q2 } = condForm();
-    // break the condition: on, but no src
-    const dep = state.sections[0].questions.find((x) => x.id === q2)!;
-    dep.cond = { on: true, src: null, opts: [] };
-    expect(validate(state).some((p) => /no trigger/i.test(p))).toBe(true);
+describe('formProblems', () => {
+  it('is empty for a complete form', () => {
+    expect(formProblems(seedExample())).toEqual([]);
   });
 
-  it('passes a well-formed seeded form', () => {
-    expect(validate(seedExample())).toEqual([]);
+  it('names each problem with where it is (section and student label)', () => {
+    const state = seedExample();
+    state.name = ' ';
+    const q = state.sections[0].questions[0];
+    q.text.en = '';
+    q.options = [q.options[0]];
+    state.sections.push(newSection('Empty'));
+    const problems = formProblems(state);
+    expect(problems).toContainEqual(expect.objectContaining({ where: 'Form name', qid: null }));
+    expect(problems).toContainEqual({
+      qid: q.id,
+      sectionId: state.sections[0].id,
+      where: 'Section 1 · Q.1',
+      message: 'The question text is missing.',
+    });
+    expect(problems.map((p) => p.message)).toContain('Add at least two options.');
+    expect(problems).toContainEqual(
+      expect.objectContaining({
+        where: `Section ${state.sections.length}`,
+        message: 'This section has no questions.',
+      })
+    );
+  });
+
+  it('flags a follow-up with no question or no option chosen', () => {
+    const { state, q2 } = condForm();
+    const dep = state.sections[0].questions.find((x) => x.id === q2)!;
+    dep.cond = { on: true, src: null, opts: [] };
+    expect(formProblems(state).map((p) => p.message)).toContain(
+      'Choose which question this follow-up depends on.'
+    );
+  });
+
+  it('checks options, rating rows and the rating scale like quiz-backend', () => {
+    const state = seedExample();
+    const choice = state.sections[0].questions[0];
+    choice.options[1].text.en = ' ';
+    const matrix = state.sections
+      .flatMap((s) => s.questions)
+      .find((x) => x.type === 'matrix-rating')!;
+    matrix.rows[0].text.en = '';
+    matrix.scale.en = ' , ';
+    const messages = formProblems(state).map((p) => p.message);
+    expect(messages).toEqual(
+      expect.arrayContaining([
+        'An option has no text.',
+        'Every rating row needs text.',
+        'The rating scale is empty.',
+      ])
+    );
   });
 });

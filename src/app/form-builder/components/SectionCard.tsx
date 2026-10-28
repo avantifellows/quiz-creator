@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { nestingDepths, newQuestion, questionLabels } from '../lib/model';
 import type { Action } from '../lib/reducer';
 import { FormState, Section } from '../lib/types';
+import type { FormProblem } from '../lib/model';
 import { QuestionCard } from './QuestionCard';
 
 /** Deeper chains still render, just without further indentation. */
@@ -19,6 +20,7 @@ export function SectionCard({
   dispatch,
   activeId,
   onActivate,
+  problems = [],
 }: {
   state: FormState;
   section: Section;
@@ -26,6 +28,8 @@ export function SectionCard({
   dispatch: Dispatch<Action>;
   activeId: string | null;
   onActivate: (qid: string) => void;
+  /** Missing data in this section, shown after a "Save" that found problems. */
+  problems?: FormProblem[];
 }) {
   const depths = nestingDepths(section);
   // The numbers students see (1, 1a, 2…), continuing across sections like the student app.
@@ -79,11 +83,19 @@ export function SectionCard({
               onActivate={() => onActivate(q.id)}
               openQuestion={onActivate}
               nested={depth > 0}
+              problems={problems.filter((p) => p.qid === q.id).map((p) => p.message)}
             />
           </div>
         );
       })}
 
+      {problems
+        .filter((p) => p.qid === null)
+        .map((p) => (
+          <p key={p.message} className='mb-3 text-sm font-medium text-destructive'>
+            {p.message}
+          </p>
+        ))}
       <Button type='button' variant='secondary' size='sm' className='mt-1' onClick={addQuestion}>
         + Add Question
       </Button>

@@ -1,16 +1,33 @@
 'use client';
 
-import { useLayoutEffect, useReducer, useRef, useState, useTransition } from 'react';
+import { useLayoutEffect, useMemo, useReducer, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Copy, Eye, Lock, Pencil, Plus, Save } from 'lucide-react';
+import {
+  AlertCircle,
+  ArrowLeft,
+  Copy,
+  Eye,
+  FileClock,
+  Lock,
+  Pencil,
+  Plus,
+  Save,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { createForm, saveForm } from '@/services/forms';
 import { toDefinition } from '../lib/definition';
-import { newForm, validate } from '../lib/model';
+import { FormProblem, formProblems, newForm } from '../lib/model';
 import { reducer } from '../lib/reducer';
 import { FormState } from '../lib/types';
 import { FieldLabel } from './fields';
@@ -43,6 +60,13 @@ export function FormBuilder({
   const [activeId, setActiveId] = useState<string | null>(() =>
     mode === 'create' && !initial ? (state.sections[0]?.questions[0]?.id ?? null) : null
   );
+  // What is still missing. Highlighted on the cards once a "Save" found problems, and kept
+  // up to date as the author fixes them (each fixed problem disappears).
+  const problems = useMemo(() => formProblems(state), [state]);
+  const [showProblems, setShowProblems] = useState(false);
+  const [problemsOpen, setProblemsOpen] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const shownProblems = showProblems ? problems : [];
 
   // Preview replaces the builder full-screen. Remember where the author was so "Back to
   // editing" returns them to the same spot; the preview itself starts at the top.
@@ -63,9 +87,21 @@ export function FormBuilder({
 
   const heading = { create: 'Create form', edit: 'Edit form', locked: 'View form' }[mode];
 
-  function save() {
+  /**
+   * "Save" (`asDraft` false) only stores a complete form, so it can be picked for sessions;
+   * if anything is missing it lists and highlights it instead. "Save as draft" stores the form
+   * as it is (decision D22) — it just isn't offered for sessions until complete.
+   */
+  function save(asDraft: boolean) {
     if (!state.name.trim()) {
+      setShowProblems(true);
       toast.error('Give the form a name before saving');
+      nameRef.current?.focus();
+      return;
+    }
+    if (!asDraft && problems.length > 0) {
+      setShowProblems(true);
+      setProblemsOpen(true);
       return;
     }
     startSaving(async () => {
@@ -82,20 +118,28 @@ export function FormBuilder({
         }
         return;
       }
-      // A draft may be incomplete; it is saved but not offered when creating a session.
-      const todo = validate(state);
-      if (todo.length) {
-        toast.warning('Saved as a draft', {
-          description: `Not ready for sessions yet: ${todo[0]}${
-            todo.length > 1 ? ` (+${todo.length - 1} more)` : ''
-          }`,
+      if (asDraft) {
+        toast.success('Saved as draft', {
+          description: problems.length
+            ? 'It will be offered for sessions once it is complete.'
+            : 'Nothing is missing; use Save to mark it complete.',
         });
       } else {
-        toast.success('Form saved');
+        setShowProblems(false);
+        toast.success('Form saved', {
+          description: 'It can now be picked when creating a session.',
+        });
       }
       if (!formId && result.id) router.replace(`/forms/edit?id=${result.id}`);
       else router.refresh();
     });
+  }
+
+  /** Jump from the problems list to the question (or the form name) it is about. */
+  function goTo(problem: FormProblem) {
+    setProblemsOpen(false);
+    if (problem.qid) setActiveId(problem.qid);
+    else if (problem.where === 'Form name') nameRef.current?.focus();
   }
 
   return (
@@ -114,7 +158,7 @@ export function FormBuilder({
               ? 'Shown as a student sees it — answer questions to see conditional ones appear.'
               : showPreview
                 ? 'Previewing as a student — answer questions to see conditional ones appear.'
-                : 'Click any question to edit it. Save often — a form can be saved before it is complete.'}
+                : 'Click any question to edit it. Not finished? Save as draft and come back later.'}
           </p>
         </div>
         <div className='flex items-center gap-2'>
@@ -138,7 +182,21 @@ export function FormBuilder({
                 )}
                 {showPreview ? 'Back to editing' : 'Preview'}
               </Button>
-              <Button type='button' onClick={save} disabled={saving}>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => save(true)}
+                disabled={saving}
+                title='Store the form as it is; it is not offered for sessions until complete'
+              >
+                <FileClock className='mr-1 h-4 w-4' /> Save as draft
+              </Button>
+              <Button
+                type='button'
+                onClick={() => save(false)}
+                disabled={saving}
+                title='Check the form and save it so it can be picked for sessions'
+              >
                 <Save className='mr-1 h-4 w-4' /> {saving ? 'Saving…' : 'Save'}
               </Button>
             </>
@@ -165,10 +223,15 @@ export function FormBuilder({
             <div className='max-w-xl'>
               <FieldLabel>Form name</FieldLabel>
               <Input
+                ref={nameRef}
                 value={state.name}
                 onChange={(e) => dispatch({ type: 'set-name', value: e.target.value })}
                 placeholder='e.g. Grade 12 Mentorship Screener'
+                className={cn(showProblems && !state.name.trim() && 'border-destructive')}
               />
+              {showProblems && !state.name.trim() && (
+                <p className='mt-1 text-sm font-medium text-destructive'>The form has no name.</p>
+              )}
             </div>
             <div className='mt-4 flex flex-wrap items-center gap-6'>
               <div className='flex items-center gap-2'>
@@ -213,6 +276,7 @@ export function FormBuilder({
                 dispatch={dispatch}
                 activeId={activeId}
                 onActivate={setActiveId}
+                problems={shownProblems.filter((p) => p.sectionId === section.id)}
               />
             ))
           )}
@@ -222,6 +286,34 @@ export function FormBuilder({
           </Button>
         </div>
       )}
+
+      <Dialog open={problemsOpen} onOpenChange={setProblemsOpen}>
+        <DialogContent className='max-h-[80vh] overflow-y-auto'>
+          <DialogHeader>
+            <DialogTitle>Some things are missing</DialogTitle>
+            <DialogDescription>
+              Fix these to save the form, or use Save as draft to keep working on it later. Click
+              one to go to it.
+            </DialogDescription>
+          </DialogHeader>
+          <ul className='flex flex-col gap-1'>
+            {problems.map((p, i) => (
+              <li key={`${p.where}-${p.message}-${i}`}>
+                <button
+                  type='button'
+                  onClick={() => goTo(p)}
+                  className='flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted'
+                >
+                  <AlertCircle className='mt-0.5 h-4 w-4 shrink-0 text-destructive' />
+                  <span>
+                    <span className='font-semibold'>{p.where}:</span> {p.message}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

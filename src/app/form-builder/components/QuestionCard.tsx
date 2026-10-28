@@ -2,6 +2,7 @@
 
 import { Dispatch, useEffect, useRef } from 'react';
 import {
+  AlertCircle,
   Circle,
   Copy,
   CornerDownRight,
@@ -62,6 +63,22 @@ interface Props {
   openQuestion: (qid: string) => void;
   /** Display-only nesting under the trigger (see model `nestingDepths`). */
   nested: boolean;
+  /** What is missing in this question, shown after a "Save" that found problems. */
+  problems?: string[];
+}
+
+/** The card's missing-data messages, in red, under the question. */
+function ProblemList({ problems }: { problems: string[] }) {
+  if (problems.length === 0) return null;
+  return (
+    <ul className='mt-3 flex flex-col gap-1 text-sm font-medium text-destructive'>
+      {problems.map((p) => (
+        <li key={p} className='flex items-start gap-1.5'>
+          <AlertCircle className='mt-0.5 h-4 w-4 shrink-0' /> {p}
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export function QuestionCard({
@@ -73,6 +90,7 @@ export function QuestionCard({
   onActivate,
   openQuestion,
   nested,
+  problems = [],
 }: Props) {
   const hi = state.langs.hi;
   const isChoice = CHOICE_TYPES.includes(q.type);
@@ -92,6 +110,7 @@ export function QuestionCard({
         label={label}
         nested={nested}
         onActivate={onActivate}
+        problems={problems}
       />
     );
   }
@@ -122,9 +141,13 @@ export function QuestionCard({
   return (
     <div
       ref={ref}
-      className='mb-4 rounded-lg border border-border border-l-4 border-l-primary bg-background shadow-md'
+      className={cn(
+        'mb-4 rounded-lg border border-border border-l-4 border-l-primary bg-background shadow-md',
+        problems.length > 0 && 'border-destructive'
+      )}
     >
       <div className='p-5'>
+        <ProblemList problems={problems} />
         {/* question text + answer type on one line */}
         <div className='flex flex-col gap-3 sm:flex-row sm:items-start'>
           <span className='mt-2 inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-primary px-1.5 font-mono text-xs font-bold text-primary-foreground'>
@@ -251,12 +274,14 @@ function CollapsedQuestion({
   label,
   nested,
   onActivate,
+  problems,
 }: {
   state: FormState;
   q: Question;
   label: string;
   nested: boolean;
   onActivate: () => void;
+  problems: string[];
 }) {
   const summary = conditionSummary(state, q, { nested });
   return (
@@ -272,7 +297,10 @@ function CollapsedQuestion({
           onActivate();
         }
       }}
-      className='mb-4 cursor-pointer rounded-lg border border-border bg-background p-5 transition-colors hover:border-primary/50 hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+      className={cn(
+        'mb-4 cursor-pointer rounded-lg border border-border bg-background p-5 transition-colors hover:border-primary/50 hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        problems.length > 0 && 'border-2 border-destructive hover:border-destructive'
+      )}
     >
       <div className='mb-3 flex flex-wrap items-center gap-2'>
         <span className='inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-muted px-1.5 font-mono text-xs font-bold text-muted-foreground'>
@@ -290,6 +318,7 @@ function CollapsedQuestion({
         )}
       </div>
       <StudentQuestion q={q} lang='en' />
+      <ProblemList problems={problems} />
     </div>
   );
 }

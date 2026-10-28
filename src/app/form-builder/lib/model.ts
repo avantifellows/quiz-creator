@@ -371,31 +371,68 @@ export function toQuizPayload(state: FormState): QuizPayload {
   };
 }
 
-// ---- emit-time validation ------------------------------------------------
-/** Author-facing problems that would make the emitted form incoherent. Non-blocking in the
- *  prototype — surfaced in the emit dialog so the positional contract stays honest. */
-export function validate(state: FormState): string[] {
-  const problems: string[] = [];
+// ---- what is missing before the form can be used ---------------------------
+
+/** Something that must be fixed before the form can be saved as complete. */
+export interface FormProblem {
+  /** The question it is about; null for the form name or a section. */
+  qid: string | null;
+  sectionId: string | null;
+  /** Where to look, as the author sees it: "Form name", "Section 2", "Section 1 · Q.1a". */
+  where: string;
+  message: string;
+}
+
+/**
+ * Everything missing before a session can use the form — the same checks quiz-backend makes
+ * before it marks a saved form ready (form_definition_build.completeness_errors), plus the
+ * builder-only half-finished condition. "Save" refuses while there are any; "Save as draft"
+ * stores the form anyway.
+ */
+export function formProblems(state: FormState): FormProblem[] {
+  const problems: FormProblem[] = [];
+  const labels = questionLabels(state);
   const positions = positionIndex(state);
-  if (allQuestions(state).length === 0) problems.push('The form has no questions yet.');
-  for (const q of allQuestions(state)) {
-    if (!q.text.en.trim()) problems.push('A question is missing its English text.');
-    if (!q.cond.on) continue;
-    const src = questionById(state, q.cond.src);
-    const label = q.text.en.trim() || '(untitled question)';
-    if (!q.cond.src || !src) {
-      problems.push(`"${label}" is conditional but has no trigger question selected.`);
-      continue;
+  const add = (qid: string | null, sectionId: string | null, where: string, message: string) =>
+    problems.push({ qid, sectionId, where, message });
+
+  if (!state.name.trim()) add(null, null, 'Form name', 'The form has no name.');
+  if (allQuestions(state).length === 0) add(null, null, 'Form', 'The form has no questions yet.');
+
+  state.sections.forEach((section, sIndex) => {
+    const sectionWhere = `Section ${sIndex + 1}`;
+    if (section.questions.length === 0)
+      add(null, section.id, sectionWhere, 'This section has no questions.');
+    for (const q of section.questions) {
+      const where = `${sectionWhere} · Q.${labels[q.id]}`;
+      const issue = (message: string) => add(q.id, section.id, where, message);
+
+      if (!q.text.en.trim()) issue('The question text is missing.');
+      if (CHOICE_TYPES.includes(q.type)) {
+        if (q.options.length < 2) issue('Add at least two options.');
+        if (q.options.some((o) => !o.text.en.trim())) issue('An option has no text.');
+      }
+      if (q.type === 'matrix-rating') {
+        if (q.rows.length === 0 || q.rows.some((r) => !r.text.en.trim()))
+          issue('Every rating row needs text.');
+        if (!q.scale.en.split(',').some((s) => s.trim())) issue('The rating scale is empty.');
+      }
+      if (q.cond.on) {
+        const src = questionById(state, q.cond.src);
+        if (!src) {
+          issue('Choose which question this follow-up depends on.');
+        } else if (
+          positions.get(src.id)! >= positions.get(q.id)! ||
+          !CHOICE_TYPES.includes(src.type)
+        ) {
+          issue('Its "Show only if" question must be an earlier choice question.');
+        } else if (q.cond.opts.length === 0) {
+          issue(`Pick the option(s) of Q.${labels[src.id]} that show this question.`);
+        }
+      }
     }
-    const sp = positions.get(src.id)!;
-    const dp = positions.get(q.id)!;
-    if (sp >= dp) problems.push(`"${label}" has a trigger that is not earlier in the form.`);
-    if (!CHOICE_TYPES.includes(src.type))
-      problems.push(`"${label}" has a trigger that is not a single/multiple-choice question.`);
-    if (q.cond.opts.length === 0)
-      problems.push(`"${label}" is conditional but no trigger option is chosen.`);
-  }
-  return Array.from(new Set(problems));
+  });
+  return problems;
 }
 
 // ---- seed (story-telling example from the handoff) -----------------------
