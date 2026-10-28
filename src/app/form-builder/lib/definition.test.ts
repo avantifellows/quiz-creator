@@ -48,7 +48,7 @@ describe('toDefinition / fromDefinition', () => {
     s.questions = [q];
     const stored = toDefinition({
       name: 'T',
-      header: { en: '', hi: '' },
+      header: '',
       langs: { en: true, hi: false },
       sections: [s],
     }).sections[0].questions[0];
@@ -65,7 +65,7 @@ describe('toDefinition / fromDefinition', () => {
     s.questions = [q];
     const stored = toDefinition({
       name: 'T',
-      header: { en: '', hi: '' },
+      header: '',
       langs: { en: true, hi: false },
       sections: [s],
     });
@@ -80,7 +80,7 @@ describe('toDefinition / fromDefinition', () => {
     s.questions = [t, f];
     const stored = toDefinition({
       name: 'T',
-      header: { en: '', hi: '' },
+      header: '',
       langs: { en: true, hi: false },
       sections: [s],
     });
@@ -136,15 +136,20 @@ describe('form-builder marker', () => {
 });
 
 describe('header text', () => {
-  it('is stored with the form, per language (decision D23)', () => {
+  it('is stored with the form as one text (decision D23)', () => {
     const state = seedExample();
-    expect(toDefinition(state).header_text).toEqual(state.header);
-    expect(fromDefinition(toDefinition(state)).header).toEqual(state.header);
+    expect(toDefinition(state).header_text).toBe(state.header);
+    expect(fromDefinition(toDefinition(state)).header).toBe(state.header);
   });
 
   it('is empty for a form saved before the header was part of the form', () => {
     const { header_text: _omit, ...older } = toDefinition(seedExample());
     const loaded = fromDefinition(older as unknown as ReturnType<typeof toDefinition>);
-    expect(loaded.header).toEqual({ en: '', hi: '' });
+    expect(loaded.header).toBe('');
+  });
+
+  it('reads a header stored per language during development as its English', () => {
+    const stored = { ...toDefinition(seedExample()), header_text: { en: 'Old', hi: 'पुराना' } };
+    expect(fromDefinition(stored as unknown as ReturnType<typeof toDefinition>).header).toBe('Old');
   });
 });

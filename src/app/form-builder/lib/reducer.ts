@@ -19,7 +19,7 @@ import {
 
 export type Action =
   | { type: 'set-name'; value: string }
-  | { type: 'set-header'; lang: Lang; value: string }
+  | { type: 'set-header'; value: string }
   | { type: 'toggle-hi' }
   | { type: 'add-section' }
   | { type: 'del-section'; sid: string }
@@ -102,7 +102,7 @@ export function reducer(state: FormState, action: Action): FormState {
       s.name = action.value;
       return s;
     case 'set-header':
-      s.header[action.lang] = action.value;
+      s.header = action.value;
       return s;
     case 'toggle-hi':
       s.langs.hi = !s.langs.hi;

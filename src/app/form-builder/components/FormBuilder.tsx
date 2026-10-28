@@ -30,7 +30,7 @@ import { toDefinition } from '../lib/definition';
 import { FormProblem, formProblems, newForm } from '../lib/model';
 import { reducer } from '../lib/reducer';
 import { FormState } from '../lib/types';
-import { FieldLabel, PairedInput } from './fields';
+import { FieldLabel } from './fields';
 import { Preview } from './Preview';
 import { SectionCard } from './SectionCard';
 
@@ -233,15 +233,16 @@ export function FormBuilder({
                 <p className='mt-1 text-sm font-medium text-destructive'>The form has no name.</p>
               )}
             </div>
-            <div className='mt-4'>
-              <FieldLabel>Header text (optional)</FieldLabel>
-              <PairedInput
-                text={state.header}
-                hiEnabled={state.langs.hi}
-                onChange={(lang, value) => dispatch({ type: 'set-header', lang, value })}
-                enPlaceholder='Shown at the top of the form, e.g. Please answer honestly'
-                hiPlaceholder='शीर्षक (Hindi)'
+            <div className='mt-4 max-w-xl'>
+              <FieldLabel>Single Page Header Text</FieldLabel>
+              <Input
+                value={state.header}
+                onChange={(e) => dispatch({ type: 'set-header', value: e.target.value })}
+                placeholder='Enter the header text to display on the form'
               />
+              <p className='mt-1 text-sm text-muted-foreground'>
+                This text will appear as a header on the single page form
+              </p>
             </div>
             <div className='mt-4 flex flex-wrap items-center gap-6'>
               <div className='flex items-center gap-2'>

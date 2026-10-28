@@ -34,7 +34,7 @@ function condForm(): { state: FormState; q1: string; q2: string; opt0: string; o
   s.questions = [q1, q2];
   const state: FormState = {
     name: 'T',
-    header: { en: '', hi: '' },
+    header: '',
     langs: { en: true, hi: false },
     sections: [s],
   };
@@ -62,7 +62,7 @@ describe('computeVisibility', () => {
     s.questions = [q1, q2, q3];
     const state: FormState = {
       name: 'T',
-      header: { en: '', hi: '' },
+      header: '',
       langs: { en: true, hi: false },
       sections: [s],
     };
@@ -155,7 +155,7 @@ describe('questionLabels', () => {
     s.questions = [q1, q2, q3, q4, q5, q6];
     const state: FormState = {
       name: 'T',
-      header: { en: '', hi: '' },
+      header: '',
       langs: { en: true, hi: false },
       sections: [s],
     };

@@ -69,9 +69,9 @@ export function Preview({ state }: { state: FormState }) {
 
       <div className='flex w-full justify-center px-4 py-4'>
         <div className='flex w-full max-w-4xl flex-col rounded-lg bg-white p-2 shadow-sm sm:p-6'>
-          {text(state.header) && (
+          {state.header.trim() && (
             <p className='mx-4 mb-4 mt-2 whitespace-pre-wrap text-lg sm:text-xl'>
-              {text(state.header)}
+              {state.header.trim()}
             </p>
           )}
 
