@@ -52,7 +52,8 @@ const QUIET_INPUT =
 interface Props {
   state: FormState;
   q: Question;
-  index: number;
+  /** The label students see ("2", "2a", "2a.1"), from questionLabels. */
+  label: string;
   dispatch: Dispatch<Action>;
   /** Only the active question shows the editor; every other one renders as the student sees it. */
   active: boolean;
@@ -66,7 +67,7 @@ interface Props {
 export function QuestionCard({
   state,
   q,
-  index,
+  label,
   dispatch,
   active,
   onActivate,
@@ -88,7 +89,7 @@ export function QuestionCard({
       <CollapsedQuestion
         state={state}
         q={q}
-        index={index}
+        label={label}
         nested={nested}
         onActivate={onActivate}
       />
@@ -126,8 +127,8 @@ export function QuestionCard({
       <div className='p-5'>
         {/* question text + answer type on one line */}
         <div className='flex flex-col gap-3 sm:flex-row sm:items-start'>
-          <span className='mt-2 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary font-mono text-xs font-bold text-primary-foreground'>
-            {index + 1}
+          <span className='mt-2 inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-primary px-1.5 font-mono text-xs font-bold text-primary-foreground'>
+            {label}
           </span>
           <PairedInput
             className='flex-1'
@@ -247,13 +248,13 @@ export function QuestionCard({
 function CollapsedQuestion({
   state,
   q,
-  index,
+  label,
   nested,
   onActivate,
 }: {
   state: FormState;
   q: Question;
-  index: number;
+  label: string;
   nested: boolean;
   onActivate: () => void;
 }) {
@@ -262,7 +263,7 @@ function CollapsedQuestion({
     <div
       role='button'
       tabIndex={0}
-      aria-label={`Edit question ${index + 1}`}
+      aria-label={`Edit question ${label}`}
       title='Click to edit'
       onClick={onActivate}
       onKeyDown={(e) => {
@@ -274,8 +275,8 @@ function CollapsedQuestion({
       className='mb-4 cursor-pointer rounded-lg border border-border bg-background p-5 transition-colors hover:border-primary/50 hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
     >
       <div className='mb-3 flex flex-wrap items-center gap-2'>
-        <span className='inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted font-mono text-xs font-bold text-muted-foreground'>
-          {index + 1}
+        <span className='inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-muted px-1.5 font-mono text-xs font-bold text-muted-foreground'>
+          {label}
         </span>
         {summary && (
           <span className='inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-accent-foreground'>

@@ -4,7 +4,7 @@ import { Dispatch } from 'react';
 import { Layers, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { nestingDepths, newQuestion } from '../lib/model';
+import { nestingDepths, newQuestion, questionLabels } from '../lib/model';
 import type { Action } from '../lib/reducer';
 import { FormState, Section } from '../lib/types';
 import { QuestionCard } from './QuestionCard';
@@ -28,6 +28,8 @@ export function SectionCard({
   onActivate: (qid: string) => void;
 }) {
   const depths = nestingDepths(section);
+  // The numbers students see (1, 1a, 2…), continuing across sections like the student app.
+  const labels = questionLabels(state);
 
   function addQuestion() {
     const question = newQuestion('single-choice');
@@ -62,7 +64,7 @@ export function SectionCard({
         </Button>
       </div>
 
-      {section.questions.map((q, i) => {
+      {section.questions.map((q) => {
         // Follow-ups sit indented under their trigger (display only); the "If …" chip on the
         // card names the trigger, so no guide line.
         const depth = Math.min(depths[q.id] ?? 0, MAX_INDENT);
@@ -71,7 +73,7 @@ export function SectionCard({
             <QuestionCard
               state={state}
               q={q}
-              index={i}
+              label={labels[q.id]}
               dispatch={dispatch}
               active={q.id === activeId}
               onActivate={() => onActivate(q.id)}
