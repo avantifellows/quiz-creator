@@ -46,8 +46,12 @@ describe('toDefinition / fromDefinition', () => {
     const q = newQuestion('subjective');
     const s = newSection('S');
     s.questions = [q];
-    const stored = toDefinition({ name: 'T', langs: { en: true, hi: false }, sections: [s] })
-      .sections[0].questions[0];
+    const stored = toDefinition({
+      name: 'T',
+      header: { en: '', hi: '' },
+      langs: { en: true, hi: false },
+      sections: [s],
+    }).sections[0].questions[0];
     expect(stored.options).toEqual([]);
     expect(stored.rows).toEqual([]);
     expect(stored.scale).toBeNull();
@@ -59,7 +63,12 @@ describe('toDefinition / fromDefinition', () => {
     q.cond = { on: true, src: null, opts: [] };
     const s = newSection('S');
     s.questions = [q];
-    const stored = toDefinition({ name: 'T', langs: { en: true, hi: false }, sections: [s] });
+    const stored = toDefinition({
+      name: 'T',
+      header: { en: '', hi: '' },
+      langs: { en: true, hi: false },
+      sections: [s],
+    });
     expect(stored.sections[0].questions[0].show_if).toBeNull();
   });
 
@@ -69,7 +78,12 @@ describe('toDefinition / fromDefinition', () => {
     f.cond = { on: true, src: t.id, opts: [] };
     const s = newSection('S');
     s.questions = [t, f];
-    const stored = toDefinition({ name: 'T', langs: { en: true, hi: false }, sections: [s] });
+    const stored = toDefinition({
+      name: 'T',
+      header: { en: '', hi: '' },
+      langs: { en: true, hi: false },
+      sections: [s],
+    });
     expect(stored.sections[0].questions[1].show_if).toEqual({ question_id: t.id, option_ids: [] });
   });
 });
@@ -118,5 +132,19 @@ describe('form-builder marker', () => {
     expect(formIdFromMarker('form-builder:')).toBeNull();
     expect(formIdFromMarker('https://docs.google.com/spreadsheets/d/x')).toBeNull();
     expect(formIdFromMarker(undefined)).toBeNull();
+  });
+});
+
+describe('header text', () => {
+  it('is stored with the form, per language (decision D23)', () => {
+    const state = seedExample();
+    expect(toDefinition(state).header_text).toEqual(state.header);
+    expect(fromDefinition(toDefinition(state)).header).toEqual(state.header);
+  });
+
+  it('is empty for a form saved before the header was part of the form', () => {
+    const { header_text: _omit, ...older } = toDefinition(seedExample());
+    const loaded = fromDefinition(older as unknown as ReturnType<typeof toDefinition>);
+    expect(loaded.header).toEqual({ en: '', hi: '' });
   });
 });

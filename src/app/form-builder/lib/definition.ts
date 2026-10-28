@@ -44,6 +44,8 @@ export interface DefinitionSection {
 export interface FormDefinitionContent {
   title: string;
   languages: DefinitionLanguage[];
+  /** Shown at the top of the form; empty = none (decision D23). */
+  header_text: LangText;
   sections: DefinitionSection[];
 }
 
@@ -78,6 +80,7 @@ export function toDefinition(state: FormState): FormDefinitionContent {
   return {
     title: state.name.trim(),
     languages: state.langs.hi ? ['en', 'hi'] : ['en'],
+    header_text: copyText(state.header),
     sections: state.sections.map((section) => ({
       id: section.id,
       title: section.title,
@@ -118,6 +121,8 @@ export function fromDefinition(definition: FormDefinitionContent): FormState {
   };
   return {
     name: definition.title,
+    // forms saved before the header was part of the form have none
+    header: definition.header_text ? copyText(definition.header_text) : { en: '', hi: '' },
     langs: { en: true, hi: definition.languages.includes('hi') },
     sections: definition.sections.map(
       (s): Section => ({ id: s.id, title: s.title, questions: s.questions.map(toQuestion) })

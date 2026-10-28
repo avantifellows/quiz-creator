@@ -69,10 +69,11 @@ export function Preview({ state }: { state: FormState }) {
 
       <div className='flex w-full justify-center px-4 py-4'>
         <div className='flex w-full max-w-4xl flex-col rounded-lg bg-white p-2 shadow-sm sm:p-6'>
-          {/* The header text belongs to the session, not the form (decided 2026-10-28). */}
-          <p className='mx-4 mb-4 mt-2 text-lg italic text-gray-400 sm:text-xl'>
-            Header text (added when you create the session)
-          </p>
+          {text(state.header) && (
+            <p className='mx-4 mb-4 mt-2 whitespace-pre-wrap text-lg sm:text-xl'>
+              {text(state.header)}
+            </p>
+          )}
 
           {state.sections.map((section) => (
             <div key={section.id} className='space-y-2 pb-10'>

@@ -199,6 +199,8 @@ const QuizForm: FC = () => {
         label: 'Single Page Header Text',
         placeholder: 'Enter the header text to display on the form',
         hide: !isForm,
+        // a form-builder form has its own header text (decision D23)
+        deriveHide: (values) => values.formSource !== 'sheet',
         helperText: 'This text will appear as a header on the single page form',
       },
       markingScheme: {
@@ -366,6 +368,7 @@ const QuizForm: FC = () => {
               sheet_name: isEditMode ? formData.meta_data?.sheet_name : data.sheetName,
             }),
           ...(isForm &&
+            !isBuilderForm &&
             data.singlePageHeaderText && {
               single_page_header_text: data.singlePageHeaderText,
             }),

@@ -69,6 +69,8 @@ export interface Section {
 
 export interface FormState {
   name: string;
+  /** Shown at the top of the form (single-page header); optional. Part of the form (D23). */
+  header: LangText;
   /** English is always on; Hindi is toggleable. */
   langs: { en: true; hi: boolean };
   sections: Section[];

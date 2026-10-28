@@ -34,6 +34,7 @@ function condForm(): { state: FormState; q1: string; q2: string; opt0: string; o
   s.questions = [q1, q2];
   const state: FormState = {
     name: 'T',
+    header: { en: '', hi: '' },
     langs: { en: true, hi: false },
     sections: [s],
   };
@@ -61,6 +62,7 @@ describe('computeVisibility', () => {
     s.questions = [q1, q2, q3];
     const state: FormState = {
       name: 'T',
+      header: { en: '', hi: '' },
       langs: { en: true, hi: false },
       sections: [s],
     };
@@ -151,7 +153,12 @@ describe('questionLabels', () => {
     q6.cond = { on: true, src: q4.id, opts: [q4.options[0].id] };
     const s = newSection('S');
     s.questions = [q1, q2, q3, q4, q5, q6];
-    const state: FormState = { name: 'T', langs: { en: true, hi: false }, sections: [s] };
+    const state: FormState = {
+      name: 'T',
+      header: { en: '', hi: '' },
+      langs: { en: true, hi: false },
+      sections: [s],
+    };
     expect(Object.values(questionLabels(state))).toEqual(['1', '1a', '2', '2a', '2b', '2a.1']);
   });
 

@@ -57,6 +57,7 @@ export function newSection(title = ''): Section {
 export function emptyForm(): FormState {
   return {
     name: '',
+    header: { en: '', hi: '' },
     langs: { en: true, hi: false },
     sections: [],
   };
@@ -498,6 +499,10 @@ export function seedExample(): FormState {
 
   return {
     name: 'Grade 12 Mentorship Screener',
+    header: {
+      en: 'Please answer honestly — this helps us match you with the right mentor.',
+      hi: 'कृपया ईमानदारी से उत्तर दें — इससे हमें आपके लिए सही मेंटर ढूँढने में मदद मिलती है।',
+    },
     langs: { en: true, hi: true },
     sections: [s1, s2],
   };
