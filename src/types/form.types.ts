@@ -178,6 +178,13 @@ export const quizSchema = z
         'Invalid option selected'
       ),
     cmsUrl: z.string().optional(),
+    // Form sessions: a form-builder form (formId) or a Google Sheet (legacy, cmsUrl).
+    formSource: z.enum(['builder', 'sheet']).optional(),
+    formId: z.string().optional(),
+    // The picked form's languages (set by the picker) and the one chosen for the session:
+    // "en", or a language shown under the English (D21).
+    formLanguages: z.array(z.string()).optional(),
+    formLanguage: z.string().optional(),
     sheetName: z.string().optional(),
     singlePageHeaderText: z.string().optional(),
     testType: z
@@ -217,8 +224,17 @@ export const quizSchema = z
     nextStepText: z.string().optional(),
   })
   .superRefine((data, context) => {
-    // CMS URL or Google Sheets link is required for all test types
-    if (!data.cmsUrl || data.cmsUrl.trim() === '') {
+    if (data.testType === 'form' && data.formSource !== 'sheet') {
+      // Form-builder form: a saved form must be picked; there is no link to check.
+      if (!data.formId) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Pick a form',
+          path: ['formId'],
+        });
+      }
+    } else if (!data.cmsUrl || data.cmsUrl.trim() === '') {
+      // CMS URL or Google Sheets link is required for every other session
       const fieldLabel = data.testType === 'form' ? 'Google Sheets link' : 'CMS URL';
       context.addIssue({
         code: z.ZodIssueCode.custom,

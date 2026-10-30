@@ -63,3 +63,48 @@ describe('quizSchema quizLanguage', () => {
     expect(field.safeParse('hindi').success).toBe(false);
   });
 });
+
+describe('quizSchema form source', () => {
+  const base = {
+    course: 'JEE',
+    stream: 'Others',
+    testFormat: 'questionnaire',
+    testPurpose: 'baseline',
+    testType: 'form',
+    gurukulFormatType: 'qa',
+    optionalLimit: 'N/A',
+    isAdvancedFormat: false,
+    showAnswers: true,
+    showScores: false,
+    shuffle: false,
+    hasNextStep: false,
+  };
+  const issuePaths = (data: object) => {
+    const result = quizSchema.safeParse({ ...base, ...data });
+    return result.success ? [] : result.error.issues.map((issue) => issue.path.join('.'));
+  };
+
+  it('a form-builder form needs a picked form, not a link', () => {
+    expect(issuePaths({ formSource: 'builder' })).toContain('formId');
+    expect(issuePaths({ formSource: 'builder' })).not.toContain('cmsUrl');
+    expect(issuePaths({ formSource: 'builder', formId: 'abc' })).not.toContain('formId');
+    // builder is the default for a form session
+    expect(issuePaths({})).toContain('formId');
+  });
+
+  it('a Google Sheet form still needs a Sheets link', () => {
+    expect(issuePaths({ formSource: 'sheet' })).toContain('cmsUrl');
+    expect(
+      issuePaths({ formSource: 'sheet', cmsUrl: 'https://docs.google.com/spreadsheets/d/x' })
+    ).not.toContain('cmsUrl');
+  });
+});
+
+describe('quizSchema form language', () => {
+  const field = quizSchema.innerType().shape.formLanguage;
+
+  it('is optional and takes a language code', () => {
+    expect(field.safeParse(undefined).success).toBe(true);
+    expect(field.safeParse('hi').success).toBe(true);
+  });
+});
