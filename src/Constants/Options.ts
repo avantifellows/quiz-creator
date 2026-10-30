@@ -78,10 +78,11 @@ export const OptionalLimitOptions: Option[] = [
   { value: 'NA', label: 'NA' },
 ];
 
-// The exam a session prepares for. Programme tiers (Photon, Alpha, Catalyst,
-// Foundation) and test purposes (Hiring, Certification) used to live here too;
-// the sessions carrying those were backfilled to the exam they actually test,
-// so the field now means one thing.
+// The exam a session prepares for. Programme tiers (Photon, Alpha, Catalyst)
+// and test purposes (Hiring, Certification) used to live here too; the sessions
+// carrying those were backfilled to the exam they actually test, so the field
+// now means one thing. Foundation is the exception: grade 9-10 foundation tests
+// prepare for no single entrance exam, so it stands in for one.
 export const CourseOptions: Option[] = [
   { value: 'JEE Mains', label: 'JEE Mains' },
   { value: 'JEE Advanced', label: 'JEE Advanced' },
@@ -104,6 +105,7 @@ export const CourseOptions: Option[] = [
   { value: 'NIFT', label: 'NIFT' },
   { value: 'UCEED', label: 'UCEED' },
   { value: 'CHSL', label: 'CHSL' },
+  { value: 'Foundation', label: 'Foundation' },
   // Kept so the ten sessions holding a bare "CET" still render and stay
   // editable; new sessions should pick the state's CET above.
   { value: 'CET', label: 'CET (unspecified)' },
