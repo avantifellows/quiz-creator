@@ -1,6 +1,6 @@
 'use client';
 
-import { Dispatch } from 'react';
+import { Dispatch, SyntheticEvent } from 'react';
 import { Layers, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,7 @@ export function SectionCard({
   dispatch,
   activeId,
   onActivate,
+  markInside,
   problems = [],
 }: {
   state: FormState;
@@ -28,6 +29,8 @@ export function SectionCard({
   dispatch: Dispatch<Action>;
   activeId: string | null;
   onActivate: (qid: string) => void;
+  /** Marks a pointer/click event as not outside the open question, so the page doesn't close it. */
+  markInside: (e: SyntheticEvent) => void;
   /** Missing data in this section, shown after a "Save" that found problems. */
   problems?: FormProblem[];
 }) {
@@ -73,7 +76,12 @@ export function SectionCard({
         // card names the trigger, so no guide line.
         const depth = Math.min(depths[q.id] ?? 0, MAX_INDENT);
         return (
-          <div key={q.id} style={depth > 0 ? { marginLeft: `${depth * 1.75}rem` } : undefined}>
+          <div
+            key={q.id}
+            style={depth > 0 ? { marginLeft: `${depth * 1.75}rem` } : undefined}
+            onPointerDown={markInside}
+            onClick={markInside}
+          >
             <QuestionCard
               state={state}
               q={q}
@@ -96,7 +104,18 @@ export function SectionCard({
             {p.message}
           </p>
         ))}
-      <Button type='button' variant='secondary' size='sm' className='mt-1' onClick={addQuestion}>
+      {/* Opens the new question, so the page must not treat this as a click outside it. */}
+      <Button
+        type='button'
+        variant='secondary'
+        size='sm'
+        className='mt-1'
+        onPointerDown={markInside}
+        onClick={(e) => {
+          markInside(e);
+          addQuestion();
+        }}
+      >
         + Add Question
       </Button>
     </div>

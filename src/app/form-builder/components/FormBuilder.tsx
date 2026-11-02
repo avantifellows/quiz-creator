@@ -1,6 +1,16 @@
 'use client';
 
-import { useLayoutEffect, useMemo, useReducer, useRef, useState, useTransition } from 'react';
+import {
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -67,6 +77,33 @@ export function FormBuilder({
   const [problemsOpen, setProblemsOpen] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
   const shownProblems = showProblems ? problems : [];
+
+  // A click anywhere outside the open question closes it. Questions, and the controls that open
+  // one (+ Add Question, the problems list), mark their own pointer and click events — React
+  // passes these up from a question's dropdown menus too, though those render elsewhere in the
+  // page — so the page listener skips them.
+  const insideEvent = useRef<Event | null>(null);
+  const markInside = useCallback((e: SyntheticEvent) => {
+    insideEvent.current = e.nativeEvent;
+  }, []);
+  useEffect(() => {
+    let pressedInside = false;
+    const onPointerDown = (e: PointerEvent) => {
+      pressedInside = e === insideEvent.current;
+    };
+    const onClick = (e: MouseEvent) => {
+      // A drag that starts in a question (e.g. selecting its text) isn't a click outside it.
+      const inside = pressedInside || e === insideEvent.current;
+      pressedInside = false;
+      if (!inside) setActiveId(null);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('click', onClick);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('click', onClick);
+    };
+  }, []);
 
   // Preview replaces the builder full-screen. Remember where the author was so "Back to
   // editing" returns them to the same spot; the preview itself starts at the top.
@@ -287,6 +324,7 @@ export function FormBuilder({
                 dispatch={dispatch}
                 activeId={activeId}
                 onActivate={setActiveId}
+                markInside={markInside}
                 problems={shownProblems.filter((p) => p.sectionId === section.id)}
               />
             ))
@@ -299,7 +337,12 @@ export function FormBuilder({
       )}
 
       <Dialog open={problemsOpen} onOpenChange={setProblemsOpen}>
-        <DialogContent className='max-h-[80vh] overflow-y-auto'>
+        {/* Picking a problem opens its question; the page must not close it again. */}
+        <DialogContent
+          className='max-h-[80vh] overflow-y-auto'
+          onPointerDown={markInside}
+          onClick={markInside}
+        >
           <DialogHeader>
             <DialogTitle>Some things are missing</DialogTitle>
             <DialogDescription>
