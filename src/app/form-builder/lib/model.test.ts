@@ -20,6 +20,7 @@ import {
   seedExample,
   toQuizPayload,
   formProblems,
+  followUpsOf,
 } from './model';
 import { FormState, PreviewAnswers } from './types';
 
@@ -191,6 +192,36 @@ describe('conditionSummary', () => {
     expect(
       conditionSummary(state, state.sections[0].questions.find((x) => x.id === q2)!)
     ).toBeNull();
+  });
+});
+
+describe('deleting a question with follow-ups', () => {
+  // seedExample: Q1 → 1a in section 1; Q2 → 2a, 2b in section 2
+  const qs = (state: FormState) => state.sections.flatMap((x) => x.questions);
+
+  it('finds the follow-ups of a question', () => {
+    const state = seedExample();
+    const [, , q2, f1, f2] = qs(state);
+    expect(followUpsOf(state, q2.id)).toEqual([f1, f2]);
+    expect(followUpsOf(state, f1.id)).toEqual([]);
+  });
+
+  it('deletes the follow-ups with their trigger', () => {
+    const state = seedExample();
+    const [q1, fa, q2] = qs(state);
+    const next = reducer(state, { type: 'del-question', qid: q2.id });
+    expect(qs(next).map((q) => q.id)).toEqual([q1.id, fa.id]);
+  });
+
+  it('deletes only the follow-up itself when that is what is deleted', () => {
+    const state = seedExample();
+    const [, , q2, f1, f2] = qs(state);
+    const next = reducer(state, { type: 'del-question', qid: f1.id });
+    expect(
+      qs(next)
+        .map((q) => q.id)
+        .slice(2)
+    ).toEqual([q2.id, f2.id]);
   });
 });
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Dispatch, useEffect, useRef } from 'react';
+import { Dispatch, useEffect, useRef, useState } from 'react';
 import {
   AlertCircle,
   Circle,
@@ -13,6 +13,14 @@ import {
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -27,6 +35,7 @@ import {
   allowedTrigger,
   cloneQuestion,
   conditionSummary,
+  followUpsOf,
   isOtherOption,
   newFollowUp,
   OTHER_OPTION_TEXT,
@@ -253,19 +262,65 @@ export function QuestionCard({
           >
             <Copy className='h-4 w-4' />
           </Button>
-          <Button
-            type='button'
-            variant='ghost'
-            size='icon'
-            className='h-8 w-8 text-muted-foreground hover:text-destructive'
-            title='Remove question'
-            onClick={() => dispatch({ type: 'del-question', qid: q.id })}
-          >
-            <Trash2 className='h-4 w-4' />
-          </Button>
+          <DeleteQuestionButton state={state} q={q} label={label} dispatch={dispatch} />
         </div>
       </div>
     </div>
+  );
+}
+
+/** Removes the question; asks first if it has follow-ups, since they are deleted with it. */
+function DeleteQuestionButton({
+  state,
+  q,
+  label,
+  dispatch,
+}: {
+  state: FormState;
+  q: Question;
+  label: string;
+  dispatch: Dispatch<Action>;
+}) {
+  const [confirming, setConfirming] = useState(false);
+  const followUps = followUpsOf(state, q.id);
+  const remove = () => dispatch({ type: 'del-question', qid: q.id });
+  const labels = questionLabels(state);
+  const names = followUps.map((f) => `Q.${labels[f.id]}`);
+  const named =
+    names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}` : names[0];
+
+  return (
+    <>
+      <Button
+        type='button'
+        variant='ghost'
+        size='icon'
+        className='h-8 w-8 text-muted-foreground hover:text-destructive'
+        title='Remove question'
+        onClick={() => (followUps.length > 0 ? setConfirming(true) : remove())}
+      >
+        <Trash2 className='h-4 w-4' />
+      </Button>
+      <Dialog open={confirming} onOpenChange={setConfirming}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Q.{label} and its follow-ups?</DialogTitle>
+            <DialogDescription>
+              {named} {names.length > 1 ? 'are' : 'is'} shown only for answers to Q.{label}, so{' '}
+              {names.length > 1 ? 'they are' : 'it is'} deleted with it.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant='outline' onClick={() => setConfirming(false)}>
+              Cancel
+            </Button>
+            <Button variant='destructive' onClick={remove}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

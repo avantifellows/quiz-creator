@@ -218,6 +218,20 @@ export function nestingDepths(section: Section): Record<string, number> {
   return Object.fromEntries(qs.map((q, i) => [q.id, depths[i]]));
 }
 
+/**
+ * The questions shown only for answers to `qid` (and, in a draft that has them, their own
+ * follow-ups), in form order. Deleting `qid` deletes these too.
+ */
+export function followUpsOf(state: FormState, qid: string): Question[] {
+  const ids = new Set([qid]);
+  // Triggers come before their follow-ups, so one pass in form order finds every level.
+  return allQuestions(state).filter((q) => {
+    const isFollowUp = q.cond.on && q.cond.src != null && ids.has(q.cond.src);
+    if (isFollowUp) ids.add(q.id);
+    return isFollowUp;
+  });
+}
+
 /** Where a new follow-up of `triggerId` goes: after the trigger's existing nested block. */
 export function followUpInsertIndex(section: Section, triggerId: string): number {
   const qs = section.questions;

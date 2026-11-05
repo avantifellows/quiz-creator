@@ -11,6 +11,7 @@ import { CHOICE_TYPES, FormState, Lang, Question, QuestionType } from './types';
 import {
   OTHER_OPTION_TEXT,
   followUpInsertIndex,
+  followUpsOf,
   isOtherOption,
   newOption,
   newQuestion,
@@ -125,8 +126,10 @@ export function reducer(state: FormState, action: Action): FormState {
       return s;
     }
     case 'del-question': {
-      for (const sec of s.sections)
-        sec.questions = sec.questions.filter((q) => q.id !== action.qid);
+      // Its follow-ups go with it: they are shown only for answers to it (the builder asks
+      // the author first).
+      const gone = new Set([action.qid, ...followUpsOf(s, action.qid).map((q) => q.id)]);
+      for (const sec of s.sections) sec.questions = sec.questions.filter((q) => !gone.has(q.id));
       pruneConditions(s);
       return s;
     }

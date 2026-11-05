@@ -68,4 +68,23 @@ describe('FormBuilder: the open question', () => {
     expect(closed('1')).not.toBeInTheDocument();
     expect(closed('2')).toBeInTheDocument();
   });
+
+  it('asks before deleting a question together with its follow-ups', async () => {
+    const user = userEvent.setup();
+    render(<FormBuilder mode='create' />);
+    await user.click(screen.getByRole('button', { name: 'Add follow-up question' }));
+    await user.click(closed('1')!);
+
+    await user.click(screen.getByRole('button', { name: 'Remove question' }));
+    expect(
+      screen.getByText('Q.1a is shown only for answers to Q.1, so it is deleted with it.')
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(closed('1a')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Remove question' }));
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
+    expect(screen.queryByRole('button', { name: /^Edit question/ })).not.toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('Question')).not.toBeInTheDocument();
+  });
 });
