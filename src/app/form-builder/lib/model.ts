@@ -90,13 +90,19 @@ export function positionIndex(state: FormState): Map<string, number> {
 /**
  * Earlier choice-type questions that may trigger `qid`. Restricting to *earlier* questions
  * enforces the invariant that triggers precede dependents; restricting to choice types
- * enforces the v1 list-only trigger rule.
+ * enforces the v1 list-only trigger rule; leaving out follow-ups (even ones whose condition
+ * isn't set up yet) keeps one level of follow-ups (decision D24).
  */
 export function possibleSources(state: FormState, qid: string): Question[] {
   const flat = allQuestions(state);
   const idx = flat.findIndex((q) => q.id === qid);
-  return flat.slice(0, idx < 0 ? 0 : idx).filter((q) => CHOICE_TYPES.includes(q.type));
+  return flat
+    .slice(0, idx < 0 ? 0 : idx)
+    .filter((q) => CHOICE_TYPES.includes(q.type) && !q.cond.on);
 }
+
+/** A question saved with a condition (`show_if`); quiz-backend refuses it as a trigger (D24). */
+const isFollowUp = (q: Question) => q.cond.on && q.cond.src != null;
 
 // ---- visibility (THE preview evaluator) ----------------------------------
 /**
@@ -427,6 +433,10 @@ export function formProblems(state: FormState): FormProblem[] {
           !CHOICE_TYPES.includes(src.type)
         ) {
           issue('Its "Show only if" question must be an earlier choice question.');
+        } else if (isFollowUp(src)) {
+          issue(
+            `Its "Show only if" question, Q.${labels[src.id]}, is itself a follow-up; a follow-up can't have follow-ups of its own.`
+          );
         } else if (q.cond.opts.length === 0) {
           issue(`Pick the option(s) of Q.${labels[src.id]} that show this question.`);
         }

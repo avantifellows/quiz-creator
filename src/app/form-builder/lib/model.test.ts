@@ -16,6 +16,7 @@ import {
   questionLabels,
   OTHER_MAX_CHARS,
   OTHER_OPTION_TEXT,
+  possibleSources,
   seedExample,
   toQuizPayload,
   formProblems,
@@ -411,6 +412,43 @@ describe('formProblems', () => {
         'Every rating row needs text.',
         'The rating scale is empty.',
       ])
+    );
+  });
+});
+
+describe('one level of follow-ups (decision D24)', () => {
+  /** Q1 (choice) → 1a (choice, follow-up of Q1) → Q2 (free text). */
+  function chainForm() {
+    const { state, q1 } = condForm();
+    const followUp = state.sections[0].questions[1];
+    followUp.type = 'single-choice';
+    followUp.options = [newOption('A'), newOption('B')];
+    const last = newQuestion('subjective');
+    last.text.en = 'More?';
+    state.sections[0].questions.push(last);
+    return { state, q1, followUp, last };
+  }
+
+  it('offers only questions that are not follow-ups as triggers', () => {
+    const { state, q1, last } = chainForm();
+    expect(possibleSources(state, last.id).map((q) => q.id)).toEqual([q1]);
+  });
+
+  it('does not offer a question whose condition is still being set up', () => {
+    const { state, q1, followUp, last } = chainForm();
+    followUp.cond = { on: true, src: null, opts: [] };
+    expect(possibleSources(state, last.id).map((q) => q.id)).toEqual([q1]);
+  });
+
+  it('flags a follow-up whose trigger is itself a follow-up', () => {
+    const { state, followUp, last } = chainForm();
+    last.cond = { on: true, src: followUp.id, opts: [followUp.options[0].id] };
+    expect(formProblems(state)).toContainEqual(
+      expect.objectContaining({
+        qid: last.id,
+        message:
+          'Its "Show only if" question, Q.1a, is itself a follow-up; a follow-up can\'t have follow-ups of its own.',
+      })
     );
   });
 });

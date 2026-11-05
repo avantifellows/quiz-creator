@@ -212,7 +212,8 @@ export function QuestionCard({
               <GitBranch className='mr-1.5 h-4 w-4' /> Show only if…
             </Button>
           )}
-          {isChoice && (
+          {/* One level of follow-ups only (decision D24). */}
+          {isChoice && !q.cond.on && (
             <Button
               type='button'
               variant='ghost'
@@ -333,8 +334,11 @@ function ConditionSentence({
   q: Question;
   dispatch: Dispatch<Action>;
 }) {
-  const sources = possibleSources(state, q.id);
   const src = questionById(state, q.cond.src);
+  // Keep listing the chosen trigger even if it can no longer be one (it was made a follow-up
+  // afterwards), so the picker doesn't go blank; Save explains the problem.
+  const allowed = possibleSources(state, q.id);
+  const sources = src && !allowed.includes(src) ? [...allowed, src] : allowed;
 
   return (
     <div className='mt-3 flex flex-wrap items-center gap-2 rounded-md bg-accent/60 px-3 py-2 text-sm text-accent-foreground'>
