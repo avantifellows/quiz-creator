@@ -57,8 +57,8 @@ async function copyFormId(id: string) {
 
 /**
  * Forms list (decision D14): newest updated first, title search (all forms, server-side),
- * details on row click, and the row actions Preview / Edit (View when locked) / Duplicate /
- * Copy form ID / Delete. Search and page live in the URL, so the server page refetches.
+ * details on row click (with Copy form ID), and the row actions Preview / Edit (View when
+ * locked) / Duplicate / Delete. Search and page live in the URL, so the server page refetches.
  */
 export function FormsList({
   forms,
@@ -248,9 +248,6 @@ function RowActions({
         <DropdownMenuItem onSelect={() => onOpen(`/forms/create?from=${form._id}`)}>
           <Copy className='mr-2 h-4 w-4' /> Duplicate
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => copyFormId(form._id)}>
-          <Copy className='mr-2 h-4 w-4' /> Copy form ID
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           disabled={locked}
@@ -322,8 +319,24 @@ function FormDetails({ form, onClose }: { form: FormSummary | null; onClose: () 
               <Detail label='Created by'>{form.created_by ?? '—'}</Detail>
               <Detail label='Created'>{formatDate(form.created_at)}</Detail>
               <Detail label='Last updated'>{formatDate(form.updated_at)}</Detail>
-              <Detail label='Form ID'>
-                <span className='break-all font-mono text-xs'>{form._id}</span>
+              {/* Copy icon beside the label, value in a pill — like a session's links. */}
+              <Detail
+                label='Form ID'
+                action={
+                  <Button
+                    variant='ghost'
+                    className='h-auto p-1'
+                    title='Copy form ID'
+                    aria-label='Copy form ID'
+                    onClick={() => copyFormId(form._id)}
+                  >
+                    <Copy className='size-4' />
+                  </Button>
+                }
+              >
+                <span className='block truncate rounded-full border px-2.5 py-0.5 font-mono text-xs text-foreground'>
+                  {form._id}
+                </span>
               </Detail>
             </dl>
             <div className='border-t pt-4'>
@@ -356,10 +369,22 @@ function FormDetails({ form, onClose }: { form: FormSummary | null; onClose: () 
   );
 }
 
-function Detail({ label, children }: { label: string; children: React.ReactNode }) {
+function Detail({
+  label,
+  action,
+  children,
+}: {
+  label: string;
+  /** Shown beside the label, e.g. a copy button. */
+  action?: React.ReactNode;
+  children: React.ReactNode;
+}) {
   return (
     <div>
-      <dt className='font-semibold'>{label}</dt>
+      <dt className='inline-flex items-center gap-1 font-semibold'>
+        {label}
+        {action}
+      </dt>
       <dd className='text-muted-foreground'>{children}</dd>
     </div>
   );
