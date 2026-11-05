@@ -87,18 +87,32 @@ export function positionIndex(state: FormState): Map<string, number> {
   return map;
 }
 
+/** The nearest question above `qid` in its section that `isFollowUp` doesn't skip. */
+function questionAbove(
+  state: FormState,
+  qid: string,
+  isFollowUp: (q: Question) => boolean
+): Question | undefined {
+  for (const section of state.sections) {
+    const i = section.questions.findIndex((q) => q.id === qid);
+    if (i < 0) continue;
+    for (let j = i - 1; j >= 0; j--) {
+      if (!isFollowUp(section.questions[j])) return section.questions[j];
+    }
+    return undefined;
+  }
+  return undefined;
+}
+
 /**
- * Earlier choice-type questions that may trigger `qid`. Restricting to *earlier* questions
- * enforces the invariant that triggers precede dependents; restricting to choice types
- * enforces the v1 list-only trigger rule; leaving out follow-ups (even ones whose condition
- * isn't set up yet) keeps one level of follow-ups (decision D24).
+ * The only question `qid` can be a follow-up of: the nearest question above it, in its
+ * section, that isn't a follow-up (even one whose condition isn't set up yet). So follow-ups
+ * sit directly under their trigger (decision D26) and are one level deep (D24). Null when that
+ * question isn't a choice question (the v1 list-only trigger rule) or there is none.
  */
-export function possibleSources(state: FormState, qid: string): Question[] {
-  const flat = allQuestions(state);
-  const idx = flat.findIndex((q) => q.id === qid);
-  return flat
-    .slice(0, idx < 0 ? 0 : idx)
-    .filter((q) => CHOICE_TYPES.includes(q.type) && !q.cond.on);
+export function allowedTrigger(state: FormState, qid: string): Question | null {
+  const above = questionAbove(state, qid, (q) => q.cond.on);
+  return above && CHOICE_TYPES.includes(above.type) ? above : null;
 }
 
 /** A question saved with a condition (`show_if`); quiz-backend refuses it as a trigger (D24). */
@@ -294,8 +308,10 @@ function toLetters(count: number): string {
 /**
  * The label students see for each question ("2" in "Q.2: "), keyed by question id. Mirrors
  * quiz-frontend `computeQuestionLabels`: unconditional questions count 1, 2, 3…; a follow-up
- * of 2 is 2a, 2b; a follow-up of 2a is 2a.1. Only a question that would be emitted with a
- * display_condition counts as a follow-up (an incomplete condition is emitted without one).
+ * of 2 is 2a, 2b; a follow-up of 2a is 2a.1. A question counts as a follow-up once its
+ * trigger is chosen, even before any option is: such a form never reaches students
+ * (quiz-backend refuses it), so the author sees "1a" from the start rather than a number that
+ * changes when the option is picked.
  */
 export function questionLabels(state: FormState): Record<string, string> {
   const positions = positionIndex(state);
@@ -306,7 +322,7 @@ export function questionLabels(state: FormState): Record<string, string> {
   const qs = allQuestions(state);
   qs.forEach((q, position) => {
     numFollowUps.push(0);
-    const source = resolveCondition(state, q.cond, positions)?.source_position;
+    const source = q.cond.on && q.cond.src ? positions.get(q.cond.src) : undefined;
     if (source == null) {
       numTopLevel += 1;
       labels.push(String(numTopLevel));
@@ -436,6 +452,11 @@ export function formProblems(state: FormState): FormProblem[] {
         } else if (isFollowUp(src)) {
           issue(
             `Its "Show only if" question, Q.${labels[src.id]}, is itself a follow-up; a follow-up can't have follow-ups of its own.`
+          );
+        } else if (questionAbove(state, q.id, isFollowUp) !== src) {
+          // D26; mirrors quiz-backend completeness_errors
+          issue(
+            `It must come right after Q.${labels[src.id]}, its "Show only if" question (or that question's other follow-ups).`
           );
         } else if (q.cond.opts.length === 0) {
           issue(`Pick the option(s) of Q.${labels[src.id]} that show this question.`);

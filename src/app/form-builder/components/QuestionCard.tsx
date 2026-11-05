@@ -24,13 +24,14 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import {
+  allowedTrigger,
   cloneQuestion,
   conditionSummary,
   isOtherOption,
   newFollowUp,
   OTHER_OPTION_TEXT,
-  possibleSources,
   questionById,
+  questionLabels,
 } from '../lib/model';
 import type { Action } from '../lib/reducer';
 import { CHOICE_TYPES, FormState, Question, QuestionType } from '../lib/types';
@@ -115,13 +116,13 @@ export function QuestionCard({
     );
   }
 
-  const sources = possibleSources(state, q.id);
+  const trigger = allowedTrigger(state, q.id);
 
   function addCondition() {
+    if (!trigger) return;
     dispatch({ type: 'cond-toggle', qid: q.id, value: true });
-    // Most conditions hang off the nearest choice question above, so preselect it.
-    if (!q.cond.src && sources.length > 0)
-      dispatch({ type: 'cond-src', qid: q.id, src: sources[sources.length - 1].id });
+    // A follow-up hangs off the question right above it (decision D26).
+    if (q.cond.src !== trigger.id) dispatch({ type: 'cond-src', qid: q.id, src: trigger.id });
   }
 
   function addFollowUp() {
@@ -201,11 +202,11 @@ export function QuestionCard({
               variant='ghost'
               size='sm'
               className='text-muted-foreground'
-              disabled={sources.length === 0}
+              disabled={!trigger}
               title={
-                sources.length === 0
-                  ? 'Needs a single/multiple-choice question above this one'
-                  : 'Show this question only for certain answers to an earlier question'
+                trigger
+                  ? 'Show this question only for certain answers to the question above'
+                  : 'Needs a single/multiple-choice question right above this one'
               }
               onClick={addCondition}
             >
@@ -334,42 +335,23 @@ function ConditionSentence({
   q: Question;
   dispatch: Dispatch<Action>;
 }) {
+  // No choice of trigger: it is the question right above (decision D26). If edits moved it
+  // since (e.g. a question between them lost its condition), it is still named; Save explains.
   const src = questionById(state, q.cond.src);
-  // Keep listing the chosen trigger even if it can no longer be one (it was made a follow-up
-  // afterwards), so the picker doesn't go blank; Save explains the problem.
-  const allowed = possibleSources(state, q.id);
-  const sources = src && !allowed.includes(src) ? [...allowed, src] : allowed;
+  const srcText = src ? src.text.en || '(untitled question)' : '';
 
   return (
     <div className='mt-3 flex flex-wrap items-center gap-2 rounded-md bg-accent/60 px-3 py-2 text-sm text-accent-foreground'>
       <GitBranch className='h-4 w-4 shrink-0' />
       <span className='font-medium'>Show only if</span>
-      {sources.length === 0 ? (
-        <span className='text-destructive'>
-          — add a single/multiple-choice question above this one first.
+      {src ? (
+        <span className='max-w-[260px] truncate rounded-md bg-background px-2 py-1' title={srcText}>
+          Q.{questionLabels(state)[src.id]} {srcText}
         </span>
       ) : (
-        <Select
-          value={q.cond.src ?? ''}
-          onValueChange={(value) => dispatch({ type: 'cond-src', qid: q.id, src: value })}
-        >
-          <SelectTrigger
-            className='h-8 w-auto max-w-[260px] bg-background'
-            aria-label='Trigger question'
-          >
-            <SelectValue placeholder='pick a question…' />
-          </SelectTrigger>
-          <SelectContent>
-            {sources.map((s) => {
-              const lbl = s.text.en || '(untitled question)';
-              return (
-                <SelectItem key={s.id} value={s.id}>
-                  {lbl.length > 60 ? lbl.slice(0, 60) + '…' : lbl}
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
+        <span className='text-destructive'>
+          — needs a single/multiple-choice question right above it.
+        </span>
       )}
       {src && (
         <>

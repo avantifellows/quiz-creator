@@ -4,6 +4,7 @@
 // Pure model/reducer logic — no DOM needed, and jsdom lacks the reducer's structuredClone.
 import { reducer } from './reducer';
 import {
+  allowedTrigger,
   cloneQuestion,
   computeVisibility,
   conditionSummary,
@@ -16,7 +17,6 @@ import {
   questionLabels,
   OTHER_MAX_CHARS,
   OTHER_OPTION_TEXT,
-  possibleSources,
   seedExample,
   toQuizPayload,
   formProblems,
@@ -163,9 +163,15 @@ describe('questionLabels', () => {
     expect(Object.values(questionLabels(state))).toEqual(['1', '1a', '2', '2a', '2b', '2a.1']);
   });
 
-  it('treats a question with an incomplete condition as unconditional', () => {
+  it('numbers a follow-up under its trigger before any option is chosen', () => {
     const { state, q1, q2 } = condForm();
     const next = reducer(state, { type: 'cond-src', qid: q2, src: q1 }); // clears the options
+    expect(Object.values(questionLabels(next))).toEqual(['1', '1a']);
+  });
+
+  it('numbers a question whose trigger is not chosen yet as unconditional', () => {
+    const { state, q2 } = condForm();
+    const next = reducer(state, { type: 'cond-src', qid: q2, src: null });
     expect(Object.values(questionLabels(next))).toEqual(['1', '2']);
   });
 });
@@ -429,15 +435,15 @@ describe('one level of follow-ups (decision D24)', () => {
     return { state, q1, followUp, last };
   }
 
-  it('offers only questions that are not follow-ups as triggers', () => {
+  it('skips follow-ups when finding the trigger', () => {
     const { state, q1, last } = chainForm();
-    expect(possibleSources(state, last.id).map((q) => q.id)).toEqual([q1]);
+    expect(allowedTrigger(state, last.id)?.id).toBe(q1);
   });
 
-  it('does not offer a question whose condition is still being set up', () => {
+  it('skips a question whose condition is still being set up', () => {
     const { state, q1, followUp, last } = chainForm();
     followUp.cond = { on: true, src: null, opts: [] };
-    expect(possibleSources(state, last.id).map((q) => q.id)).toEqual([q1]);
+    expect(allowedTrigger(state, last.id)?.id).toBe(q1);
   });
 
   it('flags a follow-up whose trigger is itself a follow-up', () => {
@@ -450,5 +456,60 @@ describe('one level of follow-ups (decision D24)', () => {
           'Its "Show only if" question, Q.1a, is itself a follow-up; a follow-up can\'t have follow-ups of its own.',
       })
     );
+  });
+});
+
+describe('a follow-up sits directly under its trigger (decision D26)', () => {
+  /** Q1 (choice), Q2 (choice), Q3 (free text) in one section. */
+  function threeQuestions() {
+    const { state, q1 } = condForm();
+    const q2 = state.sections[0].questions[1];
+    q2.cond = { on: false, src: null, opts: [] };
+    q2.type = 'single-choice';
+    q2.options = [newOption('A'), newOption('B')];
+    const q3 = newQuestion('subjective');
+    q3.text.en = 'Tell us more';
+    state.sections[0].questions.push(q3);
+    return { state, q1, q2, q3 };
+  }
+
+  it('offers only the question right above as the trigger', () => {
+    const { state, q2, q3 } = threeQuestions();
+    expect(allowedTrigger(state, q3.id)?.id).toBe(q2.id);
+  });
+
+  it('offers no trigger when the question above is not a choice question', () => {
+    const { state, q3 } = threeQuestions();
+    const q4 = newQuestion('subjective');
+    state.sections[0].questions.push(q4);
+    expect(allowedTrigger(state, q4.id)).toBeNull();
+    expect(allowedTrigger(state, q3.id)).not.toBeNull();
+  });
+
+  it('never looks into an earlier section', () => {
+    const { state } = threeQuestions();
+    const first = newQuestion('subjective');
+    const s2 = newSection('S2');
+    s2.questions = [first];
+    state.sections.push(s2);
+    expect(allowedTrigger(state, first.id)).toBeNull();
+  });
+
+  it('flags a follow-up separated from its trigger by another question', () => {
+    const { state, q1, q3 } = threeQuestions();
+    const trigger = state.sections[0].questions[0];
+    q3.cond = { on: true, src: q1, opts: [trigger.options[0].id] };
+    expect(formProblems(state)).toContainEqual(
+      expect.objectContaining({
+        qid: q3.id,
+        message:
+          'It must come right after Q.1, its "Show only if" question (or that question\'s other follow-ups).',
+      })
+    );
+  });
+
+  it('accepts several follow-ups right under their trigger', () => {
+    const state = seedExample(); // Q2 has two follow-ups in a row
+    expect(formProblems(state)).toEqual([]);
   });
 });
