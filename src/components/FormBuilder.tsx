@@ -13,6 +13,7 @@ import { useEffect, useMemo } from 'react';
 import { FieldValues, Path, UseFormReturn, useForm } from 'react-hook-form';
 import { ControlledCheckbox } from './ui/checkbox';
 import { ControlledMultiSelectField } from './ui/multi-select';
+import { ControlledFormPicker } from './ui/form-picker';
 
 /**
  * Function to render a form field based on the field type.
@@ -47,12 +48,15 @@ const RenderFields = <T extends FieldValues>(
     case 'file':
       Component = ControlledFileInput;
       break;
+    case 'form-picker':
+      Component = ControlledFormPicker;
+      break;
     default:
       Component = ControlledInput;
       break;
   }
 
-  const { hide = false, helperText, deriveOptions, ...restSchema } = memoSchema;
+  const { hide = false, helperText, deriveOptions, deriveHide, ...restSchema } = memoSchema;
 
   // A field whose options depend on ANOTHER field's current value (e.g. Class Batch is
   // the union of the children of the selected Quiz Batches) cannot read them off the
@@ -64,7 +68,7 @@ const RenderFields = <T extends FieldValues>(
   const derivedOptions = deriveOptions ? deriveOptions(watchedValues) : undefined;
   const schemaForField = derivedOptions ? { ...restSchema, options: derivedOptions } : restSchema;
 
-  if (hide) return null;
+  if (hide || deriveHide?.(watchedValues)) return null;
 
   return (
     <FormField

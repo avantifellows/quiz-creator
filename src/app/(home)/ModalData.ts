@@ -9,6 +9,7 @@ import {
 import { absoluteLink } from '@/lib/utils';
 import { DataSection, Option, Session, ExtendedOptions } from '@/types';
 import { format } from 'date-fns';
+import { formIdFromMarker } from '@/app/form-builder/lib/definition';
 
 export const displayData = (
   data: Session,
@@ -115,11 +116,18 @@ export const displayData = (
       { label: 'Show Answers', value: data.meta_data?.show_answers ? 'Yes' : 'No' },
       { label: 'Show Scores', value: data.meta_data?.show_scores == false ? 'No' : 'Yes' },
       { label: 'Shuffle Questions', value: data.meta_data?.shuffle ? 'Yes' : 'No' },
-      {
-        label: data.meta_data?.test_type === 'form' ? 'Google Sheets Link' : 'CMS Link',
-        value: data.meta_data?.cms_test_id ? absoluteLink(data.meta_data.cms_test_id) : 'N/A',
-        isLink: !!data.meta_data?.cms_test_id,
-      },
+      formIdFromMarker(data.meta_data?.cms_test_id)
+        ? {
+            // a form-builder form: link to it on the Forms page
+            label: 'Form',
+            value: `/forms/edit?id=${formIdFromMarker(data.meta_data?.cms_test_id)}`,
+            isLink: true,
+          }
+        : {
+            label: data.meta_data?.test_type === 'form' ? 'Google Sheets Link' : 'CMS Link',
+            value: data.meta_data?.cms_test_id ? absoluteLink(data.meta_data.cms_test_id) : 'N/A',
+            isLink: !!data.meta_data?.cms_test_id,
+          },
       {
         label: 'Q&A Link',
         value: data.meta_data?.shortened_link ? absoluteLink(data.meta_data.shortened_link) : 'N/A',
