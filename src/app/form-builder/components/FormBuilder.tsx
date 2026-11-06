@@ -161,14 +161,16 @@ export function FormBuilder({
             ? 'It will be offered for sessions once it is complete.'
             : 'Nothing is missing; use Save to mark it complete.',
         });
+        // A draft is work in progress: stay on it (a new one moves to its edit page).
+        if (!formId && result.id) router.replace(`/forms/edit?id=${result.id}`);
+        else router.refresh();
       } else {
-        setShowProblems(false);
         toast.success('Form saved', {
           description: 'It can now be picked when creating a session.',
         });
+        // Done: back to the forms list, as creating a session returns to the sessions list.
+        router.push('/forms');
       }
-      if (!formId && result.id) router.replace(`/forms/edit?id=${result.id}`);
-      else router.refresh();
     });
   }
 

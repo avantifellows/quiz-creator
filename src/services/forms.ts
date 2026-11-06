@@ -1,6 +1,7 @@
 'use server';
 
 import { isAxiosError } from 'axios';
+import { revalidatePath } from 'next/cache';
 import { requireActorEmail } from '@/lib/auth';
 import { quizBackend } from '@/lib/quizBackend';
 import type {
@@ -88,6 +89,7 @@ export async function createForm(content: FormDefinitionContent): Promise<FormWr
   try {
     const { data } = await quizBackend.post('/form-definitions/', { ...content, actor });
     console.info('[API SUCCESS] createForm', data.id);
+    revalidatePath('/forms'); // the builder returns to the list after a Save
     return { isSuccess: true, id: data.id };
   } catch (error) {
     console.error('[API ERROR] createForm', describe(error).error);
@@ -103,6 +105,7 @@ export async function saveForm(
   try {
     await quizBackend.put(`/form-definitions/${encodeURIComponent(id)}`, { ...content, actor });
     console.info('[API SUCCESS] saveForm', id);
+    revalidatePath('/forms'); // the builder returns to the list after a Save
     return { isSuccess: true, id };
   } catch (error) {
     console.error('[API ERROR] saveForm', id, describe(error).error);

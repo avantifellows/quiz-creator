@@ -1,9 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createForm } from '@/services/forms';
 import { FormBuilder } from './FormBuilder';
 
+const mockRouter = { push: jest.fn(), replace: jest.fn(), refresh: jest.fn() };
 jest.mock('next/navigation', () => ({
-  useRouter: () => ({ replace: jest.fn(), refresh: jest.fn() }),
+  useRouter: () => mockRouter,
 }));
 
 jest.mock('@/services/forms', () => ({
@@ -86,5 +88,41 @@ describe('FormBuilder: the open question', () => {
     await user.click(screen.getByRole('button', { name: 'Delete' }));
     expect(screen.queryByRole('button', { name: /^Edit question/ })).not.toBeInTheDocument();
     expect(screen.queryByPlaceholderText('Question')).not.toBeInTheDocument();
+  });
+});
+
+describe('FormBuilder: after saving', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (createForm as jest.Mock).mockResolvedValue({ isSuccess: true, id: 'f1' });
+  });
+
+  /** A new form with everything Save checks for: a name, question text, two options. */
+  async function fillCompleteForm(user: ReturnType<typeof userEvent.setup>) {
+    render(<FormBuilder mode='create' />);
+    await user.type(screen.getByPlaceholderText('Question'), 'Pick one');
+    const [a, b] = screen.getAllByPlaceholderText('Option');
+    await user.type(a, 'A');
+    await user.type(b, 'B');
+    await user.type(screen.getByPlaceholderText('e.g. Grade 12 Mentorship Screener'), 'Test');
+  }
+
+  it('goes back to the forms list after Save, like creating a session', async () => {
+    const user = userEvent.setup();
+    await fillCompleteForm(user);
+
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith('/forms'));
+  });
+
+  it('stays on the form after Save as draft', async () => {
+    const user = userEvent.setup();
+    await fillCompleteForm(user);
+
+    await user.click(screen.getByRole('button', { name: 'Save as draft' }));
+
+    await waitFor(() => expect(mockRouter.replace).toHaveBeenCalledWith('/forms/edit?id=f1'));
+    expect(mockRouter.push).not.toHaveBeenCalled();
   });
 });
