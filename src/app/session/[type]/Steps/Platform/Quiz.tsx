@@ -226,6 +226,20 @@ const QuizForm: FC = () => {
         hide: false,
         disabled: isForm || type === SessionType.EDIT,
       },
+      // Required for tests, hidden for forms. A retest's scores are shown but the warehouse
+      // keeps them out of the Academic Level, for everyone in the session.
+      isRetest: {
+        type: 'select',
+        options: [
+          { label: 'No, first time', value: 'no' },
+          { label: 'Yes, this is a retest', value: 'yes' },
+        ],
+        placeholder: 'Choose one',
+        label: 'Have these students already taken this paper?',
+        helperText:
+          'Yes = a retest: scores are shown but not counted in the Academic Level, for anyone in this session.',
+        deriveHide: (values) => values.testType === 'form',
+      },
       showAnswers: {
         type: 'switch',
         label: 'Show Answers?',
@@ -310,6 +324,14 @@ const QuizForm: FC = () => {
       markingScheme: formData.meta_data?.marking_scheme,
       optionalLimit: formData.meta_data?.optional_limits,
       isAdvancedFormat: formData.meta_data?.is_advanced_format == true ? true : false,
+      // No default on create, so it is answered explicitly; an older session without the key
+      // opens as "No" when edited.
+      isRetest:
+        formData.meta_data?.is_retest === true
+          ? 'yes'
+          : formData.meta_data?.is_retest === false || type === SessionType.EDIT
+            ? 'no'
+            : undefined,
       showAnswers: formData.meta_data?.show_answers == false ? false : true,
       showScores: formData.meta_data?.show_scores == false ? false : true,
       requireAllQuestions: formData.meta_data?.require_all_questions == true ? true : false,
@@ -319,7 +341,7 @@ const QuizForm: FC = () => {
       nextStepUrl: formData.meta_data?.next_step_url || '',
       nextStepText: formData.meta_data?.next_step_text || '',
     }),
-    [formData]
+    [formData, type]
   );
 
   const onSubmit = useCallback(
@@ -346,6 +368,7 @@ const QuizForm: FC = () => {
           optional_limits:
             isEditMode && !isForm ? formData.meta_data?.optional_limits : data.optionalLimit,
           is_advanced_format: isForm ? false : data.isAdvancedFormat,
+          is_retest: isForm ? false : data.isRetest === 'yes',
           cms_test_id: isEditMode
             ? formData.meta_data?.cms_test_id
             : isBuilderForm

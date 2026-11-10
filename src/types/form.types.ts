@@ -214,6 +214,9 @@ export const quizSchema = z
         'Invalid option selected'
       ),
     isAdvancedFormat: z.coerce.boolean(),
+    // "yes" / "no", with no default on create: every test session says explicitly whether
+    // students have already sat this paper (stored as meta_data.is_retest).
+    isRetest: z.enum(['yes', 'no']).optional(),
     showAnswers: z.coerce.boolean(),
     showScores: z.coerce.boolean(),
     requireAllQuestions: z.coerce.boolean().optional(),
@@ -224,6 +227,13 @@ export const quizSchema = z
     nextStepText: z.string().optional(),
   })
   .superRefine((data, context) => {
+    if (data.testType !== 'form' && !data.isRetest) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Say whether students have already taken this paper',
+        path: ['isRetest'],
+      });
+    }
     if (data.testType === 'form' && data.formSource !== 'sheet') {
       // Form-builder form: a saved form must be picked; there is no link to check.
       if (!data.formId) {

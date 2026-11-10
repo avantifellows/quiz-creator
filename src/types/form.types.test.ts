@@ -108,3 +108,40 @@ describe('quizSchema form language', () => {
     expect(field.safeParse('hi').success).toBe(true);
   });
 });
+
+const RETEST_BASE = {
+  course: 'JEE',
+  stream: 'engineering',
+  testFormat: 'major_test',
+  testPurpose: 'one_time',
+  testType: 'assessment',
+  gurukulFormatType: 'qa',
+  optionalLimit: 'N/A',
+  cmsUrl: 'https://new-cms.avantifellows.org/tests/123',
+  isAdvancedFormat: false,
+  showAnswers: true,
+  showScores: true,
+  shuffle: false,
+  hasNextStep: false,
+};
+
+const retestIssuePaths = (data: object) => {
+  const result = quizSchema.safeParse(data);
+  return result.success ? [] : result.error.issues.map((issue) => issue.path.join('.'));
+};
+
+describe('quizSchema isRetest', () => {
+  it('requires an explicit retest answer for a test', () => {
+    expect(retestIssuePaths(RETEST_BASE)).toContain('isRetest');
+    expect(retestIssuePaths({ ...RETEST_BASE, isRetest: 'no' })).not.toContain('isRetest');
+    expect(retestIssuePaths({ ...RETEST_BASE, isRetest: 'yes' })).not.toContain('isRetest');
+  });
+
+  it('does not ask for a form', () => {
+    expect(retestIssuePaths({ ...RETEST_BASE, testType: 'form', testFormat: 'questionnaire' })).not.toContain('isRetest');
+  });
+
+  it('rejects anything but yes or no', () => {
+    expect(retestIssuePaths({ ...RETEST_BASE, isRetest: 'maybe' })).toContain('isRetest');
+  });
+});
