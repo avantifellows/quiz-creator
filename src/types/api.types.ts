@@ -21,6 +21,8 @@ const metaDataSchema = z.object({
   has_synced_to_bq: z.boolean().optional(),
   infinite_session: z.boolean().optional(),
   is_advanced_format: z.boolean().optional(),
+  // Students already sat this paper: the warehouse keeps the session out of the AL.
+  is_retest: z.boolean().optional(),
   marking_scheme: z.string().optional(),
   show_answers: z.boolean().optional(),
   show_scores: z.boolean().optional(),

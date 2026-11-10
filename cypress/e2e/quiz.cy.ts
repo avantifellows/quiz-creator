@@ -64,6 +64,7 @@ describe('Quiz Session form', () => {
     cy.customSelect('gurukulFormatType', create.gurukulFormatType);
     cy.customInput('cmsUrl', create.cmsUrl);
     cy.customSelect('optionalLimit', create.optionalLimit);
+    cy.customSelect('isRetest', create.isRetest);
     cy.customSwitch('showAnswers', create.showAnswers);
     cy.customSwitch('showScores', create.showScores);
     cy.customSwitch('shuffle', create.shuffle);
