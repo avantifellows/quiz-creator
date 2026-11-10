@@ -138,7 +138,9 @@ describe('quizSchema isRetest', () => {
   });
 
   it('does not ask for a form', () => {
-    expect(retestIssuePaths({ ...RETEST_BASE, testType: 'form', testFormat: 'questionnaire' })).not.toContain('isRetest');
+    expect(
+      retestIssuePaths({ ...RETEST_BASE, testType: 'form', testFormat: 'questionnaire' })
+    ).not.toContain('isRetest');
   });
 
   it('rejects anything but yes or no', () => {
